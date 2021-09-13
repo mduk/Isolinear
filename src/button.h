@@ -12,8 +12,7 @@ class Cap {
     Cap(Uint32 _colour) : bg_colour{_colour} {};
     void Draw(
       SDL_Renderer* renderer,
-      Position* at,
-      Size* size
+      Region* where
     );
 
   protected:
@@ -24,8 +23,7 @@ class RightBarCap : public Cap {
   public:
     void Draw(
       SDL_Renderer* renderer,
-      Position* at,
-      Size* size
+      Region* where
     );
 };
 
@@ -33,8 +31,7 @@ class LeftIndicatorCap : public Cap {
   public:
     void Draw(
       SDL_Renderer* renderer,
-      Position* at,
-      Size* size
+      Region* where
     );
 };
 
@@ -43,8 +40,7 @@ class LeftRoundCap : public Cap {
     LeftRoundCap(Uint32 _colour) : Cap{_colour} {};
     void Draw(
       SDL_Renderer* renderer,
-      Position* at,
-      Size* size
+      Region* where
     );
 };
 
@@ -53,8 +49,7 @@ class RightRoundCap : public Cap {
     RightRoundCap(Uint32 _colour) : Cap{_colour} {};
     void Draw(
       SDL_Renderer* renderer,
-      Position* at,
-      Size* size
+      Region* where
     );
 };
 
