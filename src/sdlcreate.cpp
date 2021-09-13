@@ -2,7 +2,7 @@
 
 SDL_Window* createWindow(int w, int h) {
   SDL_Window *window = SDL_CreateWindow(
-    "Elkars",
+    "Isolinear",
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
     w, h,
     SDL_WINDOW_OPENGL // | SDL_WINDOW_FULLSCREEN_DESKTOP
