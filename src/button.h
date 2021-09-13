@@ -59,9 +59,9 @@ class Button {
     void Draw(SDL_Renderer* renderer, Region* where);
     bool lcap = false;
     bool rcap = false;
+    Uint32 c;
 
   private:
     std::string label = "defaultlabel";
     int g;
-    Uint32 c;
 };

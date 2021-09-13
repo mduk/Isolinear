@@ -26,8 +26,9 @@ int main(int argc, char* argv[]) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  Position* p = new Position(20,20);
-  Grid* g = new Grid(6,3, 90);
+  int margin = 20;
+  Position* p = new Position(margin, margin);
+  Grid* g = new Grid(10, 6, 90, (win_w - (margin * 2)), 5);
   g->Draw(renderer, p);
   delete p, g;
 
