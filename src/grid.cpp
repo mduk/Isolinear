@@ -39,32 +39,22 @@ void GridRow::Draw(SDL_Renderer* renderer, Region* where) {
     0xFFFFFFFF
   );
 
-  int gutter = 10;
-  int btnw = where->size->y * 1.618;
-
   std::list<GridCell*> cells;
-
   cells.push_back(new GridCell(0xff0ff0ff, where->size->y));
+  cells.push_back(new GridCell(0xff438ba4, where->size->y * 1.618));
+  cells.push_back(new GridCell(0xff000000, where->size->y * 1.618 * 3));
   cells.push_back(new GridCell(0xfff00f00, where->size->y * 1.618));
   cells.push_back(new GridCell(0xff0fffa0, where->size->y * 1.618 * 2));
   cells.push_back(new GridCell(0xff438ba4, where->size->y * 1.618));
+  cells.push_back(new GridCell(0xff0ff0ff, where->size->y));
 
   int x = where->position->x;
   int y = where->position->y;
 
-  int h = where->size->y;
-
-  printf("row\n");
   for (auto const& c : cells) {
     Region* cell_region = new Region(
       x, y,
-
-      c->width,
-      where->size->y
-    );
-    printf("Cell %dx%d@%dx%d\n",
-      cell_region->size->x, cell_region->size->y,
-      cell_region->position->x, cell_region->position->y
+      c->width, where->size->y
     );
     c->Draw(renderer, cell_region);
     delete cell_region;
@@ -84,7 +74,7 @@ void GridCell::Draw(SDL_Renderer* renderer, Region* where) {
     this->colour
   );
 
-  int g = 10;
+  int g = 6;
   boxColor(renderer,
     where->position->x + g,
     where->position->y + g,
