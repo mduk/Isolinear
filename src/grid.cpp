@@ -41,19 +41,57 @@ void GridRow::Draw(SDL_Renderer* renderer, Region* where) {
 
   int gutter = 10;
   int btnw = where->size->y * 1.618;
-  for (int col = 1; col <= this->grid->ncols; col++) {
-    Region* btnregion = new Region(
-      (where->position->x + ((col - 1) * (btnw + gutter))),
-      where->position->y,
-      btnw,
+
+  std::list<GridCell*> cells;
+
+  cells.push_back(new GridCell(0xff0ff0ff, where->size->y));
+  cells.push_back(new GridCell(0xfff00f00, where->size->y * 1.618));
+  cells.push_back(new GridCell(0xff0fffa0, where->size->y * 1.618 * 2));
+  cells.push_back(new GridCell(0xff438ba4, where->size->y * 1.618));
+
+  int x = where->position->x;
+  int y = where->position->y;
+
+  int h = where->size->y;
+
+  printf("row\n");
+  for (auto const& c : cells) {
+    Region* cell_region = new Region(
+      x, y,
+
+      c->width,
       where->size->y
     );
+    printf("Cell %dx%d@%dx%d\n",
+      cell_region->size->x, cell_region->size->y,
+      cell_region->position->x, cell_region->position->y
+    );
+    c->Draw(renderer, cell_region);
+    delete cell_region;
 
-    Button* btn = new Button();
-    if (col == 1                ) btn->lcap = true;
-    if (col == this->grid->ncols) btn->rcap = true;
-    btn->Draw(renderer, btnregion);
-
-    delete btn, btnregion;
+    x += c->width;
   }
+}
+
+void GridCell::Draw(SDL_Renderer* renderer, Region* where) {
+  rectangleColor(renderer,
+    where->position->x,
+    where->position->y,
+
+    where->position->x + where->size->x,
+    where->position->y + where->size->y,
+
+    this->colour
+  );
+
+  int g = 10;
+  boxColor(renderer,
+    where->position->x + g,
+    where->position->y + g,
+
+    where->position->x + where->size->x - g,
+    where->position->y + where->size->y - g,
+
+    this->colour
+  );
 }

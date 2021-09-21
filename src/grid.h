@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
@@ -35,4 +37,13 @@ class GridRow {
 
   protected:
     Grid* grid;
+};
+
+class GridCell {
+  public:
+    int width;
+    Uint32 colour;
+
+    GridCell(Uint32 _c, int _w) : width{_w}, colour{_c} {};
+    void Draw(SDL_Renderer* renderer, Region* where);
 };

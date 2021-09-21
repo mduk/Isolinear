@@ -68,13 +68,6 @@ Button::Button() {
 
 void Button::Draw(SDL_Renderer* renderer, Region* btn_region) {
   Region* rect_region = btn_region->Copy();
-  printf("drawing button: %s\n\tx,y = %d,%d\n\tw,h = %d,%d\n",
-      this->label.c_str(),
-      btn_region->position->x,
-      btn_region->position->y,
-      btn_region->size->x,
-      btn_region->size->y
-    );
 
   if (this->lcap || this->rcap) {
     Size* cap_size = new Size(
