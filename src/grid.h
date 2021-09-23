@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <vector>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -8,14 +9,26 @@
 #include "geometry.h"
 #include "button.h"
 
+typedef Uint32 Colour;
+Colour RandomColour();
+
+class GridCell {
+  public:
+    int width;
+    Colour colour;
+    Button* button;
+
+    GridCell(Button* _b, int _w) : button{_b}, width{_w} {};
+    void Draw(SDL_Renderer* renderer, Region* where);
+};
+
 class Grid {
   public:
-    int ncols, nrows;
+    int nrows;
     int rowh, roww;
     int gutter;
 
     Grid(
-        int ncols,
         int nrows,
         int rowh,
         int roww,
@@ -37,13 +50,6 @@ class GridRow {
 
   protected:
     Grid* grid;
+    std::list<GridCell*> cells;
 };
 
-class GridCell {
-  public:
-    int width;
-    Uint32 colour;
-
-    GridCell(Uint32 _c, int _w) : width{_w}, colour{_c} {};
-    void Draw(SDL_Renderer* renderer, Region* where);
-};

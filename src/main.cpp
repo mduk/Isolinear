@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
   int margin = 20;
   Position* p = new Position(margin, margin);
-  Grid* g = new Grid(10, 6, 90, (win_w - (margin * 2)), 5);
+  Grid* g = new Grid(6, 90, (win_w - (margin * 2)), 5);
   g->Draw(renderer, p);
   delete p, g;
 
