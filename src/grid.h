@@ -8,9 +8,7 @@
 
 #include "geometry.h"
 #include "button.h"
-
-typedef Uint32 Colour;
-Colour RandomColour();
+#include "colours.h"
 
 class GridCell {
   public:
@@ -21,6 +19,8 @@ class GridCell {
     GridCell(Button* _b, int _w) : button{_b}, width{_w} {};
     void Draw(SDL_Renderer* renderer, Region* where);
 };
+
+class GridRow;
 
 class Grid {
   public:
@@ -38,6 +38,9 @@ class Grid {
         SDL_Renderer* renderer,
         Position* position
       );
+
+  protected:
+    std::list<GridRow*> rows;
 };
 
 class GridRow {
@@ -53,3 +56,12 @@ class GridRow {
     std::list<GridCell*> cells;
 };
 
+class ContainerRow : public GridRow {
+  public:
+    ContainerRow(Grid* _g);
+};
+
+class ImageRow : public GridRow {
+  public:
+    ImageRow(Grid* _g);
+};

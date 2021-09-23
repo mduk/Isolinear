@@ -13,8 +13,7 @@ Colour RandomColour() {
     0xff112288
   };
 
-  Colour random = colours[rand() % colours.size()];
-  return random;
+  return colours[rand() % colours.size()];
 }
 
 Grid::Grid(
@@ -25,39 +24,29 @@ Grid::Grid(
 ) : nrows{_nrows},
     rowh{_rowh},
     roww{_roww},
-    gutter{_gutter} { }
+    gutter{_gutter} {
+  this->rows.push_back(new ContainerRow(this));
+  this->rows.push_back(new ImageRow(this));
+}
 
 void Grid::Draw(
     SDL_Renderer* renderer,
     Position* gridpos
 ) {
-  for (int row_n = 1; row_n <= this->nrows; row_n++) {
-    GridRow* row = new GridRow(this);
+  int row_n = 1;
+  for (auto const& row : this->rows) {
     Region* row_region = new Region(
       gridpos->x,
       gridpos->y + (this->rowh * (row_n - 1)),
       this->roww, this->rowh
     );
     row->Draw(renderer, row_region);
-    delete row, row_region;
+    delete row_region;
+    row_n++;
   }
 }
 
 void GridRow::Draw(SDL_Renderer* renderer, Region* where) {
-  Button* btn = new Button();
-  btn->lcap = true;
-  btn->c = RandomColour();
-  this->cells.push_back(new GridCell(btn, where->size->y));
-
-  Button* btn2 = new Button();
-  btn2->c = 0xff000000;
-  this->cells.push_back(new GridCell(btn2, where->size->y * 1.618 * 3));
-
-  Button* btn3 = new Button();
-  btn3->c = btn->c;
-  btn3->lcap = true;
-  this->cells.push_back(new GridCell(btn3, where->size->y * 1.618 * 2));
-
   int x = where->position->x;
   int y = where->position->y;
   int g = 10;
@@ -76,4 +65,32 @@ void GridRow::Draw(SDL_Renderer* renderer, Region* where) {
 
 void GridCell::Draw(SDL_Renderer* renderer, Region* where) {
   this->button->Draw(renderer, where);
+}
+
+ContainerRow::ContainerRow(Grid* _g) : GridRow{_g} {
+  Button* cap = new Button();
+  cap->lcap = true;
+  cap->c = RandomColour();
+  this->cells.push_back(new GridCell(cap, this->grid->rowh));
+
+  Button* label = new Button();
+  label->c = 0xff000000;
+  this->cells.push_back(new GridCell(label, this->grid->rowh * 1.618 * 3));
+
+  Button* button = new Button();
+  button->c = cap->c;
+  button->lcap = true;
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
+}
+
+ImageRow::ImageRow(Grid* _g) : GridRow{_g} {
+  Button* cap = new Button();
+  cap->lcap = true;
+  cap->c = RandomColour();
+  this->cells.push_back(new GridCell(cap, this->grid->rowh));
+
+  Button* button = new Button();
+  button->c = cap->c;
+  button->rcap = true;
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
 }
