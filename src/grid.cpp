@@ -77,4 +77,12 @@ ImageRow::ImageRow(Grid* _g) : GridRow{_g} {
   button->c = cap->c;
   button->rcap = true;
   this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
+
+  Button* button2 = new Button();
+  button2->c = cap->c;
+  button2->lcap = true;
+  button2->rcap = true;
+  this->cells.push_back(
+      new GridCell(button2, this->grid->rowh * 1.618 * 2)
+  );
 }
