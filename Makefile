@@ -9,7 +9,7 @@ CC = g++
 COMPILER_FLAGS = -w -std=c++17 -Wall -Wpedantic
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_gfx
+LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_gfx -lcurl -lcurlpp
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = $(shell basename "${PWD}")

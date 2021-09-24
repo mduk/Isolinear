@@ -64,3 +64,8 @@ class ImageRow : public GridRow {
   public:
     ImageRow(Grid* _g);
 };
+
+class VolumeRow : public GridRow {
+  public:
+    VolumeRow(Grid* _g);
+};
