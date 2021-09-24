@@ -10,10 +10,10 @@ Grid::Grid(
     roww{_roww},
     gutter{_gutter} {
   this->rows.push_back(new ContainerRow(this));
+  this->rows.push_back(new ImageRow(this));
   this->rows.push_back(new VolumeRow(this));
-  this->rows.push_back(new ImageRow(this));
-  this->rows.push_back(new ContainerRow(this));
-  this->rows.push_back(new ImageRow(this));
+  this->rows.push_back(new Volume2Row(this));
+  this->rows.push_back(new Volume3Row(this));
 }
 
 void Grid::Draw(
@@ -64,22 +64,22 @@ ContainerRow::ContainerRow(Grid* _g) : GridRow{_g} {
   cap->c = RandomColour();
   this->cells.push_back(new GridCell(cap, this->grid->rowh));
 
-  Button* label = new Button();
-  label->c = 0xff000000;
-  this->cells.push_back(new GridCell(label, this->grid->rowh * 1.618 * 3));
-
   Button* button = new Button();
   button->c = cap->c;
   button->lcap = true;
-  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
-
-  Button* button2 = new Button();
-  button2->c = cap->c;
-  button2->lcap = true;
-  button2->rcap = true;
-  this->cells.push_back(
-      new GridCell(button2, this->grid->rowh * 1.618 * 2)
-  );
+  button->rcap = true;
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 1));
 
   Button* rrcap = new Button();
   rrcap->rcap = true;
@@ -95,16 +95,14 @@ ImageRow::ImageRow(Grid* _g) : GridRow{_g} {
 
   Button* button = new Button();
   button->c = cap->c;
+  button->lcap = true;
   button->rcap = true;
   this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
-
-  Button* button2 = new Button();
-  button2->c = cap->c;
-  button2->lcap = true;
-  button2->rcap = true;
-  this->cells.push_back(
-      new GridCell(button2, this->grid->rowh * 1.618 * 3)
-  );
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
 
   Button* rrcap = new Button();
   rrcap->rcap = true;
@@ -121,15 +119,50 @@ VolumeRow::VolumeRow(Grid* _g) : GridRow{_g} {
   Button* button = new Button();
   button->c = lrcap->c;
   button->lcap = true;
-  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 2));
+  button->rcap = true;
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 3));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 3));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 3));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 3));
 
-  Button* button2 = new Button();
-  button2->c = lrcap->c;
-  button2->lcap = true;
-  button2->rcap = true;
-  this->cells.push_back(
-      new GridCell(button2, this->grid->rowh * 1.618 * 2)
-  );
+  Button* rrcap = new Button();
+  rrcap->rcap = true;
+  rrcap->c = RandomColour();
+  this->cells.push_back(new GridCell(rrcap, this->grid->rowh));
+}
+
+Volume2Row::Volume2Row(Grid* _g) : GridRow{_g} {
+  Button* lrcap = new Button();
+  lrcap->lcap = true;
+  lrcap->c = RandomColour();
+  this->cells.push_back(new GridCell(lrcap, this->grid->rowh));
+
+  Button* button = new Button();
+  button->c = lrcap->c;
+  button->lcap = true;
+  button->rcap = true;
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 4));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 4));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 4));
+
+  Button* rrcap = new Button();
+  rrcap->rcap = true;
+  rrcap->c = RandomColour();
+  this->cells.push_back(new GridCell(rrcap, this->grid->rowh));
+}
+
+Volume3Row::Volume3Row(Grid* _g) : GridRow{_g} {
+  Button* lrcap = new Button();
+  lrcap->lcap = true;
+  lrcap->c = RandomColour();
+  this->cells.push_back(new GridCell(lrcap, this->grid->rowh));
+
+  Button* button = new Button();
+  button->c = lrcap->c;
+  button->lcap = true;
+  button->rcap = true;
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 6));
+  this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 6));
 
   Button* rrcap = new Button();
   rrcap->rcap = true;

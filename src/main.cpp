@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 
   SDL_Init(SDL_INIT_VIDEO);
 
-  int win_h = 999,
+  int win_h = 1250,
       win_w = win_h * 1.618;
 
   window = createWindow(win_w, win_h);
