@@ -65,7 +65,14 @@ int main(int argc, char* argv[]) {
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
-        case SDL_QUIT: running = false; break;
+        case SDL_MOUSEBUTTONDOWN:
+          SDL_Point mouse;
+          SDL_GetMouseState(&mouse.x, &mouse.y);
+          g->OnMouseButtonDown(&e.button);
+          break;
+        case SDL_QUIT:
+          running = false;
+          break;
       }
     }
   }

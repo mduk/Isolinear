@@ -16,7 +16,10 @@ class GridCell {
     Button* button;
 
     GridCell(Button* _b, int _w) : button{_b}, width{_w} {};
-    void Draw(SDL_Renderer* renderer, Region* where);
+    void Draw(
+        SDL_Renderer* renderer,
+        Region* where
+      );
 };
 
 class GridRow;
@@ -36,6 +39,9 @@ class Grid {
     void Draw(
         SDL_Renderer* renderer,
         Position* position
+      );
+    void OnMouseButtonDown(
+        SDL_MouseButtonEvent* event
       );
 
   protected:

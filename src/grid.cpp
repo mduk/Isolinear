@@ -33,6 +33,10 @@ void Grid::Draw(
   }
 }
 
+void Grid::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
+  printf("Grid click!\n");
+}
+
 void GridRow::Draw(SDL_Renderer* renderer, Region* where) {
   int x = where->position->x;
   int y = where->position->y;
@@ -99,7 +103,7 @@ ImageRow::ImageRow(Grid* _g) : GridRow{_g} {
   button2->lcap = true;
   button2->rcap = true;
   this->cells.push_back(
-      new GridCell(button2, this->grid->rowh * 1.618 * 2)
+      new GridCell(button2, this->grid->rowh * 1.618 * 3)
   );
 
   Button* rrcap = new Button();
