@@ -47,6 +47,7 @@ void GridRow::Draw(SDL_Renderer* renderer, Region* where) {
       x + g, y + g,
       c->width - g, where->size->y - g
     );
+    cell_region->Draw(renderer);
     c->Draw(renderer, cell_region);
     delete cell_region;
 

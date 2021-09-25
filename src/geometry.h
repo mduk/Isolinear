@@ -1,5 +1,10 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
+
+#include "colours.h"
+
 class Coordinate {
   public:
     unsigned int x, y;
@@ -52,4 +57,7 @@ class Region {
     int H() { return this->size->y; };
 
     Region* Copy();
+
+    void Draw(SDL_Renderer* renderer);
+    void Draw(SDL_Renderer* renderer, Colour colour);
 };
