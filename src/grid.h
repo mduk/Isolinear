@@ -76,27 +76,3 @@ class TitleRow : public GridRow {
     };
 };
 
-class ContainerRow : public GridRow {
-  public:
-    ContainerRow(Grid* _g);
-};
-
-class ImageRow : public GridRow {
-  public:
-    ImageRow(Grid* _g);
-};
-
-class VolumeRow : public GridRow {
-  public:
-    VolumeRow(Grid* _g);
-};
-
-class Volume2Row : public GridRow {
-  public:
-    Volume2Row(Grid* _g);
-};
-
-class Volume3Row : public GridRow {
-  public:
-    Volume3Row(Grid* _g);
-};
