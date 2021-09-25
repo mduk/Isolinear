@@ -58,6 +58,6 @@ class Region {
 
     Region* Copy();
 
-    void Draw(SDL_Renderer* renderer);
-    void Draw(SDL_Renderer* renderer, Colour colour);
+    Region* Draw(SDL_Renderer* renderer);
+    Region* Draw(SDL_Renderer* renderer, Colour colour);
 };

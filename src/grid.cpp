@@ -1,14 +1,15 @@
 #include "grid.h"
 
 Grid::Grid(
-    int _nrows,
+    Region* _where,
     int _rowh,
-    int _roww,
     int _gutter
-) : nrows{_nrows},
+) :
+    where{_where},
     rowh{_rowh},
-    roww{_roww},
-    gutter{_gutter} {
+    gutter{_gutter}
+{
+  this->rows.push_back(new TitleRow(this));
   this->rows.push_back(new ContainerRow(this));
   this->rows.push_back(new ImageRow(this));
   this->rows.push_back(new VolumeRow(this));
@@ -17,20 +18,47 @@ Grid::Grid(
 }
 
 void Grid::Draw(
-    SDL_Renderer* renderer,
-    Position* gridpos
+    SDL_Renderer* renderer
 ) {
   int row_n = 1;
   for (auto const& row : this->rows) {
     Region* row_region = new Region(
-      gridpos->x,
-      gridpos->y + (this->rowh * (row_n - 1)),
-      this->roww, this->rowh
+      this->where->position->x,
+      this->where->position->y + (this->rowh * (row_n - 1)),
+      this->where->size->x,
+      this->rowh
     );
     row->Draw(renderer, row_region);
     delete row_region;
     row_n++;
   }
+}
+
+Region* Grid::CalculateCellRegion(
+    int row,
+    int left_col,
+    int right_col
+) {
+  int x, y, w, h;
+
+  int inner_row_width = this->where->size->x - (this->rowh * 2);
+  int cell_width = floor(inner_row_width / this->num_cols);
+
+  x = this->where->position->x
+    + this->gutter
+    + this->rowh
+    + (cell_width * (left_col - 1));
+
+  y = this->where->position->y
+    + this->gutter
+    + this->rowh * (row - 1);
+
+  w = cell_width * ((right_col - left_col) + 1)
+    - (this->gutter * 2);
+
+  h = this->rowh - (this->gutter * 2);
+
+  return new Region(x, y, w, h);
 }
 
 void Grid::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
@@ -40,14 +68,13 @@ void Grid::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
 void GridRow::Draw(SDL_Renderer* renderer, Region* where) {
   int x = where->position->x;
   int y = where->position->y;
-  int g = 10;
+  int g = 8;
 
   for (auto const& c : this->cells) {
     Region* cell_region = new Region(
       x + g, y + g,
       c->width - g, where->size->y - g
     );
-    cell_region->Draw(renderer);
     c->Draw(renderer, cell_region);
     delete cell_region;
 
@@ -84,7 +111,7 @@ ContainerRow::ContainerRow(Grid* _g) : GridRow{_g} {
 
   Button* rrcap = new Button();
   rrcap->rcap = true;
-  rrcap->c = RandomColour();
+  rrcap->c = cap->c;
   this->cells.push_back(new GridCell(rrcap, this->grid->rowh));
 }
 

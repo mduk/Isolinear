@@ -52,11 +52,40 @@ int main(int argc, char* argv[]) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  int margin = 20;
-  Position* p = new Position(margin, margin);
-  Grid* g = new Grid(6, 90, (win_w - (margin * 2)), 5);
-  g->Draw(renderer, p);
-  delete p, g;
+  Region* region = new Region(0, 0, win_w, win_h);
+  Grid* grid = new Grid(region, 90, 5);
+  //grid->Draw(renderer);
+
+  int i, j;
+
+  delete grid->CalculateCellRegion(1,  1, 12)->Draw(renderer);
+
+  for (i=1; i<=12; i++) {
+    delete grid->CalculateCellRegion(2, i, i)->Draw(renderer);
+  }
+
+  delete grid->CalculateCellRegion(3,  1,  2)->Draw(renderer);
+  delete grid->CalculateCellRegion(3,  3,  4)->Draw(renderer);
+  delete grid->CalculateCellRegion(3,  5,  6)->Draw(renderer);
+  delete grid->CalculateCellRegion(3,  7,  8)->Draw(renderer);
+  delete grid->CalculateCellRegion(3,  9, 10)->Draw(renderer);
+  delete grid->CalculateCellRegion(3, 11, 12)->Draw(renderer);
+
+  delete grid->CalculateCellRegion(4,  1,  3)->Draw(renderer);
+  delete grid->CalculateCellRegion(4,  4,  6)->Draw(renderer);
+  delete grid->CalculateCellRegion(4,  7,  9)->Draw(renderer);
+  delete grid->CalculateCellRegion(4, 10, 12)->Draw(renderer);
+
+  delete grid->CalculateCellRegion(5,  1,  4)->Draw(renderer);
+  delete grid->CalculateCellRegion(5,  5,  8)->Draw(renderer);
+  delete grid->CalculateCellRegion(5,  9, 12)->Draw(renderer);
+
+  delete grid->CalculateCellRegion(6,  1,  6)->Draw(renderer);
+  delete grid->CalculateCellRegion(6,  7, 12)->Draw(renderer);
+
+  delete grid->CalculateCellRegion(7,  1, 12)->Draw(renderer);
+
+  delete grid, region;
 
   SDL_RenderPresent(renderer);
 
@@ -68,7 +97,7 @@ int main(int argc, char* argv[]) {
         case SDL_MOUSEBUTTONDOWN:
           SDL_Point mouse;
           SDL_GetMouseState(&mouse.x, &mouse.y);
-          g->OnMouseButtonDown(&e.button);
+          grid->OnMouseButtonDown(&e.button);
           break;
         case SDL_QUIT:
           running = false;

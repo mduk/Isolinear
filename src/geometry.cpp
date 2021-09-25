@@ -54,11 +54,11 @@ Region* Region::Copy() {
   return copy;
 }
 
-void Region::Draw(SDL_Renderer* renderer) {
-  this->Draw(renderer, RandomColour());
+Region* Region::Draw(SDL_Renderer* renderer) {
+  return this->Draw(renderer, RandomColour());
 }
 
-void Region::Draw(SDL_Renderer* renderer, Colour colour) {
+Region* Region::Draw(SDL_Renderer* renderer, Colour colour) {
   boxColor(renderer,
     this->position->x,
     this->position->y,
@@ -66,4 +66,5 @@ void Region::Draw(SDL_Renderer* renderer, Colour colour) {
     this->position->y + this->size->y,
     colour
   );
+  return this;
 }

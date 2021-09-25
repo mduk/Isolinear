@@ -26,25 +26,21 @@ class GridRow;
 
 class Grid {
   public:
-    int nrows;
-    int rowh, roww;
+    Region* where;
+    int rowh;
     int gutter;
 
     Grid(
-        int nrows,
+        Region* where,
         int rowh,
-        int roww,
         int gutter
       );
-    void Draw(
-        SDL_Renderer* renderer,
-        Position* position
-      );
-    void OnMouseButtonDown(
-        SDL_MouseButtonEvent* event
-      );
+    void Draw(SDL_Renderer* renderer);
+    Region* CalculateCellRegion(int row, int left_col, int right_col);
+    void OnMouseButtonDown(SDL_MouseButtonEvent* event);
 
   protected:
+    int num_cols = 12;
     std::list<GridRow*> rows;
 };
 
@@ -59,6 +55,25 @@ class GridRow {
   protected:
     Grid* grid;
     std::list<GridCell*> cells;
+};
+
+class TitleRow : public GridRow {
+  public:
+    TitleRow(Grid* _g) : GridRow{_g} {
+      Button* cap = new Button();
+      cap->lcap = true;
+      cap->c = RandomColour();
+      this->cells.push_back(new GridCell(cap, this->grid->rowh));
+
+      Button* button = new Button();
+      button->c = RandomColour();
+      this->cells.push_back(new GridCell(button, this->grid->rowh * 1.618 * 12));
+
+      Button* rrcap = new Button();
+      rrcap->rcap = true;
+      rrcap->c = RandomColour();
+      this->cells.push_back(new GridCell(rrcap, this->grid->rowh));
+    };
 };
 
 class ContainerRow : public GridRow {
