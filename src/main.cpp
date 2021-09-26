@@ -54,36 +54,15 @@ int main(int argc, char* argv[]) {
 
   Region* region = new Region(0, 0, win_w, win_h);
   Grid* grid = new Grid(region, 90, 5);
-  //grid->Draw(renderer);
 
-  int i, j;
-
-  delete grid->CalculateCellRegion(1,  1, 12)->Draw(renderer);
-
-  for (i=1; i<=12; i++) {
-    delete grid->CalculateCellRegion(2, i, i)->Draw(renderer);
+  int gcx, gcy;
+  for (gcx=1; gcx<=12; gcx++) {
+    delete grid->CalculateLeftCapRegion(gcx)->Draw(renderer);
+    for (gcy=1; gcy<=12; gcy++) {
+      delete grid->CalculateCellRegion(gcx, gcy, gcy)->Draw(renderer);
+    }
+    delete grid->CalculateRightCapRegion(gcx)->Draw(renderer);
   }
-
-  delete grid->CalculateCellRegion(3,  1,  2)->Draw(renderer);
-  delete grid->CalculateCellRegion(3,  3,  4)->Draw(renderer);
-  delete grid->CalculateCellRegion(3,  5,  6)->Draw(renderer);
-  delete grid->CalculateCellRegion(3,  7,  8)->Draw(renderer);
-  delete grid->CalculateCellRegion(3,  9, 10)->Draw(renderer);
-  delete grid->CalculateCellRegion(3, 11, 12)->Draw(renderer);
-
-  delete grid->CalculateCellRegion(4,  1,  3)->Draw(renderer);
-  delete grid->CalculateCellRegion(4,  4,  6)->Draw(renderer);
-  delete grid->CalculateCellRegion(4,  7,  9)->Draw(renderer);
-  delete grid->CalculateCellRegion(4, 10, 12)->Draw(renderer);
-
-  delete grid->CalculateCellRegion(5,  1,  4)->Draw(renderer);
-  delete grid->CalculateCellRegion(5,  5,  8)->Draw(renderer);
-  delete grid->CalculateCellRegion(5,  9, 12)->Draw(renderer);
-
-  delete grid->CalculateCellRegion(6,  1,  6)->Draw(renderer);
-  delete grid->CalculateCellRegion(6,  7, 12)->Draw(renderer);
-
-  delete grid->CalculateCellRegion(7,  1, 12)->Draw(renderer);
 
   delete grid, region;
 
