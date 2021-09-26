@@ -57,11 +57,21 @@ int main(int argc, char* argv[]) {
 
   int gcx, gcy;
   for (gcx=1; gcx<=12; gcx++) {
-    delete grid->CalculateLeftCapRegion(gcx)->Draw(renderer);
+    Region* lcap_region = grid->CalculateLeftCapRegion(gcx);
+    Button* lcap_button = new Button();
+    lcap_button->lcap = true;
+    lcap_button->Draw(renderer, lcap_region);
+    delete lcap_region, lcap_button;
+
     for (gcy=1; gcy<=12; gcy++) {
       delete grid->CalculateCellRegion(gcx, gcy, gcy)->Draw(renderer);
     }
-    delete grid->CalculateRightCapRegion(gcx)->Draw(renderer);
+
+    Region* rcap_region = grid->CalculateRightCapRegion(gcx);
+    Button* rcap_button = new Button();
+    rcap_button->rcap = true;
+    rcap_button->Draw(renderer, rcap_region);
+    delete rcap_region, rcap_button;
   }
 
   delete grid, region;
