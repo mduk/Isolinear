@@ -6,17 +6,18 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "geometry.h"
+#include "colours.h"
 
 class Cap {
   public:
-    Cap(Uint32 _colour) : bg_colour{_colour} {};
+    Cap(Colour _colour) : bg_colour{_colour} {};
     void Draw(
       SDL_Renderer* renderer,
       Region* where
     );
 
   protected:
-    Uint32 bg_colour;
+    Colour bg_colour;
 };
 
 class RightBarCap : public Cap {
@@ -37,7 +38,7 @@ class LeftIndicatorCap : public Cap {
 
 class LeftRoundCap : public Cap {
   public:
-    LeftRoundCap(Uint32 _colour) : Cap{_colour} {};
+    LeftRoundCap(Colour _colour) : Cap{_colour} {};
     void Draw(
       SDL_Renderer* renderer,
       Region* where
@@ -46,7 +47,7 @@ class LeftRoundCap : public Cap {
 
 class RightRoundCap : public Cap {
   public:
-    RightRoundCap(Uint32 _colour) : Cap{_colour} {};
+    RightRoundCap(Colour _colour) : Cap{_colour} {};
     void Draw(
       SDL_Renderer* renderer,
       Region* where
@@ -55,11 +56,13 @@ class RightRoundCap : public Cap {
 
 class Button {
   public:
-    Button();
-    void Draw(SDL_Renderer* renderer, Region* where);
     bool lcap = false;
     bool rcap = false;
-    Uint32 c;
+    Colour c;
+
+    Button();
+    void Draw(SDL_Renderer* renderer, Region* where);
+    void OnMouseButtonDown(SDL_MouseButtonEvent* event);
 
   private:
     std::string label = "defaultlabel";

@@ -5,6 +5,8 @@
 
 #include "colours.h"
 
+class Region;
+
 class Coordinate {
   public:
     unsigned int x, y;
@@ -16,6 +18,10 @@ class Coordinate {
     Coordinate* Copy();
     void Add(Coordinate* c);
     void Subtract(Coordinate* c);
+
+    bool IsWithin(
+        Region* region
+      );
 };
 
 class Position : public Coordinate {
@@ -51,13 +57,17 @@ class Region {
         unsigned int h
       );
 
-    int X() { return this->position->x; };
-    int Y() { return this->position->y; };
-    int W() { return this->size->x; };
-    int H() { return this->size->y; };
+    bool Encloses(
+        Coordinate* point
+      );
 
     Region* Copy();
 
-    Region* Draw(SDL_Renderer* renderer);
-    Region* Draw(SDL_Renderer* renderer, Colour colour);
+    Region* Draw(
+        SDL_Renderer* renderer
+      );
+    Region* Draw(
+        SDL_Renderer* renderer,
+        Colour colour
+      );
 };

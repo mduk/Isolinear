@@ -118,3 +118,11 @@ void Button::Draw(SDL_Renderer* renderer, Region* btn_region) {
     this->c
   );
 }
+
+void Button::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
+  Colour c = RandomColour();
+  while (c == this->c) {
+    c = RandomColour();
+  }
+  this->c = c;
+}

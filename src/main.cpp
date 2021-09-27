@@ -38,7 +38,6 @@ string http_req(string url) {
 
 int main(int argc, char* argv[]) {
   curlpp::initialize();
-  //cout << "Response: <" << http_req("http://ifconfig.co") << "> \n";
 
   SDL_Init(SDL_INIT_VIDEO);
 
@@ -53,47 +52,58 @@ int main(int argc, char* argv[]) {
   SDL_RenderClear(renderer);
 
   Region* region = new Region(0, 0, win_w, win_h);
-  Grid* grid = new Grid(region, 90, 5);
+  Grid* grid = new Grid(region, 100, 5);
 
   int gcx, gcy;
   for (gcx=1; gcx<=12; gcx++) {
     Region* lcap_region = grid->CalculateLeftCapRegion(gcx);
     Button* lcap_button = new Button();
     lcap_button->lcap = true;
-    lcap_button->Draw(renderer, lcap_region);
-    delete lcap_region, lcap_button;
+    grid->AssignRegion(lcap_region, lcap_button);
 
     for (gcy=1; gcy<=12; gcy++) {
-      delete grid->CalculateCellRegion(gcx, gcy, gcy)->Draw(renderer);
+      Button* button = new Button();
+      button->c = RandomColour();
+      grid->AssignRegion(gcx, gcx, gcy, gcy, button);
     }
 
     Region* rcap_region = grid->CalculateRightCapRegion(gcx);
     Button* rcap_button = new Button();
     rcap_button->rcap = true;
-    rcap_button->Draw(renderer, rcap_region);
-    delete rcap_region, rcap_button;
+    grid->AssignRegion(rcap_region, rcap_button);
   }
-
-  delete grid, region;
-
-  SDL_RenderPresent(renderer);
 
   running = true;
   while (running) {
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
+
+        case SDL_KEYDOWN:
+          switch (e.key.keysym.sym) {
+            case 'q':
+              running = false;
+              break;
+          }
+          break;
+
         case SDL_MOUSEBUTTONDOWN:
-          SDL_Point mouse;
-          SDL_GetMouseState(&mouse.x, &mouse.y);
           grid->OnMouseButtonDown(&e.button);
           break;
+
         case SDL_QUIT:
           running = false;
           break;
+
       }
     }
+
+
+    grid->Draw(renderer);
+    SDL_RenderPresent(renderer);
   }
+
+  delete grid, region;
 
   return 0;
 }

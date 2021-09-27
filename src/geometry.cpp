@@ -21,6 +21,10 @@ void Coordinate::Subtract(Coordinate* c) {
   this->y -= c->y;
 }
 
+bool Coordinate::IsWithin(Region* r) {
+  return r->Encloses(this);
+}
+
 Position::Position(unsigned int _x, unsigned int _y)
   : Coordinate{_x, _y} { }
 
@@ -39,6 +43,14 @@ Region::Region(
 ) {
   this->position = new Position(_x, _y);
   this->size = new Size(_w, _h);
+}
+
+bool Region::Encloses(Coordinate* point) {
+  if (point->x < this->position->x) return false;
+  if (point->y < this->position->y) return false;
+  if (point->x > this->position->x + this->size->x) return false;
+  if (point->y > this->position->y + this->size->y) return false;
+  return true;
 }
 
 Region* Region::Copy() {
