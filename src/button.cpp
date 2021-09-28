@@ -68,6 +68,7 @@ Button::Button() {
 
 void Button::Draw(SDL_Renderer* renderer, Region* btn_region) {
   Region* rect_region = btn_region->Copy();
+  btn_region->Draw(renderer, 0xff000000);
 
   if (this->lcap || this->rcap) {
     Size* cap_size = new Size(
@@ -120,9 +121,24 @@ void Button::Draw(SDL_Renderer* renderer, Region* btn_region) {
 }
 
 void Button::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
-  Colour c = RandomColour();
-  while (c == this->c) {
-    c = RandomColour();
+  switch (event->button) {
+    case SDL_BUTTON_LEFT: {
+      Colour c = RandomColour();
+      while (c == this->c) {
+        c = RandomColour();
+      }
+      this->c = c;
+
+      this->lcap = (rand() % 3) == 1;
+      this->rcap = (rand() % 3) == 1;
+      break;
+    }
+
+    case SDL_BUTTON_RIGHT: {
+      this->lcap = false;
+      this->rcap = false;
+      this->c = 0xff000000;
+      break;
+    }
   }
-  this->c = c;
 }

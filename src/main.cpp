@@ -54,20 +54,20 @@ int main(int argc, char* argv[]) {
   Region* region = new Region(0, 0, win_w, win_h);
   Grid* grid = new Grid(region, 100, 5);
 
-  int gcx, gcy;
-  for (gcx=1; gcx<=12; gcx++) {
-    Region* lcap_region = grid->CalculateLeftCapRegion(gcx);
+  int row, col;
+  for (row=1; row<=12; row++) {
+    Region* lcap_region = grid->CalculateLeftCapRegion(row);
     Button* lcap_button = new Button();
     lcap_button->lcap = true;
     grid->AssignRegion(lcap_region, lcap_button);
 
-    for (gcy=1; gcy<=12; gcy++) {
+    for (col=1; col<=12; col++) {
       Button* button = new Button();
       button->c = RandomColour();
-      grid->AssignRegion(gcx, gcx, gcy, gcy, button);
+      grid->AssignRegion(row, row, col, col, button);
     }
 
-    Region* rcap_region = grid->CalculateRightCapRegion(gcx);
+    Region* rcap_region = grid->CalculateRightCapRegion(row);
     Button* rcap_button = new Button();
     rcap_button->rcap = true;
     grid->AssignRegion(rcap_region, rcap_button);
