@@ -29,7 +29,7 @@ class Elbo {
     Position* corner;
     Colour colour;
 
-    int outer_radius = 150;
-    int inner_radius = 50;
-    int gutter = 10;
+    int outer_radius =  90;
+    int inner_radius = 60;
+    int gutter = 20;
 };
