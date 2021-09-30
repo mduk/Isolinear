@@ -98,7 +98,7 @@ Region* Grid::AssignRegion(
 }
 
 void Grid::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
-  Coordinate* mouse_position = new Coordinate(event->x, event->y);
+  Position* mouse_position = new Position(event->x, event->y);
   for (auto const* assignment : this->assigned_regions) {
     if (assignment->region->Encloses(mouse_position)) {
       assignment->button->OnMouseButtonDown(event);

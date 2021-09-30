@@ -28,12 +28,39 @@ bool Coordinate::IsWithin(Region* r) {
 Position::Position(unsigned int _x, unsigned int _y)
   : Coordinate{_x, _y} { }
 
+void Position::Draw(SDL_Renderer* renderer) {
+  this->Draw(renderer, RandomColour());
+}
+void Position::Draw(SDL_Renderer* renderer, Colour colour) {
+  rectangleColor(renderer,
+    this->x - 10, this->y - 10,
+    this->x + 11, this->y + 11,
+    colour
+  );
+  boxColor(renderer,
+    this->x - 10, this->y - 10,
+    this->x, this->y,
+    colour
+  );
+  boxColor(renderer,
+    this->x, this->y,
+    this->x + 10, this->y + 10,
+    colour
+  );
+}
+
 Size::Size(unsigned int _w, unsigned int _h)
   : Coordinate{_w, _h} { }
 
 Region::Region(Position* _p, Size* _s)
   : position{_p},
     size{_s} { }
+
+Region::Region(Position* p, Position* c)
+  : position{p}
+{
+  this->size = new Size(c->x - p->x, c->y - p->y);
+}
 
 Region::Region(
     unsigned int _x,

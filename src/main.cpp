@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <sstream>
+#include <cstdlib>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -13,6 +15,7 @@
 #include "geometry.h"
 #include "button.h"
 #include "grid.h"
+#include "elbo.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -37,6 +40,8 @@ string http_req(string url) {
 }
 
 int main(int argc, char* argv[]) {
+  srand(time(NULL));
+
   curlpp::initialize();
 
   SDL_Init(SDL_INIT_VIDEO);
@@ -51,8 +56,16 @@ int main(int argc, char* argv[]) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  Region* region = new Region(0, 0, win_w, win_h);
-  Grid* grid = new Grid(region, 100, 5);
+  Region* window_region = new Region(0, 0, win_w, win_h);
+  int row_height = 100;
+
+  Position* elbo_inner_corner = new Position(
+      row_height * 1.618 * 1.5,
+      row_height / 2
+  );
+
+  Elbo* elbo = new Elbo(window_region, elbo_inner_corner, 0xff3399ff);
+  Grid* grid = new Grid(elbo->ContainerRegion(), 100, 5);
 
   int row, col;
   for (row=1; row<=12; row++) {
@@ -80,11 +93,14 @@ int main(int argc, char* argv[]) {
       switch (e.type) {
 
         case SDL_KEYDOWN:
+          running = false;
+/*
           switch (e.key.keysym.sym) {
             case 'q':
               running = false;
               break;
           }
+*/
           break;
 
         case SDL_MOUSEBUTTONDOWN:
@@ -98,12 +114,14 @@ int main(int argc, char* argv[]) {
       }
     }
 
-
+    elbo->Draw(renderer);
     grid->Draw(renderer);
     SDL_RenderPresent(renderer);
   }
 
-  delete grid, region;
+  delete grid;
+  delete elbo_inner_corner;
+  delete elbo;
 
   return 0;
 }

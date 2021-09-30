@@ -30,6 +30,14 @@ class Position : public Coordinate {
         unsigned int x,
         unsigned int y
       );
+
+    void Draw(
+        SDL_Renderer* r,
+        Colour c
+      );
+    void Draw(
+        SDL_Renderer* r
+      );
 };
 
 class Size : public Coordinate {
@@ -49,7 +57,10 @@ class Region {
         Position* p,
         Size* s
       );
-
+    Region(
+        Position* p,
+        Position* s
+      );
     Region(
         unsigned int x,
         unsigned int y,
