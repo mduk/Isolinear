@@ -17,17 +17,6 @@ void Elbo::Draw(SDL_Renderer* renderer) {
     = guttered_position_y
     + outer_radius;
 
-  // sweep_arc
-  filledPieColor(renderer,
-    outer_radius_origin_x,
-    outer_radius_origin_y,
-
-    outer_radius,
-    180, 270,
-
-    colour
-  );
-
   Region* sweep_fill = new Region(
     guttered_position_x + outer_radius,
     guttered_position_y,
@@ -39,13 +28,28 @@ void Elbo::Draw(SDL_Renderer* renderer) {
     guttered_position_x,
     guttered_position_y + outer_radius,
     corner->x - gutter,
-    gutter * 2
+    sweep_base_height
   );
 
   Region* sweep_shelf = new Region(
       corner->x, guttered_position_y,
       inner_radius, inner_radius
   );
+
+  // sweep_arc
+  filledPieColor(renderer,
+    outer_radius_origin_x,
+    outer_radius_origin_y,
+
+    outer_radius,
+    180, 270,
+
+    colour
+  );
+
+  sweep_fill->Draw(renderer, colour);
+  sweep_shelf->Draw(renderer, colour);
+  sweep_south->Draw(renderer, colour);
 
   Region* top_bar = new Region(
     corner->x + inner_radius + gutter,
@@ -56,16 +60,13 @@ void Elbo::Draw(SDL_Renderer* renderer) {
 
   Region* side_bar = new Region(
     guttered_position_x,
-    guttered_position_y + outer_radius + (gutter * 3),
+    guttered_position_y + outer_radius + sweep_base_height + gutter,
     corner->x - gutter,
     bounds->size->y - outer_radius - gutter - gutter
   );
 
-   sweep_fill->Draw(renderer, colour);
-  sweep_shelf->Draw(renderer, colour);
-  sweep_south->Draw(renderer, colour);
-     side_bar->Draw(renderer, 0xff00ffff);
-      top_bar->Draw(renderer, colour);
+  side_bar->Draw(renderer, colour);
+  top_bar->Draw(renderer, colour);
 
 
   int rix = corner->x + inner_radius,
@@ -93,7 +94,7 @@ void Elbo::Draw(SDL_Renderer* renderer) {
 Region* Elbo::ContainerRegion() {
   return new Region(
     corner->x + gutter,
-    corner->y + gutter,
+    corner->y + gutter + inner_radius + sweep_base_height,
     bounds->size->x - (corner->x + gutter),
     bounds->size->y - (corner->y + gutter)
   );

@@ -56,11 +56,12 @@ int main(int argc, char* argv[]) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
+  SDL_GetWindowSize(window, &win_w, &win_h);
   Region* window_region = new Region(0, 0, win_w, win_h);
   int row_height = 100;
 
   Position* elbo_inner_corner = new Position(
-      row_height * 1.618 * 1.5,
+      row_height * 1.618 * 2,
       row_height / 2
   );
 
@@ -93,14 +94,11 @@ int main(int argc, char* argv[]) {
       switch (e.type) {
 
         case SDL_KEYDOWN:
-          running = false;
-/*
           switch (e.key.keysym.sym) {
             case 'q':
               running = false;
               break;
           }
-*/
           break;
 
         case SDL_MOUSEBUTTONDOWN:

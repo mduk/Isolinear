@@ -32,4 +32,5 @@ class Elbo {
     int outer_radius =  90;
     int inner_radius = 60;
     int gutter = 20;
+    int sweep_base_height = 20;
 };
