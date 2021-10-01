@@ -107,3 +107,16 @@ Region* Region::Draw(SDL_Renderer* renderer, Colour colour) {
   );
   return this;
 }
+
+WindowRegion::WindowRegion(SDL_Window* _window)
+    : Region{0,0,0,0}, window{_window}
+{
+  this->Update();
+}
+
+void WindowRegion::Update() {
+  int x, y;
+  SDL_GetWindowSize(this->window, &x, &y);
+  this->size->x = x;
+  this->size->y = y;
+}

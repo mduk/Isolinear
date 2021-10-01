@@ -56,8 +56,7 @@ int main(int argc, char* argv[]) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  SDL_GetWindowSize(window, &win_w, &win_h);
-  Region* window_region = new Region(0, 0, win_w, win_h);
+  Region* window_region = new WindowRegion(window);
   int row_height = 100;
 
   Position* elbo_inner_corner = new Position(
@@ -65,26 +64,17 @@ int main(int argc, char* argv[]) {
       row_height / 2
   );
 
-  Elbo* elbo = new Elbo(window_region, elbo_inner_corner, 0xff3399ff);
-  Grid* grid = new Grid(elbo->ContainerRegion(), 100, 5);
+  Grid* grid = new Grid(window_region, row_height, 5);
+  Elbo* elbo1 = new Elbo(grid->CalculateCellRegion(1,14,1,6), elbo_inner_corner, 0xff3399ff);
+  Elbo* elbo2 = new Elbo(grid->CalculateCellRegion(1,14,7,12), elbo_inner_corner, 0xff3399ff);
 
   int row, col;
-  for (row=1; row<=12; row++) {
-    Region* lcap_region = grid->CalculateLeftCapRegion(row);
-    Button* lcap_button = new Button();
-    lcap_button->lcap = true;
-    grid->AssignRegion(lcap_region, lcap_button);
-
+  for (row=1; row<=36; row++) {
     for (col=1; col<=12; col++) {
       Button* button = new Button();
       button->c = RandomColour();
       grid->AssignRegion(row, row, col, col, button);
     }
-
-    Region* rcap_region = grid->CalculateRightCapRegion(row);
-    Button* rcap_button = new Button();
-    rcap_button->rcap = true;
-    grid->AssignRegion(rcap_region, rcap_button);
   }
 
   running = true;
@@ -95,6 +85,7 @@ int main(int argc, char* argv[]) {
 
         case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
+            case SDLK_ESCAPE:
             case 'q':
               running = false;
               break;
@@ -112,14 +103,20 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    elbo->Draw(renderer);
-    grid->Draw(renderer);
+    SDL_GetWindowSize(window, &win_w, &win_h);
+    window_region->size->x = win_w;
+    window_region->size->y = win_h;
+
+    //grid->Draw(renderer);
+    elbo1->Draw(renderer);
+    elbo2->Draw(renderer);
+
     SDL_RenderPresent(renderer);
   }
 
   delete grid;
   delete elbo_inner_corner;
-  delete elbo;
+  //delete elbo;
 
   return 0;
 }

@@ -9,20 +9,20 @@
 #include "button.h"
 #include "colours.h"
 
-class GridAssignment {
+class TableAssignment {
   public:
     Region* region;
     Button* button;
-    GridAssignment(Region* _r, Button* _b) : region{_r}, button{_b} {}
+    TableAssignment(Region* _r, Button* _b) : region{_r}, button{_b} {}
 };
 
-class Grid {
+class Table {
   public:
     Region* where;
     int rowh;
     int gutter;
 
-    Grid(
+    Table(
         Region* where,
         int rowh,
         int gutter
@@ -30,10 +30,12 @@ class Grid {
 
     void Draw(SDL_Renderer* renderer);
 
+    Region* CalculateLeftCapRegion(int row);
     Region* CalculateCellRegion(
         int top_row, int bottom_row,
         int left_col, int right_col
       );
+    Region* CalculateRightCapRegion(int row);
     Region* AssignRegion(
         int top_row, int bottom_row,
         int left_col, int right_col,
@@ -48,6 +50,6 @@ class Grid {
 
   protected:
     int num_cols = 12;
-    std::list<GridAssignment*> assigned_regions;
+    std::list<TableAssignment*> assigned_regions;
 };
 

@@ -1,6 +1,6 @@
-#include "grid.h"
+#include "table.h"
 
-Grid::Grid(
+Table::Table(
     Region* _where,
     int _rowh,
     int _gutter
@@ -11,18 +11,40 @@ Grid::Grid(
     assigned_regions{}
 { }
 
-Region* Grid::CalculateCellRegion(
+Region* Table::CalculateLeftCapRegion(
+    int row
+) {
+  int x, y, w, h;
+
+  x = this->where->position->x
+    + this->gutter;
+
+  y = this->where->position->y
+    + this->gutter
+    + this->rowh * (row - 1);
+
+  w = this->rowh - (this->gutter * 2);
+  h = this->rowh - (this->gutter * 2);
+
+  return new Region(x, y, w, h);
+}
+
+Region* Table::CalculateCellRegion(
     int top_row, int bottom_row,
     int left_col, int right_col
 ) {
   int x, y, w, h;
 
-  int cell_width = floor(this->where->size->x / this->num_cols);
+  int inner_row_width = this->where->size->x - (this->rowh * 2);
+  int cell_width = floor(inner_row_width / this->num_cols);
 
   x = this->where->position->x
+    + this->gutter
+    + this->rowh
     + (cell_width * (left_col - 1));
 
   y = this->where->position->y
+    + this->gutter
     + this->rowh * (top_row - 1);
 
   w = cell_width * ((right_col - left_col) + 1)
@@ -34,7 +56,30 @@ Region* Grid::CalculateCellRegion(
   return new Region(x, y, w, h);
 }
 
-Region* Grid::AssignRegion(
+Region* Table::CalculateRightCapRegion(
+    int row
+) {
+  int x, y, w, h;
+
+  int inner_row_width = this->where->size->x - (this->rowh * 2);
+  int cell_width = floor(inner_row_width / this->num_cols);
+
+  x = this->where->position->x
+    + this->gutter
+    + this->rowh
+    + (cell_width * (this->num_cols + 0));
+
+  y = this->where->position->y
+    + this->gutter
+    + this->rowh * (row - 1);
+
+  w = this->rowh - (this->gutter * 2);
+  h = this->rowh - (this->gutter * 2);
+
+  return new Region(x, y, w, h);
+}
+
+Region* Table::AssignRegion(
     int top_row, int bottom_row,
     int left_col, int right_col,
     Button* button
@@ -43,16 +88,16 @@ Region* Grid::AssignRegion(
   this->AssignRegion(region, button);
 }
 
-Region* Grid::AssignRegion(
+Region* Table::AssignRegion(
     Region* region,
     Button* button
 ) {
-  GridAssignment* ga = new GridAssignment(region, button);
+  TableAssignment* ga = new TableAssignment(region, button);
   this->assigned_regions.push_back(ga);
   return region;
 }
 
-void Grid::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
+void Table::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
   Position* mouse_position = new Position(event->x, event->y);
   for (auto const* assignment : this->assigned_regions) {
     if (assignment->region->Encloses(mouse_position)) {
@@ -62,7 +107,7 @@ void Grid::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
   delete mouse_position;
 }
 
-void Grid::Draw(
+void Table::Draw(
     SDL_Renderer* renderer
 ) {
   for (auto const* assignment : this->assigned_regions) {

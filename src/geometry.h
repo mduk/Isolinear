@@ -82,3 +82,13 @@ class Region {
         Colour colour
       );
 };
+
+class WindowRegion : public Region {
+  public:
+    WindowRegion(SDL_Window* _window);
+
+    void Update();
+
+  protected:
+    SDL_Window* window;
+};

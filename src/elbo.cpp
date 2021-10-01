@@ -20,19 +20,19 @@ void Elbo::Draw(SDL_Renderer* renderer) {
   Region* sweep_fill = new Region(
     guttered_position_x + outer_radius,
     guttered_position_y,
-    corner->x - (guttered_position_x + outer_radius),
+    (guttered_position_x + corner->x) - (guttered_position_x + outer_radius),
     outer_radius
   );
 
   Region* sweep_south = new Region(
     guttered_position_x,
     guttered_position_y + outer_radius,
-    corner->x - gutter,
+    guttered_position_x + corner->x - gutter,
     sweep_base_height
   );
 
   Region* sweep_shelf = new Region(
-      corner->x, guttered_position_y,
+      guttered_position_x + corner->x, guttered_position_y,
       inner_radius, inner_radius
   );
 
