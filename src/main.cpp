@@ -108,9 +108,9 @@ int main(int argc, char* argv[]) {
     window_region->size->x = win_w;
     window_region->size->y = win_h;
 
-    elbo1->Draw(renderer);
-    elbo2->Draw(renderer);
-    elbo3->Draw(renderer);
+    elbo1->Draw(renderer); elbo1->ContainerRegion()->Draw(renderer);
+    elbo2->Draw(renderer); elbo2->ContainerRegion()->Draw(renderer);
+    elbo3->Draw(renderer); elbo3->ContainerRegion()->Draw(renderer);
 
     SDL_RenderPresent(renderer);
   }

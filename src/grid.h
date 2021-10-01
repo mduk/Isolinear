@@ -8,12 +8,14 @@
 #include "geometry.h"
 #include "button.h"
 #include "colours.h"
+#include "drawing.h"
 
 class GridAssignment {
   public:
     Region* region;
-    Button* button;
-    GridAssignment(Region* _r, Button* _b) : region{_r}, button{_b} {}
+    Drawable* drawable;
+    GridAssignment(Region* _r, Drawable* _d)
+      : region{_r}, drawable{_d} {}
 };
 
 class Grid {
@@ -41,10 +43,12 @@ class Grid {
       );
     Region* AssignRegion(
         Region* region,
-        Button* button
+        Drawable* drawable
       );
 
-    void OnMouseButtonDown(SDL_MouseButtonEvent* event);
+    void OnMouseButtonDown(
+        SDL_MouseButtonEvent* event
+      );
 
   protected:
     int num_cols = 12;

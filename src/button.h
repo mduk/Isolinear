@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "drawing.h"
 #include "geometry.h"
 #include "colours.h"
 
@@ -54,15 +55,20 @@ class RightRoundCap : public Cap {
     );
 };
 
-class Button {
+class Button : public Drawable {
   public:
     bool lcap = false;
     bool rcap = false;
     Colour c;
 
     Button();
-    void Draw(SDL_Renderer* renderer, Region* where);
-    void OnMouseButtonDown(SDL_MouseButtonEvent* event);
+    void Draw(
+        SDL_Renderer* renderer,
+        Region* where
+      );
+    void OnMouseButtonDown(
+        SDL_MouseButtonEvent* event
+      );
 
   private:
     std::string label = "defaultlabel";

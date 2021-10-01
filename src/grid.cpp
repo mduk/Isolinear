@@ -39,24 +39,29 @@ Region* Grid::AssignRegion(
     int left_col, int right_col,
     Button* button
 ) {
-  Region* region = this->CalculateCellRegion(top_row, bottom_row, left_col, right_col);
-  this->AssignRegion(region, button);
+  Region* region = this->CalculateCellRegion(
+      top_row, bottom_row,
+      left_col, right_col
+  );
+  return this->AssignRegion(region, button);
 }
 
 Region* Grid::AssignRegion(
     Region* region,
-    Button* button
+    Drawable* drawable
 ) {
-  GridAssignment* ga = new GridAssignment(region, button);
+  GridAssignment* ga = new GridAssignment(region, drawable);
   this->assigned_regions.push_back(ga);
   return region;
 }
 
-void Grid::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
+void Grid::OnMouseButtonDown(
+    SDL_MouseButtonEvent* event
+) {
   Position* mouse_position = new Position(event->x, event->y);
   for (auto const* assignment : this->assigned_regions) {
     if (assignment->region->Encloses(mouse_position)) {
-      assignment->button->OnMouseButtonDown(event);
+      assignment->drawable->OnMouseButtonDown(event);
     }
   }
   delete mouse_position;
@@ -66,7 +71,7 @@ void Grid::Draw(
     SDL_Renderer* renderer
 ) {
   for (auto const* assignment : this->assigned_regions) {
-    assignment->button->Draw(renderer, assignment->region);
+    assignment->drawable->Draw(renderer, assignment->region);
   }
 }
 
