@@ -64,9 +64,10 @@ int main(int argc, char* argv[]) {
       row_height / 2
   );
 
-  Grid* grid = new Grid(window_region, row_height, 5);
-  Elbo* elbo1 = new Elbo(grid->CalculateCellRegion(1,14,1,6), elbo_inner_corner, 0xff3399ff);
-  Elbo* elbo2 = new Elbo(grid->CalculateCellRegion(1,14,7,12), elbo_inner_corner, 0xff3399ff);
+  Grid* grid = new Grid(window_region, row_height, 10);
+  Elbo* elbo1 = new Elbo(grid->CalculateCellRegion(1,14,1, 6), elbo_inner_corner, 0xff3399ff);
+  Elbo* elbo2 = new Elbo(grid->CalculateCellRegion(7,14,7,12), elbo_inner_corner, 0xff3399ff);
+  Elbo* elbo3 = new Elbo(grid->CalculateCellRegion(1,6, 7,12), elbo_inner_corner, 0xff3399ff);
 
   int row, col;
   for (row=1; row<=36; row++) {
@@ -107,9 +108,9 @@ int main(int argc, char* argv[]) {
     window_region->size->x = win_w;
     window_region->size->y = win_h;
 
-    //grid->Draw(renderer);
     elbo1->Draw(renderer);
     elbo2->Draw(renderer);
+    elbo3->Draw(renderer);
 
     SDL_RenderPresent(renderer);
   }
