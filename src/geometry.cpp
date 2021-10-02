@@ -94,7 +94,8 @@ Region* Region::Copy() {
 }
 
 Region* Region::Draw(SDL_Renderer* renderer) {
-  return this->Draw(renderer, RandomColour());
+  static Colour col = RandomColour();
+  return this->Draw(renderer, col);
 }
 
 Region* Region::Draw(SDL_Renderer* renderer, Colour colour) {
