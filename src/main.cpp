@@ -59,15 +59,15 @@ int main(int argc, char* argv[]) {
   Region* window_region = new WindowRegion(window);
   int row_height = 100;
 
-  Position* elbo_inner_corner = new Position(
-      row_height * 1.618 * 2,
-      row_height / 2
-  );
+  int elbo_outer_radius = 90;
+  int elbo_inner_radius = 60;
+  int elbo_hline_thickness = 15;
+  Position* elbo_corner = new Position(elbo_outer_radius*2, elbo_hline_thickness);
 
   Grid* grid = new Grid(window_region, row_height, 10);
-  Elbo* elbo1 = new Elbo(grid->CalculateCellRegion(1,14,1, 6), elbo_inner_corner, 0xff3399ff);
-  Elbo* elbo2 = new Elbo(grid->CalculateCellRegion(7,14,7,12), elbo_inner_corner, 0xff3399ff);
-  Elbo* elbo3 = new Elbo(grid->CalculateCellRegion(1,6, 7,12), elbo_inner_corner, 0xff3399ff);
+  Elbo* elbo1 = new Elbo(grid->CalculateCellRegion(1,14,1, 6), elbo_corner, 0xff3399ff);
+  Elbo* elbo2 = new Elbo(grid->CalculateCellRegion(7,14,7,12), elbo_corner, 0xff3399ff);
+  Elbo* elbo3 = new Elbo(grid->CalculateCellRegion(1,6, 7,12), elbo_corner, 0xff3399ff);
 
   int row, col;
   for (row=1; row<=36; row++) {
@@ -112,8 +112,8 @@ int main(int argc, char* argv[]) {
   }
 
   delete grid;
-  delete elbo_inner_corner;
-  //delete elbo;
+  delete elbo1, elbo2, elbo3;
+  delete elbo_corner;
 
   return 0;
 }
