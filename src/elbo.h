@@ -6,8 +6,9 @@
 #include "geometry.h"
 #include "button.h"
 #include "colours.h"
+#include "drawing.h"
 
-class Elbo {
+class Elbo : public Drawable {
   public:
     Elbo(
         Region* _b,
@@ -20,6 +21,16 @@ class Elbo {
     { };
     void Draw(
         SDL_Renderer* renderer
+      ) {
+        this->Draw(renderer, this->bounds);
+    }
+
+    void Draw(
+        SDL_Renderer* renderer,
+        Region* where
+      );
+    void OnMouseButtonDown(
+        SDL_MouseButtonEvent* e
       );
 
     Region* ContainerRegion();

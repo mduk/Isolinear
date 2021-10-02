@@ -1,6 +1,8 @@
 #include "elbo.h"
 
-void Elbo::Draw(SDL_Renderer* renderer) {
+void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent* e) {}
+
+void Elbo::Draw(SDL_Renderer* renderer, Region* where) {
   int outer_radius_origin_x
     = bounds->position->x
     + outer_radius;
