@@ -39,7 +39,7 @@ class Grid {
     Region* AssignRegion(
         int top_row, int bottom_row,
         int left_col, int right_col,
-        Button*
+        Drawable* drawable
       );
     Region* AssignRegion(
         Region* region,

@@ -37,13 +37,13 @@ Region* Grid::CalculateCellRegion(
 Region* Grid::AssignRegion(
     int top_row, int bottom_row,
     int left_col, int right_col,
-    Button* button
+    Drawable* drawable
 ) {
   Region* region = this->CalculateCellRegion(
       top_row, bottom_row,
       left_col, right_col
   );
-  return this->AssignRegion(region, button);
+  return this->AssignRegion(region, drawable);
 }
 
 Region* Grid::AssignRegion(

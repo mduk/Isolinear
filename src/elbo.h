@@ -11,23 +11,16 @@
 class Elbo : public Drawable {
   public:
     Elbo(
-        Region* _b,
         Position* _c,
         Colour _col
       ) :
-        bounds{_b},
         corner{_c},
         colour{_col}
     { };
-    void Draw(
-        SDL_Renderer* renderer
-      ) {
-        this->Draw(renderer, this->bounds);
-    }
 
     void Draw(
         SDL_Renderer* renderer,
-        Region* where
+        Region* bounds
       );
     void OnMouseButtonDown(
         SDL_MouseButtonEvent* e
