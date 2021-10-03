@@ -34,7 +34,7 @@ Region* Grid::CalculateCellRegion(
   return new Region(x, y, w, h);
 }
 
-Region* Grid::AssignRegion(
+Region* Grid::AssignCellRegion(
     int top_row, int bottom_row,
     int left_col, int right_col,
     Drawable* drawable

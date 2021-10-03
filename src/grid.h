@@ -36,7 +36,7 @@ class Grid {
         int top_row, int bottom_row,
         int left_col, int right_col
       );
-    Region* AssignRegion(
+    Region* AssignCellRegion(
         int top_row, int bottom_row,
         int left_col, int right_col,
         Drawable* drawable

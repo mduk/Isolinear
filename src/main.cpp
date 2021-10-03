@@ -69,9 +69,9 @@ int main(int argc, char* argv[]) {
   Elbo* elbo2 = new Elbo(elbo_corner, 0xff3399ff);
   Elbo* elbo3 = new Elbo(elbo_corner, 0xff3399ff);
 
-  grid->AssignRegion( 1,14, 1, 6, elbo1);
-  grid->AssignRegion( 7,14, 7,12, elbo2);
-  grid->AssignRegion( 1, 6, 7,12, elbo3);
+  grid->AssignCellRegion( 1,14, 1, 6, elbo1);
+  grid->AssignCellRegion( 7,14, 7,12, elbo2);
+  grid->AssignCellRegion( 1, 6, 7,12, elbo3);
 
   running = true;
   while (running) {
