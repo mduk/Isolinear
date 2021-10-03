@@ -95,10 +95,53 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    int rowh = 100;
+    int gutter = 10;
+
+    Grid*   grid1    = new Grid(elbo1->ContainerRegion(), rowh, gutter);
+    Button* button1  = new Button(grid1->CalculateCellRegion(1,1,1,2));
+    Button* button2  = new Button(grid1->CalculateCellRegion(2,2,2,2));
+    Button* button3  = new Button(grid1->CalculateCellRegion(3,3,3,3));
+    Button* button4  = new Button(grid1->CalculateCellRegion(4,4,4,4));
+    Button* button5  = new Button(grid1->CalculateCellRegion(5,5,5,5));
+    Button* button6  = new Button(grid1->CalculateCellRegion(6,6,6,6));
+    Button* button7  = new Button(grid1->CalculateCellRegion(7,7,8,8));
+    Button* button8  = new Button(grid1->CalculateCellRegion(8,8,8,8));
+    Button* button9  = new Button(grid1->CalculateCellRegion(9,9,9,9));
+    Button* button10 = new Button(grid1->CalculateCellRegion(10,10,10,10));
+    Button* button11 = new Button(grid1->CalculateCellRegion(11,11,11,11));
+    Button* button12 = new Button(grid1->CalculateCellRegion(12,12,12,12));
+
+    Grid*   grid2 = new Grid(elbo2->ContainerRegion(), rowh, gutter);
+    Button* button13 = new Button(grid2->CalculateCellRegion(1,1, 1,6));
+    Button* button14 = new Button(grid2->CalculateCellRegion(1,1, 7,12));
+
+    Grid* grid3 = new Grid(elbo3->ContainerRegion(), rowh, gutter);
+
     grid->Draw(renderer);
-    elbo1->Draw(renderer); elbo1->ContainerRegion()->Draw(renderer);
-    elbo2->Draw(renderer); elbo2->ContainerRegion()->Draw(renderer);
-    elbo3->Draw(renderer); elbo3->ContainerRegion()->Draw(renderer);
+
+    elbo1->Draw(renderer);
+    elbo2->Draw(renderer);
+    elbo3->Draw(renderer);
+
+    grid1->Draw(renderer);
+    grid2->Draw(renderer);
+    grid3->Draw(renderer);
+
+    button1->Draw(renderer);
+    button2->Draw(renderer);
+    button3->Draw(renderer);
+    button4->Draw(renderer);
+    button5->Draw(renderer);
+    button6->Draw(renderer);
+    button7->Draw(renderer);
+    button8->Draw(renderer);
+    button9->Draw(renderer);
+    button10->Draw(renderer);
+    button11->Draw(renderer);
+    button12->Draw(renderer);
+    button13->Draw(renderer);
+    button14->Draw(renderer);
 
     SDL_RenderPresent(renderer);
   }

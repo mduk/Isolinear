@@ -111,7 +111,7 @@ void Table::Draw(
     SDL_Renderer* renderer
 ) {
   for (auto const* assignment : this->assigned_regions) {
-    assignment->button->Draw(renderer, assignment->region);
+    assignment->button->Draw(renderer);
   }
 }
 

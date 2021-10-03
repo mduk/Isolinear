@@ -62,23 +62,19 @@ void RightRoundCap::Draw(
   );
 }
 
-Button::Button() {
-  this->c = 0xFF0099FF;
-}
-
-void Button::Draw(SDL_Renderer* renderer, Region* btn_region) {
-  Region* rect_region = btn_region->Copy();
-  btn_region->Draw(renderer, 0xff000000);
+void Button::Draw(SDL_Renderer* renderer) {
+  Region* rect_region = this->region->Copy();
+  this->region->Draw(renderer, 0xff000000);
 
   if (this->lcap || this->rcap) {
     Size* cap_size = new Size(
-      btn_region->size->y / 2,
-      btn_region->size->y
+      this->region->size->y / 2,
+      this->region->size->y
     );
     if (this->lcap) {
       LeftRoundCap* lcap = new LeftRoundCap(this->c);
       Region* lcap_region = new Region(
-        btn_region->position,
+        this->region->position,
         cap_size
       );
       lcap->Draw(renderer, lcap_region);
@@ -93,10 +89,10 @@ void Button::Draw(SDL_Renderer* renderer, Region* btn_region) {
     if (this->rcap) {
       RightRoundCap* rcap = new RightRoundCap(this->c);
       Region* rcap_region = new Region(
-        btn_region->position->x
-          + btn_region->size->x
+        this->region->position->x
+          + this->region->size->x
           - cap_size->x,
-        btn_region->position->y,
+        this->region->position->y,
         cap_size->x,
         cap_size->y
       );

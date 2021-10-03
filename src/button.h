@@ -61,16 +61,20 @@ class Button {
     bool rcap = false;
     Colour c;
 
-    Button();
+    Button(Region* _b)
+      : region{_b},
+        c{0xFF0099FF}
+    {};
+
     void Draw(
-        SDL_Renderer* renderer,
-        Region* where
+        SDL_Renderer* renderer
       );
     void OnMouseButtonDown(
         SDL_MouseButtonEvent* event
       );
 
   private:
+    Region* region;
     std::string label = "defaultlabel";
     int g;
 };
