@@ -10,12 +10,21 @@ class Region;
 class Coordinate {
   public:
     unsigned int x, y;
+    Coordinate* origin;
 
     Coordinate(
         unsigned int x,
         unsigned int y
       );
     Coordinate* Copy();
+    Coordinate* Extend(
+        unsigned int x,
+        unsigned int y
+      );
+
+    unsigned int X();
+    unsigned int Y();
+
     void Add(Coordinate* c);
     void Subtract(Coordinate* c);
 
@@ -50,6 +59,7 @@ class Size : public Coordinate {
 
 class Region {
   public:
+    Region* origin;
     Position* position;
     Size* size;
 

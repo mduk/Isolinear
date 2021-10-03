@@ -65,13 +65,9 @@ int main(int argc, char* argv[]) {
   Position* elbo_corner = new Position(elbo_outer_radius*2, elbo_hline_thickness);
 
   Grid* grid = new Grid(window_region, row_height, 10);
-  Elbo* elbo1 = new Elbo(elbo_corner, 0xff3399ff);
-  Elbo* elbo2 = new Elbo(elbo_corner, 0xff3399ff);
-  Elbo* elbo3 = new Elbo(elbo_corner, 0xff3399ff);
-
-  grid->AssignCellRegion( 1,14, 1, 6, elbo1);
-  grid->AssignCellRegion( 7,14, 7,12, elbo2);
-  grid->AssignCellRegion( 1, 6, 7,12, elbo3);
+  Elbo* elbo1 = new Elbo(grid->CalculateCellRegion( 1,14, 1, 6), elbo_corner, 0xff3399ff);
+  Elbo* elbo2 = new Elbo(grid->CalculateCellRegion( 7,14, 7,12), elbo_corner, 0xff3399ff);
+  Elbo* elbo3 = new Elbo(grid->CalculateCellRegion( 1, 6, 7,12), elbo_corner, 0xff3399ff);
 
   running = true;
   while (running) {
@@ -100,9 +96,9 @@ int main(int argc, char* argv[]) {
     }
 
     grid->Draw(renderer);
-    //elbo1->ContainerRegion()->Draw(renderer);
-    //elbo2->ContainerRegion()->Draw(renderer);
-    //elbo3->ContainerRegion()->Draw(renderer);
+    elbo1->Draw(renderer); elbo1->ContainerRegion()->Draw(renderer);
+    elbo2->Draw(renderer); elbo2->ContainerRegion()->Draw(renderer);
+    elbo3->Draw(renderer); elbo3->ContainerRegion()->Draw(renderer);
 
     SDL_RenderPresent(renderer);
   }

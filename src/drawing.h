@@ -8,8 +8,7 @@
 class Drawable {
   public:
     virtual void Draw(
-        SDL_Renderer* renderer,
-        Region* region
+        SDL_Renderer* renderer
       ) = 0;
 
     virtual void OnMouseButtonDown(

@@ -1,7 +1,9 @@
 #include "geometry.h"
 
-Coordinate::Coordinate(unsigned int _x, unsigned int _y)
-  : x{_x},
+Coordinate::Coordinate(
+    unsigned int _x,
+    unsigned int _y
+) : x{_x},
     y{_y} { }
 
 Coordinate* Coordinate::Copy() {

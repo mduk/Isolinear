@@ -71,7 +71,7 @@ void Grid::Draw(
     SDL_Renderer* renderer
 ) {
   for (auto const* assignment : this->assigned_regions) {
-    assignment->drawable->Draw(renderer, assignment->region);
+    assignment->drawable->Draw(renderer);
   }
 }
 

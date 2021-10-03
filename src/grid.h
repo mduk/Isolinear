@@ -30,7 +30,7 @@ class Grid {
         int gutter
       );
 
-    void Draw(SDL_Renderer* renderer);
+    void Draw(SDL_Renderer*);
 
     Region* CalculateCellRegion(
         int top_row, int bottom_row,

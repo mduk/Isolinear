@@ -55,7 +55,7 @@ class RightRoundCap : public Cap {
     );
 };
 
-class Button : public Drawable {
+class Button {
   public:
     bool lcap = false;
     bool rcap = false;
