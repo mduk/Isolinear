@@ -62,7 +62,7 @@ void RightRoundCap::Draw(
   );
 }
 
-void Button::Draw(SDL_Renderer* renderer) {
+void Button::Draw(SDL_Renderer* renderer) const {
   Region* rect_region = this->region->Copy();
   this->region->Draw(renderer, 0xff000000);
 

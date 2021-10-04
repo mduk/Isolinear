@@ -55,7 +55,7 @@ class RightRoundCap : public Cap {
     );
 };
 
-class Button {
+class Button : public Drawable {
   public:
     bool lcap = false;
     bool rcap = false;
@@ -68,7 +68,12 @@ class Button {
 
     void Draw(
         SDL_Renderer* renderer
-      );
+      ) const;
+
+    Region* GetBounds() const {
+      return this->region;
+    }
+
     void OnMouseButtonDown(
         SDL_MouseButtonEvent* event
       );

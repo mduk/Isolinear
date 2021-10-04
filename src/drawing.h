@@ -9,7 +9,9 @@ class Drawable {
   public:
     virtual void Draw(
         SDL_Renderer* renderer
-      ) = 0;
+      ) const = 0;
+
+    virtual Region* GetBounds() const = 0;
 
     virtual void OnMouseButtonDown(
         SDL_MouseButtonEvent* e

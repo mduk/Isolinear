@@ -22,10 +22,14 @@ class Elbo : public Drawable {
 
     void Draw(
         SDL_Renderer* renderer
-      );
+      ) const;
     void OnMouseButtonDown(
         SDL_MouseButtonEvent* e
       );
+
+    Region* GetBounds() const {
+      return this->bounds;
+    }
 
     Region* ContainerRegion();
 
