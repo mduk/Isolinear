@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
   int elbo_hline_thickness = 15;
   Position* elbo_corner = new Position(elbo_outer_radius*2, elbo_hline_thickness);
 
-  Window* window = new Window();
+  Window window;
 
   running = true;
   while (running) {
@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
           break;
 
         case SDL_MOUSEBUTTONDOWN:
-          window->OnMouseButtonDown(&e.button);
+          window.OnMouseButtonDown(&e.button);
           break;
 
         case SDL_QUIT:
@@ -101,31 +101,31 @@ int main(int argc, char* argv[]) {
     Elbo elbo1(grid.CalculateCellRegion( 1,14, 1, 6), elbo_corner, 0xff3399ff);
     Elbo elbo2(grid.CalculateCellRegion( 7,14, 7,12), elbo_corner, 0xff3399ff);
     Elbo elbo3(grid.CalculateCellRegion( 1, 6, 7,12), elbo_corner, 0xff3399ff);
-    window->Add(&elbo1);
-    window->Add(&elbo2);
-    window->Add(&elbo3);
+    window.Add(&elbo1);
+    window.Add(&elbo2);
+    window.Add(&elbo3);
 
     Grid grid1(elbo1.ContainerRegion(), rowh, gutter);
-    window->Add(new Button(grid1.CalculateCellRegion(1,1,1,2)));
-    window->Add(new Button(grid1.CalculateCellRegion(2,2,2,2)));
-    window->Add(new Button(grid1.CalculateCellRegion(3,3,3,3)));
-    window->Add(new Button(grid1.CalculateCellRegion(4,4,4,4)));
-    window->Add(new Button(grid1.CalculateCellRegion(5,5,5,5)));
-    window->Add(new Button(grid1.CalculateCellRegion(6,6,6,6)));
-    window->Add(new Button(grid1.CalculateCellRegion(7,7,8,8)));
-    window->Add(new Button(grid1.CalculateCellRegion(8,8,8,8)));
-    window->Add(new Button(grid1.CalculateCellRegion(9,9,9,9)));
-    window->Add(new Button(grid1.CalculateCellRegion(10,10,10,10)));
-    window->Add(new Button(grid1.CalculateCellRegion(11,11,11,11)));
-    window->Add(new Button(grid1.CalculateCellRegion(12,12,12,12)));
+    window.Add(new Button(grid1.CalculateCellRegion(1,1,1,2)));
+    window.Add(new Button(grid1.CalculateCellRegion(2,2,2,2)));
+    window.Add(new Button(grid1.CalculateCellRegion(3,3,3,3)));
+    window.Add(new Button(grid1.CalculateCellRegion(4,4,4,4)));
+    window.Add(new Button(grid1.CalculateCellRegion(5,5,5,5)));
+    window.Add(new Button(grid1.CalculateCellRegion(6,6,6,6)));
+    window.Add(new Button(grid1.CalculateCellRegion(7,7,8,8)));
+    window.Add(new Button(grid1.CalculateCellRegion(8,8,8,8)));
+    window.Add(new Button(grid1.CalculateCellRegion(9,9,9,9)));
+    window.Add(new Button(grid1.CalculateCellRegion(10,10,10,10)));
+    window.Add(new Button(grid1.CalculateCellRegion(11,11,11,11)));
+    window.Add(new Button(grid1.CalculateCellRegion(12,12,12,12)));
 
     Grid grid2(elbo2.ContainerRegion(), rowh, gutter);
-    window->Add(new Button(grid2.CalculateCellRegion(1,1, 1,6)));
-    window->Add(new Button(grid2.CalculateCellRegion(1,1, 7,12)));
+    window.Add(new Button(grid2.CalculateCellRegion(1,1, 1,6)));
+    window.Add(new Button(grid2.CalculateCellRegion(1,1, 7,12)));
 
     Grid grid3(elbo3.ContainerRegion(), rowh, gutter);
 
-    window->Draw(renderer);
+    window.Draw(renderer);
 
     SDL_RenderPresent(renderer);
   }
