@@ -59,7 +59,7 @@ void Grid::OnMouseButtonDown(
     SDL_MouseButtonEvent* event
 ) {
   Position* mouse_position = new Position(event->x, event->y);
-  for (auto const* assignment : this->assigned_regions) {
+  for (auto* assignment : this->assigned_regions) {
     if (assignment->region->Encloses(mouse_position)) {
       assignment->drawable->OnMouseButtonDown(event);
     }

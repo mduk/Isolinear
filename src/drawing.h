@@ -7,13 +7,17 @@
 
 class Drawable {
   public:
+    Region* bounds;
+
     virtual void Draw(
-        SDL_Renderer* renderer
+        SDL_Renderer*
       ) const = 0;
 
-    virtual Region* GetBounds() const = 0;
-
     virtual void OnMouseButtonDown(
-        SDL_MouseButtonEvent* e
+        SDL_MouseButtonEvent*
       ) = 0;
+
+    Region* Bounds() const {
+      return this->bounds;
+    }
 };

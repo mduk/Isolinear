@@ -57,6 +57,7 @@ class RightRoundCap : public Cap {
 
 class Button : public Drawable {
   public:
+    Region* region;
     bool lcap = false;
     bool rcap = false;
     Colour c;
@@ -70,16 +71,11 @@ class Button : public Drawable {
         SDL_Renderer* renderer
       ) const;
 
-    Region* GetBounds() const {
-      return this->region;
-    }
-
     void OnMouseButtonDown(
         SDL_MouseButtonEvent* event
       );
 
   private:
-    Region* region;
     std::string label = "defaultlabel";
     int g;
 };

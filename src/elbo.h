@@ -27,10 +27,6 @@ class Elbo : public Drawable {
         SDL_MouseButtonEvent* e
       );
 
-    Region* GetBounds() const {
-      return this->bounds;
-    }
-
     Region* ContainerRegion();
 
   protected:
