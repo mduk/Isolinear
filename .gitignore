@@ -1,1 +1,4 @@
 *.swp
+.session.vim
+
+Isolinear
