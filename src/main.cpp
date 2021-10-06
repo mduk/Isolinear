@@ -22,8 +22,8 @@ using namespace std;
 using namespace curlpp::options;
 
 bool running = false;
-SDL_Window *window;
-SDL_Renderer *renderer;
+SDL_Window * sdl_window;
+SDL_Renderer * renderer;
 
 string http_req(string url) {
   list<string> headers;
@@ -50,22 +50,64 @@ int main(int argc, char* argv[]) {
   int win_h = 1250,
       win_w = win_h * 1.618;
 
-  window = createWindow(win_w, win_h);
-  renderer = createRenderer(window);
+  sdl_window = createWindow(win_w, win_h);
+  renderer = createRenderer(sdl_window);
 
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  WindowRegion window_region(window);
-  int row_height = 100;
+  WindowRegion window_region(sdl_window);
+  Window window;
 
+  Grid grid(&window_region, 100, 10);
+
+/*
+  list<Button> mylist;
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 1, 1));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 2, 2));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 3, 3));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 4, 4));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 5, 5));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 6, 6));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 7, 7));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 8, 8));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 9, 9));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1,10,10));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1,11,11));
+  mylist.emplace_back(grid.CalculateCellRegion( 1, 1,12,12));
+  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 1, 2));
+  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 3, 4));
+  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 5, 6));
+  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 7, 8));
+  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 9,10));
+  mylist.emplace_back(grid.CalculateCellRegion( 2, 2,11,12));
+  mylist.emplace_back(grid.CalculateCellRegion( 3, 3, 1, 3));
+  mylist.emplace_back(grid.CalculateCellRegion( 3, 3, 4, 6));
+  mylist.emplace_back(grid.CalculateCellRegion( 3, 3, 7, 9));
+  mylist.emplace_back(grid.CalculateCellRegion( 3, 3,10,12));
+  mylist.emplace_back(grid.CalculateCellRegion( 4, 4, 1, 4));
+  mylist.emplace_back(grid.CalculateCellRegion( 4, 4, 5, 8));
+  mylist.emplace_back(grid.CalculateCellRegion( 4, 4, 9,12));
+  mylist.emplace_back(grid.CalculateCellRegion( 5, 5, 1, 6));
+  mylist.emplace_back(grid.CalculateCellRegion( 5, 5, 7,12));
+  mylist.emplace_back(grid.CalculateCellRegion( 6, 6, 1,12));
+
+  for (auto i : mylist) {
+    printf("%#08x\n", i.c);
+    i.Draw(renderer);
+  }
+*/
+
+
+  /*
+  int row_height = 100;
   int elbo_outer_radius = 90;
   int elbo_inner_radius = 60;
   int elbo_hline_thickness = 15;
   Position* elbo_corner = new Position(elbo_outer_radius*2, elbo_hline_thickness);
+  */
 
-  Window window;
 
   running = true;
   while (running) {
@@ -76,7 +118,6 @@ int main(int argc, char* argv[]) {
         case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE:
-            case 'q':
               running = false;
               break;
           }
@@ -96,41 +137,6 @@ int main(int argc, char* argv[]) {
     int rowh = 100;
     int gutter = 10;
 
-    Grid grid(&window_region, row_height, 10);
-
-    Elbo* elbo1 = new Elbo(grid.CalculateCellRegion( 1,14, 1, 6), elbo_corner, 0xff3399ff);
-    Elbo* elbo2 = new Elbo(grid.CalculateCellRegion( 7,14, 7,12), elbo_corner, 0xff3399ff);
-    Elbo* elbo3 = new Elbo(grid.CalculateCellRegion( 1, 6, 7,12), elbo_corner, 0xff3399ff);
-    window.Add(elbo1);
-    window.Add(elbo2);
-    window.Add(elbo3);
-
-    Grid grid1(elbo1->ContainerRegion(), rowh, gutter);
-    window.Add(new Button(grid1.CalculateCellRegion( 1, 1, 1, 2)));
-    window.Add(new Button(grid1.CalculateCellRegion( 2, 2, 2, 2)));
-    window.Add(new Button(grid1.CalculateCellRegion( 3, 3, 3, 3)));
-    window.Add(new Button(grid1.CalculateCellRegion( 4, 4, 4, 4)));
-    window.Add(new Button(grid1.CalculateCellRegion( 5, 5, 5, 5)));
-    window.Add(new Button(grid1.CalculateCellRegion( 6, 6, 6, 6)));
-    window.Add(new Button(grid1.CalculateCellRegion( 7, 7, 8, 8)));
-    window.Add(new Button(grid1.CalculateCellRegion( 8, 8, 8, 8)));
-    window.Add(new Button(grid1.CalculateCellRegion( 9, 9, 9, 9)));
-    window.Add(new Button(grid1.CalculateCellRegion(10,10,10,10)));
-    window.Add(new Button(grid1.CalculateCellRegion(11,11,11,11)));
-    window.Add(new Button(grid1.CalculateCellRegion(12,12,12,12)));
-
-    Grid grid2(elbo2->ContainerRegion(), rowh, gutter);
-    window.Add(new Button(grid2.CalculateCellRegion( 1, 1, 1, 6)));
-    window.Add(new Button(grid2.CalculateCellRegion( 1, 1, 7,12)));
-
-    Grid grid3(elbo3->ContainerRegion(), rowh, gutter);
-    window.Add(new Button(grid3.CalculateCellRegion( 1, 1, 1, 6)));
-    window.Add(new Button(grid3.CalculateCellRegion( 1, 1, 7,12)));
-    window.Add(new Button(grid3.CalculateCellRegion( 2, 2, 1, 4)));
-    window.Add(new Button(grid3.CalculateCellRegion( 2, 2, 5, 8)));
-    window.Add(new Button(grid3.CalculateCellRegion( 2, 2, 9,12)));
-
-    window.Draw(renderer);
 
     SDL_RenderPresent(renderer);
   }

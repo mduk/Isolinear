@@ -15,7 +15,9 @@ class Window {
     int rowh;
     int gutter;
 
-    Window();
+    Window()
+      : drawables{}
+    {};
 
     void Draw(SDL_Renderer* renderer);
     void Add(Drawable* drawable);
