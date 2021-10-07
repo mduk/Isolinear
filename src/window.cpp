@@ -31,6 +31,21 @@ Window::Window(int w, int h)
   );
   SDL_SetRenderDrawColor(this->sdl_renderer, 0, 0, 0, 255);
   SDL_RenderPresent(this->sdl_renderer);
+
+  SDL_GetWindowSize(
+    this->sdl_window,
+    &this->region.size.x,
+    &this->region.size.y
+  );
+}
+
+Region Window::GetRegion() {
+  SDL_GetWindowSize(
+    this->sdl_window,
+    &this->region.size.x,
+    &this->region.size.y
+  );
+  return this->region;
 }
 
 void Window::Add(Drawable* drawable) {

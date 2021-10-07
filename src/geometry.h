@@ -3,10 +3,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "colours.h"
-
-class Region;
-
 
 
 class Coordinate {
@@ -22,10 +18,6 @@ class Coordinate {
 
     void Add(Coordinate* c);
     void Subtract(Coordinate* c);
-
-    bool IsWithin(
-        Region* region
-      );
 };
 
 
@@ -52,6 +44,10 @@ class Region {
   public:
     Position position;
     Size size;
+
+    Region()
+        : position{0,0}, size{0,0}
+      {};
 
     Region( Position _p, Size _s)
         : position{_p}, size{_s}
