@@ -12,6 +12,7 @@
 #include <curlpp/Options.hpp>
 
 #include "geometry.h"
+#include "window.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -41,32 +42,7 @@ int main(int argc, char* argv[]) {
   int win_h = 1250,
       win_w = win_h * 1.618;
 
-  SDL_Window *window = SDL_CreateWindow(
-    "Isolinear",
-    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    win_w, win_h,
-    SDL_WINDOW_OPENGL //| SDL_WINDOW_FULLSCREEN_DESKTOP
-  );
-
-  if (window == NULL) {
-    printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
-    exit(1);
-  }
-
-
-  SDL_Renderer *renderer = SDL_CreateRenderer(
-    window, -1, SDL_RENDERER_SOFTWARE
-  );
-
-  if (!renderer) {
-    fprintf(stderr, "SDL_CreateRenderer failed: %s\n", SDL_GetError());
-    exit(1);
-  }
-
-
-  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-  SDL_RenderClear(renderer);
+  Window mainwindow(win_w, win_h);
 
 
   bool running = true;
@@ -96,7 +72,6 @@ int main(int argc, char* argv[]) {
     }
 
 
-    SDL_RenderPresent(renderer);
   }
 
   return 0;
