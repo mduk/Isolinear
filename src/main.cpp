@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
 
   Window window(win_w, win_h);
 
+  window.Add(new Button());
 
   bool running = true;
   while (running) {
@@ -70,6 +71,7 @@ int main(int argc, char* argv[]) {
 
       }
     }
+
 
     window.Draw();
 

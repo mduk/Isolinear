@@ -14,8 +14,6 @@ using namespace std;
 
 class Drawable {
   public:
-    Region bounds;
-
     virtual void Draw(
         SDL_Renderer*
       ) const = 0;
@@ -27,8 +25,9 @@ class Drawable {
 
 class Window {
   public:
-    Window(int w, int h);
+    Window(int, int);
 
+    void Add(Drawable*);
     void Draw();
 
   protected:
@@ -38,4 +37,11 @@ class Window {
     SDL_Renderer* sdl_renderer;
 
     std::list<Drawable*> drawables;
+};
+
+class Button : public Drawable {
+  public:
+    void Draw(SDL_Renderer*) const;
+    void OnMouseButtonDown(SDL_MouseButtonEvent*);
+    Region Bounds();
 };

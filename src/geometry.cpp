@@ -26,11 +26,13 @@ void Coordinate::Subtract(Coordinate* c) {
 //////////////////////////////////////////////////
 
 bool Region::Encloses(Coordinate& point) {
-  if (point.x < this->position.x) return false;
-  if (point.y < this->position.y) return false;
-  if (point.x > this->position.x + this->size.x) return false;
-  if (point.y > this->position.y + this->size.y) return false;
-  return true;
+  int nearx = this->position.x,
+      neary = this->position.y,
+       farx = this->position.x + this->size.x,
+       fary = this->position.y + this->size.y;
+
+  return ( nearx < point.x < farx )
+      && ( neary < point.y < fary );
 }
 
 

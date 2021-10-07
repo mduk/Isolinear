@@ -35,8 +35,22 @@ Window::Window(int w, int h)
   SDL_RenderPresent(this->sdl_renderer);
 }
 
+void Window::Add(Drawable* drawable) {
+  this->drawables.push_back(drawable);
+}
+
 void Window::Draw() {
-  for (auto * drawable : this->drawables) {
+  for (auto* drawable : this->drawables) {
     drawable->Draw(this->sdl_renderer);
   }
+  SDL_RenderPresent(this->sdl_renderer);
+}
+
+
+void Button::Draw(SDL_Renderer* renderer) const {
+  boxColor(renderer, 100,100,200,200,0xffffffff);
+}
+
+void Button::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
+
 }
