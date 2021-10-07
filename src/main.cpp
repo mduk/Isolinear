@@ -16,10 +16,6 @@
 using namespace std;
 using namespace curlpp::options;
 
-bool running = false;
-SDL_Window * sdl_window;
-SDL_Renderer * renderer;
-
 string http_req(string url) {
   list<string> headers;
   headers.push_back("Accept: application/json");
@@ -68,15 +64,12 @@ int main(int argc, char* argv[]) {
   }
 
 
-  sdl_window = createWindow(win_w, win_h);
-  renderer = createRenderer(sdl_window);
-
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
 
-  running = true;
+  bool running = true;
   while (running) {
 
 

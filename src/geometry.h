@@ -13,11 +13,11 @@ class Coordinate {
   public:
     int x, y;
 
-    Coordinate( int _x, int _y)
+    Coordinate(int _x, int _y)
         : x{_x}, y{_y}
       {};
-    Coordinate( Coordinate* _c)
-        : x{_c->x}, y{_c->y}
+    Coordinate(Coordinate& _c)
+        : x{_c.x}, y{_c.y}
       {};
 
     void Add(Coordinate* c);
@@ -32,10 +32,9 @@ class Coordinate {
 
 class Position : public Coordinate {
   public:
-    Position(
-        int x,
-        int y
-      );
+    Position(int _x, int _y)
+        : Coordinate{_x, _y}
+      { };
 
     void Draw(
         SDL_Renderer* r,
@@ -50,38 +49,27 @@ class Position : public Coordinate {
 
 class Size : public Coordinate {
   public:
-    Size(
-        int w,
-        int h
-      );
+    Size(int _x, int _y)
+        : Coordinate{_x, _y}
+      { };
 };
 
 
 
 class Region {
   public:
-    Region* origin;
-    Position* position;
-    Size* size;
+    Position position;
+    Size size;
 
-    Region(
-        Position* p,
-        Size* s
-      );
-    Region(
-        Position* p,
-        Position* s
-      );
-    Region(
-        int x,
-        int y,
-        int w,
-        int h
-      );
+    Region( Position _p, Size _s)
+        : position{_p}, size{_s}
+      {};
 
-    bool Encloses(
-        Coordinate* point
-      );
+    Region( int _x, int _y, int _w, int _h)
+        : position{_x, _y}, size{_w, _h}
+      {};
+
+    bool Encloses(Coordinate& point);
 
     Region* Copy();
 
