@@ -46,11 +46,17 @@ void Window::Draw() {
 
 void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
   Position cursor{event.x, event.y};
+
   for (auto* drawable : this->drawables) {
     if (drawable->Bounds().Encloses(cursor)) {
       drawable->OnMouseButtonDown(event);
+      return;
     }
   }
+
+  Size size{100,100};
+  Region reg{ cursor, size };
+  this->Add(new Button(reg));
 }
 
 
