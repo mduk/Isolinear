@@ -11,12 +11,7 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
-#include "sdlcreate.h"
-#include "window.h"
 #include "geometry.h"
-#include "button.h"
-#include "grid.h"
-#include "elbo.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -50,6 +45,29 @@ int main(int argc, char* argv[]) {
   int win_h = 1250,
       win_w = win_h * 1.618;
 
+  SDL_Window *window = SDL_CreateWindow(
+    "Isolinear",
+    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+    win_w, win_h,
+    SDL_WINDOW_OPENGL //| SDL_WINDOW_FULLSCREEN_DESKTOP
+  );
+
+  if (window == NULL) {
+    printf("SDL_CreateWindow failed: %s\n", SDL_GetError());
+    exit(1);
+  }
+
+
+  SDL_Renderer *renderer = SDL_CreateRenderer(
+    window, -1, SDL_RENDERER_SOFTWARE
+  );
+
+  if (!renderer) {
+    fprintf(stderr, "SDL_CreateRenderer failed: %s\n", SDL_GetError());
+    exit(1);
+  }
+
+
   sdl_window = createWindow(win_w, win_h);
   renderer = createRenderer(sdl_window);
 
@@ -57,60 +75,11 @@ int main(int argc, char* argv[]) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
 
-  WindowRegion window_region(sdl_window);
-  Window window;
-
-  Grid grid(&window_region, 100, 10);
-
-/*
-  list<Button> mylist;
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 1, 1));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 2, 2));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 3, 3));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 4, 4));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 5, 5));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 6, 6));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 7, 7));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 8, 8));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1, 9, 9));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1,10,10));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1,11,11));
-  mylist.emplace_back(grid.CalculateCellRegion( 1, 1,12,12));
-  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 1, 2));
-  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 3, 4));
-  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 5, 6));
-  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 7, 8));
-  mylist.emplace_back(grid.CalculateCellRegion( 2, 2, 9,10));
-  mylist.emplace_back(grid.CalculateCellRegion( 2, 2,11,12));
-  mylist.emplace_back(grid.CalculateCellRegion( 3, 3, 1, 3));
-  mylist.emplace_back(grid.CalculateCellRegion( 3, 3, 4, 6));
-  mylist.emplace_back(grid.CalculateCellRegion( 3, 3, 7, 9));
-  mylist.emplace_back(grid.CalculateCellRegion( 3, 3,10,12));
-  mylist.emplace_back(grid.CalculateCellRegion( 4, 4, 1, 4));
-  mylist.emplace_back(grid.CalculateCellRegion( 4, 4, 5, 8));
-  mylist.emplace_back(grid.CalculateCellRegion( 4, 4, 9,12));
-  mylist.emplace_back(grid.CalculateCellRegion( 5, 5, 1, 6));
-  mylist.emplace_back(grid.CalculateCellRegion( 5, 5, 7,12));
-  mylist.emplace_back(grid.CalculateCellRegion( 6, 6, 1,12));
-
-  for (auto i : mylist) {
-    printf("%#08x\n", i.c);
-    i.Draw(renderer);
-  }
-*/
-
-
-  /*
-  int row_height = 100;
-  int elbo_outer_radius = 90;
-  int elbo_inner_radius = 60;
-  int elbo_hline_thickness = 15;
-  Position* elbo_corner = new Position(elbo_outer_radius*2, elbo_hline_thickness);
-  */
-
 
   running = true;
   while (running) {
+
+
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
@@ -124,7 +93,6 @@ int main(int argc, char* argv[]) {
           break;
 
         case SDL_MOUSEBUTTONDOWN:
-          window.OnMouseButtonDown(&e.button);
           break;
 
         case SDL_QUIT:
@@ -133,9 +101,6 @@ int main(int argc, char* argv[]) {
 
       }
     }
-
-    int rowh = 100;
-    int gutter = 10;
 
 
     SDL_RenderPresent(renderer);

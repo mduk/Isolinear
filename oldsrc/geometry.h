@@ -7,18 +7,23 @@
 
 class Region;
 
-
-
 class Coordinate {
   public:
-    int x, y;
+    unsigned int x, y;
+    Coordinate* origin;
 
-    Coordinate( int _x, int _y)
-        : x{_x}, y{_y}
-      {};
-    Coordinate( Coordinate* _c)
-        : x{_c->x}, y{_c->y}
-      {};
+    Coordinate(
+        unsigned int x,
+        unsigned int y
+      );
+    Coordinate* Copy();
+    Coordinate* Extend(
+        unsigned int x,
+        unsigned int y
+      );
+
+    unsigned int X();
+    unsigned int Y();
 
     void Add(Coordinate* c);
     void Subtract(Coordinate* c);
@@ -28,13 +33,11 @@ class Coordinate {
       );
 };
 
-
-
 class Position : public Coordinate {
   public:
     Position(
-        int x,
-        int y
+        unsigned int x,
+        unsigned int y
       );
 
     void Draw(
@@ -46,17 +49,13 @@ class Position : public Coordinate {
       );
 };
 
-
-
 class Size : public Coordinate {
   public:
     Size(
-        int w,
-        int h
+        unsigned int w,
+        unsigned int h
       );
 };
-
-
 
 class Region {
   public:
@@ -73,10 +72,10 @@ class Region {
         Position* s
       );
     Region(
-        int x,
-        int y,
-        int w,
-        int h
+        unsigned int x,
+        unsigned int y,
+        unsigned int w,
+        unsigned int h
       );
 
     bool Encloses(
@@ -93,8 +92,6 @@ class Region {
         Colour colour
       );
 };
-
-
 
 class WindowRegion : public Region {
   public:

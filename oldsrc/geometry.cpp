@@ -1,7 +1,17 @@
 #include "geometry.h"
 
+Coordinate::Coordinate(
+    unsigned int _x,
+    unsigned int _y
+) : x{_x},
+    y{_y} { }
 
-
+Coordinate* Coordinate::Copy() {
+  Coordinate* copy = new Coordinate(
+    this->x, this->y
+  );
+  return copy;
+}
 
 void Coordinate::Add(Coordinate* c) {
   this->x += c->x;
@@ -17,16 +27,12 @@ bool Coordinate::IsWithin(Region* r) {
   return r->Encloses(this);
 }
 
-
-
-
-Position::Position(int _x, int _y)
+Position::Position(unsigned int _x, unsigned int _y)
   : Coordinate{_x, _y} { }
 
 void Position::Draw(SDL_Renderer* renderer) {
   this->Draw(renderer, RandomColour());
 }
-
 void Position::Draw(SDL_Renderer* renderer, Colour colour) {
   rectangleColor(renderer,
     this->x - 10, this->y - 10,
@@ -45,14 +51,8 @@ void Position::Draw(SDL_Renderer* renderer, Colour colour) {
   );
 }
 
-
-
-
-Size::Size(int _w, int _h)
+Size::Size(unsigned int _w, unsigned int _h)
   : Coordinate{_w, _h} { }
-
-
-
 
 Region::Region(Position* _p, Size* _s)
   : position{_p},
@@ -65,10 +65,10 @@ Region::Region(Position* p, Position* c)
 }
 
 Region::Region(
-    int _x,
-    int _y,
-    int _w,
-    int _h
+    unsigned int _x,
+    unsigned int _y,
+    unsigned int _w,
+    unsigned int _h
 ) {
   this->position = new Position(_x, _y);
   this->size = new Size(_w, _h);
