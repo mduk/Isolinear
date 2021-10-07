@@ -45,8 +45,11 @@ void Window::Draw() {
 }
 
 void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+  Position cursor{event.x, event.y};
   for (auto* drawable : this->drawables) {
-    //
+    if (drawable->Bounds().Encloses(cursor)) {
+      drawable->OnMouseButtonDown(event);
+    }
   }
 }
 
@@ -60,7 +63,7 @@ void Button::Draw(SDL_Renderer* renderer) const {
 }
 
 void Button::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-
+  printf("Button clicked!\n");
 }
 
 Region Button::Bounds() {

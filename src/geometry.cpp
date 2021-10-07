@@ -31,8 +31,10 @@ bool Region::Encloses(Coordinate& point) {
        farx = this->position.x + this->size.x,
        fary = this->position.y + this->size.y;
 
-  return ( nearx < point.x < farx )
-      && ( neary < point.y < fary );
+  return ( nearx <= point.x )
+      && ( point.x <= farx  )
+      && ( neary <= point.y )
+      && ( point.y <= fary  );
 }
 
 
