@@ -44,7 +44,8 @@ int main(int argc, char* argv[]) {
 
   Window window(win_w, win_h);
 
-  window.Add(new Button());
+  Region reg{200,300,400,500};
+  window.Add(new Button(reg));
 
   bool running = true;
   while (running) {
@@ -63,6 +64,7 @@ int main(int argc, char* argv[]) {
           break;
 
         case SDL_MOUSEBUTTONDOWN:
+          window.OnMouseButtonDown(e.button);
           break;
 
         case SDL_QUIT:

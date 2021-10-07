@@ -16,7 +16,6 @@ Window::Window(int w, int h)
     );
   }
 
-
   this->sdl_renderer = SDL_CreateRenderer(
     this->sdl_window, -1, SDL_RENDERER_SOFTWARE
   );
@@ -26,7 +25,6 @@ Window::Window(int w, int h)
       "Failed to create SDL renderer"
     );
   }
-
 
   SDL_SetRenderDrawBlendMode(
     this->sdl_renderer, SDL_BLENDMODE_BLEND
@@ -46,11 +44,25 @@ void Window::Draw() {
   SDL_RenderPresent(this->sdl_renderer);
 }
 
-
-void Button::Draw(SDL_Renderer* renderer) const {
-  boxColor(renderer, 100,100,200,200,0xffffffff);
+void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+  for (auto* drawable : this->drawables) {
+    //
+  }
 }
 
-void Button::OnMouseButtonDown(SDL_MouseButtonEvent* event) {
 
+void Button::Draw(SDL_Renderer* renderer) const {
+  boxColor(renderer,
+    this->bounds.NearX(), this->bounds.NearY(),
+    this->bounds.FarX(), this->bounds.FarY(),
+    0xffffffff
+  );
+}
+
+void Button::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+
+}
+
+Region Button::Bounds() {
+  return this->bounds;
 }

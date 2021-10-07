@@ -61,6 +61,24 @@ class Region {
         : position{_x, _y}, size{_w, _h}
       {};
 
+    int NearX() const {
+      return this->position.x;
+    }
+
+    int NearY() const {
+      return this->position.y;
+    }
+
+    int FarX() const {
+      return this->position.x
+           + this->size.x;
+    }
+
+    int FarY() const {
+      return this->position.y
+           + this->size.y;
+    }
+
     bool Encloses(Coordinate& point);
 };
 

@@ -19,8 +19,10 @@ class Drawable {
       ) const = 0;
 
     virtual void OnMouseButtonDown(
-        SDL_MouseButtonEvent*
+        SDL_MouseButtonEvent&
       ) = 0;
+
+    virtual Region Bounds() = 0;
 };
 
 class Window {
@@ -29,6 +31,7 @@ class Window {
 
     void Add(Drawable*);
     void Draw();
+    void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
   protected:
     int width_px;
@@ -41,7 +44,12 @@ class Window {
 
 class Button : public Drawable {
   public:
+    Button(Region& _b) : bounds{_b} {}
+
     void Draw(SDL_Renderer*) const;
-    void OnMouseButtonDown(SDL_MouseButtonEvent*);
+    void OnMouseButtonDown(SDL_MouseButtonEvent&);
     Region Bounds();
+
+  protected:
+    Region bounds;
 };
