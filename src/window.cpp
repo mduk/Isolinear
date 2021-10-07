@@ -34,3 +34,9 @@ Window::Window(int w, int h)
   SDL_SetRenderDrawColor(this->sdl_renderer, 0, 0, 0, 255);
   SDL_RenderPresent(this->sdl_renderer);
 }
+
+void Window::Draw() {
+  for (auto * drawable : this->drawables) {
+    drawable->Draw(this->sdl_renderer);
+  }
+}

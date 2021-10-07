@@ -35,14 +35,6 @@ class Position : public Coordinate {
     Position(int _x, int _y)
         : Coordinate{_x, _y}
       { };
-
-    void Draw(
-        SDL_Renderer* r,
-        Colour c
-      );
-    void Draw(
-        SDL_Renderer* r
-      );
 };
 
 
@@ -70,16 +62,6 @@ class Region {
       {};
 
     bool Encloses(Coordinate& point);
-
-    Region* Copy();
-
-    Region* Draw(
-        SDL_Renderer* renderer
-      );
-    Region* Draw(
-        SDL_Renderer* renderer,
-        Colour colour
-      );
 };
 
 

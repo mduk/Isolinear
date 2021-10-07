@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
   int win_h = 1250,
       win_w = win_h * 1.618;
 
-  Window mainwindow(win_w, win_h);
+  Window window(win_w, win_h);
 
 
   bool running = true;
@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    window.Draw();
 
   }
 
