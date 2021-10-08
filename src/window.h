@@ -8,6 +8,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "colours.h"
 #include "geometry.h"
 
 using namespace std;
@@ -48,7 +49,9 @@ class Window {
 
 class Button : public Drawable {
   public:
-    Button(Region _b) : bounds{_b} {}
+    Button(Region _b, Colour _c)
+      : bounds{_b}, colour{_c}
+    {};
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
@@ -56,4 +59,5 @@ class Button : public Drawable {
 
   protected:
     Region bounds;
+    Colour colour;
 };

@@ -65,7 +65,7 @@ void Button::Draw(SDL_Renderer* renderer) const {
   boxColor(renderer,
     this->bounds.NearX(), this->bounds.NearY(),
     this->bounds.FarX(), this->bounds.FarY(),
-    0xffffffff
+    this->colour
   );
 }
 
