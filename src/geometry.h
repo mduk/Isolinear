@@ -12,32 +12,14 @@ class Coordinate {
     Coordinate(int _x, int _y)
         : x{_x}, y{_y}
       {};
-    Coordinate(Coordinate& _c)
-        : x{_c.x}, y{_c.y}
-      {};
 
     void Add(Coordinate* c);
     void Subtract(Coordinate* c);
 };
 
 
-
-class Position : public Coordinate {
-  public:
-    Position(int _x, int _y)
-        : Coordinate{_x, _y}
-      { };
-};
-
-
-
-class Size : public Coordinate {
-  public:
-    Size(int _x, int _y)
-        : Coordinate{_x, _y}
-      { };
-};
-
+using Position = Coordinate;
+using Size = Coordinate;
 
 
 class Region {
@@ -76,16 +58,4 @@ class Region {
     }
 
     bool Encloses(Coordinate& point);
-};
-
-
-
-class WindowRegion : public Region {
-  public:
-    WindowRegion(SDL_Window* _window);
-
-    void Update();
-
-  protected:
-    SDL_Window* window;
 };

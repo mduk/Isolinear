@@ -13,6 +13,7 @@
 
 #include "geometry.h"
 #include "window.h"
+#include "grid.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -43,8 +44,9 @@ int main(int argc, char* argv[]) {
       win_w = win_h * 1.618;
 
   Window window(win_w, win_h);
+  Grid grid{window.GetRegion()};
 
-  Region reg{200,300,400,500};
+  Region reg = grid.CalculateRegion(1,2,1,2);
   window.Add(new Button(reg));
 
   bool running = true;
