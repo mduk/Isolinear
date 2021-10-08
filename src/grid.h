@@ -15,7 +15,8 @@ class Grid {
       : bounds{_b}
     {};
 
-    Region CalculateRegion(int, int, int, int);
+    Region CalculateSingleCellRegion(int, int);
+    Region CalculateMultiCellRegion(int, int, int, int);
 
   protected:
     Region bounds;

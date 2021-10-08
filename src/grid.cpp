@@ -1,7 +1,15 @@
 #include "grid.h"
 
 
-Region Grid::CalculateRegion(
+Region Grid::CalculateSingleCellRegion(
+    int row, int col
+) {
+  return this->CalculateMultiCellRegion(
+    row, row, col, col
+  );
+}
+
+Region Grid::CalculateMultiCellRegion(
     int top_row, int bottom_row,
     int left_col, int right_col
 ) {
