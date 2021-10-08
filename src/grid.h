@@ -8,6 +8,9 @@
 #include "geometry.h"
 #include "window.h"
 
+using Column = int;
+using Row = int;
+
 class Grid {
   public:
 
@@ -15,8 +18,12 @@ class Grid {
       : bounds{_b}
     {};
 
-    Region CalculateSingleCellRegion(int, int);
-    Region CalculateMultiCellRegion(int, int, int, int);
+    Region SingleCellRegion(int, int);
+    Region MultiCellRegion(int, int, int, int);
+
+    Column PositionColumn(Position&);
+       Row PositionRow   (Position&);
+    Region PositionRegion(Position&);
 
   protected:
     Region bounds;

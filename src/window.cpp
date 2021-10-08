@@ -68,10 +68,6 @@ void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
       return;
     }
   }
-
-  this->Add(new Button(Region{
-    cursor, Size{100,100}
-  }));
 }
 
 void Button::Draw(SDL_Renderer* renderer) const {
