@@ -46,7 +46,9 @@ int main(int argc, char* argv[]) {
   Window window(win_w, win_h);
   Grid grid{window.size};
 
-  window.Add(new Button(grid.MultiCellRegion(2,4, 6,8)));
+  window.Add(new Button(grid.MultiCellRegion( 1, 1, 6,12)));
+  window.Add(new Button(grid.MultiCellRegion( 7, 1,12, 6)));
+  window.Add(new Button(grid.MultiCellRegion( 7, 7,12,12)));
 
   bool running = true;
   while (running) {
@@ -65,9 +67,7 @@ int main(int argc, char* argv[]) {
           break;
 
         case SDL_MOUSEBUTTONDOWN: {
-          //window.OnMouseButtonDown(e.button);
-          Position cursor{e.button.x, e.button.y};
-          window.Add(new Button(grid.PositionRegion(cursor)));
+          window.OnMouseButtonDown(e.button);
           break;
         }
 
