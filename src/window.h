@@ -27,6 +27,8 @@ class Drawable {
 
 class Window {
   public:
+    Size size;
+
     Window(int, int);
     ~Window() {
       for (auto* drawable : drawables) {
@@ -34,13 +36,11 @@ class Window {
       }
     }
 
-    Region GetRegion();
     void Add(Drawable*);
     void Draw();
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
   protected:
-    Size size;
     SDL_Window* sdl_window;
     SDL_Renderer* sdl_renderer;
     std::list<Drawable*> drawables;

@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
       win_w = win_h * 1.618;
 
   Window window(win_w, win_h);
-  Grid grid{window.GetRegion()};
+  Grid grid{window.size};
 
   window.Add(new Button(grid.SingleCellRegion(2,2)));
   window.Add(new Button(grid.SingleCellRegion(4,4)));

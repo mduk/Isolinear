@@ -14,6 +14,10 @@ using Row = int;
 class Grid {
   public:
 
+    Grid(Size _s)
+      : bounds{Position{0,0},_s}
+    {};
+
     Grid(Region _b)
       : bounds{_b}
     {};

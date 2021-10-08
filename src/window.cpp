@@ -39,15 +39,6 @@ Window::Window(int w, int h)
   );
 }
 
-Region Window::GetRegion() {
-  SDL_GetWindowSize(
-    this->sdl_window,
-    &this->size.x,
-    &this->size.y
-  );
-  return this->size;
-}
-
 void Window::Add(Drawable* drawable) {
   this->drawables.push_back(drawable);
 }
