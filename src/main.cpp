@@ -46,9 +46,18 @@ int main(int argc, char* argv[]) {
   Window window(win_w, win_h);
   Grid grid{window.size};
 
-  window.Add(new Button(grid.MultiCellRegion( 1, 1, 6,12), RandomColour()));
-  window.Add(new Button(grid.MultiCellRegion( 7, 1,12, 6), RandomColour()));
-  window.Add(new Button(grid.MultiCellRegion( 7, 7,12,12), RandomColour()));
+  window.Add(new Button(
+      grid.MultiCellRegion( 1, 1, 6,12),
+      ColourScheme{0xff3f403f, 0xff99ffff, 0xff66ccff, 0xff3399ff}
+  ));
+  window.Add(new Button(
+      grid.MultiCellRegion( 7, 1,12, 6),
+      ColourScheme{0xff664466, 0xffcc99cc, 0xffffcc99, 0xffcc6633}
+  ));
+  window.Add(new Button(
+      grid.MultiCellRegion( 7, 7,12,12),
+      ColourScheme{0xff996600, 0xffcc9999, 0xffff9999, 0xffcc99cc}
+  ));
 
   bool running = true;
   while (running) {

@@ -62,17 +62,37 @@ void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
 }
 
 void Button::Draw(SDL_Renderer* renderer) const {
+  Colour drawcolour = (this->active == true)
+                    ? this->colours.active
+                    : this->colours.base;
+
   boxColor(renderer,
     this->bounds.NearX(), this->bounds.NearY(),
     this->bounds.FarX(), this->bounds.FarY(),
-    this->colour
+    drawcolour
   );
 }
 
 void Button::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-  printf("Button clicked!\n");
+  this->active = !this->active;
 }
 
 Region Button::Bounds() {
   return this->bounds;
+}
+
+
+
+
+
+void Elbo::Draw(SDL_Renderer*) const {
+
+}
+
+void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent&) {
+
+}
+
+Region Elbo::Bounds() {
+
 }

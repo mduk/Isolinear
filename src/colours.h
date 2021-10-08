@@ -6,3 +6,16 @@
 typedef u_int32_t Colour;
 
 Colour RandomColour();
+
+class ColourScheme {
+  public:
+    Colour base;
+    Colour active;
+    Colour inactive;
+    Colour disabled;
+
+    ColourScheme(Colour b, Colour a, Colour i, Colour d)
+      : base{b}, active{a}, inactive{i}, disabled{d}
+    {};
+
+};

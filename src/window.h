@@ -49,8 +49,8 @@ class Window {
 
 class Button : public Drawable {
   public:
-    Button(Region _b, Colour _c)
-      : bounds{_b}, colour{_c}
+    Button(Region _b, ColourScheme _cs)
+      : bounds{_b}, colours{_cs}
     {};
 
     void Draw(SDL_Renderer*) const;
@@ -59,5 +59,13 @@ class Button : public Drawable {
 
   protected:
     Region bounds;
-    Colour colour;
+    ColourScheme colours;
+    bool active = false;
+};
+
+class Elbo : public Drawable {
+  public:
+    void Draw(SDL_Renderer*) const;
+    void OnMouseButtonDown(SDL_MouseButtonEvent&);
+    Region Bounds();
 };
