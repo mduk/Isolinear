@@ -85,16 +85,3 @@ class Elbo : public Drawable {
     ColourScheme colours;
     Size sweep_size;
 };
-
-class ElboNorthWest : public Elbo {
-  public:
-    ElboNorthWest(Region _b, ColourScheme _cs, Size _s)
-      : Elbo{_b, _cs, _s}
-    {};
-
-    void Draw(SDL_Renderer*) const;
-    void OnMouseButtonDown(SDL_MouseButtonEvent&);
-    Region Bounds() {
-      return bounds;
-    };
-};
