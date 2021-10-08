@@ -48,9 +48,9 @@ Region Grid::PositionRegion(Position& p) {
 
 Column Grid::PositionColumn(Position& p) {
   Size s = this->CellSize();
-  return floor(p.x / s.x)+1;
+  return floor(p.x / s.x) + 1;
 }
 
 Row Grid::PositionRow(Position& p) {
-  return floor(p.y / rowh)+1;
+  return floor(p.y / rowh) + 1;
 }
