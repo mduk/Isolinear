@@ -31,13 +31,24 @@ class Region {
         : position{0,0}, size{0,0}
       {};
 
-    Region( Position _p, Size _s)
+    Region(Position _p, Size _s)
         : position{_p}, size{_s}
       {};
 
-    Region( int _x, int _y, int _w, int _h)
+    Region(int _x, int _y, int _w, int _h)
         : position{_x, _y}, size{_w, _h}
       {};
+
+    Position Near() const {
+      return this->position;
+    }
+
+    Position Far() const {
+      return Position{
+        this->FarX(),
+        this->FarY()
+      };
+    }
 
     int NearX() const {
       return this->position.x;
