@@ -30,7 +30,7 @@ bool Region::Encloses(Coordinate& point) {
            far  = this->Far();
 
   return ( near.x <= point.x )
-      && ( point.x <= far.x  )
       && ( near.y <= point.y )
+      && ( point.x <= far.x  )
       && ( point.y <= far.y  );
 }

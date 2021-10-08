@@ -84,44 +84,69 @@ Region Button::Bounds() {
 
 
 
-
-void ElboNorthWest::Draw(SDL_Renderer* renderer) const {
-  Region sweep{
+Region Elbo::SweepRegion() const {
+  return Region{
       this->bounds.position,
       this->sweep_size
     };
+}
 
-  Region hbar{
+Region Elbo::HorizontalRegion() const {
+  Region sweep = this->SweepRegion();
+
+  return Region{
       Position{sweep.FarX(), sweep.NearY()},
       Size{bounds.size.x - sweep.size.x, sweep.size.y}
     };
+}
 
-  Region vbar{
+Region Elbo::VerticalRegion() const {
+  Region sweep = this->SweepRegion();
+
+  return Region{
       Position{sweep.NearX(), sweep.FarY()},
       Size{sweep.size.x, bounds.size.y - sweep.size.y}
     };
+}
 
-  Region container{
+Region Elbo::ContainerRegion() const {
+  Region sweep = this->SweepRegion();
+  return Region{
     sweep.Far(),
     Size{bounds.size.x - sweep.size.x,
          bounds.size.y - sweep.size.y}
   };
+}
 
+void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent&) {
+  printf("my elbo feel funny\n");
+}
+
+
+
+void Elbo::Draw(SDL_Renderer* renderer) const {
+  Region sweep = this->SweepRegion();
   boxColor(renderer,
     sweep.NearX(), sweep.NearY(),
     sweep.FarX(),  sweep.FarY(),
     this->colours.base
   );
+
+  Region hbar = this->HorizontalRegion();
   boxColor(renderer,
     hbar.NearX(), hbar.NearY(),
     hbar.FarX(),  hbar.FarY(),
     this->colours.active
   );
+
+  Region vbar = this->VerticalRegion();
   boxColor(renderer,
     vbar.NearX(), vbar.NearY(),
     vbar.FarX(),  vbar.FarY(),
     this->colours.inactive
   );
+
+  Region container = this->ContainerRegion();
   boxColor(renderer,
     container.NearX(), container.NearY(),
     container.FarX(),  container.FarY(),
@@ -129,6 +154,3 @@ void ElboNorthWest::Draw(SDL_Renderer* renderer) const {
   );
 }
 
-void ElboNorthWest::OnMouseButtonDown(SDL_MouseButtonEvent&) {
-
-}

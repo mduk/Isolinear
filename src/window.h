@@ -63,11 +63,16 @@ class Button : public Drawable {
     bool active = false;
 };
 
-class ElboNorthWest : public Drawable {
+class Elbo : public Drawable {
   public:
-    ElboNorthWest(Region _b, ColourScheme _cs, Size _s)
+    Elbo(Region _b, ColourScheme _cs, Size _s)
       : bounds{_b}, colours{_cs}, sweep_size{_s}
     {};
+
+    Region SweepRegion() const;
+    Region HorizontalRegion() const;
+    Region VerticalRegion() const;
+    Region ContainerRegion() const;
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
@@ -79,4 +84,17 @@ class ElboNorthWest : public Drawable {
     Region bounds;
     ColourScheme colours;
     Size sweep_size;
+};
+
+class ElboNorthWest : public Elbo {
+  public:
+    ElboNorthWest(Region _b, ColourScheme _cs, Size _s)
+      : Elbo{_b, _cs, _s}
+    {};
+
+    void Draw(SDL_Renderer*) const;
+    void OnMouseButtonDown(SDL_MouseButtonEvent&);
+    Region Bounds() {
+      return bounds;
+    };
 };
