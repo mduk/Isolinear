@@ -69,11 +69,10 @@ void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
     }
   }
 
-  Size size{100,100};
-  Region reg{ cursor, size };
-  this->Add(new Button(reg));
+  this->Add(new Button(Region{
+    cursor, Size{100,100}
+  }));
 }
-
 
 void Button::Draw(SDL_Renderer* renderer) const {
   boxColor(renderer,

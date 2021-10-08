@@ -50,7 +50,7 @@ class Window {
 
 class Button : public Drawable {
   public:
-    Button(Region& _b) : bounds{_b} {}
+    Button(Region _b) : bounds{_b} {}
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);

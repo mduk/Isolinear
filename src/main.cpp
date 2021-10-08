@@ -46,8 +46,8 @@ int main(int argc, char* argv[]) {
   Window window(win_w, win_h);
   Grid grid{window.GetRegion()};
 
-  Region reg = grid.CalculateRegion(1,2,1,2);
-  window.Add(new Button(reg));
+  window.Add(new Button(grid.CalculateSingleCellRegion(2,2)));
+  window.Add(new Button(grid.CalculateSingleCellRegion(4,4)));
 
   bool running = true;
   while (running) {
