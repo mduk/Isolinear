@@ -18,6 +18,8 @@ class Grid {
       : bounds{_b}
     {};
 
+      Size CellSize();
+
     Region SingleCellRegion(int, int);
     Region MultiCellRegion(int, int, int, int);
 
