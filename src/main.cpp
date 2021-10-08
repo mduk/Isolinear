@@ -46,8 +46,7 @@ int main(int argc, char* argv[]) {
   Window window(win_w, win_h);
   Grid grid{window.size};
 
-  window.Add(new Button(grid.SingleCellRegion(2,2)));
-  window.Add(new Button(grid.SingleCellRegion(4,4)));
+  window.Add(new Button(grid.MultiCellRegion(2,4, 6,8)));
 
   bool running = true;
   while (running) {
