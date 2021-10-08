@@ -46,9 +46,10 @@ int main(int argc, char* argv[]) {
   Window window(win_w, win_h);
   Grid grid{window.size};
 
-  window.Add(new Button(
+  window.Add(new ElboNorthWest(
       grid.MultiCellRegion( 1, 1, 6,12),
-      ColourScheme{0xff3f403f, 0xff99ffff, 0xff66ccff, 0xff3399ff}
+      ColourScheme{0xff3f403f, 0xff99ffff, 0xff66ccff, 0xff3399ff},
+      Size{300,50}
   ));
   window.Add(new Button(
       grid.MultiCellRegion( 7, 1,12, 6),

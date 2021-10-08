@@ -85,14 +85,50 @@ Region Button::Bounds() {
 
 
 
-void Elbo::Draw(SDL_Renderer*) const {
+void ElboNorthWest::Draw(SDL_Renderer* renderer) const {
+  Region sweep{
+      this->bounds.position,
+      this->sweep_size
+    };
 
+  Region hbar{
+      Position{sweep.FarX(), sweep.NearY()},
+      Size{bounds.size.x - sweep.size.x, sweep.size.y}
+    };
+
+  Region vbar{
+      Position{sweep.NearX(), sweep.FarY()},
+      Size{sweep.size.x, bounds.size.y - sweep.size.y}
+    };
+
+  Region container{
+    sweep.Far(),
+    Size{bounds.size.x - sweep.size.x,
+         bounds.size.y - sweep.size.y}
+  };
+
+  boxColor(renderer,
+    sweep.NearX(), sweep.NearY(),
+    sweep.FarX(),  sweep.FarY(),
+    this->colours.base
+  );
+  boxColor(renderer,
+    hbar.NearX(), hbar.NearY(),
+    hbar.FarX(),  hbar.FarY(),
+    this->colours.active
+  );
+  boxColor(renderer,
+    vbar.NearX(), vbar.NearY(),
+    vbar.FarX(),  vbar.FarY(),
+    this->colours.inactive
+  );
+  boxColor(renderer,
+    container.NearX(), container.NearY(),
+    container.FarX(),  container.FarY(),
+    this->colours.disabled
+  );
 }
 
-void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent&) {
-
-}
-
-Region Elbo::Bounds() {
+void ElboNorthWest::OnMouseButtonDown(SDL_MouseButtonEvent&) {
 
 }
