@@ -40,9 +40,7 @@ class Window {
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
   protected:
-    int width_px;
-    int height_px;
-    Region region;
+    Size size;
     SDL_Window* sdl_window;
     SDL_Renderer* sdl_renderer;
     std::list<Drawable*> drawables;

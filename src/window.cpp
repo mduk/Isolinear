@@ -1,12 +1,12 @@
 #include "window.h"
 
 Window::Window(int w, int h)
-  : width_px{w}, height_px{h}
+  : size{w, h}
 {
   this->sdl_window = SDL_CreateWindow(
     "Isolinear",
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    this->width_px, this->height_px,
+    this->size.x, this->size.y,
     SDL_WINDOW_OPENGL //| SDL_WINDOW_FULLSCREEN_DESKTOP
   );
 
@@ -34,18 +34,18 @@ Window::Window(int w, int h)
 
   SDL_GetWindowSize(
     this->sdl_window,
-    &this->region.size.x,
-    &this->region.size.y
+    &this->size.x,
+    &this->size.y
   );
 }
 
 Region Window::GetRegion() {
   SDL_GetWindowSize(
     this->sdl_window,
-    &this->region.size.x,
-    &this->region.size.y
+    &this->size.x,
+    &this->size.y
   );
-  return this->region;
+  return this->size;
 }
 
 void Window::Add(Drawable* drawable) {
