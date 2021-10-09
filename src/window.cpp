@@ -87,43 +87,37 @@ Region Button::Bounds() {
 Region Elbo::SweepRegion() const {
   return Region{
       this->bounds.position,
-      this->sweep_size
+      this->corner.size
     };
 }
 
 Region Elbo::HorizontalRegion() const {
-  Region sweep = this->SweepRegion();
-
   return Region{
-      Position{sweep.FarX(), sweep.NearY()},
-      Size{bounds.size.x - sweep.size.x, sweep.size.y}
+      Position{corner.FarX(), corner.NearY()},
+      Size{bounds.size.x - corner.size.x, corner.size.y}
     };
 }
 
 Region Elbo::VerticalRegion() const {
-  Region sweep = this->SweepRegion();
-
   return Region{
-      Position{sweep.NearX(), sweep.FarY()},
-      Size{sweep.size.x, bounds.size.y - sweep.size.y}
+      Position{corner.NearX(), corner.FarY()},
+      Size{corner.size.x, bounds.size.y - corner.size.y}
     };
 }
 
 Region Elbo::InnerRadiusRegion() const {
-  Region sweep = this->SweepRegion();
   return Region{
-    Position{sweep.Far()},
-    Size{inner_radius, inner_radius}
-  };
+      Position{corner.Far()},
+      Size{inner_radius, inner_radius}
+    };
 }
 
 Region Elbo::ContainerRegion() const {
-  Region sweep = this->SweepRegion();
   return Region{
-    Position{sweep.FarX(), sweep.FarY() + inner_radius},
-    Size{bounds.size.x - sweep.size.x,
-         bounds.size.y - sweep.size.y - inner_radius}
-  };
+    Position{corner.FarX(), corner.FarY() + inner_radius},
+    Size{bounds.size.x - corner.size.x,
+         bounds.size.y - corner.size.y - inner_radius}
+    };
 }
 
 void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent&) {

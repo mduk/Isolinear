@@ -65,9 +65,15 @@ class Button : public Drawable {
 
 class Elbo : public Drawable {
   public:
-    Elbo(Region _b, ColourScheme _cs, Size _s)
-      : bounds{_b}, colours{_cs}, sweep_size{_s},
-        inner_radius{sweep_size.y}
+    Elbo(
+        Region _b,
+        ColourScheme _cs,
+        Size _s
+      ) :
+        bounds{_b},
+        colours{_cs},
+        corner{_b.position, _s},
+        inner_radius{_s.y}
     {};
 
     Region SweepRegion() const;
@@ -84,7 +90,7 @@ class Elbo : public Drawable {
 
   protected:
     Region bounds;
+    Region corner;
     ColourScheme colours;
-    Size sweep_size;
     int inner_radius;
 };
