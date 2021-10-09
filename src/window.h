@@ -66,12 +66,14 @@ class Button : public Drawable {
 class Elbo : public Drawable {
   public:
     Elbo(Region _b, ColourScheme _cs, Size _s)
-      : bounds{_b}, colours{_cs}, sweep_size{_s}
+      : bounds{_b}, colours{_cs}, sweep_size{_s},
+        inner_radius{sweep_size.y}
     {};
 
     Region SweepRegion() const;
     Region HorizontalRegion() const;
     Region VerticalRegion() const;
+    Region InnerRadiusRegion() const;
     Region ContainerRegion() const;
 
     void Draw(SDL_Renderer*) const;
@@ -84,4 +86,5 @@ class Elbo : public Drawable {
     Region bounds;
     ColourScheme colours;
     Size sweep_size;
+    int inner_radius;
 };

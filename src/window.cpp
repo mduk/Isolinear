@@ -109,12 +109,20 @@ Region Elbo::VerticalRegion() const {
     };
 }
 
+Region Elbo::InnerRadiusRegion() const {
+  Region sweep = this->SweepRegion();
+  return Region{
+    Position{sweep.Far()},
+    Size{inner_radius, inner_radius}
+  };
+}
+
 Region Elbo::ContainerRegion() const {
   Region sweep = this->SweepRegion();
   return Region{
-    sweep.Far(),
+    Position{sweep.FarX(), sweep.FarY() + inner_radius},
     Size{bounds.size.x - sweep.size.x,
-         bounds.size.y - sweep.size.y}
+         bounds.size.y - sweep.size.y - inner_radius}
   };
 }
 
@@ -152,5 +160,13 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     container.FarX(),  container.FarY(),
     this->colours.disabled
   );
+
+  Region iradius = this->InnerRadiusRegion();
+  boxColor(renderer,
+    iradius.NearX(), iradius.NearY(),
+    iradius.FarX(),  iradius.FarY(),
+    this->colours.base
+  );
+
 }
 
