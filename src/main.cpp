@@ -52,28 +52,36 @@ int main(int argc, char* argv[]) {
     Gutter{10,10}
   };
 
-  Elbo* mainelbo = new Elbo(
+  Elbo* main = new Elbo(
       grid.MultiCellRegion( 1, 1, 6,12),
       ColourScheme{0xff3399ff, 0xff99ffff, 0xff66ccff, 0xff3f403f},
       Size{grid.MultiCellRegion(1,1, 2,1).size.x, 20},
       InnerRadius{70}
   );
-  mainelbo->AddButton();
-  mainelbo->AddButton();
-  mainelbo->AddButton();
-  mainelbo->AddButton();
-  window.Add(mainelbo);
-  window.Add(new Elbo(
+  main->AddButton();
+  main->AddButton();
+  main->AddButton();
+  main->AddButton();
+  window.Add(main);
+
+  Elbo* second = new Elbo(
       grid.MultiCellRegion( 7, 1,12, 6),
       ColourScheme{0xff996600, 0xffcc99cc, 0xffffcc99, 0xffcc6633},
       Size{grid.CellSize().x, grid.CellSize().y / 3}
-  ));
-  window.Add(new Elbo(
+  );
+  second->AddButton();
+  second->AddButton();
+  window.Add(second);
+
+  Elbo* third = new Elbo(
       grid.MultiCellRegion( 7, 7,12,12),
       ColourScheme{0xff664466, 0xffcc9999, 0xffff9999, 0xff6666cc},
       Size{80,20},
       InnerRadius{50}
-  ));
+  );
+  third->AddButton();
+  third->AddButton();
+  window.Add(third);
 
   bool running = true;
   window.Draw();

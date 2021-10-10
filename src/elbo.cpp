@@ -78,7 +78,7 @@ Region Elbo::ContainerRegion() const {
 
 void Elbo::AddButton() {
   Region vertical_region = this->VerticalRegion();
-  static Grid g{
+  Grid g{
     vertical_region,
     NumCols{1},
     Margin{0, 0},
