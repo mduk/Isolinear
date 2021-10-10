@@ -49,17 +49,19 @@ int main(int argc, char* argv[]) {
   window.Add(new Elbo(
       grid.MultiCellRegion( 1, 1, 6,12),
       ColourScheme{0xff3399ff, 0xff99ffff, 0xff66ccff, 0xff3f403f},
-      grid.MultiCellRegion(1,1, 2,1).size
+      Size{grid.MultiCellRegion(1,1, 2,1).size.x, 20},
+      InnerRadius{70}
   ));
   window.Add(new Elbo(
       grid.MultiCellRegion( 7, 1,12, 6),
       ColourScheme{0xff996600, 0xffcc99cc, 0xffffcc99, 0xffcc6633},
-      grid.SingleCellRegion(1,1).size
+      Size{grid.SingleCellRegion(1,1).size.x, 20}
   ));
   window.Add(new Elbo(
       grid.MultiCellRegion( 7, 7,12,12),
       ColourScheme{0xff664466, 0xffcc9999, 0xffff9999, 0xff6666cc},
-      Size{150,20}
+      Size{150,20},
+      InnerRadius{50}
   ));
 
   bool running = true;

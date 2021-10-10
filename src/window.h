@@ -63,8 +63,39 @@ class Button : public Drawable {
     bool active = false;
 };
 
+using InnerRadius = int;
+using OuterRadius = int;
+
 class Elbo : public Drawable {
   public:
+    Elbo(
+        Region _b,
+        ColourScheme _cs,
+        Size _s,
+        InnerRadius _ir,
+        OuterRadius _or
+      ) :
+        bounds{_b},
+        colours{_cs},
+        corner{_b.position, _s},
+        inner_radius{_ir},
+        outer_radius{_or}
+    {};
+
+    Elbo(
+        Region _b,
+        ColourScheme _cs,
+        Size _s,
+        InnerRadius _ir
+      ) :
+        bounds{_b},
+        colours{_cs},
+        corner{_b.position, _s},
+        inner_radius{_ir},
+        outer_radius{_s.y + _ir}
+    {};
+
+
     Elbo(
         Region _b,
         ColourScheme _cs,
@@ -73,6 +104,7 @@ class Elbo : public Drawable {
         bounds{_b},
         colours{_cs},
         corner{_b.position, _s},
+        outer_radius{_s.y*2},
         inner_radius{_s.y}
     {};
 
@@ -80,6 +112,7 @@ class Elbo : public Drawable {
     Region HorizontalRegion() const;
     Region VerticalRegion() const;
     Region InnerRadiusRegion() const;
+    Region OuterRadiusRegion() const;
     Region ContainerRegion() const;
 
     void Draw(SDL_Renderer*) const;
@@ -92,5 +125,6 @@ class Elbo : public Drawable {
     Region bounds;
     Region corner;
     ColourScheme colours;
-    int inner_radius;
+    InnerRadius inner_radius;
+    OuterRadius outer_radius;
 };

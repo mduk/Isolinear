@@ -87,21 +87,24 @@ Region Button::Bounds() {
 Region Elbo::SweepRegion() const {
   return Region{
       this->bounds.position,
-      this->corner.size
+      Size{this->corner.size.x + inner_radius,
+           this->corner.size.y + inner_radius}
     };
 }
 
 Region Elbo::HorizontalRegion() const {
+  Region sweep = this->SweepRegion();
   return Region{
-      Position{corner.FarX(), corner.NearY()},
+      Position{sweep.FarX(), sweep.NearY()},
       Size{bounds.size.x - corner.size.x, corner.size.y}
     };
 }
 
 Region Elbo::VerticalRegion() const {
+  Region sweep = this->SweepRegion();
   return Region{
-      Position{corner.NearX(), corner.FarY()},
-      Size{corner.size.x, bounds.size.y - corner.size.y}
+      Position{sweep.NearX(), sweep.FarY()},
+      Size{corner.size.x, bounds.size.y - sweep.size.y}
     };
 }
 
@@ -109,6 +112,13 @@ Region Elbo::InnerRadiusRegion() const {
   return Region{
       Position{corner.Far()},
       Size{inner_radius, inner_radius}
+    };
+}
+
+Region Elbo::OuterRadiusRegion() const {
+  return Region{
+      bounds.position,
+      Size{outer_radius, outer_radius}
     };
 }
 
@@ -138,29 +148,70 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   boxColor(renderer,
     hbar.NearX(), hbar.NearY(),
     hbar.FarX(),  hbar.FarY(),
-    this->colours.active
+    this->colours.base
   );
 
   Region vbar = this->VerticalRegion();
   boxColor(renderer,
     vbar.NearX(), vbar.NearY(),
     vbar.FarX(),  vbar.FarY(),
-    this->colours.inactive
+    this->colours.base
+  );
+
+  Region oradius = this->OuterRadiusRegion();
+  boxColor(renderer,
+    oradius.NearX(), oradius.NearY(),
+    oradius.FarX(),  oradius.FarY(),
+    0xff000000
+  );
+  filledPieColor(renderer,
+    oradius.FarX(), oradius.FarY(),
+    outer_radius,
+    180, 270,
+    this->colours.base
+  );
+
+  Region iradius = this->InnerRadiusRegion();
+  filledPieColor(renderer,
+    iradius.FarX(), iradius.FarY(),
+    inner_radius,
+    180, 270,
+
+    0xff000000
   );
 
   Region container = this->ContainerRegion();
   boxColor(renderer,
     container.NearX(), container.NearY(),
     container.FarX(),  container.FarY(),
-    this->colours.disabled
+    0xff000000
   );
 
-  Region iradius = this->InnerRadiusRegion();
-  boxColor(renderer,
-    iradius.NearX(), iradius.NearY(),
-    iradius.FarX(),  iradius.FarY(),
-    this->colours.base
-  );
+  if (false) { // debug
+    rectangleColor(renderer,
+        iradius.NearX(), iradius.NearY(),
+        iradius.FarX() , iradius.FarY(),
+        0xffffffff
+    );
 
+    rectangleColor(renderer,
+        oradius.NearX(), oradius.NearY(),
+        oradius.FarX() , oradius.FarY(),
+        0xffffffff
+    );
+
+    rectangleColor(renderer,
+        this->corner.NearX(), this->corner.NearY(),
+        this->corner.FarX() , this->corner.FarY(),
+        0xffffffff
+    );
+
+    rectangleColor(renderer,
+      container.NearX(), container.NearY(),
+      container.FarX(),  container.FarY(),
+      0xffffffff
+    );
+
+  }
 }
 
