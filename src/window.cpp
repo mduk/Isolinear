@@ -65,9 +65,6 @@ void Button::Draw(SDL_Renderer* renderer) const {
   Colour drawcolour = (this->active == true)
                     ? this->colours.active
                     : this->colours.base;
-  drawcolour = 0xffffffff;
-
-  printf("Button: %d,%d %d,%d\n", this->bounds.NearX(), this->bounds.NearY(), this->bounds.size.x, this->bounds.size.y);
   boxColor(renderer,
     this->bounds.NearX(), this->bounds.NearY(),
     this->bounds.FarX(), this->bounds.FarY(),
@@ -133,15 +130,10 @@ Region Elbo::ContainerRegion() const {
 }
 
 
-void Elbo::AddButton(SDL_Renderer* renderer) {
-  Grid g(this->ContainerRegion(), 1);
+void Elbo::AddButton() {
+  Grid g(this->VerticalRegion(), 1);
   int n = buttons.size();
   Region button_region = g.SingleCellRegion(1, n + 1);
-  boxColor(renderer,
-    button_region.NearX(), button_region.NearY(),
-    button_region.FarX(),  button_region.FarY(),
-    0xff0000ff
-  );
   buttons.emplace_back(button_region, colours);
 }
 
@@ -172,10 +164,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     this->colours.base
   );
 
-  int i = 0;
   for (auto b : this->buttons) {
-    i++;
-    printf("Drawing button %d\n", i);
     b.Draw(renderer);
   }
 
@@ -201,7 +190,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   );
 
   Region container = this->ContainerRegion();
-  boxColor(renderer,
+  rectangleColor(renderer,
     container.NearX(), container.NearY(),
     container.FarX(),  container.FarY(),
     0xff000000

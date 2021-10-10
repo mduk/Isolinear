@@ -121,7 +121,7 @@ class Elbo : public Drawable {
     Region OuterRadiusRegion() const;
     Region ContainerRegion() const;
 
-    void AddButton(SDL_Renderer* renderer);
+    void AddButton();
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);

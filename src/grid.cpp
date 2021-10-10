@@ -18,6 +18,11 @@ Region Grid::MultiCellRegion(
   Column near_col, Row near_row,
   Column  far_col, Row  far_row
 ) {
+
+  if (near_col > num_cols || far_col > num_cols) {
+    throw std::runtime_error("Out of bounds");
+  }
+
   int x, y, w, h;
 
   Size s = this->CellSize();

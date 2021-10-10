@@ -53,7 +53,10 @@ int main(int argc, char* argv[]) {
       InnerRadius{70}
   );
   SDL_Renderer* renderer = window.sdl_renderer;
-  mainelbo->AddButton(renderer);
+  mainelbo->AddButton();
+  mainelbo->AddButton();
+  mainelbo->AddButton();
+  mainelbo->AddButton();
   window.Add(mainelbo);
   window.Add(new Elbo(
       grid.MultiCellRegion( 7, 1,12, 6),
@@ -68,6 +71,7 @@ int main(int argc, char* argv[]) {
   ));
 
   bool running = true;
+  window.Draw();
   while (running) {
 
 
@@ -75,28 +79,30 @@ int main(int argc, char* argv[]) {
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
 
-        case SDL_KEYDOWN:
+        case SDL_KEYDOWN: {
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE:
               running = false;
               break;
           }
           break;
+        }
 
         case SDL_MOUSEBUTTONDOWN: {
           window.OnMouseButtonDown(e.button);
           break;
         }
 
-        case SDL_QUIT:
+        case SDL_QUIT: {
           running = false;
           break;
-
+        }
       }
+
+      window.Draw();
     }
 
 
-    window.Draw();
 
   }
 
