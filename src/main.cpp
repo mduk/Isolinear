@@ -14,6 +14,7 @@
 #include "geometry.h"
 #include "window.h"
 #include "grid.h"
+#include "elbo.h"
 
 using namespace std;
 using namespace curlpp::options;
