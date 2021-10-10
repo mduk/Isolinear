@@ -77,20 +77,16 @@ Region Elbo::ContainerRegion() const {
 
 
 void Elbo::AddButton() {
-  Region vertical_region = this->VerticalRegion();
   Grid g{
-    vertical_region,
+    this->VerticalRegion(),
     NumCols{1},
     Margin{0, 0},
     Gutter{0, 10}
   };
-  int n = buttons.size();
-  Region button_region = g.SingleCellRegion(1, n + 1);
-  buttons.emplace_back(button_region, colours);
-
-  printf("w: %d b: %d\n",
-      vertical_region.size.x,
-      button_region.size.x );
+  buttons.emplace_back(
+      g.SingleCellRegion(1, buttons.size() + 1),
+      colours
+  );
 }
 
 
@@ -152,7 +148,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     0xff000000
   );
 
-  if (true) { // debug
+  if (false) { // debug
     rectangleColor(renderer,
         bounds.NearX(), bounds.NearY(),
         bounds.FarX() , bounds.FarY(),
