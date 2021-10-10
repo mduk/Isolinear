@@ -65,6 +65,7 @@ class Button : public Drawable {
 
 using InnerRadius = int;
 using OuterRadius = int;
+using Gutter = int;
 
 class Elbo : public Drawable {
   public:
@@ -126,4 +127,5 @@ class Elbo : public Drawable {
     ColourScheme colours;
     InnerRadius inner_radius;
     OuterRadius outer_radius;
+    Gutter gutter = 10;
 };

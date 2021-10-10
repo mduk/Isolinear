@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
   window.Add(new Elbo(
       grid.MultiCellRegion( 7, 7,12,12),
       ColourScheme{0xff664466, 0xffcc9999, 0xffff9999, 0xff6666cc},
-      Size{150,20},
+      Size{80,20},
       InnerRadius{50}
   ));
 

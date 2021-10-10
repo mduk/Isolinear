@@ -95,16 +95,16 @@ Region Elbo::SweepRegion() const {
 Region Elbo::HorizontalRegion() const {
   Region sweep = this->SweepRegion();
   return Region{
-      Position{sweep.FarX(), sweep.NearY()},
-      Size{bounds.size.x - corner.size.x, corner.size.y}
+      Position{sweep.FarX() + gutter, sweep.NearY()},
+      Size{bounds.size.x - corner.size.x - gutter, corner.size.y}
     };
 }
 
 Region Elbo::VerticalRegion() const {
   Region sweep = this->SweepRegion();
   return Region{
-      Position{sweep.NearX(), sweep.FarY()},
-      Size{corner.size.x, bounds.size.y - sweep.size.y}
+      Position{sweep.NearX(), sweep.FarY() + gutter},
+      Size{corner.size.x, bounds.size.y - sweep.size.y - gutter}
     };
 }
 
@@ -176,7 +176,6 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     iradius.FarX(), iradius.FarY(),
     inner_radius,
     180, 270,
-
     0xff000000
   );
 
