@@ -42,9 +42,9 @@ class Window {
     void Draw();
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
+    SDL_Renderer* sdl_renderer;
   protected:
     SDL_Window* sdl_window;
-    SDL_Renderer* sdl_renderer;
     std::list<Drawable*> drawables;
 };
 
@@ -121,7 +121,7 @@ class Elbo : public Drawable {
     Region OuterRadiusRegion() const;
     Region ContainerRegion() const;
 
-    void AddButton();
+    void AddButton(SDL_Renderer* renderer);
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);

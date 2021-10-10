@@ -52,7 +52,8 @@ int main(int argc, char* argv[]) {
       Size{grid.MultiCellRegion(1,1, 2,1).size.x, 20},
       InnerRadius{70}
   );
-  mainelbo->AddButton();
+  SDL_Renderer* renderer = window.sdl_renderer;
+  mainelbo->AddButton(renderer);
   window.Add(mainelbo);
   window.Add(new Elbo(
       grid.MultiCellRegion( 7, 1,12, 6),

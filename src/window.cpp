@@ -133,10 +133,16 @@ Region Elbo::ContainerRegion() const {
 }
 
 
-void Elbo::AddButton() {
+void Elbo::AddButton(SDL_Renderer* renderer) {
   Grid g(this->ContainerRegion(), 1);
   int n = buttons.size();
-  buttons.emplace_back(g.SingleCellRegion(1, n + 1), colours);
+  Region button_region = g.SingleCellRegion(1, n + 1);
+  boxColor(renderer,
+    button_region.NearX(), button_region.NearY(),
+    button_region.FarX(),  button_region.FarY(),
+    0xff0000ff
+  );
+  buttons.emplace_back(button_region, colours);
 }
 
 
