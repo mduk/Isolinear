@@ -65,7 +65,9 @@ void Button::Draw(SDL_Renderer* renderer) const {
   Colour drawcolour = (this->active == true)
                     ? this->colours.active
                     : this->colours.base;
+  drawcolour = 0xffffffff;
 
+  printf("Button: %d,%d %d,%d\n", this->bounds.NearX(), this->bounds.NearY(), this->bounds.size.x, this->bounds.size.y);
   boxColor(renderer,
     this->bounds.NearX(), this->bounds.NearY(),
     this->bounds.FarX(), this->bounds.FarY(),
@@ -130,11 +132,17 @@ Region Elbo::ContainerRegion() const {
     };
 }
 
-void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent&) {
-  printf("my elbo feel funny\n");
+
+void Elbo::AddButton() {
+  Grid g(this->ContainerRegion(), 1);
+  int n = buttons.size();
+  buttons.emplace_back(g.SingleCellRegion(1, n + 1), colours);
 }
 
 
+void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent&) {
+  printf("my elbo feel funny\n");
+}
 
 void Elbo::Draw(SDL_Renderer* renderer) const {
   Region sweep = this->SweepRegion();
@@ -152,11 +160,18 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   );
 
   Region vbar = this->VerticalRegion();
-  boxColor(renderer,
+  rectangleColor(renderer,
     vbar.NearX(), vbar.NearY(),
     vbar.FarX(),  vbar.FarY(),
     this->colours.base
   );
+
+  int i = 0;
+  for (auto b : this->buttons) {
+    i++;
+    printf("Drawing button %d\n", i);
+    b.Draw(renderer);
+  }
 
   Region oradius = this->OuterRadiusRegion();
   boxColor(renderer,

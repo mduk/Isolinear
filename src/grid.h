@@ -8,6 +8,7 @@
 #include "geometry.h"
 #include "window.h"
 
+using NumCols = int;
 using Column = int;
 using Row = int;
 
@@ -22,6 +23,11 @@ class Grid {
       : bounds{_b}
     {};
 
+    Grid(Region _b, NumCols _nc)
+      : bounds{_b},
+        num_cols(_nc)
+    {};
+
       Size CellSize();
 
     Region SingleCellRegion(int, int);
@@ -33,7 +39,7 @@ class Grid {
 
   protected:
     Region bounds;
-    int num_cols = 12;
+    NumCols num_cols = 12;
     int rowh = 100;
     int gutter = 10;
 };

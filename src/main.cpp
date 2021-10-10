@@ -46,12 +46,14 @@ int main(int argc, char* argv[]) {
   Window window(win_w, win_h);
   Grid grid{window.size};
 
-  window.Add(new Elbo(
+  Elbo* mainelbo = new Elbo(
       grid.MultiCellRegion( 1, 1, 6,12),
       ColourScheme{0xff3399ff, 0xff99ffff, 0xff66ccff, 0xff3f403f},
       Size{grid.MultiCellRegion(1,1, 2,1).size.x, 20},
       InnerRadius{70}
-  ));
+  );
+  mainelbo->AddButton();
+  window.Add(mainelbo);
   window.Add(new Elbo(
       grid.MultiCellRegion( 7, 1,12, 6),
       ColourScheme{0xff996600, 0xffcc99cc, 0xffffcc99, 0xffcc6633},

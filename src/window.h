@@ -8,6 +8,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "grid.h"
 #include "colours.h"
 #include "geometry.h"
 
@@ -67,6 +68,8 @@ using InnerRadius = int;
 using OuterRadius = int;
 using Gutter = int;
 
+using ButtonList = std::list<Button>;
+
 class Elbo : public Drawable {
   public:
     Elbo(
@@ -80,7 +83,8 @@ class Elbo : public Drawable {
         colours{_cs},
         corner{_b.position, _s},
         inner_radius{_ir},
-        outer_radius{_or}
+        outer_radius{_or},
+        buttons{}
     {};
 
     Elbo(
@@ -93,7 +97,8 @@ class Elbo : public Drawable {
         colours{_cs},
         corner{_b.position, _s},
         inner_radius{_ir},
-        outer_radius{_s.y + _ir}
+        outer_radius{_s.y + _ir},
+        buttons{}
     {};
 
     Elbo(
@@ -105,7 +110,8 @@ class Elbo : public Drawable {
         colours{_cs},
         corner{_b.position, _s},
         outer_radius{_s.y*2},
-        inner_radius{_s.y}
+        inner_radius{_s.y},
+        buttons{}
     {};
 
     Region SweepRegion() const;
@@ -114,6 +120,8 @@ class Elbo : public Drawable {
     Region InnerRadiusRegion() const;
     Region OuterRadiusRegion() const;
     Region ContainerRegion() const;
+
+    void AddButton();
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
@@ -128,4 +136,5 @@ class Elbo : public Drawable {
     InnerRadius inner_radius;
     OuterRadius outer_radius;
     Gutter gutter = 10;
+    ButtonList buttons;
 };
