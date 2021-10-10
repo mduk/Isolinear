@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "types.h"
 #include "geometry.h"
 #include "window.h"
 
@@ -16,17 +17,24 @@ using Row = int;
 class Grid {
   public:
 
-    Grid(Size _s)
-      : bounds{Position{0,0},_s}
+    Grid(Size s)
+      : bounds{Position{0,0},s}
     {};
 
-    Grid(Region _b)
-      : bounds{_b}
+    Grid(Region b)
+      : bounds{b}
     {};
 
-    Grid(Region _b, NumCols _nc)
-      : bounds{_b},
-        num_cols(_nc)
+    Grid(
+        Region b,
+        NumCols nc,
+        Margin m,
+        Gutter g
+      ) :
+        bounds{b},
+        num_cols{nc},
+        margin{m},
+        gutter{g}
     {};
 
       Size CellSize();
@@ -42,6 +50,7 @@ class Grid {
     Region bounds;
     NumCols num_cols = 12;
     int rowh = 100;
-    int gutter = 10;
+    Gutter gutter{10, 10};
+    Margin margin{10, 10};
 };
 

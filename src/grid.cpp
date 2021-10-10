@@ -28,18 +28,19 @@ Region Grid::MultiCellRegion(
   Size s = this->CellSize();
 
   x = bounds.position.x
-    + gutter
+    + margin.x
     + (s.x * (near_col - 1));
 
   y = bounds.position.y
-    + gutter
+    + margin.y
     + rowh * (near_row - 1);
 
   w = s.x * ((far_col - near_col) + 1)
-    - (gutter * 1);
+    - (gutter.x * 1)
+    ;
 
   h = rowh * ((far_row - near_row) + 1)
-    - (gutter * 1);
+    - (gutter.y * 1);
 
   return Region{ x, y, w, h };
 }

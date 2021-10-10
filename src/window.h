@@ -8,6 +8,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "types.h"
 #include "grid.h"
 #include "colours.h"
 #include "geometry.h"
@@ -66,7 +67,6 @@ class Button : public Drawable {
 
 using InnerRadius = int;
 using OuterRadius = int;
-using Gutter = int;
 
 using ButtonList = std::list<Button>;
 
@@ -135,6 +135,6 @@ class Elbo : public Drawable {
     ColourScheme colours;
     InnerRadius inner_radius;
     OuterRadius outer_radius;
-    Gutter gutter = 10;
+    Gutter gutter{10, 10};
     ButtonList buttons;
 };

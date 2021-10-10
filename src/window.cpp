@@ -94,16 +94,16 @@ Region Elbo::SweepRegion() const {
 Region Elbo::HorizontalRegion() const {
   Region sweep = this->SweepRegion();
   return Region{
-      Position{sweep.FarX() + gutter, sweep.NearY()},
-      Size{bounds.size.x - corner.size.x - gutter, corner.size.y}
+      Position{sweep.FarX() + gutter.x, sweep.NearY()},
+      Size{bounds.size.x - corner.size.x - gutter.x, corner.size.y}
     };
 }
 
 Region Elbo::VerticalRegion() const {
   Region sweep = this->SweepRegion();
   return Region{
-      Position{sweep.NearX(), sweep.FarY() + gutter},
-      Size{corner.size.x, bounds.size.y - sweep.size.y - gutter}
+      Position{sweep.NearX(), sweep.FarY() + gutter.y},
+      Size{corner.size.x, bounds.size.y - sweep.size.y - gutter.y}
     };
 }
 
@@ -131,7 +131,12 @@ Region Elbo::ContainerRegion() const {
 
 
 void Elbo::AddButton() {
-  Grid g(this->VerticalRegion(), 1);
+  Grid g{
+    this->VerticalRegion(),
+    NumCols{1},
+    Margin{0, 0},
+    Gutter{10, 10}
+  };
   int n = buttons.size();
   Region button_region = g.SingleCellRegion(1, n + 1);
   buttons.emplace_back(button_region, colours);
@@ -196,7 +201,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     0xff000000
   );
 
-  if (false) { // debug
+  if (true) { // debug
     rectangleColor(renderer,
         iradius.NearX(), iradius.NearY(),
         iradius.FarX() , iradius.FarY(),
