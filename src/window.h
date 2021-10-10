@@ -95,7 +95,6 @@ class Elbo : public Drawable {
         outer_radius{_s.y + _ir}
     {};
 
-
     Elbo(
         Region _b,
         ColourScheme _cs,
