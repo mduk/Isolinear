@@ -44,7 +44,12 @@ int main(int argc, char* argv[]) {
       win_w = win_h * 1.618;
 
   Window window(win_w, win_h);
-  Grid grid{window.size};
+  Grid grid{
+    Region{Position{0,0}, window.size},
+    NumCols{12},
+    Margin{10,10},
+    Gutter{10,10}
+  };
 
   Elbo* mainelbo = new Elbo(
       grid.MultiCellRegion( 1, 1, 6,12),
@@ -52,7 +57,6 @@ int main(int argc, char* argv[]) {
       Size{grid.MultiCellRegion(1,1, 2,1).size.x, 20},
       InnerRadius{70}
   );
-  SDL_Renderer* renderer = window.sdl_renderer;
   mainelbo->AddButton();
   mainelbo->AddButton();
   mainelbo->AddButton();

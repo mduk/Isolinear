@@ -50,7 +50,7 @@ class Grid {
     Region bounds;
     NumCols num_cols = 12;
     int rowh = 100;
-    Gutter gutter{10, 10};
+    Gutter gutter{50, 50};
     Margin margin{10, 10};
 };
 

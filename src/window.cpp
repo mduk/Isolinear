@@ -86,38 +86,44 @@ Region Button::Bounds() {
 Region Elbo::SweepRegion() const {
   return Region{
       this->bounds.position,
-      Size{this->corner.size.x + inner_radius,
-           this->corner.size.y + inner_radius}
+      Size{ this->corner.size.x + inner_radius,
+            this->corner.size.y + inner_radius }
     };
 }
 
 Region Elbo::HorizontalRegion() const {
   Region sweep = this->SweepRegion();
   return Region{
-      Position{sweep.FarX() + gutter.x, sweep.NearY()},
-      Size{bounds.size.x - corner.size.x - gutter.x, corner.size.y}
+      Position{ sweep.FarX(), sweep.NearY() },
+      Size{ bounds.size.x - corner.size.x - inner_radius,
+            corner.size.y
+      }
     };
 }
 
 Region Elbo::VerticalRegion() const {
   Region sweep = this->SweepRegion();
   return Region{
-      Position{sweep.NearX(), sweep.FarY() + gutter.y},
-      Size{corner.size.x, bounds.size.y - sweep.size.y - gutter.y}
+      Position{ sweep.NearX(),
+                sweep.FarY() + gutter.y
+      },
+      Size{ corner.size.x,
+            bounds.size.y - sweep.size.y - gutter.y
+      }
     };
 }
 
 Region Elbo::InnerRadiusRegion() const {
   return Region{
-      Position{corner.Far()},
-      Size{inner_radius, inner_radius}
+      Position{ corner.Far() },
+      Size{ inner_radius, inner_radius }
     };
 }
 
 Region Elbo::OuterRadiusRegion() const {
   return Region{
       bounds.position,
-      Size{outer_radius, outer_radius}
+      Size{ outer_radius, outer_radius }
     };
 }
 
@@ -202,6 +208,12 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   );
 
   if (true) { // debug
+    rectangleColor(renderer,
+        bounds.NearX(), bounds.NearY(),
+        bounds.FarX() , bounds.FarY(),
+        0xffffffff
+    );
+
     rectangleColor(renderer,
         iradius.NearX(), iradius.NearY(),
         iradius.FarX() , iradius.FarY(),
