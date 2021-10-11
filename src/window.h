@@ -9,24 +9,14 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "types.h"
+#include "drawable.h"
 #include "grid.h"
 #include "colours.h"
 #include "geometry.h"
 
+
 using namespace std;
 
-class Drawable {
-  public:
-    virtual void Draw(
-        SDL_Renderer*
-      ) const = 0;
-
-    virtual void OnMouseButtonDown(
-        SDL_MouseButtonEvent&
-      ) = 0;
-
-    virtual Region Bounds() = 0;
-};
 
 class Window {
   public:
@@ -43,8 +33,8 @@ class Window {
     void Draw();
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
-    SDL_Renderer* sdl_renderer;
   protected:
     SDL_Window* sdl_window;
+    SDL_Renderer* sdl_renderer;
     std::list<Drawable*> drawables;
 };

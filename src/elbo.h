@@ -9,6 +9,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "types.h"
+#include "drawable.h"
 #include "grid.h"
 #include "button.h"
 #include "colours.h"

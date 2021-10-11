@@ -4,7 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "window.h"
+#include "drawable.h"
 #include "types.h"
 #include "grid.h"
 #include "colours.h"
