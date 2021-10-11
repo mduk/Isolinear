@@ -13,6 +13,14 @@ class Coordinate {
         : x{_x}, y{_y}
       {};
 
+    Coordinate(SDL_MouseButtonEvent e)
+        : x{e.x}, y{e.y}
+      {};
+
+    Coordinate(SDL_MouseMotionEvent e)
+        : x{e.x}, y{e.y}
+      {};
+
     void Add(Coordinate* c);
     void Subtract(Coordinate* c);
 };

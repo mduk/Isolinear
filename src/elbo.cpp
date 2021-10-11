@@ -13,6 +13,7 @@ void Button::Draw(SDL_Renderer* renderer) const {
 }
 
 void Button::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+  printf("Button::OnMouseButtonDown\n");
   this->active = !this->active;
 }
 
@@ -90,8 +91,34 @@ void Elbo::AddButton() {
 }
 
 
-void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent&) {
-  printf("my elbo feel funny\n");
+void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
+  printf("Elbo::OnMouseButtonDown\n");
+  Position cursor{e};
+
+  if (SweepRegion().Encloses(cursor)) {
+    printf("      Sweep click\n");
+    return;
+  }
+
+  if (HorizontalRegion().Encloses(cursor)) {
+    printf("      Horizontal click\n");
+    return;
+  }
+
+  if (VerticalRegion().Encloses(cursor)) {
+    printf("      Vertical click\n");
+    for (auto button : buttons) {
+      if (button.Bounds().Encloses(cursor)) {
+        button.OnMouseButtonDown(e);
+      }
+    }
+    return;
+  }
+
+  if (ContainerRegion().Encloses(cursor)) {
+    printf("      Container click\n");
+    return;
+  }
 }
 
 void Elbo::Draw(SDL_Renderer* renderer) const {

@@ -51,7 +51,8 @@ void Window::Draw() {
 }
 
 void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-  Position cursor{event.x, event.y};
+  printf("Window::OnMouseButtonDown\n");
+  Position cursor{event};
 
   for (auto* drawable : this->drawables) {
     if (drawable->Bounds().Encloses(cursor)) {
