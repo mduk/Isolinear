@@ -13,17 +13,16 @@
 
 class Button : public Drawable {
   public:
-    Button(Region _b, ColourScheme _cs)
-      : bounds{_b}, colours{_cs}
-    {};
-
+    Button(Region, ColourScheme, Label);
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
     Region Bounds();
 
   protected:
+    TTF_Font* sdl_font;
     Region bounds;
     ColourScheme colours;
+    Label label;
     bool active = false;
 };
 

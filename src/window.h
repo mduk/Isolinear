@@ -27,6 +27,9 @@ class Window {
       for (auto* drawable : drawables) {
         delete drawable;
       }
+
+      SDL_DestroyRenderer(sdl_renderer);
+      SDL_DestroyWindow(sdl_window);
     }
 
     void Add(Drawable*);
@@ -36,6 +39,5 @@ class Window {
   protected:
     SDL_Window* sdl_window;
     SDL_Renderer* sdl_renderer;
-    TTF_Font* sdl_font;
     std::list<Drawable*> drawables;
 };

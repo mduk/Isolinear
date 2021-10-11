@@ -1,6 +1,21 @@
 #include "button.h"
 
 
+Button::Button(Region b, ColourScheme cs, Label l)
+  : bounds{b}, colours{cs}, label{l} {
+  this->sdl_font = TTF_OpenFont(
+      "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf",
+      64
+    );
+
+  if (!this->sdl_font) {
+    fprintf(stderr, "Couldn't load font: %s\n", TTF_GetError());
+    throw std::runtime_error(
+      "Failed to load font"
+    );
+  }
+}
+
 void Button::Draw(SDL_Renderer* renderer) const {
   Colour drawcolour = (this->active == true)
                     ? this->colours.active
@@ -10,6 +25,38 @@ void Button::Draw(SDL_Renderer* renderer) const {
     this->bounds.FarX(), this->bounds.FarY(),
     drawcolour
   );
+
+  SDL_Surface* surface =
+    TTF_RenderUTF8_Blended(
+        this->sdl_font,
+        label.c_str(),
+        SDL_Color{255,255,255}
+      );
+
+  SDL_Texture* texture =
+    SDL_CreateTextureFromSurface(
+        renderer, surface
+      );
+
+  SDL_Rect label_rect{
+      bounds.position.x,
+      bounds.position.y,
+      surface->w,
+      surface->h
+    };
+
+  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  SDL_RenderFillRect(renderer, &label_rect);
+
+  SDL_RenderCopy(
+      renderer,
+      texture,
+      NULL,
+      &label_rect
+    );
+
+  SDL_FreeSurface(surface);
+  SDL_DestroyTexture(texture);
 }
 
 
