@@ -84,6 +84,7 @@ class Elbo : public Drawable {
     Region VerticalRegion() const;
     Region InnerRadiusRegion() const;
     Region OuterRadiusRegion() const;
+    Region HeaderRegion() const;
     Region ContainerRegion() const;
 
     void AddButton();

@@ -68,6 +68,20 @@ Region Elbo::OuterRadiusRegion() const {
     };
 }
 
+Region Elbo::HeaderRegion() const {
+  Region sweep = SweepRegion();
+  return Region{
+      Position{
+          sweep.FarX(),
+          sweep.FarY() - inner_radius
+      },
+      Size{
+          bounds.size.x - sweep.size.x,
+          inner_radius
+      }
+    };
+}
+
 Region Elbo::ContainerRegion() const {
   return Region{
     Position{corner.FarX(), corner.FarY() + inner_radius},
@@ -170,6 +184,8 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     0xff000000
   );
 
+  Region header = HeaderRegion();
+
   Region container = this->ContainerRegion();
   rectangleColor(renderer,
     container.NearX(), container.NearY(),
@@ -200,6 +216,12 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
         this->corner.NearX(), this->corner.NearY(),
         this->corner.FarX() , this->corner.FarY(),
         0xffffffff
+    );
+
+    rectangleColor(renderer,
+      header.NearX(), header.NearY(),
+      header.FarX(),  header.FarY(),
+      0xffffffff
     );
 
     rectangleColor(renderer,
