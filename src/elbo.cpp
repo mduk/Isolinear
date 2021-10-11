@@ -110,8 +110,10 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
     for (auto button : buttons) {
       if (button.Bounds().Encloses(cursor)) {
         button.OnMouseButtonDown(e);
+        return;
       }
     }
+    // Tail region
     return;
   }
 
