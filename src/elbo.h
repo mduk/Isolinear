@@ -10,30 +10,13 @@
 
 #include "types.h"
 #include "grid.h"
+#include "button.h"
 #include "colours.h"
 #include "geometry.h"
-
-class Button;
 
 using InnerRadius = int;
 using OuterRadius = int;
 using ButtonList = std::list<Button>;
-
-class Button : public Drawable {
-  public:
-    Button(Region _b, ColourScheme _cs)
-      : bounds{_b}, colours{_cs}
-    {};
-
-    void Draw(SDL_Renderer*) const;
-    void OnMouseButtonDown(SDL_MouseButtonEvent&);
-    Region Bounds();
-
-  protected:
-    Region bounds;
-    ColourScheme colours;
-    bool active = false;
-};
 
 class Elbo : public Drawable {
   public:
