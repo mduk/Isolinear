@@ -119,6 +119,11 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
     return;
   }
 
+  if (HeaderRegion().Encloses(cursor)) {
+    printf("      Header click\n");
+    return;
+  }
+
   if (VerticalRegion().Encloses(cursor)) {
     printf("      Vertical click\n");
     for (auto button : buttons) {
