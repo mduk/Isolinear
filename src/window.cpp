@@ -26,6 +26,19 @@ Window::Window(int w, int h)
     );
   }
 
+  this->sdl_font = TTF_OpenFont(
+      "/usr/share/fonts/truetype/freefont/FreeMono.ttf",
+      64
+    );
+
+  if (!this->sdl_font) {
+    fprintf(stderr, "Couldn't load font: %s\n", TTF_GetError());
+    throw std::runtime_error(
+      "Failed to load font"
+    );
+  }
+
+
   SDL_SetRenderDrawBlendMode(
     this->sdl_renderer, SDL_BLENDMODE_BLEND
   );

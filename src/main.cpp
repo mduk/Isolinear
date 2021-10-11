@@ -40,6 +40,7 @@ int main(int argc, char* argv[]) {
   curlpp::initialize();
 
   SDL_Init(SDL_INIT_VIDEO);
+  TTF_Init();
 
   int win_h = 1250,
       win_w = win_h * 1.618;

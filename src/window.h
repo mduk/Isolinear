@@ -36,5 +36,6 @@ class Window {
   protected:
     SDL_Window* sdl_window;
     SDL_Renderer* sdl_renderer;
+    TTF_Font* sdl_font;
     std::list<Drawable*> drawables;
 };
