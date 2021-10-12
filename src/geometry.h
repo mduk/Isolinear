@@ -9,6 +9,10 @@ class Coordinate {
   public:
     int x, y;
 
+    Coordinate()
+        : x{0}, y{0}
+      {};
+
     Coordinate(int _x, int _y)
         : x{_x}, y{_y}
       {};
@@ -33,8 +37,27 @@ class Coordinate {
 };
 
 
-using Position = Coordinate;
-using Size = Coordinate;
+class Position : public Coordinate {
+  public:
+    Position() : Coordinate() {}
+
+    Position(int x, int y)
+        : Coordinate(x, y)
+      {};
+
+    Position(SDL_MouseButtonEvent e)
+        : Coordinate(e)
+      {};
+};
+
+class Size : public Coordinate {
+  public:
+    Size() : Coordinate() {};
+
+    Size(int w, int h)
+        : Coordinate(w, h)
+      {};
+};
 
 
 class Region {
