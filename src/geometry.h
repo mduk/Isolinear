@@ -41,23 +41,16 @@ class Position : public Coordinate {
   public:
     Position() : Coordinate() {}
 
-    Position(int x, int y)
-        : Coordinate(x, y)
-      {};
-
-    Position(SDL_MouseButtonEvent e)
-        : Coordinate(e)
-      {};
+    Position(int x, int y) : Coordinate(x, y) {};
+    Position(SDL_MouseButtonEvent e) : Coordinate(e) {};
 };
 
 class Size : public Coordinate {
   public:
     Size() : Coordinate() {};
 
-    Size(int w, int h)
-        : Coordinate(w, h)
-      {};
-};
+    Size(int w, int h) : Coordinate(w, h) {};
+    Size(SDL_Surface* s) : Coordinate(s) {}; };
 
 
 class Region {
