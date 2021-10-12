@@ -25,6 +25,10 @@ class Coordinate {
         : x{e.x}, y{e.y}
       {};
 
+    Coordinate(SDL_Surface* s)
+        : x{s->w}, y{s->h}
+      {};
+
     void Add(Coordinate c) {
       this->x += c.x;
       this->y += c.y;

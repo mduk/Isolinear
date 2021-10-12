@@ -38,7 +38,7 @@ void Button::Draw(SDL_Renderer* renderer) const {
         renderer, surface
       );
 
-  Size label_size{ surface->w, surface->h };
+  Size label_size{ surface };
   Region label_region = bounds.SouthEast(label_size);
   label_region.position.Subtract(Coordinate{5,0});
 
