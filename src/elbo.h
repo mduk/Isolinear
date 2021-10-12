@@ -71,6 +71,9 @@ class Elbo : public Drawable {
     Region HeaderRegion() const;
     Region ContainerRegion() const;
 
+    void SetHeader(std::string h) {
+      header = h;
+    }
     void AddButton();
 
     void Draw(SDL_Renderer*) const;
@@ -87,4 +90,5 @@ class Elbo : public Drawable {
     OuterRadius outer_radius;
     Gutter gutter{10, 10};
     ButtonList buttons;
+    std::string header;
 };

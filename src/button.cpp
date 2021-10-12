@@ -38,14 +38,11 @@ void Button::Draw(SDL_Renderer* renderer) const {
         renderer, surface
       );
 
-  SDL_Rect label_rect{
-      bounds.position.x,
-      bounds.position.y,
-      surface->w,
-      surface->h
-    };
+  Size label_size{ surface->w, surface->h };
+  Region label_region = bounds.SouthEast(label_size);
+  label_region.position.Subtract(Coordinate{5,0});
 
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+  SDL_Rect label_rect = label_region.AsSdlRect();
   SDL_RenderFillRect(renderer, &label_rect);
 
   SDL_RenderCopy(

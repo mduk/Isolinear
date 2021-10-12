@@ -25,14 +25,14 @@ class Coordinate {
         : x{e.x}, y{e.y}
       {};
 
-    void Add(Coordinate* c) {
-      this->x += c->x;
-      this->y += c->y;
+    void Add(Coordinate c) {
+      this->x += c.x;
+      this->y += c.y;
     }
 
-    void Subtract(Coordinate* c) {
-      this->x -= c->x;
-      this->y -= c->y;
+    void Subtract(Coordinate c) {
+      this->x -= c.x;
+      this->y -= c.y;
     }
 };
 
@@ -82,78 +82,69 @@ class Region {
         : position{_x, _y}, size{_w, _h}
       {};
 
-    Position Near() const {
-      return this->position;
-    }
+    // Near and Far Point Positions
 
-    Position Far() const {
-      return Position{
-        this->FarX(),
-        this->FarY()
-      };
-    }
+    Position Near()  const { return this->position; }
+         int NearX() const { return this->position.x; }
+         int NearY() const { return this->position.y; }
 
-    int NearX() const {
-      return this->position.x;
-    }
+    Position Far()  const { return Position{ FarX(), FarY() }; }
+         int FarX() const { return this->position.x + this->size.x; }
+         int FarY() const { return this->position.y + this->size.y; }
 
-    int NearY() const {
-      return this->position.y;
-    }
+    // Centre Point Position
 
-    int FarX() const {
-      return this->position.x
-           + this->size.x;
-    }
+    Position Centre()  const { return Position{ position.x + (size.x / 2),
+                                                position.y + (size.y / 2) }; }
+         int CentreX() const { return Centre().x; }
+         int CentreY() const { return Centre().y; }
 
-    int FarY() const {
-      return this->position.y
-           + this->size.y;
-    }
+    // Compass Point Positions
 
+    Position North()  const { return Position{ Centre().x, Near().y }; }
+         int NorthX() const { return North().x; }
+         int NorthY() const { return North().y; }
 
-    Position Centre() const {
-      return Position{
-          position.x + (size.x / 2),
-          position.y + (size.y / 2)
+    Position East()   const { return Position{ Far().x, Centre().y }; }
+         int EastX()  const { return East().x; }
+         int EastY()  const { return East().y; }
+
+    Position South()  const { return Position{ Centre().x, Far().y }; }
+         int SouthX() const { return South().x; }
+         int SouthY() const { return South().y; }
+
+    Position West()   const { return Position{ Near().x, Centre().y }; }
+         int WestX()  const { return West().x; }
+         int WestY()  const { return West().y; }
+
+    Position NorthEast()  const { return Position{ Far().x, Near().y }; }
+         int NorthEastX() const { return NorthEast().x; }
+         int NorthEastY() const { return NorthEast().y; }
+
+    Position SouthEast()  const { return Far(); }
+         int SouthEastX() const { return SouthEast().x; }
+         int SouthEastY() const { return SouthEast().y; }
+
+    Position SouthWest()  const { return Position{ Near().x, Far().y }; }
+         int SouthWestX() const { return SouthWest().x; }
+         int SouthWestY() const { return SouthWest().y; }
+
+    Position NorthWest()  const { return Near(); }
+         int NorthWestX() const { return NorthWest().x; }
+         int NorthWestY() const { return NorthWest().y; }
+
+    // Compass Point Regions
+
+    Region SouthEast(Size& s) const {
+      return Region{
+          SouthEastX() - s.x,
+          SouthEastY() - s.y,
+          s.x,
+          s.y
         };
     }
 
-
-    Position North() const {
-      return Position{ Centre().x, Near().y };
-    }
-
-    Position East() const {
-      return Position{ Far().x, Centre().y };
-    }
-
-    Position South() const {
-      return Position{ Centre().x, Far().y };
-    }
-
-    Position West() const {
-      return Position{ Near().x, Centre().y };
-    }
-
-
-    Position NorthEast() const {
-      return Position{ Far().x, Near().y };
-    }
-
-    Position SouthEast() const {
-      return Far();
-    }
-
-    Position SouthWest() const {
-      return Position{ Near().x, Far().y };
-    }
-
-    Position NorthWest() const {
-      return Near();
-    }
-
-
+    // Compass Quadrents
     Region NorthEastQuadrent() const {
       return Region{ North(), East() };
     }
@@ -171,6 +162,8 @@ class Region {
     }
 
 
+
+
     bool Encloses(Coordinate& point) const {
       Position near = this->Near(),
                far  = this->Far();
@@ -180,4 +173,15 @@ class Region {
           && ( point.x <= far.x  )
           && ( point.y <= far.y  );
     };
+
+
+
+    SDL_Rect AsSdlRect() const {
+      return SDL_Rect{
+          position.x,
+          position.y,
+          size.x,
+          size.y
+        };
+    }
 };
