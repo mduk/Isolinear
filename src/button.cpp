@@ -59,7 +59,13 @@ void Button::Draw(SDL_Renderer* renderer) const {
 
 void Button::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
   printf("Button::OnMouseButtonDown\n");
-  this->active = !this->active;
+  active = !active;
+  if (active) {
+    printf("      Now Active\n");
+  }
+  else {
+    printf("      Now Inactive\n");
+  }
 }
 
 
