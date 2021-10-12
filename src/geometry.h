@@ -44,7 +44,6 @@ class Coordinate {
 class Position : public Coordinate {
   public:
     Position() : Coordinate() {}
-
     Position(int x, int y) : Coordinate(x, y) {};
     Position(SDL_MouseButtonEvent e) : Coordinate(e) {};
 };
@@ -52,9 +51,9 @@ class Position : public Coordinate {
 class Size : public Coordinate {
   public:
     Size() : Coordinate() {};
-
     Size(int w, int h) : Coordinate(w, h) {};
-    Size(SDL_Surface* s) : Coordinate(s) {}; };
+    Size(SDL_Surface* s) : Coordinate(s) {};
+};
 
 
 class Region {
