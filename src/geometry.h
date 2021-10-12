@@ -158,16 +158,11 @@ class Region {
     }
 
 
-
-
     bool Encloses(Coordinate& point) const {
-      Position near = this->Near(),
-               far  = this->Far();
-
-      return ( near.x <= point.x )
-          && ( near.y <= point.y )
-          && ( point.x <= far.x  )
-          && ( point.y <= far.y  );
+      return ( NearX() <= point.x )
+          && ( NearY() <= point.y )
+          && ( point.x <= FarX()  )
+          && ( point.y <= FarY()  );
     };
 
 
