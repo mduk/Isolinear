@@ -140,7 +140,7 @@ class Region {
         };
     }
 
-    // Compass Quadrents
+    // Compass Quadrants
     Region NorthEastQuadrent() const {
       return Region{ North(), East() };
     }
