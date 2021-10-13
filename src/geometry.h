@@ -1,6 +1,9 @@
 #pragma once
 
+#include <stdexcept>
+
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 
@@ -174,5 +177,55 @@ class Region {
           size.x,
           size.y
         };
+    }
+
+
+
+    void RenderText(
+        SDL_Renderer* renderer,
+        std::string text
+    ) const {
+      TTF_Font* font = TTF_OpenFont(
+          "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf",
+          64
+        );
+
+      if (!font) {
+        fprintf(stderr, "Couldn't load font: %s\n", TTF_GetError());
+        throw std::runtime_error(
+          "Failed to load font"
+        );
+      }
+
+      SDL_Surface* surface =
+        TTF_RenderUTF8_Blended(
+            font,
+            text.c_str(),
+            SDL_Color{255,255,255}
+          );
+
+      TTF_CloseFont(font);
+
+      SDL_Texture* texture =
+        SDL_CreateTextureFromSurface(
+            renderer, surface
+          );
+
+      Size label_size{ surface };
+      Region label_region = SouthEast(label_size);
+      label_region.position.Subtract(Coordinate{5,0});
+
+      SDL_Rect label_rect = label_region.AsSdlRect();
+      SDL_RenderFillRect(renderer, &label_rect);
+
+      SDL_RenderCopy(
+          renderer,
+          texture,
+          NULL,
+          &label_rect
+        );
+
+      SDL_FreeSurface(surface);
+      SDL_DestroyTexture(texture);
     }
 };
