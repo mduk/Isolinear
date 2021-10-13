@@ -18,7 +18,7 @@ class Grid {
   public:
 
     Grid(Size s)
-      : bounds{Position{0,0},s}
+      : bounds{Position{0,0}, s}
     {};
 
     Grid(Region b)
@@ -40,7 +40,7 @@ class Grid {
       Size CellSize();
 
     Region SingleCellRegion(int, int);
-    Region MultiCellRegion(int, int, int, int);
+    Region  MultiCellRegion(int, int, int, int);
 
     Column PositionColumn(Position&);
        Row PositionRow   (Position&);
@@ -48,8 +48,8 @@ class Grid {
 
   protected:
     Region bounds;
-    NumCols num_cols = 12;
-    int rowh = 100;
+    NumCols num_cols{12};
+    int rowh{100};
     Gutter gutter{50, 50};
     Margin margin{10, 10};
 };
