@@ -143,20 +143,22 @@ class Region {
         };
     }
 
+    // Compass Halves
+
     // Compass Quadrants
-    Region NorthEastQuadrent() const {
+    Region NorthEastQuadrant() const {
       return Region{ North(), East() };
     }
 
-    Region SouthEastQuadrent() const {
+    Region SouthEastQuadrant() const {
       return Region{ Centre(), SouthEast() };
     }
 
-    Region SouthWestQuadrent() const {
+    Region SouthWestQuadrant() const {
       return Region{ West(), South() };
     }
 
-    Region NorthWestQuadrent() const {
+    Region NorthWestQuadrant() const {
       return Region{ NorthWest(), Centre() };
     }
 
