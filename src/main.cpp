@@ -46,12 +46,15 @@ int main(int argc, char* argv[]) {
       win_w = win_h * 1.618;
 
   Window window(win_w, win_h);
+
+  /*
   Grid grid{
     Region{Position{0,0}, window.size},
     NumCols{12},
     Margin{10,10},
     Gutter{10,10}
   };
+
   Size cell_size = grid.CellSize();
 
   Elbo* main = new Elbo(
@@ -85,6 +88,7 @@ int main(int argc, char* argv[]) {
   third->AddButton();
   third->AddButton();
   window.Add(third);
+*/
 
   bool running = true;
   window.Draw();

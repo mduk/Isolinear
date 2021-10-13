@@ -35,6 +35,8 @@ class Window {
     void Add(Drawable*);
     void Draw();
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
+    void draw(SDL_Renderer*, Position, uint32_t c);
+    void draw(SDL_Renderer*, Region, uint32_t c);
 
   protected:
     SDL_Window* sdl_window;

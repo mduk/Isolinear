@@ -178,13 +178,13 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   );
 
   Region header = HeaderRegion();
-  header.RenderText(renderer, this->header);
 
   Region container = this->ContainerRegion();
+  container.RenderText(renderer, this->header);
   rectangleColor(renderer,
     container.NearX(), container.NearY(),
     container.FarX(),  container.FarY(),
-    0xff000000
+    0xffffffff
   );
 
   if (false) { // debug
