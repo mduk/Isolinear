@@ -39,9 +39,11 @@ class Coordinate {
         };
     }
 
-    void Subtract(Coordinate c) {
-      this->x -= c.x;
-      this->y -= c.y;
+    Coordinate Subtract(Coordinate c) const {
+      return Coordinate{
+          x - c.x,
+          y - c.y
+        };
     }
 
     int CentreX()    const { return x / 2; }
@@ -152,61 +154,22 @@ class Region {
     int NorthWestX() const { return NorthWest().x; }
     int NorthWestY() const { return NorthWest().y; }
 
-    // Compass Point Regions
-
-    Region AlignCentre(Size& s) const {
-      return Region{
-          CentreX() - (s.x / 2),
-          CentreY() - (s.y / 2),
-          s.x, s.y
-        };
-    }
-
-    Region AlignNorth(Size& s) const {
-      return Region{
-          NorthX() - (s.x / 2),
-          NorthY(),
-          s.x, s.y
-        };
-    }
-
-    Region AlignSouth(Size& s) const {
-      return Region{};
-    }
-
-    Region AlignEast(Size& s) const {
-      return Region{
-          EastX() - s.x,
-          EastY() - (s.y / 2),
-          s.x, s.y
-        };
-    }
-
-    Region AlignSouthEast(Size& s) const {
-      return Region{
-          SouthEastX() - s.x,
-          SouthEastY() - s.y,
-          s.x, s.y
-        };
-    }
+    // Compass Alignment
+    Region AlignCentre(Size& s)    const { return Region{    Centre().Subtract(s.Centre()   ), s }; }
+    Region AlignNorth(Size& s)     const { return Region{     North().Subtract(s.North()    ), s }; }
+    Region AlignEast(Size& s)      const { return Region{      East().Subtract(s.East()     ), s }; }
+    Region AlignSouth(Size& s)     const { return Region{     South().Subtract(s.South()    ), s }; }
+    Region AlignWest(Size& s)      const { return Region{      West().Subtract(s.West()     ), s }; }
+    Region AlignNorthEast(Size& s) const { return Region{ NorthEast().Subtract(s.NorthEast()), s }; }
+    Region AlignSouthEast(Size& s) const { return Region{ SouthEast().Subtract(s.SouthEast()), s }; }
+    Region AlignSouthWest(Size& s) const { return Region{ SouthWest().Subtract(s.SouthWest()), s }; }
+    Region AlignNorthWest(Size& s) const { return Region{ NorthWest().Subtract(s.NorthWest()), s }; }
 
     // Compass Quadrants
-    Region NorthEastQuadrant() const {
-      return Region{ North(), East() };
-    }
-
-    Region SouthEastQuadrant() const {
-      return Region{ Centre(), SouthEast() };
-    }
-
-    Region SouthWestQuadrant() const {
-      return Region{ West(), South() };
-    }
-
-    Region NorthWestQuadrant() const {
-      return Region{ NorthWest(), Centre() };
-    }
-
+    Region NorthEastQuadrant() const { return Region{ North(),       East() }; }
+    Region SouthEastQuadrant() const { return Region{ Centre(), SouthEast() }; }
+    Region SouthWestQuadrant() const { return Region{ West(),       South() }; }
+    Region NorthWestQuadrant() const { return Region{ NorthWest(), Centre() }; }
 
     bool Encloses(Coordinate& point) const {
       return ( NearX() <= point.x )
@@ -259,7 +222,7 @@ class Region {
           );
 
       Size label_size{ surface };
-      Region label_region = AlignSouth(label_size);
+      Region label_region = AlignEast(label_size);
       label_region.position.Subtract(Coordinate{5,0});
 
       SDL_Rect label_rect = label_region.AsSdlRect();
