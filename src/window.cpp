@@ -44,16 +44,6 @@ void Window::Add(Drawable* drawable) {
   this->drawables.push_back(drawable);
 }
 
-void Window::draw(SDL_Renderer* r, Position p, uint32_t c) {
-  filledCircleColor(r, p.x, p.y, 10, c);
-}
-
-void Window::draw(SDL_Renderer* r, Region re, uint32_t c) {
-  printf("Region: %d,%d %d,%d\n", re.position.x, re.position.y, re.Far().x, re.Far().y);
-  boxColor(r, re.NearX(), re.NearY(),
-               re.FarX(),  re.FarY(), c);
-}
-
 void Window::Draw() {
   for (auto* drawable : this->drawables) {
     drawable->Draw(this->sdl_renderer);
@@ -72,3 +62,15 @@ void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
     }
   }
 }
+
+
+void Window::draw(SDL_Renderer* r, Position p, uint32_t c) {
+  filledCircleColor(r, p.x, p.y, 10, c);
+}
+
+void Window::draw(SDL_Renderer* r, Region re, uint32_t c) {
+  printf("Region: %d,%d %d,%d\n", re.position.x, re.position.y, re.Far().x, re.Far().y);
+  boxColor(r, re.NearX(), re.NearY(),
+               re.FarX(),  re.FarY(), c);
+}
+

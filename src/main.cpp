@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
 
   Window window(win_w, win_h);
 
-  /*
   Grid grid{
     Region{Position{0,0}, window.size},
     NumCols{12},
@@ -88,7 +87,6 @@ int main(int argc, char* argv[]) {
   third->AddButton();
   third->AddButton();
   window.Add(third);
-*/
 
   bool running = true;
   window.Draw();
