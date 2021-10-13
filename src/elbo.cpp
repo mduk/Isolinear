@@ -75,10 +75,20 @@ void Elbo::AddButton() {
     Margin{0, 0},
     Gutter{0, 10}
   };
+
+  std::string tmp_s;
+  static const char chars[] = "0123456789";
+
+  int len = 3;
+  tmp_s.reserve(len);
+  for (int i = 0; i < len; ++i) {
+      tmp_s += chars[rand() % (sizeof(chars) - 1)];
+  }
+
   buttons.emplace_back(
       g.SingleCellRegion(1, buttons.size() + 1),
       colours,
-      "Bbg"
+      tmp_s
   );
 }
 

@@ -15,9 +15,13 @@
 #include "colours.h"
 #include "geometry.h"
 
+
+using namespace std;
+
 using InnerRadius = int;
 using OuterRadius = int;
 using ButtonList = std::list<Button>;
+
 
 class Elbo : public Drawable {
   public:
