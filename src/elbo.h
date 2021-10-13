@@ -26,47 +26,60 @@ using ButtonList = std::list<Button>;
 class Elbo : public Drawable {
   public:
     Elbo(
+        Region b,
+        ColourScheme cs,
+        Size s,
+        std::string h
+      ) :
+        bounds{b},
+        colours{cs},
+        corner{b.position, s},
+        header{h},
+        inner_radius{s.y * 3},
+        outer_radius{s.y * 3}
+    {};
+
+    Elbo(
         Region _b,
         ColourScheme _cs,
         Size _s,
+        std::string _h,
         InnerRadius _ir,
         OuterRadius _or
       ) :
         bounds{_b},
         colours{_cs},
         corner{_b.position, _s},
+        header{_h},
         inner_radius{_ir},
-        outer_radius{_or},
-        buttons{}
+        outer_radius{_or}
     {};
-
+/*
     Elbo(
         Region _b,
         ColourScheme _cs,
-        Size _s,
+        ElboCorner _s,
         InnerRadius _ir
       ) :
         bounds{_b},
         colours{_cs},
         corner{_b.position, _s},
         inner_radius{_ir},
-        outer_radius{_s.y + _ir},
-        buttons{}
+        outer_radius{_s.y + _ir}
     {};
 
     Elbo(
         Region _b,
         ColourScheme _cs,
-        Size _s
+        ElboCorner _s
       ) :
         bounds{_b},
         colours{_cs},
         corner{_b.position, _s},
         outer_radius{_s.y*2},
-        inner_radius{_s.y},
-        buttons{}
+        inner_radius{_s.y}
     {};
-
+*/
     Region SweepRegion() const;
     Region HorizontalRegion() const;
     Region VerticalRegion() const;
@@ -93,6 +106,6 @@ class Elbo : public Drawable {
     InnerRadius inner_radius;
     OuterRadius outer_radius;
     Gutter gutter{10, 10};
-    ButtonList buttons;
+    ButtonList buttons{};
     std::string header;
 };
