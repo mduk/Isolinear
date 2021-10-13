@@ -54,32 +54,7 @@ class Elbo : public Drawable {
         inner_radius{_ir},
         outer_radius{_or}
     {};
-/*
-    Elbo(
-        Region _b,
-        ColourScheme _cs,
-        ElboCorner _s,
-        InnerRadius _ir
-      ) :
-        bounds{_b},
-        colours{_cs},
-        corner{_b.position, _s},
-        inner_radius{_ir},
-        outer_radius{_s.y + _ir}
-    {};
 
-    Elbo(
-        Region _b,
-        ColourScheme _cs,
-        ElboCorner _s
-      ) :
-        bounds{_b},
-        colours{_cs},
-        corner{_b.position, _s},
-        outer_radius{_s.y*2},
-        inner_radius{_s.y}
-    {};
-*/
     Region SweepRegion() const;
     Region HorizontalRegion() const;
     Region VerticalRegion() const;
