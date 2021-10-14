@@ -1,7 +1,11 @@
 #include "window.h"
 
 Window::Window(int w, int h)
-  : size{w, h}
+  : size{w, h},
+    font{
+      "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf",
+      64
+    }
 {
   this->sdl_window = SDL_CreateWindow(
     "Isolinear",
@@ -69,7 +73,6 @@ void Window::draw(SDL_Renderer* r, Position p, uint32_t c) {
 }
 
 void Window::draw(SDL_Renderer* r, Region re, uint32_t c) {
-  printf("Region: %d,%d %d,%d\n", re.position.x, re.position.y, re.Far().x, re.Far().y);
   boxColor(r, re.NearX(), re.NearY(),
                re.FarX(),  re.FarY(), c);
 }

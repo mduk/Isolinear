@@ -49,6 +49,7 @@ int main(int argc, char* argv[]) {
 
   Grid grid{
     Region{Position{0,0}, window.size},
+    RowHeight{100},
     NumCols{12},
     Margin{10,10},
     Gutter{10,10}

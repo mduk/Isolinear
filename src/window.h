@@ -13,6 +13,7 @@
 #include "grid.h"
 #include "colours.h"
 #include "geometry.h"
+#include "text.h"
 
 
 using namespace std;
@@ -39,6 +40,7 @@ class Window {
   protected:
     SDL_Window* sdl_window;
     SDL_Renderer* sdl_renderer;
+    Font font;
     std::list<Drawable*> drawables;
 
     void draw(SDL_Renderer*, Position, uint32_t c);

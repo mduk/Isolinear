@@ -222,7 +222,7 @@ class Region {
           );
 
       Size label_size{ surface };
-      Region label_region = AlignEast(label_size);
+      Region label_region = AlignSouthEast(label_size);
       label_region.position.Subtract(Coordinate{5,0});
 
       SDL_Rect label_rect = label_region.AsSdlRect();

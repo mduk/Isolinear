@@ -13,6 +13,7 @@
 using NumCols = int;
 using Column = int;
 using Row = int;
+using RowHeight = int;
 
 class Grid {
   public:
@@ -27,11 +28,13 @@ class Grid {
 
     Grid(
         Region b,
+        RowHeight rh,
         NumCols nc,
         Margin m,
         Gutter g
       ) :
         bounds{b},
+        rowh{rh},
         num_cols{nc},
         margin{m},
         gutter{g}
