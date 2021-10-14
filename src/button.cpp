@@ -1,10 +1,6 @@
 #include "button.h"
 
 
-Button::Button(Region b, ColourScheme cs, Label l)
-  : bounds{b}, colours{cs}, label{l} {
-}
-
 void Button::Draw(SDL_Renderer* renderer) const {
   Colour drawcolour = (this->active == true)
                     ? this->colours.active
@@ -28,9 +24,4 @@ void Button::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
   else {
     printf("      Now Inactive\n");
   }
-}
-
-
-Region Button::Bounds() {
-  return this->bounds;
 }
