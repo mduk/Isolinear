@@ -39,7 +39,14 @@ class Elbo : public Drawable {
         corner{b.position, s},
         header{h},
         inner_radius{window.HeaderFont().Height()},
-        outer_radius{s.y * 3}
+        outer_radius{s.y * 3},
+        button_grid{
+          VerticalRegion(),
+          RowHeight{100},
+          NumCols{1},
+          Margin{0,0},
+          Gutter{0,10}
+        }
     {};
 
     Region SweepRegion() const;
@@ -66,6 +73,7 @@ class Elbo : public Drawable {
     InnerRadius inner_radius;
     OuterRadius outer_radius;
     Gutter gutter{10, 10};
+    Grid button_grid;
     ButtonList buttons{};
     std::string header;
 };

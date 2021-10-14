@@ -69,14 +69,6 @@ Region Elbo::ContainerRegion() const {
 
 
 void Elbo::AddButton() {
-  Grid g{
-    this->VerticalRegion(),
-    RowHeight{100},
-    NumCols{1},
-    Margin{0, 0},
-    Gutter{0, 10}
-  };
-
   std::string tmp_s;
   static const char chars[] = "0123456789";
 
@@ -88,7 +80,7 @@ void Elbo::AddButton() {
 
   buttons.emplace_back(
       window,
-      g.SingleCellRegion(1, buttons.size() + 1),
+      button_grid.SingleCellRegion(1, buttons.size() + 1),
       colours,
       tmp_s
   );
