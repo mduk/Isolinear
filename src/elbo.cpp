@@ -87,6 +87,7 @@ void Elbo::AddButton() {
   }
 
   buttons.emplace_back(
+      window,
       g.SingleCellRegion(1, buttons.size() + 1),
       colours,
       tmp_s

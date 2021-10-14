@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "window.h"
 #include "drawable.h"
 #include "types.h"
 #include "grid.h"
@@ -14,10 +15,12 @@
 class Button : public Drawable {
   public:
     Button(
+        Window& w,
         Region b,
         ColourScheme cs,
         Label l
       ) :
+        window{w},
         bounds{b},
         colours{cs},
         label{l}
@@ -30,6 +33,7 @@ class Button : public Drawable {
     }
 
   protected:
+    Window window;
     Region bounds;
     ColourScheme colours;
     Label label;
