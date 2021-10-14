@@ -178,8 +178,10 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     0xff000000
   );
 
-  Region header = HeaderRegion();
-  header.RenderText(renderer, this->header);
+  Region header_region = HeaderRegion();
+  window.HeaderFont().RenderTextWest(
+    renderer, header_region, this->header
+  );
 
   Region container = this->ContainerRegion();
   rectangleColor(renderer,
@@ -188,7 +190,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     0xffffffff
   );
 
-  if (false) { // debug
+  if (true) { // debug
     rectangleColor(renderer,
         bounds.NearX(), bounds.NearY(),
         bounds.FarX() , bounds.FarY(),
@@ -214,8 +216,8 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     );
 
     rectangleColor(renderer,
-      header.NearX(), header.NearY(),
-      header.FarX(),  header.FarY(),
+      header_region.NearX(), header_region.NearY(),
+      header_region.FarX(),  header_region.FarY(),
       0xffffffff
     );
 

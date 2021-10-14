@@ -47,12 +47,11 @@ int main(int argc, char* argv[]) {
 
   Window window(win_w, win_h);
 
-  Size cell_size = window.grid.CellSize();
-
   Elbo* main = new Elbo(
+      window,
       window.grid.MultiCellRegion( 1, 1, 6,12),
       ColourScheme{0xffaaaaaa, 0xff00ff00, 0xff0000ff, 0xff999999},
-      Size{window.grid.MultiCellRegion(1,1, 2,1).size.x, 20},
+      Size{window.grid.MultiCellRegion(1,1, 2,1).size.x, window.grid.CellSize().y / 3},
       "MAIN WINDOW"
   );
   main->AddButton();
@@ -62,6 +61,7 @@ int main(int argc, char* argv[]) {
   window.Add(main);
 
   Elbo* second = new Elbo(
+      window,
       window.grid.MultiCellRegion( 7, 1,12, 6),
       ColourScheme{0xff996600, 0xffcc99cc, 0xffffcc99, 0xffcc6633},
       Size{window.grid.CellSize().x, window.grid.CellSize().y / 3},
@@ -72,9 +72,10 @@ int main(int argc, char* argv[]) {
   window.Add(second);
 
   Elbo* third = new Elbo(
+      window,
       window.grid.MultiCellRegion( 7, 7,12,12),
       ColourScheme{0xff664466, 0xffcc9999, 0xffff9999, 0xff6666cc},
-      Size{80, 20},
+      Size{window.grid.CellSize().x, window.grid.CellSize().y / 3},
       "AUX WINDOW 1"
   );
   third->AddButton();

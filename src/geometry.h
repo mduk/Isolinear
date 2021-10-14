@@ -102,6 +102,10 @@ class Region {
         : position{0,0}, size{0,0}
       {};
 
+    Region(Size s)
+        : position{0,0}, size{s}
+      {};
+
     Region(Position _p, Size _s)
         : position{_p}, size{_s}
       {};

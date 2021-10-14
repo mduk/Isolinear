@@ -14,6 +14,7 @@
 #include "button.h"
 #include "colours.h"
 #include "geometry.h"
+#include "window.h"
 
 
 using namespace std;
@@ -26,33 +27,19 @@ using ButtonList = std::list<Button>;
 class Elbo : public Drawable {
   public:
     Elbo(
+        Window& w,
         Region b,
         ColourScheme cs,
         Size s,
         std::string h
       ) :
+        window{w},
         bounds{b},
         colours{cs},
         corner{b.position, s},
         header{h},
-        inner_radius{s.y * 3},
+        inner_radius{window.HeaderFont().Height()},
         outer_radius{s.y * 3}
-    {};
-
-    Elbo(
-        Region _b,
-        ColourScheme _cs,
-        Size _s,
-        std::string _h,
-        InnerRadius _ir,
-        OuterRadius _or
-      ) :
-        bounds{_b},
-        colours{_cs},
-        corner{_b.position, _s},
-        header{_h},
-        inner_radius{_ir},
-        outer_radius{_or}
     {};
 
     Region SweepRegion() const;
@@ -63,9 +50,6 @@ class Elbo : public Drawable {
     Region HeaderRegion() const;
     Region ContainerRegion() const;
 
-    void SetHeader(std::string h) {
-      header = h;
-    }
     void AddButton();
 
     void Draw(SDL_Renderer*) const;
@@ -75,6 +59,7 @@ class Elbo : public Drawable {
     };
 
   protected:
+    Window window;
     Region bounds;
     Region corner;
     ColourScheme colours;

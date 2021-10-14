@@ -27,15 +27,15 @@ class Font {
       TTF_CloseFont(sdl_font);
     }
 
-    int Height() {
+    int Height() const {
       return TTF_FontHeight(sdl_font);
     }
 
-    void RenderText(
+    void RenderTextWest(
         SDL_Renderer* renderer,
         Region bounds,
         std::string text
-    ) {
+    ) const {
       SDL_Surface* surface = TTF_RenderUTF8_Blended(
           sdl_font, text.c_str(), SDL_Color{255,255,255}
       );
@@ -45,7 +45,7 @@ class Font {
       );
 
       Size surface_size{surface};
-      Region label_region = bounds.AlignSouthEast(surface_size);
+      Region label_region = bounds.AlignWest(surface_size);
       label_region.position.Subtract(Coordinate{5,0});
 
       SDL_Rect label_rect = label_region.AsSdlRect();

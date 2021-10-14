@@ -34,13 +34,20 @@ class Window {
       SDL_DestroyWindow(sdl_window);
     }
 
+    Font& HeaderFont() const {
+      return font;
+    }
+
     void Add(Drawable*);
     void Draw();
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
   protected:
     std::string title{"Isolinear"};
-    Font font;
+    const Font font{
+      "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf",
+      64
+    };
     std::list<Drawable*> drawables;
 
     SDL_Window* sdl_window;

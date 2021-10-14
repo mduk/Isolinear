@@ -2,15 +2,8 @@
 
 Window::Window(int w, int h)
   : size{w, h},
-    font{
-      "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf",
-      64
-    },
     grid{
-      Region{
-        Position{0,0},
-        size
-      },
+      Region{size},
       RowHeight{100},
       NumCols{12},
       Margin{10,10},
@@ -54,7 +47,7 @@ Window::Window(int w, int h)
   );
 
   Grid grid{
-    Region{Position{0,0}, size},
+    Region{size},
     RowHeight{font.Height()},
     NumCols{12},
     Margin{10,10},
