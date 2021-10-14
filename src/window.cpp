@@ -5,6 +5,16 @@ Window::Window(int w, int h)
     font{
       "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf",
       64
+    },
+    grid{
+      Region{
+        Position{0,0},
+        size
+      },
+      RowHeight{100},
+      NumCols{12},
+      Margin{10,10},
+      Gutter{10,10}
     }
 {
   this->sdl_window = SDL_CreateWindow(
@@ -42,6 +52,14 @@ Window::Window(int w, int h)
     &this->size.x,
     &this->size.y
   );
+
+  Grid grid{
+    Region{Position{0,0}, size},
+    RowHeight{font.Height()},
+    NumCols{12},
+    Margin{10,10},
+    Gutter{10,10}
+  };
 }
 
 void Window::Add(Drawable* drawable) {

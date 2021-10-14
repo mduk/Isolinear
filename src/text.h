@@ -27,6 +27,10 @@ class Font {
       TTF_CloseFont(sdl_font);
     }
 
+    int Height() {
+      return TTF_FontHeight(sdl_font);
+    }
+
     void RenderText(
         SDL_Renderer* renderer,
         Region bounds,
@@ -55,4 +59,13 @@ class Font {
     std::string path;
     int size_pt;
     TTF_Font* sdl_font;
+};
+
+class FontScheme{
+  public:
+    Font header;
+
+    FontScheme(Font h)
+        : header{h}
+      {};
 };

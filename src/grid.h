@@ -8,7 +8,6 @@
 
 #include "types.h"
 #include "geometry.h"
-#include "window.h"
 
 using NumCols = int;
 using Column = int;

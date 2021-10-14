@@ -22,6 +22,7 @@ using namespace std;
 class Window {
   public:
     Size size;
+    Grid grid;
 
     Window(int, int);
     ~Window() {
