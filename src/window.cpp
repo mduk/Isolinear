@@ -17,24 +17,24 @@ Window::Window(int w, int h)
       Gutter{10,10}
     }
 {
-  this->sdl_window = SDL_CreateWindow(
+  sdl_window = SDL_CreateWindow(
     title.c_str(),
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    this->size.x, this->size.y,
+    size.x, size.y,
     SDL_WINDOW_OPENGL //| SDL_WINDOW_FULLSCREEN_DESKTOP
   );
 
-  if (!this->sdl_window) {
+  if (!sdl_window) {
     throw std::runtime_error(
       "Failed to create SDL window"
     );
   }
 
-  this->sdl_renderer = SDL_CreateRenderer(
-    this->sdl_window, -1, SDL_RENDERER_SOFTWARE
+  sdl_renderer = SDL_CreateRenderer(
+    sdl_window, -1, SDL_RENDERER_SOFTWARE
   );
 
-  if (!this->sdl_renderer) {
+  if (!sdl_renderer) {
     throw std::runtime_error(
       "Failed to create SDL renderer"
     );
@@ -42,15 +42,15 @@ Window::Window(int w, int h)
 
 
   SDL_SetRenderDrawBlendMode(
-    this->sdl_renderer, SDL_BLENDMODE_BLEND
+    sdl_renderer, SDL_BLENDMODE_BLEND
   );
-  SDL_SetRenderDrawColor(this->sdl_renderer, 0, 0, 0, 255);
-  SDL_RenderPresent(this->sdl_renderer);
+  SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
+  SDL_RenderPresent(sdl_renderer);
 
   SDL_GetWindowSize(
-    this->sdl_window,
-    &this->size.x,
-    &this->size.y
+    sdl_window,
+    &size.x,
+    &size.y
   );
 
   Grid grid{
@@ -63,21 +63,21 @@ Window::Window(int w, int h)
 }
 
 void Window::Add(Drawable* drawable) {
-  this->drawables.push_back(drawable);
+  drawables.push_back(drawable);
 }
 
 void Window::Draw() {
-  for (auto* drawable : this->drawables) {
-    drawable->Draw(this->sdl_renderer);
+  for (auto* drawable : drawables) {
+    drawable->Draw(sdl_renderer);
   }
-  SDL_RenderPresent(this->sdl_renderer);
+  SDL_RenderPresent(sdl_renderer);
 }
 
 void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
   printf("Window::OnMouseButtonDown\n");
   Position cursor{event};
 
-  for (auto* drawable : this->drawables) {
+  for (auto* drawable : drawables) {
     if (drawable->Bounds().Encloses(cursor)) {
       drawable->OnMouseButtonDown(event);
       return;
