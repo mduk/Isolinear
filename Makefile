@@ -6,7 +6,7 @@ CC = g++
 
 #COMPILER_FLAGS specifies the additional compilation options we're using
 # -w suppresses all warnings
-COMPILER_FLAGS = -w -std=c++17 -Wall -Wpedantic
+COMPILER_FLAGS = -ggdb -w -std=c++17 -Wall -Wpedantic
 
 #LINKER_FLAGS specifies the libraries we're linking against
 LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_gfx -lcurl -lcurlpp
