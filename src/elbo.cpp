@@ -190,7 +190,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     0xffffffff
   );
 
-  if (true) { // debug
+  if (false) { // debug
     rectangleColor(renderer,
         bounds.NearX(), bounds.NearY(),
         bounds.FarX() , bounds.FarY(),

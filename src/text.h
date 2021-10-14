@@ -43,6 +43,7 @@ class Font {
       SDL_Texture* texture = SDL_CreateTextureFromSurface(
           renderer, surface
       );
+      SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
       Size surface_size{surface};
       Region label_region = bounds.AlignWest(surface_size);
