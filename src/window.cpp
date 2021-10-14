@@ -18,7 +18,7 @@ Window::Window(int w, int h)
     }
 {
   this->sdl_window = SDL_CreateWindow(
-    "Isolinear",
+    title.c_str(),
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
     this->size.x, this->size.y,
     SDL_WINDOW_OPENGL //| SDL_WINDOW_FULLSCREEN_DESKTOP

@@ -39,10 +39,12 @@ class Window {
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
   protected:
-    SDL_Window* sdl_window;
-    SDL_Renderer* sdl_renderer;
+    std::string title{"Isolinear"};
     Font font;
     std::list<Drawable*> drawables;
+
+    SDL_Window* sdl_window;
+    SDL_Renderer* sdl_renderer;
 
     void draw(SDL_Renderer*, Position, uint32_t c);
     void draw(SDL_Renderer*, Region, uint32_t c);
