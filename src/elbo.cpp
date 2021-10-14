@@ -184,10 +184,10 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   );
 
   Region container = this->ContainerRegion();
-  rectangleColor(renderer,
+  boxColor(renderer,
     container.NearX(), container.NearY(),
     container.FarX(),  container.FarY(),
-    0xffffffff
+    0xff000000
   );
 
   if (false) { // debug
