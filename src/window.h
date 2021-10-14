@@ -34,7 +34,7 @@ class Window {
       SDL_DestroyWindow(sdl_window);
     }
 
-    Font& HeaderFont() const {
+    Font const& HeaderFont() const {
       return font;
     }
 
