@@ -6,10 +6,10 @@ void Button::Draw(SDL_Renderer* renderer) const {
                     ? colours.active
                     : colours.base;
   boxColor(renderer,
-    NearX(), NearY(),
-    FarX(),  FarY(),
-    drawcolour
-  );
+      NearX(), NearY(),
+      FarX(),  FarY(),
+      drawcolour
+    );
 
   window.ButtonFont().RenderTextSouthEast(
       renderer,
