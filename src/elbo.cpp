@@ -3,14 +3,14 @@
 
 Region Elbo::SweepRegion() const {
   return Region{
-      this->bounds.position,
-      Size{ this->corner.size.x + inner_radius,
-            this->corner.size.y + inner_radius }
+      bounds.position,
+      Size{ corner.size.x + inner_radius,
+            corner.size.y + inner_radius }
     };
 }
 
 Region Elbo::HorizontalRegion() const {
-  Region sweep = this->SweepRegion();
+  Region sweep = SweepRegion();
   return Region{
       Position{ sweep.FarX(), sweep.NearY() },
       Size{ bounds.size.x - corner.size.x - inner_radius,
@@ -20,7 +20,7 @@ Region Elbo::HorizontalRegion() const {
 }
 
 Region Elbo::VerticalRegion() const {
-  Region sweep = this->SweepRegion();
+  Region sweep = SweepRegion();
   return Region{
       Position{ sweep.NearX(),
                 sweep.FarY() + gutter.y
@@ -33,7 +33,7 @@ Region Elbo::VerticalRegion() const {
 
 Region Elbo::InnerRadiusRegion() const {
   return Region{
-      Position{ corner.Far() },
+      Position{ corner.FarX(), corner.FarY() + 1 },
       Size{ inner_radius, inner_radius }
     };
 }
@@ -128,32 +128,55 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
 }
 
 void Elbo::Draw(SDL_Renderer* renderer) const {
-  Region sweep = this->SweepRegion();
+  Region sweep = SweepRegion();
+  Region hbar = HorizontalRegion();
+  Region vbar = VerticalRegion();
+  Region oradius = OuterRadiusRegion();
+  Region iradius = InnerRadiusRegion();
+  Region header_region = HeaderRegion();
+  Region container = ContainerRegion();
+
+  if (wireframe) {
+    sweep.Stroke(renderer, 0xffffffff);
+    hbar.Stroke(renderer, 0xffffffff);
+    vbar.Stroke(renderer, 0xffffffff);
+    oradius.Stroke(renderer, 0xffffffff);
+    iradius.Stroke(renderer, 0xffffffff);
+    header_region.Stroke(renderer, 0xffffffff);
+    container.Stroke(renderer, 0xffffffff);
+    return;
+  }
+
+  if (basic) {
+    sweep.Fill(renderer, 0x88ffffff);
+    hbar.Fill(renderer, 0x88ffffff);
+    iradius.Fill(renderer, 0x88000000);
+    vbar.Fill(renderer, 0x88ffffff);
+    return;
+  }
+
   boxColor(renderer,
     sweep.NearX(), sweep.NearY(),
     sweep.FarX(),  sweep.FarY(),
-    this->colours.base
+    colours.base
   );
 
-  Region hbar = this->HorizontalRegion();
   boxColor(renderer,
     hbar.NearX(), hbar.NearY(),
     hbar.FarX(),  hbar.FarY(),
-    this->colours.base
+    colours.base
   );
 
-  Region vbar = this->VerticalRegion();
   rectangleColor(renderer,
     vbar.NearX(), vbar.NearY(),
     vbar.FarX(),  vbar.FarY(),
-    this->colours.base
+    colours.base
   );
 
-  for (auto const &b : this->buttons) {
+  for (auto const &b : buttons) {
     b.Draw(renderer);
   }
 
-  Region oradius = this->OuterRadiusRegion();
   boxColor(renderer,
     oradius.NearX(), oradius.NearY(),
     oradius.FarX(),  oradius.FarY(),
@@ -163,10 +186,9 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     oradius.FarX(), oradius.FarY(),
     outer_radius,
     180, 270,
-    this->colours.base
+    colours.base
   );
 
-  Region iradius = this->InnerRadiusRegion();
   filledPieColor(renderer,
     iradius.FarX(), iradius.FarY(),
     inner_radius,
@@ -174,50 +196,9 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     0xff000000
   );
 
-  Region header_region = HeaderRegion();
   window.HeaderFont().RenderTextWest(
-    renderer, header_region, this->header
+    renderer, header_region, header
   );
 
-  Region container = this->ContainerRegion();
-
-  if (false) { // debug
-    rectangleColor(renderer,
-        bounds.NearX(), bounds.NearY(),
-        bounds.FarX() , bounds.FarY(),
-        0xffffffff
-    );
-
-    rectangleColor(renderer,
-        iradius.NearX(), iradius.NearY(),
-        iradius.FarX() , iradius.FarY(),
-        0xffffffff
-    );
-
-    rectangleColor(renderer,
-        oradius.NearX(), oradius.NearY(),
-        oradius.FarX() , oradius.FarY(),
-        0xffffffff
-    );
-
-    rectangleColor(renderer,
-        this->corner.NearX(), this->corner.NearY(),
-        this->corner.FarX() , this->corner.FarY(),
-        0xffffffff
-    );
-
-    rectangleColor(renderer,
-      header_region.NearX(), header_region.NearY(),
-      header_region.FarX(),  header_region.FarY(),
-      0xffffffff
-    );
-
-    rectangleColor(renderer,
-      container.NearX(), container.NearY(),
-      container.FarX(),  container.FarY(),
-      0xffffffff
-    );
-
-  }
 }
 

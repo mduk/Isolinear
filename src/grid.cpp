@@ -63,3 +63,13 @@ Column Grid::PositionColumn(Position& p) {
 Row Grid::PositionRow(Position& p) {
   return floor(p.y / rowh) + 1;
 }
+
+
+void Grid::DrawCells(SDL_Renderer* renderer) {
+  for (int i=1; i<=num_cols; i++) {
+    for (int j=1; j<=num_cols; j++) {
+      SingleCellRegion(i, j)
+        .Stroke(renderer, 0xff333333);
+    }
+  }
+}

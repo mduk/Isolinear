@@ -78,4 +78,7 @@ class Elbo : public Drawable {
     Grid button_grid;
     ButtonList buttons{};
     std::string header;
+
+    bool wireframe = false;
+    bool basic = true;
 };

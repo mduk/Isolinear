@@ -48,6 +48,8 @@ class Grid {
        Row PositionRow   (Position&);
     Region PositionRegion(Position&);
 
+    void DrawCells(SDL_Renderer*);
+
   protected:
     Region bounds;
     NumCols num_cols{12};

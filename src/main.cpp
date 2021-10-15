@@ -50,10 +50,10 @@ int main(int argc, char* argv[]) {
 
   Elbo* main = new Elbo(
       window,
-      Region{window.size},
+      window.grid.MultiCellRegion(1,1, 12,12),
       colours,
       Size{
-          window.grid.MultiCellRegion(1,1, 2,1).size.x,
+          window.grid.MultiCellRegion(1,1, 2,2).size.x,
           window.grid.CellSize().y / 3
         },
       "MAIN WINDOW"
@@ -93,6 +93,7 @@ int main(int argc, char* argv[]) {
       }
 
       window.Draw();
+      window.grid.DrawCells(window.sdl_renderer);
     }
 
 
