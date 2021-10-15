@@ -200,10 +200,15 @@ class Region : public Drawable {
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
-      printf("Region: %d,%d %d,%d (%d,%d)\n",
+      printf("Region: %d,%d (%d,%d) %d,%d \n",
           NearX(), NearY(),
-          FarX(),  FarY(),
-          size.x,  size.y
+          size.x,  size.y,
+          FarX(),  FarY()
+        );
+      printf(" Click: %d,%d (%d,%d local)\n",
+          e.x, e.y,
+          e.x - NearX(),
+          e.y - NearY()
         );
     }
 
