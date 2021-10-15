@@ -29,13 +29,11 @@ class Elbo : public Drawable {
     Elbo(
         Window& w,
         Region b,
-        ColourScheme cs,
         Size s,
         std::string h
       ) :
         window{w},
         bounds{b},
-        colours{cs},
         corner{b.position, s},
         header{h},
         inner_radius{window.HeaderFont().Height()},
@@ -71,7 +69,10 @@ class Elbo : public Drawable {
     Window window;
     Region bounds;
     Region corner;
-    ColourScheme colours;
+    ColourScheme colours{
+        0xff664466, 0xffcc9999,
+        0xffff9999, 0xff6666cc
+      };
     InnerRadius inner_radius;
     OuterRadius outer_radius;
     Gutter gutter{10, 10};
@@ -80,5 +81,5 @@ class Elbo : public Drawable {
     std::string header;
 
     bool wireframe = false;
-    bool basic = false;
+    bool basic = true;
 };

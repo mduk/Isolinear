@@ -181,6 +181,12 @@ class Region : public Drawable {
     Region SouthWestQuadrant() const { return Region{ West(),       South() }; }
     Region NorthWestQuadrant() const { return Region{ NorthWest(), Centre() }; }
 
+    // Halfs
+    Region TopHalf()    const { return Region{ NorthWest(), East()      }; }
+    Region BottomHalf() const { return Region{ West(),      SouthEast() }; }
+    Region LeftHalf()   const { return Region{ NorthWest(), South()     }; }
+    Region RightHalf()  const { return Region{ North(),     SouthEast() }; }
+
     bool Encloses(Coordinate& point) const {
       return ( NearX() <= point.x )
           && ( NearY() <= point.y )

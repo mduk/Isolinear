@@ -45,13 +45,11 @@ int main(int argc, char* argv[]) {
   int win_h = 1250,
       win_w = win_h * 1.618;
 
-  ColourScheme colours{0xff664466, 0xffcc9999, 0xffff9999, 0xff6666cc};
   Window window(win_w, win_h);
 
   Elbo* main = new Elbo(
       window,
       window.grid.MultiCellRegion(1,1, 12,12),
-      colours,
       window.grid.MultiCellRegion(1,1, 2,1).size,
       "MAIN WINDOW"
   );
@@ -62,8 +60,7 @@ int main(int argc, char* argv[]) {
   main->AddButton();
   window.Add(main);
 
-  Region* r = new Region{window.grid.SingleCellRegion(6,6)};
-  window.Add(r);
+  window.Add(new Region{window.grid.MultiCellRegion(3,6, 12,6).BottomHalf().TopHalf()});
 
   bool running = true;
   while (running) {
@@ -93,7 +90,7 @@ int main(int argc, char* argv[]) {
       }
 
       window.Draw();
-      //window.grid.DrawCells(window.sdl_renderer);
+      window.grid.DrawCells(window.sdl_renderer);
     }
 
 
