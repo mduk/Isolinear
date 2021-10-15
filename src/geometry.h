@@ -208,7 +208,7 @@ class Region : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const {
-      Fill(renderer, 0xffffffff);
+      Fill(renderer, 0xaaffffff);
     }
 
 
@@ -217,7 +217,8 @@ class Region : public Drawable {
     }
 
     void Stroke(SDL_Renderer* renderer, Colour colour) const {
-      rectangleColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
+      boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
+      boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
     }
 
 };
