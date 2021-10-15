@@ -39,7 +39,7 @@ class Elbo : public Drawable {
         corner{b.position, s},
         header{h},
         inner_radius{window.HeaderFont().Height()},
-        outer_radius{s.y * 3},
+        outer_radius{window.HeaderFont().Height()},
         button_grid{
           VerticalRegion(),
           RowHeight{100},
@@ -64,6 +64,8 @@ class Elbo : public Drawable {
     Region Bounds() {
       return bounds;
     };
+
+    Drawable* container = nullptr;
 
   protected:
     Window window;

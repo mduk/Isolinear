@@ -11,7 +11,11 @@ void Button::Draw(SDL_Renderer* renderer) const {
     drawcolour
   );
 
-  bounds.RenderText(renderer, label);
+  window.ButtonFont().RenderTextSouthEast(
+      renderer,
+      bounds,
+      label
+    );
 }
 
 

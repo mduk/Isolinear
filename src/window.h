@@ -15,6 +15,8 @@
 #include "geometry.h"
 #include "text.h"
 
+#define FONT "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf"
+
 
 using namespace std;
 
@@ -35,24 +37,29 @@ class Window {
     }
 
     Font const& HeaderFont() const {
-      return font;
+      return header_font;
+    }
+
+    Font const& ButtonFont() const {
+      return button_font;
     }
 
     void Add(Drawable*);
     void Draw();
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
+    SDL_Renderer* sdl_renderer;
+    void draw(Position, uint32_t c);
+    void draw(Region, uint32_t c);
+
   protected:
+    SDL_Window* sdl_window;
+
     std::string title{"Isolinear"};
-    const Font font{
-      "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf",
-      64
-    };
     std::list<Drawable*> drawables;
 
-    SDL_Window* sdl_window;
-    SDL_Renderer* sdl_renderer;
+    const Font header_font{ FONT, 96 };
+    const Font button_font{ FONT, 64 };
 
-    void draw(SDL_Renderer*, Position, uint32_t c);
-    void draw(SDL_Renderer*, Region, uint32_t c);
+
 };

@@ -83,7 +83,7 @@ void Elbo::AddButton() {
       button_grid.SingleCellRegion(1, buttons.size() + 1),
       colours,
       tmp_s
-  );
+    );
 }
 
 
@@ -120,6 +120,9 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
 
   if (ContainerRegion().Encloses(cursor)) {
     printf("      Container click\n");
+    if (container) {
+      container->OnMouseButtonDown(e);
+    }
     return;
   }
 }
@@ -177,11 +180,6 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   );
 
   Region container = this->ContainerRegion();
-  boxColor(renderer,
-    container.NearX(), container.NearY(),
-    container.FarX(),  container.FarY(),
-    0xff000000
-  );
 
   if (false) { // debug
     rectangleColor(renderer,

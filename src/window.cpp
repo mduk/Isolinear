@@ -48,7 +48,7 @@ Window::Window(int w, int h)
 
   Grid grid{
     Region{size},
-    RowHeight{font.Height()},
+    RowHeight{header_font.Height()},
     NumCols{12},
     Margin{10,10},
     Gutter{10,10}
@@ -79,12 +79,13 @@ void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
 }
 
 
-void Window::draw(SDL_Renderer* r, Position p, uint32_t c) {
-  filledCircleColor(r, p.x, p.y, 10, c);
+void Window::draw(Position p, uint32_t c) {
+  filledCircleColor(sdl_renderer, p.x, p.y, 10, c);
 }
 
-void Window::draw(SDL_Renderer* r, Region re, uint32_t c) {
-  boxColor(r, re.NearX(), re.NearY(),
+void Window::draw(Region re, uint32_t c) {
+  boxColor(sdl_renderer,
+               re.NearX(), re.NearY(),
                re.FarX(),  re.FarY(), c);
 }
 
