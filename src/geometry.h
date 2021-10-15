@@ -6,6 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "drawable.h"
 #include "colours.h"
 
 
@@ -94,7 +95,7 @@ class Size : public Coordinate {
 };
 
 
-class Region {
+class Region : public Drawable {
   public:
     Position position;
     Size size;
@@ -105,6 +106,10 @@ class Region {
 
     Region(Size s)
         : position{0,0}, size{s}
+      {};
+
+    Region(SDL_Rect r)
+        : position{r.x, r.y}, size{r.w, r.h}
       {};
 
     Region(Position _p, Size _s)
@@ -185,7 +190,7 @@ class Region {
 
 
 
-    SDL_Rect AsSdlRect() const {
+    SDL_Rect SdlRect() const {
       return SDL_Rect{
           position.x,
           position.y,
@@ -194,12 +199,24 @@ class Region {
         };
     }
 
+    void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
+      printf("Region: %d,%d %d,%d (%d,%d)\n",
+          NearX(), NearY(),
+          FarX(),  FarY(),
+          size.x,  size.y
+        );
+    }
 
-    void Fill(SDL_Renderer* renderer, Colour colour) {
+    void Draw(SDL_Renderer* renderer) const {
+      Fill(renderer, 0xffffffff);
+    }
+
+
+    void Fill(SDL_Renderer* renderer, Colour colour) const {
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
     }
 
-    void Stroke(SDL_Renderer* renderer, Colour colour) {
+    void Stroke(SDL_Renderer* renderer, Colour colour) const {
       rectangleColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
     }
 

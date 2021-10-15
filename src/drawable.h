@@ -6,7 +6,6 @@
 
 #include "geometry.h"
 
-
 class Drawable {
   public:
     virtual void Draw(
@@ -17,5 +16,5 @@ class Drawable {
         SDL_MouseButtonEvent&
       ) = 0;
 
-    virtual Region Bounds() = 0;
+    virtual SDL_Rect SdlRect() const = 0;
 };

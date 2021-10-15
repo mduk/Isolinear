@@ -28,6 +28,11 @@ class Button : public Drawable {
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
+
+    SDL_Rect SdlRect() const {
+      return bounds.SdlRect();
+    }
+
     Region Bounds() {
       return bounds;
     }

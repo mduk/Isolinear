@@ -52,10 +52,7 @@ int main(int argc, char* argv[]) {
       window,
       window.grid.MultiCellRegion(1,1, 12,12),
       colours,
-      Size{
-          window.grid.MultiCellRegion(1,1, 2,2).size.x,
-          window.grid.CellSize().y / 3
-        },
+      window.grid.MultiCellRegion(1,1, 2,1).size,
       "MAIN WINDOW"
   );
 
@@ -64,6 +61,9 @@ int main(int argc, char* argv[]) {
   main->AddButton();
   main->AddButton();
   window.Add(main);
+
+  Region* r = new Region{window.grid.SingleCellRegion(6,6)};
+  window.Add(r);
 
   bool running = true;
   while (running) {

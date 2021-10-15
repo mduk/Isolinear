@@ -61,9 +61,9 @@ class Elbo : public Drawable {
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
-    Region Bounds() {
-      return bounds;
-    };
+    SDL_Rect SdlRect() const {
+      return bounds.SdlRect();
+    }
 
     Drawable* container = nullptr;
 

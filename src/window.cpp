@@ -71,9 +71,8 @@ void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
   Position cursor{event};
 
   for (auto* drawable : drawables) {
-    if (drawable->Bounds().Encloses(cursor)) {
+    if (Region{drawable->SdlRect()}.Encloses(cursor)) {
       drawable->OnMouseButtonDown(event);
-      return;
     }
   }
 }
