@@ -2,18 +2,18 @@
 
 
 void Button::Draw(SDL_Renderer* renderer) const {
-  Colour drawcolour = (this->active == true)
-                    ? this->colours.active
-                    : this->colours.base;
+  Colour drawcolour = active == true
+                    ? colours.active
+                    : colours.base;
   boxColor(renderer,
-    this->bounds.NearX(), this->bounds.NearY(),
-    this->bounds.FarX(), this->bounds.FarY(),
+    NearX(), NearY(),
+    FarX(),  FarY(),
     drawcolour
   );
 
   window.ButtonFont().RenderTextSouthEast(
       renderer,
-      bounds,
+      Region{position, size},
       label
     );
 }
@@ -21,11 +21,6 @@ void Button::Draw(SDL_Renderer* renderer) const {
 
 void Button::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
   printf("Button::OnMouseButtonDown\n");
+  Region::OnMouseButtonDown(event);
   active = !active;
-  if (active) {
-    printf("      Now Active\n");
-  }
-  else {
-    printf("      Now Inactive\n");
-  }
 }

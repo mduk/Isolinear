@@ -80,5 +80,5 @@ class Elbo : public Drawable {
     std::string header;
 
     bool wireframe = false;
-    bool basic = true;
+    bool basic = false;
 };

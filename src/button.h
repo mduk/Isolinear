@@ -12,7 +12,7 @@
 #include "geometry.h"
 
 
-class Button : public Drawable {
+class Button : public Region {
   public:
     Button(
         Window& w,
@@ -20,8 +20,8 @@ class Button : public Drawable {
         ColourScheme cs,
         Label l
       ) :
+        Region{b},
         window{w},
-        bounds{b},
         colours{cs},
         label{l}
     {}
@@ -29,17 +29,8 @@ class Button : public Drawable {
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
 
-    SDL_Rect SdlRect() const {
-      return bounds.SdlRect();
-    }
-
-    Region Bounds() {
-      return bounds;
-    }
-
   protected:
     Window window;
-    Region bounds;
     ColourScheme colours;
     Label label;
     bool active = false;

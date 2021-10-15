@@ -109,7 +109,7 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
   if (VerticalRegion().Encloses(cursor)) {
     printf("      Vertical click\n");
     for (auto& button : buttons) {
-      if (button.Bounds().Encloses(cursor)) {
+      if (button.Encloses(cursor)) {
         button.OnMouseButtonDown(e);
         return;
       }
