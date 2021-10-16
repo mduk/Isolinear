@@ -23,7 +23,6 @@ using InnerRadius = int;
 using OuterRadius = int;
 using ButtonList = std::list<Button>;
 
-
 class Elbo : public Drawable {
   public:
     Elbo(
@@ -40,8 +39,8 @@ class Elbo : public Drawable {
         outer_radius{window.HeaderFont().Height()},
         button_grid{
           VerticalRegion(),
-          RowHeight{100},
-          NumCols{1},
+          100, // row height
+          1, // num cols
           Margin{0,0},
           Gutter{0,10}
         }
@@ -81,5 +80,5 @@ class Elbo : public Drawable {
     std::string header;
 
     bool wireframe = false;
-    bool basic = true;
+    bool basic = false;
 };

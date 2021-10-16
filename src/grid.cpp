@@ -3,20 +3,20 @@
 
 Size Grid::CellSize() {
   int width = floor(bounds.size.x / num_cols);
-  return Size{ width, rowh };
+  return Size{ width, row_height };
 }
 
 Region Grid::SingleCellRegion(
-    Column col, Row row
+    int col, int row
 ) {
-  return this->MultiCellRegion(
+  return MultiCellRegion(
     col, row, col, row
   );
 }
 
 Region Grid::MultiCellRegion(
-  Column near_col, Row near_row,
-  Column  far_col, Row  far_row
+  int near_col, int near_row,
+  int  far_col, int  far_row
 ) {
 
   if (near_col > num_cols || far_col > num_cols) {
@@ -25,7 +25,7 @@ Region Grid::MultiCellRegion(
 
   int x, y, w, h;
 
-  Size s = this->CellSize();
+  Size s = CellSize();
 
   x = bounds.position.x
     + margin.x
@@ -34,34 +34,50 @@ Region Grid::MultiCellRegion(
 
   y = bounds.position.y
     + margin.y
-    + rowh * (near_row - 1)
+    + row_height * (near_row - 1)
     ;
 
   w = s.x * ((far_col - near_col) + 1)
     - gutter.x
     ;
 
-  h = rowh * ((far_row - near_row) + 1)
+  h = row_height * ((far_row - near_row) + 1)
     - gutter.y
     ;
 
   return Region{ x, y, w, h };
 }
 
+Grid Grid::SubGrid(
+    int near_col, int near_row,
+    int  far_col, int  far_row
+) {
+  return Grid{
+    MultiCellRegion(
+        near_col, near_row,
+         far_col,  far_row
+      ),
+    row_height,
+    (far_col - near_col),
+    Margin{0,0},
+    gutter
+  };
+}
+
 Region Grid::PositionRegion(Position& p) {
-  return this->SingleCellRegion(
-    this->PositionColumn(p),
-    this->PositionRow(p)
+  return SingleCellRegion(
+    PositionColumn(p),
+    PositionRow(p)
   );
 }
 
-Column Grid::PositionColumn(Position& p) {
-  Size s = this->CellSize();
+int Grid::PositionColumn(Position& p) {
+  Size s = CellSize();
   return floor(p.x / s.x) + 1;
 }
 
-Row Grid::PositionRow(Position& p) {
-  return floor(p.y / rowh) + 1;
+int Grid::PositionRow(Position& p) {
+  return floor(p.y / row_height) + 1;
 }
 
 

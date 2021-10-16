@@ -4,8 +4,8 @@ Window::Window(int w, int h)
   : size{w, h},
     grid{
       Region{size},
-      RowHeight{100},
-      NumCols{12},
+      100, // row height
+      12,  // num columns
       Margin{10,10},
       Gutter{10,10}
     }
@@ -48,8 +48,8 @@ Window::Window(int w, int h)
 
   Grid grid{
     Region{size},
-    RowHeight{header_font.Height()},
-    NumCols{12},
+    header_font.Height(), // Row height
+    12, // Num cols
     Margin{10,10},
     Gutter{10,10}
   };

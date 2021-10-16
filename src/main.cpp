@@ -47,20 +47,20 @@ int main(int argc, char* argv[]) {
 
   Window window(win_w, win_h);
 
-  Elbo* main = new Elbo(
-      window,
-      window.grid.MultiCellRegion(1,1, 12,12),
-      window.grid.MultiCellRegion(1,1, 2,1).size,
-      "MAIN WINDOW"
-  );
+  Region sweep{window.grid.MultiCellRegion(1,1,  3, 2)};
 
-  main->AddButton();
-  main->AddButton();
-  main->AddButton();
-  main->AddButton();
-  window.Add(main);
+  int csx = window.grid.CellSize().x;
 
-  window.Add(new Region{window.grid.MultiCellRegion(3,6, 12,6).BottomHalf().TopHalf()});
+  // Sweep
+  window.Add(new Region{sweep});
+  window.Add(new Region{sweep.AlignSouthEast(Size{csx, csx})});
+
+  // Reach
+  window.Add(new Region{window.grid.MultiCellRegion(4,1, 12, 2)});
+  window.Add(new Region{window.grid.MultiCellRegion(4,1, 12, 1).TopHalf().TopHalf()});
+
+  // Bar
+  window.Add(new Region{window.grid.MultiCellRegion(1,3,  2,12)});
 
   bool running = true;
   while (running) {

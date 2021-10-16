@@ -165,15 +165,15 @@ class Region : public Drawable {
     int NorthWestY() const { return NorthWest().y; }
 
     // Compass Alignment
-    Region AlignCentre(Size& s)    const { return Region{    Centre().Subtract(s.Centre()   ), s }; }
-    Region AlignNorth(Size& s)     const { return Region{     North().Subtract(s.North()    ), s }; }
-    Region AlignEast(Size& s)      const { return Region{      East().Subtract(s.East()     ), s }; }
-    Region AlignSouth(Size& s)     const { return Region{     South().Subtract(s.South()    ), s }; }
-    Region AlignWest(Size& s)      const { return Region{      West().Subtract(s.West()     ), s }; }
-    Region AlignNorthEast(Size& s) const { return Region{ NorthEast().Subtract(s.NorthEast()), s }; }
-    Region AlignSouthEast(Size& s) const { return Region{ SouthEast().Subtract(s.SouthEast()), s }; }
-    Region AlignSouthWest(Size& s) const { return Region{ SouthWest().Subtract(s.SouthWest()), s }; }
-    Region AlignNorthWest(Size& s) const { return Region{ NorthWest().Subtract(s.NorthWest()), s }; }
+    Region AlignCentre(Size s)    const { return Region{    Centre().Subtract(s.Centre()   ), s }; }
+    Region AlignNorth(Size s)     const { return Region{     North().Subtract(s.North()    ), s }; }
+    Region AlignEast(Size s)      const { return Region{      East().Subtract(s.East()     ), s }; }
+    Region AlignSouth(Size s)     const { return Region{     South().Subtract(s.South()    ), s }; }
+    Region AlignWest(Size s)      const { return Region{      West().Subtract(s.West()     ), s }; }
+    Region AlignNorthEast(Size s) const { return Region{ NorthEast().Subtract(s.NorthEast()), s }; }
+    Region AlignSouthEast(Size s) const { return Region{ SouthEast().Subtract(s.SouthEast()), s }; }
+    Region AlignSouthWest(Size s) const { return Region{ SouthWest().Subtract(s.SouthWest()), s }; }
+    Region AlignNorthWest(Size s) const { return Region{ NorthWest().Subtract(s.NorthWest()), s }; }
 
     // Compass Quadrants
     Region NorthEastQuadrant() const { return Region{ North(),       East() }; }
