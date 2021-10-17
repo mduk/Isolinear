@@ -126,27 +126,30 @@ class Region : public Drawable {
         : _position{_x, _y}, _size{_w, _h}
       {};
 
-    // Near and Far Point Positions
 
     Position Origin() const { return _position; };
 
-    Position Near()  const { return _position; }
-         int NearX() const { return _position.x; }
-         int NearY() const { return _position.y; }
+    // Near and Far Point Positions
 
-    Position Far()  const { return Position{ FarX(), FarY() }; }
-         int FarX() const { return _position.x + _size.x; }
-         int FarY() const { return _position.y + _size.y; }
+    Position Near()  const { return Origin(); }
+         int NearX() const { return Origin().x; }
+         int NearY() const { return Origin().y; }
 
-    Position Centre()     const { return _position.Add(_size.Centre());    }
-    Position North()      const { return _position.Add(_size.North());     }
-    Position East()       const { return _position.Add(_size.East());      }
-    Position South()      const { return _position.Add(_size.South());     }
-    Position West()       const { return _position.Add(_size.West());      }
-    Position SouthWest()  const { return _position.Add(_size.SouthWest()); }
-    Position NorthWest()  const { return _position.Add(_size.NorthWest()); }
-    Position SouthEast()  const { return _position.Add(_size.SouthEast()); }
-    Position NorthEast()  const { return _position.Add(_size.NorthEast()); }
+    Position Far()  const { return Origin().Add(_size); }
+         int FarX() const { return Far().x; }
+         int FarY() const { return Far().y; }
+
+    // Compass points
+
+    Position Centre()     const { return Origin().Add(_size.Centre());    }
+    Position North()      const { return Origin().Add(_size.North());     }
+    Position East()       const { return Origin().Add(_size.East());      }
+    Position South()      const { return Origin().Add(_size.South());     }
+    Position West()       const { return Origin().Add(_size.West());      }
+    Position SouthWest()  const { return Origin().Add(_size.SouthWest()); }
+    Position NorthWest()  const { return Origin().Add(_size.NorthWest()); }
+    Position SouthEast()  const { return Origin().Add(_size.SouthEast()); }
+    Position NorthEast()  const { return Origin().Add(_size.NorthEast()); }
 
     int CentreX()    const { return Centre().x;    }
     int CentreY()    const { return Centre().y;    }
