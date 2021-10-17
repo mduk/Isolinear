@@ -25,6 +25,7 @@ class Window {
   public:
     Size size;
     Grid grid;
+    SDL_Renderer* sdl_renderer;
 
     Window(
         int _w, int _h,
@@ -65,17 +66,40 @@ class Window {
       return button_font;
     }
 
-    void Add(Drawable*);
-    void Draw();
-    void OnMouseButtonDown(SDL_MouseButtonEvent&);
+    void Add(Drawable* drawable) {
+      drawables.push_back(drawable);
+    }
 
-    SDL_Renderer* sdl_renderer;
-    void draw(Position, uint32_t c);
-    void draw(Region, uint32_t c);
+    void Draw() {
+      for (auto* drawable : drawables) {
+        drawable->Draw(sdl_renderer);
+      }
+      SDL_RenderPresent(sdl_renderer);
+    }
+
+    void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+      Position cursor{event};
+
+      for (auto* drawable : drawables) {
+        if (Region{drawable->SdlRect()}.Encloses(cursor)) {
+          drawable->OnMouseButtonDown(event);
+        }
+      }
+    }
+
+    void draw(Position p, uint32_t c) {
+      filledCircleColor(sdl_renderer, p.x, p.y, 10, c);
+    }
+
+    void draw(Region re, uint32_t c) {
+      boxColor(sdl_renderer,
+          re.NearX(), re.NearY(),
+          re.FarX(),  re.FarY(),
+          c
+        );
+    }
 
   protected:
-    void InitSdl();
-
     SDL_Window* sdl_window;
 
     std::string title{"Isolinear"};
@@ -88,5 +112,42 @@ class Window {
     Coordinate g_margin;
     Coordinate g_gutter;
 
+    void InitSdl() {
+      sdl_window = SDL_CreateWindow(
+          title.c_str(),
+          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+          size.x, size.y,
+          0 | SDL_WINDOW_OPENGL
+            | SDL_WINDOW_FULLSCREEN_DESKTOP
+        );
+
+      if (!sdl_window) {
+        throw std::runtime_error(
+          "Failed to create SDL window"
+        );
+      }
+
+      sdl_renderer = SDL_CreateRenderer(
+          sdl_window, -1, SDL_RENDERER_SOFTWARE
+        );
+
+      if (!sdl_renderer) {
+        throw std::runtime_error(
+          "Failed to create SDL renderer"
+        );
+      }
+
+      SDL_SetRenderDrawBlendMode(
+          sdl_renderer, SDL_BLENDMODE_BLEND
+        );
+      SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
+      SDL_RenderPresent(sdl_renderer);
+
+      SDL_GetWindowSize(
+          sdl_window,
+          &size.x,
+          &size.y
+        );
+    }
 
 };
