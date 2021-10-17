@@ -90,6 +90,7 @@ class Position : public Coordinate {
 class Size : public Coordinate {
   public:
     Size() : Coordinate() {};
+    Size(int w) : Coordinate{w, w} {};
     Size(int w, int h) : Coordinate(w, h) {};
     Size(SDL_Surface* s) : Coordinate(s) {};
 };
@@ -230,6 +231,15 @@ class Region : public Drawable {
     void Stroke(SDL_Renderer* renderer, Colour colour) const {
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
       boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
+    }
+
+    void ArcNorthWest(SDL_Renderer* renderer, Colour colour) const {
+      filledPieColor(renderer,
+        FarX(), FarY(),
+        size.x,
+        180, 270,
+        colour
+      );
     }
 
 };

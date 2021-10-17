@@ -15,6 +15,7 @@
 #include "window.h"
 #include "grid.h"
 #include "elbo.h"
+#include "newbo.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -34,6 +35,15 @@ string http_req(string url) {
   return string(response_stream.str());
 }
 
+void grid_test(Window& window) {
+  window.grid.DrawCells(window.sdl_renderer);
+  window.Add(new Region{window.grid.Column(2)});
+  window.Add(new Region{window.grid.Row(2)});
+  window.Add(new Region{window.grid.SingleCellRegion(4,4)});
+  window.Add(new Region{window.grid.MultiCellRegion(4,6, 4,12)});
+  window.Add(new Region{window.grid.MultiCellRegion(6,4, 12,4)});
+}
+
 int main(int argc, char* argv[]) {
   srand(time(NULL));
 
@@ -45,22 +55,14 @@ int main(int argc, char* argv[]) {
   int win_h = 1250,
       win_w = win_h * 1.618;
 
-  Window window(win_w, win_h);
+  Window window(
+      win_w, win_h,
+      12,
+      Size{10,10},
+      Size{10,10}
+    );
 
-  Region sweep{window.grid.MultiCellRegion(1,1,  3, 2)};
-
-  int csx = window.grid.CellSize().x;
-
-  // Sweep
-  window.Add(new Region{sweep});
-  window.Add(new Region{sweep.AlignSouthEast(Size{csx, csx})});
-
-  // Reach
-  window.Add(new Region{window.grid.MultiCellRegion(4,1, 12, 2)});
-  window.Add(new Region{window.grid.MultiCellRegion(4,1, 12, 1).TopHalf().TopHalf()});
-
-  // Bar
-  window.Add(new Region{window.grid.MultiCellRegion(1,3,  2,12)});
+  SDL_RenderPresent(window.sdl_renderer);
 
   bool running = true;
   while (running) {
@@ -88,13 +90,10 @@ int main(int argc, char* argv[]) {
           break;
         }
       }
-
-      window.Draw();
-      window.grid.DrawCells(window.sdl_renderer);
     }
 
-
-
+    window.grid.DrawCells(window.sdl_renderer);
+    window.Draw();
   }
 
   return 0;

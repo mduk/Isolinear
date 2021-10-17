@@ -34,21 +34,22 @@ class Grid {
         gutter{g}
     {};
 
-      Size CellSize();
+    Size CellSize() const;
+    Grid SubGrid(int, int, int, int) const;
 
-    Region SingleCellRegion(int, int);
-    Region  MultiCellRegion(int, int, int, int);
+    int PositionColumn(Position&) const;
+    int PositionRow(Position&) const;
+    Region PositionRegion(Position&) const;
 
-      Grid SubGrid(int, int, int, int);
+    Region SingleCellRegion(int, int) const;
+    Region MultiCellRegion(int, int, int, int) const;
+    Region Row(int) const;
+    Region Column(int) const;
 
-    int PositionColumn(Position&);
-    int PositionRow(Position&);
-    Region PositionRegion(Position&);
+    void DrawCells(SDL_Renderer*) const;
 
-    void DrawCells(SDL_Renderer*);
-
-  protected:
     Region bounds;
+  protected:
     int num_cols{12};
     int row_height{100};
     Gutter gutter{50, 50};

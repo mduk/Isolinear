@@ -26,7 +26,35 @@ class Window {
     Size size;
     Grid grid;
 
-    Window(int, int);
+    Window(
+        int _w, int _h,
+        int _num_columns,
+        Coordinate _margin,
+        Coordinate _gutter
+    ) :
+      size{_w, _h},
+      g_num_columns{_num_columns},
+      g_margin{_margin},
+      g_gutter{_gutter},
+      grid{
+        Region{0,0,0,0},
+        0,
+        0,
+        Coordinate{0,0},
+        Coordinate{0,0}
+      }
+    {
+      InitSdl();
+
+      grid = Grid{
+          Region{size},
+          header_font.Height(), // Row height
+          g_num_columns,
+          g_margin,
+          g_gutter
+        };
+    };
+
     ~Window() {
       for (auto* drawable : drawables) {
         delete drawable;
@@ -53,6 +81,8 @@ class Window {
     void draw(Region, uint32_t c);
 
   protected:
+    void InitSdl();
+
     SDL_Window* sdl_window;
 
     std::string title{"Isolinear"};
@@ -60,6 +90,10 @@ class Window {
 
     const Font header_font{ FONT, 96 };
     const Font button_font{ FONT, 64 };
+
+    int g_num_columns;
+    Coordinate g_margin;
+    Coordinate g_gutter;
 
 
 };

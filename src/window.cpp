@@ -1,21 +1,14 @@
 #include "window.h"
 
-Window::Window(int w, int h)
-  : size{w, h},
-    grid{
-      Region{size},
-      100, // row height
-      12,  // num columns
-      Margin{10,10},
-      Gutter{10,10}
-    }
+void Window::InitSdl()
 {
   sdl_window = SDL_CreateWindow(
-    title.c_str(),
-    SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    size.x, size.y,
-    SDL_WINDOW_OPENGL //| SDL_WINDOW_FULLSCREEN_DESKTOP
-  );
+      title.c_str(),
+      SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      size.x, size.y,
+      0 | SDL_WINDOW_OPENGL
+        | SDL_WINDOW_FULLSCREEN_DESKTOP
+    );
 
   if (!sdl_window) {
     throw std::runtime_error(
@@ -24,8 +17,8 @@ Window::Window(int w, int h)
   }
 
   sdl_renderer = SDL_CreateRenderer(
-    sdl_window, -1, SDL_RENDERER_SOFTWARE
-  );
+      sdl_window, -1, SDL_RENDERER_SOFTWARE
+    );
 
   if (!sdl_renderer) {
     throw std::runtime_error(
@@ -33,26 +26,17 @@ Window::Window(int w, int h)
     );
   }
 
-
   SDL_SetRenderDrawBlendMode(
-    sdl_renderer, SDL_BLENDMODE_BLEND
-  );
+      sdl_renderer, SDL_BLENDMODE_BLEND
+    );
   SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
   SDL_RenderPresent(sdl_renderer);
 
   SDL_GetWindowSize(
-    sdl_window,
-    &size.x,
-    &size.y
-  );
-
-  Grid grid{
-    Region{size},
-    header_font.Height(), // Row height
-    12, // Num cols
-    Margin{10,10},
-    Gutter{10,10}
-  };
+      sdl_window,
+      &size.x,
+      &size.y
+    );
 }
 
 void Window::Add(Drawable* drawable) {
@@ -67,7 +51,6 @@ void Window::Draw() {
 }
 
 void Window::OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-  printf("Window::OnMouseButtonDown\n");
   Position cursor{event};
 
   for (auto* drawable : drawables) {
