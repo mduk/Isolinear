@@ -99,10 +99,9 @@ class Size : public Coordinate {
 class Region : public Drawable {
   protected:
     Position _position;
-
-  public:
     Size _size;
 
+  public:
     Region()
         : _position{0,0}, _size{0,0}
       {};
@@ -127,6 +126,17 @@ class Region : public Drawable {
     Region(int _x, int _y, int _w, int _h)
         : _position{_x, _y}, _size{_w, _h}
       {};
+
+
+    void Resize(Size newsize) {
+      _size = newsize;
+    }
+
+
+    int X() const { return _position.x; }
+    int Y() const { return _position.y; }
+    int W() const { return _size.x; }
+    int H() const { return _size.y; }
 
 
     Position Origin() const { return _position; };

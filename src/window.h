@@ -95,7 +95,7 @@ class Window {
           &size.y
         );
 
-      grid.bounds._size = size;
+      grid.bounds.Resize(size);
     }
 
     void draw(Position p, uint32_t c) {

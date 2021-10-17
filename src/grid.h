@@ -46,19 +46,107 @@ class Grid {
         gutter{g}
     {};
 
-    Size CellSize() const;
-    Grid SubGrid(int, int, int, int) const;
+    Size CellSize() const {
+      int width = floor(bounds.W() / num_cols);
+      return Size{ width, row_height };
+    }
 
-    int PositionColumn(Position&) const;
-    int PositionRow(Position&) const;
-    GridRegion PositionRegion(Position&) const;
+    Grid SubGrid(
+        int near_col, int near_row,
+        int  far_col, int  far_row
+    ) const {
+      return Grid{
+        MultiCellRegion(
+            near_col, near_row,
+             far_col,  far_row
+          ),
+        row_height,
+        (far_col - near_col) + 1,
+        Margin{0,0},
+        gutter
+      };
+    }
 
-    GridRegion SingleCellRegion(int, int) const;
-    GridRegion MultiCellRegion(int, int, int, int) const;
-    GridRegion Row(int) const;
-    GridRegion Column(int) const;
+    int PositionColumn(Position& p) const {
+      Size s = CellSize();
+      return floor(p.x / s.x) + 1;
+    }
 
-    void DrawCells(SDL_Renderer*) const;
+    int PositionRow(Position& p) const {
+      return floor(p.y / row_height) + 1;
+    }
+
+    GridRegion PositionRegion(Position& p) const {
+      return SingleCellRegion(
+        PositionColumn(p),
+        PositionRow(p)
+      );
+    }
+
+    GridRegion SingleCellRegion(
+        int col, int row
+    ) const {
+      return MultiCellRegion(
+        col, row, col, row
+      );
+    }
+
+    GridRegion MultiCellRegion(
+      int near_col, int near_row,
+      int  far_col, int  far_row
+    ) const {
+
+      if (near_col > num_cols || far_col > num_cols) {
+        throw std::runtime_error("Out of bounds");
+      }
+
+      int x, y, w, h;
+
+      Size s = CellSize();
+
+      x = bounds.Origin().x
+        + margin.x
+        + (s.x * (near_col - 1))
+        ;
+
+      y = bounds.Origin().y
+        + margin.y
+        + row_height * (near_row - 1)
+        ;
+
+      w = s.x * ((far_col - near_col) + 1)
+        - gutter.x
+        ;
+
+      h = row_height * ((far_row - near_row) + 1)
+        - gutter.y
+        ;
+
+      return GridRegion{ x, y, w, h };
+    }
+
+    GridRegion Row(int row) const {
+      return MultiCellRegion(
+          1,        row,
+          num_cols, row
+        );
+    }
+
+    GridRegion Column(int col) const {
+      return MultiCellRegion(
+          col, 1,
+          col, 12 // Indeterminate
+        );
+    }
+
+    void DrawCells(SDL_Renderer* renderer) const {
+      for (int i=1; i<=num_cols; i++) {
+        for (int j=1; j<=num_cols; j++) {
+          SingleCellRegion(i, j)
+            .Stroke(renderer, 0xfeffffff);
+        }
+      }
+    }
 
     Region bounds;
   protected:
