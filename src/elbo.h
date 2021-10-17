@@ -33,7 +33,7 @@ class Elbo : public Drawable {
       ) :
         window{w},
         bounds{b},
-        corner{b.position, s},
+        corner{b._position, s},
         header{h},
         inner_radius{window.HeaderFont().Height()},
         outer_radius{window.HeaderFont().Height()},

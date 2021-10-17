@@ -26,8 +26,29 @@ class Button : public Region {
         label{l}
     {}
 
-    void Draw(SDL_Renderer*) const;
-    void OnMouseButtonDown(SDL_MouseButtonEvent&);
+    void Draw(SDL_Renderer* renderer) const {
+      Colour drawcolour = active == true
+                        ? colours.active
+                        : colours.base;
+      boxColor(renderer,
+          NearX(), NearY(),
+          FarX(),  FarY(),
+          drawcolour
+        );
+
+      window.ButtonFont().RenderTextSouthEast(
+          renderer,
+          Region{_position, _size},
+          label
+        );
+    }
+
+
+    void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+      printf("OnMouseButtonDown\n");
+      Region::OnMouseButtonDown(event);
+      active = !active;
+    }
 
   protected:
     Window window;

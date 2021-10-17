@@ -2,7 +2,7 @@
 
 
 Size Grid::CellSize() const {
-  int width = floor(bounds.size.x / num_cols);
+  int width = floor(bounds._size.x / num_cols);
   return Size{ width, row_height };
 }
 
@@ -27,12 +27,12 @@ GridRegion Grid::MultiCellRegion(
 
   Size s = CellSize();
 
-  x = bounds.position.x
+  x = bounds.Origin().x
     + margin.x
     + (s.x * (near_col - 1))
     ;
 
-  y = bounds.position.y
+  y = bounds.Origin().y
     + margin.y
     + row_height * (near_row - 1)
     ;

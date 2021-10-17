@@ -47,7 +47,7 @@ class Font {
 
       Size surface_size{surface};
       Region label_region = bounds.AlignSouthEast(surface_size);
-      label_region.position.Subtract(Coordinate{5,0});
+      label_region.Origin().Subtract(Coordinate{5,0});
 
       SDL_Rect label_rect = label_region.SdlRect();
       SDL_RenderCopy(renderer, texture, NULL, &label_rect);
@@ -72,7 +72,7 @@ class Font {
 
       Size surface_size{surface};
       Region label_region = bounds.AlignWest(surface_size);
-      label_region.position.Subtract(Coordinate{5,0});
+      label_region.Origin().Subtract(Coordinate{5,0});
 
       SDL_Rect label_rect = label_region.SdlRect();
       SDL_RenderCopy(renderer, texture, NULL, &label_rect);

@@ -3,9 +3,9 @@
 
 Region Elbo::SweepRegion() const {
   return Region{
-      bounds.position,
-      Size{ corner.size.x + inner_radius,
-            corner.size.y + inner_radius }
+      bounds._position,
+      Size{ corner._size.x + inner_radius,
+            corner._size.y + inner_radius }
     };
 }
 
@@ -13,8 +13,8 @@ Region Elbo::HorizontalRegion() const {
   Region sweep = SweepRegion();
   return Region{
       Position{ sweep.FarX(), sweep.NearY() },
-      Size{ bounds.size.x - corner.size.x - inner_radius,
-            corner.size.y
+      Size{ bounds._size.x - corner._size.x - inner_radius,
+            corner._size.y
       }
     };
 }
@@ -25,8 +25,8 @@ Region Elbo::VerticalRegion() const {
       Position{ sweep.NearX(),
                 sweep.FarY() + gutter.y
       },
-      Size{ corner.size.x,
-            bounds.size.y - sweep.size.y - gutter.y
+      Size{ corner._size.x,
+            bounds._size.y - sweep._size.y - gutter.y
       }
     };
 }
@@ -40,7 +40,7 @@ Region Elbo::InnerRadiusRegion() const {
 
 Region Elbo::OuterRadiusRegion() const {
   return Region{
-      bounds.position,
+      bounds._position,
       Size{ outer_radius, outer_radius }
     };
 }
@@ -53,7 +53,7 @@ Region Elbo::HeaderRegion() const {
           sweep.FarY() - inner_radius
       },
       Size{
-          bounds.size.x - sweep.size.x,
+          bounds._size.x - sweep._size.x,
           inner_radius
       }
     };
@@ -62,8 +62,8 @@ Region Elbo::HeaderRegion() const {
 Region Elbo::ContainerRegion() const {
   return Region{
     Position{corner.FarX(), corner.FarY() + inner_radius},
-    Size{bounds.size.x - corner.size.x,
-         bounds.size.y - corner.size.y - inner_radius}
+    Size{bounds._size.x - corner._size.x,
+         bounds._size.y - corner._size.y - inner_radius}
     };
 }
 

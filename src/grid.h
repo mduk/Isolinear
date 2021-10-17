@@ -66,5 +66,6 @@ class Grid {
     int row_height{100};
     Gutter gutter{50, 50};
     Margin margin{10, 10};
+    std::list<GridRegion> regions{};
 };
 

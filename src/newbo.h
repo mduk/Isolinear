@@ -19,7 +19,7 @@
 
 using namespace std;
 
-
+/*
 class Newbo : public Drawable {
   public:
     Newbo(Window& w) : window{w} {};
@@ -60,3 +60,4 @@ class Newbo : public Drawable {
   protected:
     Window window;
 };
+*/
