@@ -9,6 +9,15 @@
 #include "types.h"
 #include "geometry.h"
 
+class Grid;
+
+class GridRegion : public Region {
+  public:
+    GridRegion(int x, int y, int w, int h)
+      : Region{x, y, w, h}
+    {};
+};
+
 class Grid {
   public:
 
@@ -42,12 +51,12 @@ class Grid {
 
     int PositionColumn(Position&) const;
     int PositionRow(Position&) const;
-    Region PositionRegion(Position&) const;
+    GridRegion PositionRegion(Position&) const;
 
-    Region SingleCellRegion(int, int) const;
-    Region MultiCellRegion(int, int, int, int) const;
-    Region Row(int) const;
-    Region Column(int) const;
+    GridRegion SingleCellRegion(int, int) const;
+    GridRegion MultiCellRegion(int, int, int, int) const;
+    GridRegion Row(int) const;
+    GridRegion Column(int) const;
 
     void DrawCells(SDL_Renderer*) const;
 

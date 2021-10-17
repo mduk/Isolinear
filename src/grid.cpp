@@ -6,7 +6,7 @@ Size Grid::CellSize() const {
   return Size{ width, row_height };
 }
 
-Region Grid::SingleCellRegion(
+GridRegion Grid::SingleCellRegion(
     int col, int row
 ) const {
   return MultiCellRegion(
@@ -14,7 +14,7 @@ Region Grid::SingleCellRegion(
   );
 }
 
-Region Grid::MultiCellRegion(
+GridRegion Grid::MultiCellRegion(
   int near_col, int near_row,
   int  far_col, int  far_row
 ) const {
@@ -45,7 +45,7 @@ Region Grid::MultiCellRegion(
     - gutter.y
     ;
 
-  return Region{ x, y, w, h };
+  return GridRegion{ x, y, w, h };
 }
 
 Grid Grid::SubGrid(
@@ -64,21 +64,21 @@ Grid Grid::SubGrid(
   };
 }
 
-Region Grid::Row(int row) const {
+GridRegion Grid::Row(int row) const {
   return MultiCellRegion(
       1,        row,
       num_cols, row
     );
 }
 
-Region Grid::Column(int col) const {
+GridRegion Grid::Column(int col) const {
   return MultiCellRegion(
       col, 1,
       col, 12 // Indeterminate
     );
 }
 
-Region Grid::PositionRegion(Position& p) const {
+GridRegion Grid::PositionRegion(Position& p) const {
   return SingleCellRegion(
     PositionColumn(p),
     PositionRow(p)
