@@ -35,14 +35,7 @@ class Window {
       size{_w, _h},
       g_num_columns{_num_columns},
       g_margin{_margin},
-      g_gutter{_gutter},
-      grid{
-        Region{0,0,0,0},
-        0,
-        0,
-        Coordinate{0,0},
-        Coordinate{0,0}
-      }
+      g_gutter{_gutter}
     {
       InitSdl();
 

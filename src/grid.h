@@ -12,6 +12,9 @@
 class Grid {
   public:
 
+    Grid()
+    {}
+
     Grid(Size s)
       : bounds{Position{0,0}, s}
     {};
