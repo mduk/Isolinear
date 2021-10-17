@@ -97,8 +97,10 @@ class Size : public Coordinate {
 
 
 class Region : public Drawable {
-  public:
+  protected:
     Position _position;
+
+  public:
     Size _size;
 
     Region()

@@ -3,7 +3,7 @@
 
 Region Elbo::SweepRegion() const {
   return Region{
-      bounds._position,
+      bounds.Origin(),
       Size{ corner._size.x + inner_radius,
             corner._size.y + inner_radius }
     };
@@ -40,7 +40,7 @@ Region Elbo::InnerRadiusRegion() const {
 
 Region Elbo::OuterRadiusRegion() const {
   return Region{
-      bounds._position,
+      bounds.Origin(),
       Size{ outer_radius, outer_radius }
     };
 }
