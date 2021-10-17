@@ -62,6 +62,8 @@ int main(int argc, char* argv[]) {
       Size{10,10}
     );
 
+  grid_test(window);
+
   SDL_RenderPresent(window.sdl_renderer);
 
   bool running = true;
@@ -82,6 +84,16 @@ int main(int argc, char* argv[]) {
 
         case SDL_MOUSEBUTTONDOWN: {
           window.OnMouseButtonDown(e.button);
+          break;
+        }
+
+        case SDL_WINDOWEVENT: {
+          switch (e.window.event) {
+            case SDL_WINDOWEVENT_RESIZED: {
+              window.OnWindowResize(e.window);
+              break;
+            };
+          }
           break;
         }
 

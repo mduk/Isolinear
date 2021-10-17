@@ -87,6 +87,15 @@ class Window {
       }
     }
 
+    void OnWindowResize(SDL_WindowEvent& event) {
+      printf("Window::OnWindowResize\n");
+      SDL_GetWindowSize(
+          sdl_window,
+          &size.x,
+          &size.y
+        );
+    }
+
     void draw(Position p, uint32_t c) {
       filledCircleColor(sdl_renderer, p.x, p.y, 10, c);
     }
@@ -118,6 +127,7 @@ class Window {
           SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
           size.x, size.y,
           0 | SDL_WINDOW_OPENGL
+            | SDL_WINDOW_RESIZABLE
             | SDL_WINDOW_FULLSCREEN_DESKTOP
         );
 
