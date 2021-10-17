@@ -94,6 +94,8 @@ class Window {
           &size.x,
           &size.y
         );
+
+      grid.bounds.size = size;
     }
 
     void draw(Position p, uint32_t c) {
