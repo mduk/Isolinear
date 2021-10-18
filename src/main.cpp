@@ -78,6 +78,9 @@ int main(int argc, char* argv[]) {
 
     GridRegion vertical = window.grid.MultiCellRegion(1,3, 2,12);
     window.Add(&vertical);
+
+    GridRegion container = window.grid.MultiCellRegion(3,3, 12,12);
+    window.Add(&container);
   }
 
   SDL_RenderPresent(window.sdl_renderer);
