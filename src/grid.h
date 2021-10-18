@@ -13,24 +13,42 @@ class Grid;
 
 class GridRegion : public Region {
   public:
-    GridRegion(int x, int y, int w, int h)
-      : Region{x, y, w, h}
+    GridRegion(
+        Grid const* g,
+        int nc, int nr,
+        int fc, int fr
+      ) :
+        grid{g},
+        near_col{nc},
+        near_row{nr},
+        far_col{fc},
+        far_row{fr}
     {};
+
+    int NearColumn() { return near_col; }
+    int NearRow()    { return near_row; }
+    int FarColumn()  { return far_col;  }
+    int FarRow()     { return far_row;  }
+
+    int X() { return grid->CalculateGridRegion(this).X(); }
+    int Y() { return grid->CalculateGridRegion(this).Y(); }
+    int W() { return grid->CalculateGridRegion(this).W(); }
+    int H() { return grid->CalculateGridRegion(this).H(); }
+
+  protected:
+    Grid const* grid;
+    int near_col;
+    int near_row;
+    int far_col;
+    int far_row;
 };
 
 class Grid {
   public:
 
-    Grid()
-    {}
-
-    Grid(Size s)
-      : bounds{Position{0,0}, s}
-    {};
-
-    Grid(Region b)
-      : bounds{b}
-    {};
+    Grid() {}
+    Grid(Size s) : bounds{Position{0,0}, s} {};
+    Grid(Region b) : bounds{b} {};
 
     Grid(
         Region b,
@@ -100,6 +118,18 @@ class Grid {
         throw std::runtime_error("Out of bounds");
       }
 
+      return GridRegion{ this, near_col, near_row, far_col, far_row };
+    }
+
+    Region CalculateGridRegion(
+        GridRegion& gr
+    ) {
+
+      int near_col = gr.NearColumn();
+      int near_row = gr.NearRow();
+      int  far_col = gr.FarColumn()
+      int  far_row = gr.FarRow();
+
       int x, y, w, h;
 
       Size s = CellSize();
@@ -122,7 +152,7 @@ class Grid {
         - gutter.y
         ;
 
-      return GridRegion{ x, y, w, h };
+      return Region{ x, y, w, h };
     }
 
     GridRegion Row(int row) const {
