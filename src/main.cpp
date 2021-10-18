@@ -35,15 +35,6 @@ string http_req(string url) {
   return string(response_stream.str());
 }
 
-void grid_test(Window& window) {
-  window.grid.DrawCells(window.sdl_renderer);
-  window.Add(new Region{window.grid.Column(2)});
-  window.Add(new Region{window.grid.Row(2)});
-  window.Add(new Region{window.grid.SingleCellRegion(4,4)});
-  window.Add(new Region{window.grid.MultiCellRegion(4,6, 4,12)});
-  window.Add(new Region{window.grid.MultiCellRegion(6,4, 12,4)});
-}
-
 int main(int argc, char* argv[]) {
   srand(time(NULL));
 
@@ -62,8 +53,17 @@ int main(int argc, char* argv[]) {
       Size{10,10}
     );
 
-  grid_test(window);
+  window.Add(new Region{100,100,10,10});
 
+/*
+  GridRegion column = window.grid.Column(2);
+  window.Add(&column);
+  window.Add(&window.grid.Row(2));
+  window.Add(&window.grid.SingleCellRegion(4,4));
+  window.Add(&window.grid.MultiCellRegion(4,6, 4,12));
+  window.Add(&window.grid.MultiCellRegion(6,4, 12,4));
+*/
+  window.grid.DrawCells(window.sdl_renderer);
   SDL_RenderPresent(window.sdl_renderer);
 
   bool running = true;
@@ -104,7 +104,6 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    window.grid.DrawCells(window.sdl_renderer);
     window.Draw();
   }
 

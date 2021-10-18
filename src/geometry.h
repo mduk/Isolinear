@@ -133,16 +133,19 @@ class Region : public Drawable {
     }
 
 
-    int X() const { return _position.x; }
-    int Y() const { return _position.y; }
-    int W() const { return _size.x; }
-    int H() const { return _size.y; }
+
+    // Sources of truth
+    Position Origin()  const { return _position; };
+    Size     GetSize() const { return _size; };
 
 
-    Position Origin() const { return _position; };
+    // X, Y, W, H shortcuts
+    int X() const { return Origin().x; }
+    int Y() const { return Origin().y; }
+    int W() const { return GetSize().x; }
+    int H() const { return GetSize().y; }
 
     // Near and Far Point Positions
-
     Position Near()  const { return Origin(); }
          int NearX() const { return Origin().x; }
          int NearY() const { return Origin().y; }
@@ -152,7 +155,6 @@ class Region : public Drawable {
          int FarY() const { return Far().y; }
 
     // Compass points
-
     Position Centre()     const { return Origin().Add(_size.Centre());    }
     Position North()      const { return Origin().Add(_size.North());     }
     Position East()       const { return Origin().Add(_size.East());      }
