@@ -55,15 +55,21 @@ int main(int argc, char* argv[]) {
 
   window.Add(new Region{100,100,10,10});
 
-/*
   GridRegion column = window.grid.Column(2);
   window.Add(&column);
-  window.Add(&window.grid.Row(2));
-  window.Add(&window.grid.SingleCellRegion(4,4));
-  window.Add(&window.grid.MultiCellRegion(4,6, 4,12));
-  window.Add(&window.grid.MultiCellRegion(6,4, 12,4));
-*/
-  window.grid.DrawCells(window.sdl_renderer);
+
+  GridRegion row = window.grid.Row(2);
+  window.Add(&row);
+
+  GridRegion singlecell = window.grid.SingleCellRegion(4,4);
+  window.Add(&singlecell);
+
+  GridRegion multicell1 = window.grid.MultiCellRegion(4,6, 4,12);
+  window.Add(&multicell1);
+
+  GridRegion multicell2 = window.grid.MultiCellRegion(6,4, 12,4);
+  window.Add(&multicell2);
+
   SDL_RenderPresent(window.sdl_renderer);
 
   bool running = true;
@@ -104,6 +110,7 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    window.grid.DrawCells(window.sdl_renderer);
     window.Draw();
   }
 

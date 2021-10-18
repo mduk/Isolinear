@@ -135,8 +135,8 @@ class Region : public Drawable {
 
 
     // Sources of truth
-    Position Origin()  const { return _position; };
-    Size     GetSize() const { return _size; };
+    virtual Position Origin()  const { return _position; };
+    virtual Size     GetSize() const { return _size; };
 
 
     // X, Y, W, H shortcuts
