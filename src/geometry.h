@@ -240,6 +240,25 @@ class Region : public Drawable {
 
     void Draw(SDL_Renderer* renderer) const {
       Fill(renderer, 0xaaffffff);
+      filledCircleColor(renderer,    CentreX(),    CentreY(), 4, 0xaa00ff00);
+      filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0xaaff0000);
+      filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0xaa0000ff);
+      filledCircleColor(renderer,      EastX(),      EastY(), 4, 0xaaff0000);
+      filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0xaa0000ff);
+      filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0xaaff0000);
+      filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0xaa0000ff);
+      filledCircleColor(renderer,      WestX(),      WestY(), 4, 0xaaff0000);
+      filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0xaa0000ff);
+      lineColor(renderer,
+          NorthWestX(), NorthWestY(),
+          SouthEastX(), SouthEastY(),
+          0xaa000000
+        );
+      lineColor(renderer,
+          NorthEastX(), NorthEastY(),
+          SouthWestX(), SouthWestY(),
+          0xaa000000
+        );
     }
 
 
