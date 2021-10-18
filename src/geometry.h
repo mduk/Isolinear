@@ -150,20 +150,20 @@ class Region : public Drawable {
          int NearX() const { return Origin().x; }
          int NearY() const { return Origin().y; }
 
-    Position Far()  const { return Origin().Add(_size); }
+    Position Far()  const { return Origin().Add(GetSize()); }
          int FarX() const { return Far().x; }
          int FarY() const { return Far().y; }
 
     // Compass points
-    Position Centre()     const { return Origin().Add(_size.Centre());    }
-    Position North()      const { return Origin().Add(_size.North());     }
-    Position East()       const { return Origin().Add(_size.East());      }
-    Position South()      const { return Origin().Add(_size.South());     }
-    Position West()       const { return Origin().Add(_size.West());      }
-    Position SouthWest()  const { return Origin().Add(_size.SouthWest()); }
-    Position NorthWest()  const { return Origin().Add(_size.NorthWest()); }
-    Position SouthEast()  const { return Origin().Add(_size.SouthEast()); }
-    Position NorthEast()  const { return Origin().Add(_size.NorthEast()); }
+    Position Centre()     const { return Origin().Add(GetSize().Centre());    }
+    Position North()      const { return Origin().Add(GetSize().North());     }
+    Position East()       const { return Origin().Add(GetSize().East());      }
+    Position South()      const { return Origin().Add(GetSize().South());     }
+    Position West()       const { return Origin().Add(GetSize().West());      }
+    Position SouthWest()  const { return Origin().Add(GetSize().SouthWest()); }
+    Position NorthWest()  const { return Origin().Add(GetSize().NorthWest()); }
+    Position SouthEast()  const { return Origin().Add(GetSize().SouthEast()); }
+    Position NorthEast()  const { return Origin().Add(GetSize().NorthEast()); }
 
     int CentreX()    const { return Centre().x;    }
     int CentreY()    const { return Centre().y;    }
@@ -220,15 +220,15 @@ class Region : public Drawable {
       return SDL_Rect{
           _position.x,
           _position.y,
-          _size.x,
-          _size.y
+          GetSize().x,
+          GetSize().y
         };
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
       printf("Region: %d,%d (%d,%d) %d,%d \n",
           NearX(), NearY(),
-          _size.x,  _size.y,
+          GetSize().x,  GetSize().y,
           FarX(),  FarY()
         );
       printf(" Click: %d,%d (%d,%d local)\n",
@@ -255,7 +255,7 @@ class Region : public Drawable {
     void ArcNorthWest(SDL_Renderer* renderer, Colour colour) const {
       filledPieColor(renderer,
         FarX(), FarY(),
-        _size.x,
+        GetSize().x,
         180, 270,
         colour
       );
