@@ -58,8 +58,8 @@ class Coordinate {
     int SouthY()     const { return y;     }
     int WestX()      const { return 0;     }
     int WestY()      const { return y / 2; }
-    int NorthEastX() const { return 0;     }
-    int NorthEastY() const { return y;     }
+    int NorthEastX() const { return x;     }
+    int NorthEastY() const { return 0;     }
     int SouthEastX() const { return x;     }
     int SouthEastY() const { return y;     }
     int SouthWestX() const { return 0;     }
