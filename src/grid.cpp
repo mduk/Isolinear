@@ -67,7 +67,6 @@ Region Grid::CalculateGridRegion(
   int  far_col = gr.FarColumn();
   int  far_row = gr.FarRow();
 
-//  printf("Grid::CalculateGridRegion(%d,%d,%d,%d)\n", near_col, near_row, far_col, far_row);
 
   int x, y, w, h;
 
@@ -95,23 +94,10 @@ Region Grid::CalculateGridRegion(
 }
 
 void Grid::DrawCells(SDL_Renderer* renderer) const {
-  printf("Grid::DrawCells\n");
   for (int i=1; i<=num_cols; i++) {
     for (int j=1; j<=num_cols; j++) {
-      GridRegion gr = SingleCellRegion(i, j);
-      printf("\n      %d, %d, %d, %d\n",
-          gr.NearColumn(), gr.NearRow(),
-          gr.FarColumn(), gr.FarColumn()
-        );
-      printf("      => Origin(%d,%d), GetSize(%d,%d)\n",
-          gr.Origin().x, gr.Origin().y,
-          gr.GetSize().x, gr.GetSize().y
-        );
-      printf("      => Near(%d,%d), FarX(%d,%d)\n",
-          gr.Near().x, gr.Near().y,
-          gr.Far().x, gr.Far().y
-        );
-      gr.Stroke(renderer, 0xfeffffff);
+      SingleCellRegion(i, j)
+        .Stroke(renderer, 0xfeffffff);
     }
   }
 }

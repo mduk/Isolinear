@@ -15,7 +15,6 @@
 #include "window.h"
 #include "grid.h"
 #include "elbo.h"
-#include "newbo.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -53,22 +52,33 @@ int main(int argc, char* argv[]) {
       Size{10,10}
     );
 
-  window.Add(new Region{100,100,10,10});
+  if (false) {
+    GridRegion column = window.grid.Column(2);
+    window.Add(&column);
 
-  GridRegion column = window.grid.Column(2);
-  window.Add(&column);
+    GridRegion row = window.grid.Row(2);
+    window.Add(&row);
 
-  GridRegion row = window.grid.Row(2);
-  window.Add(&row);
+    GridRegion singlecell = window.grid.SingleCellRegion(4,4);
+    window.Add(&singlecell);
 
-  GridRegion singlecell = window.grid.SingleCellRegion(4,4);
-  window.Add(&singlecell);
+    GridRegion multicell1 = window.grid.MultiCellRegion(4,6, 4,12);
+    window.Add(&multicell1);
 
-  GridRegion multicell1 = window.grid.MultiCellRegion(4,6, 4,12);
-  window.Add(&multicell1);
+    GridRegion multicell2 = window.grid.MultiCellRegion(6,4, 12,4);
+    window.Add(&multicell2);
+  }
 
-  GridRegion multicell2 = window.grid.MultiCellRegion(6,4, 12,4);
-  window.Add(&multicell2);
+  if (true) {
+    GridRegion sweep = window.grid.MultiCellRegion(1,1, 3,2);
+    window.Add(&sweep);
+
+    GridRegion horizontal = window.grid.MultiCellRegion(4,1, 12,2);
+    window.Add(&horizontal);
+
+    GridRegion vertical = window.grid.MultiCellRegion(1,3, 2,12);
+    window.Add(&vertical);
+  }
 
   SDL_RenderPresent(window.sdl_renderer);
 

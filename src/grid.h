@@ -95,6 +95,14 @@ class GridRegion : public Region {
       return grid->CalculateGridRegion(*this).GetSize();
     }
 
+    void Print() const {
+      Region r = grid->CalculateGridRegion(*this);
+      printf("%d,%d %d,%d\n",
+          r.Origin().x, r.Origin().y,
+          r.GetSize().x, r.GetSize().y
+        );
+    }
+
   protected:
     Grid const* grid;
     int near_col;

@@ -88,7 +88,6 @@ class Window {
     }
 
     void OnWindowResize(SDL_WindowEvent& event) {
-      printf("Window::OnWindowResize\n");
       SDL_GetWindowSize(
           sdl_window,
           &size.x,
