@@ -50,10 +50,6 @@ class Window {
     };
 
     ~Window() {
-      for (auto* drawable : drawables) {
-        delete drawable;
-      }
-
       SDL_DestroyRenderer(sdl_renderer);
       SDL_DestroyWindow(sdl_window);
     }
