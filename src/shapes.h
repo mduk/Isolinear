@@ -9,7 +9,7 @@
 
 class Quad : public Drawable {
   public:
-    Quad(Region& r, int fc) :
+    Quad(Region&& r, int fc) :
         region{r},
         fill_colour{fc}
     {};
