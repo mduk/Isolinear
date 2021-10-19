@@ -52,23 +52,6 @@ int main(int argc, char* argv[]) {
       Size{10,10}
     );
 
-  if (false) { // Grid test pattern
-    GridRegion column = window.grid.Column(2);
-    window.Add(&column);
-
-    GridRegion row = window.grid.Row(2);
-    window.Add(&row);
-
-    GridRegion singlecell = window.grid.SingleCellRegion(4,4);
-    window.Add(&singlecell);
-
-    GridRegion multicell1 = window.grid.MultiCellRegion(4,6, 4,12);
-    window.Add(&multicell1);
-
-    GridRegion multicell2 = window.grid.MultiCellRegion(6,4, 12,4);
-    window.Add(&multicell2);
-  }
-
   Quad corner{window.grid.MultiCellRegion(1,1, 3,2), 0xff00ffff};
   window.Add(&corner);
 
