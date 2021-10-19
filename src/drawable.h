@@ -14,7 +14,8 @@ class Drawable {
 
     virtual void OnMouseButtonDown(
         SDL_MouseButtonEvent&
-      ) = 0;
+      ) {};
 
     virtual SDL_Rect SdlRect() const = 0;
 };
+

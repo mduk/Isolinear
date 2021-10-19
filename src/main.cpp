@@ -14,7 +14,7 @@
 #include "geometry.h"
 #include "window.h"
 #include "grid.h"
-#include "elbo.h"
+#include "shapes.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -69,42 +69,54 @@ int main(int argc, char* argv[]) {
     window.Add(&multicell2);
   }
 
-  if (true) {
-    GridRegion sweep = window.grid.MultiCellRegion(1,1, 3,2);
-    window.Add(&sweep);
+  GridRegion sweepregion = window.grid.MultiCellRegion(1,1, 3,2);
+  Quad sweep(Region{100,100,50,50}, 0xff0000ff);
+  window.Add(&sweep);
+/*
+  GridRegion horizontal = window.grid.MultiCellRegion(4,1, 12,2);
+//    window.Add(&horizontal);
 
-    Size outerradius{sweep.H()};
-    Size innerradius{window.HeaderFont().Height()};
+  int reachweight = 30;
 
-    Region oradius = sweep.AlignNorthWest(outerradius);
-    window.Add(&oradius);
+  Region reach{
+      horizontal.Origin(),
+      Size{
+          50
+      }
+  };
+  window.Add(&reach);
 
-    Region iradius = sweep.AlignSouthEast(innerradius);
-    window.Add(&iradius);
+  Region header{
+      Position{
+          horizontal.Origin().x,
+          horizontal.Origin().y + reachweight
+      },
+      Size{
+          horizontal.GetSize().x,
+          horizontal.GetSize().y - reachweight
+      }
+    };
+  //window.Add(&header);
 
-    GridRegion horizontal = window.grid.MultiCellRegion(4,1, 12,2);
-    window.Add(&horizontal);
+  Size outerradius{sweep.H()};
+  Size innerradius{sweep.H() - reachweight};
+  //Size innerradius{window.HeaderFont().Height()};
+*/
+/*
+  Region oradius = sweep.AlignNorthWest(outerradius);
+  window.Add(&oradius);
 
-    int reachweight = 30;
-
-    Region reach{horizontal.Origin(), Size{horizontal.GetSize().x, reachweight}};
-    window.Add(&reach);
-
-    Region header{
-        Position{horizontal.Origin().x, horizontal.Origin().y + reachweight},
-        Size{horizontal.GetSize().x, horizontal.GetSize().y - reachweight}
-      };
-    window.Add(&header);
-
-    GridRegion vertical = window.grid.MultiCellRegion(1,3, 2,12);
-    window.Add(&vertical);
-
-    GridRegion button1 = window.grid.MultiCellRegion(1,3, 2,3);
-    window.Add(&button1);
-
-    GridRegion container = window.grid.MultiCellRegion(3,3, 12,12);
-    window.Add(&container);
-  }
+  Region iradius = sweep.AlignSouthEast(innerradius);
+  window.Add(&iradius);
+*/
+  GridRegion vertical = window.grid.MultiCellRegion(1,3, 2,12);
+  window.Add(&vertical);
+/*
+  GridRegion button1 = window.grid.MultiCellRegion(1,3, 2,3);
+  window.Add(&button1);
+*/
+  GridRegion container = window.grid.MultiCellRegion(3,3, 12,12);
+  window.Add(&container);
 
   SDL_RenderPresent(window.sdl_renderer);
 
