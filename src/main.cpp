@@ -52,8 +52,13 @@ int main(int argc, char* argv[]) {
       Size{10,10}
     );
 
-  Quad corner{window.grid.MultiCellRegion(1,1, 3,2), 0xff00ffff};
-  window.Add(&corner);
+
+  Quad redsquare{Region{100,100,50,50}, 0xff0000ff};
+  window.Add(&redsquare);
+
+  GridRegion corner_region = window.grid.MultiCellRegion(1,1, 3,2);
+  Quad corner_quad{window.grid.MultiCellRegion(1,1, 3,2), 0xff0000ff};
+  window.Add(&corner_quad);
 
   SDL_RenderPresent(window.sdl_renderer);
 
