@@ -11,12 +11,11 @@ class Quad : public Drawable {
   public:
     Quad(Region&& r, uint32_t fc) :
         fill_colour{fc}
-    {
-      region = r;
-    };
+    { region = r; };
 
     void Draw(SDL_Renderer* renderer) const {
-      printf("Quad::Draw %d,%d %d,%d\n",
+      printf("Quad<0x%08X>::Draw %d,%d %d,%d\n",
+          this,
           region.NearX(), region.NearY(),
           region.FarX(), region.FarY()
         );
