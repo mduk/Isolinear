@@ -52,15 +52,10 @@ int main(int argc, char* argv[]) {
     );
 
 
-  Quad redsquare{Region{100,100,50,50}, 0xff0000ff};
-  window.Add(&redsquare);
-
-  GridRegion corner_region = window.grid.MultiCellRegion(1,1, 3,2);
   Quad corner_quad{window.grid.MultiCellRegion(1,1, 3,2), 0xff0000ff};
-  window.Add(&corner_quad);
+  //Quad corner_quad{window.grid.CalculateGridRegion(1,1, 3,2), 0xff0000ff};
 
-  GridRegion col = window.grid.Column(2);
-  window.Add(&col);
+  window.Add(&corner_quad);
 
   SDL_RenderPresent(window.sdl_renderer);
 
@@ -102,6 +97,7 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    window.grid.Print();
     window.grid.DrawCells(window.sdl_renderer);
     window.Draw();
   }

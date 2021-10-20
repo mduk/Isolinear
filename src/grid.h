@@ -73,6 +73,13 @@ class Grid {
       return max_row - 1;
     }
 
+    void Print() const {
+      printf("Grid<0x%08X>%d,%d (%d,%d)\n",
+          this,
+          bounds.X(), bounds.Y(),
+          bounds.W(), bounds.H()
+        );
+    }
 
     Region bounds;
   protected:

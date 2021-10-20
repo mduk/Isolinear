@@ -132,6 +132,15 @@ class Region : public Drawable {
       _size = newsize;
     }
 
+    void Print() const {
+      printf("Region<0x%08X> %d,%d (%d,%d) %d,%d\n",
+          this,
+          _position.x, _position.y,
+          _size.x, _size.y,
+          _position.x+_size.x, _position.y+_size.y
+        );
+    }
+
 
 
     // Sources of truth

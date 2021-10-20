@@ -9,7 +9,7 @@
 
 class Quad : public Drawable {
   public:
-    Quad(Region&& r, uint32_t fc) :
+    Quad(Region r, uint32_t fc) :
         fill_colour{fc}
     { region = r; };
 
@@ -19,6 +19,7 @@ class Quad : public Drawable {
           region.NearX(), region.NearY(),
           region.FarX(), region.FarY()
         );
+      region.Print();
       boxColor(renderer,
           region.NearX(), region.NearY(),
           region.FarX(), region.FarY(),

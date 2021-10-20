@@ -10,6 +10,12 @@ GridRegion Grid::MultiCellRegion(
   }
 
   return GridRegion{ this, near_col, near_row, far_col, far_row };
+  printf("Grid::MultiCellRegion(%d,%d %d,%d)\n",
+      near_col, near_row,
+       far_col,  far_row
+    );
+  printf("      Bounds:\n");
+  bounds.Print();
 }
 
 
