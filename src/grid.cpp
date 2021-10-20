@@ -13,10 +13,10 @@ GridRegion Grid::MultiCellRegion(
 }
 
 
-GridRegion Grid::PositionRegion(Position& p) const {
+GridRegion Grid::PositionRegion(Position p) const {
   return SingleCellRegion(
-    PositionColumn(p),
-    PositionRow(p)
+    PositionColumnIndex(p),
+    PositionRowIndex(p)
   );
 }
 
@@ -36,9 +36,10 @@ GridRegion Grid::Row(int row) const {
 }
 
 GridRegion Grid::Column(int col) const {
+  Position far = bounds.Far();
   return MultiCellRegion(
       col, 1,
-      col, 12 // Indeterminate
+      col, PositionRowIndex(far) // Indeterminate
     );
 }
 
@@ -51,7 +52,24 @@ Region Grid::CalculateGridRegion(
   int  far_col = gr.FarColumn();
   int  far_row = gr.FarRow();
 
+  return CalculateGridRegion(
+      near_col, near_row,
+      far_col, far_row
+    );
+}
 
+Region Grid::CalculateGridRegion(
+  int col, int row
+) const {
+  return CalculateGridRegion(
+      col, row, col, row
+    );
+}
+
+Region Grid::CalculateGridRegion(
+  int near_col, int near_row,
+  int  far_col, int  far_row
+) const {
   int x, y, w, h;
 
   Size s = CellSize();
@@ -79,7 +97,7 @@ Region Grid::CalculateGridRegion(
 
 void Grid::DrawCells(SDL_Renderer* renderer) const {
   for (int i=1; i<=num_cols; i++) {
-    for (int j=1; j<=num_cols; j++) {
+    for (int j=1; j<=MaxRows(); j++) {
       SingleCellRegion(i, j)
         .Stroke(renderer, 0xfeffffff);
     }

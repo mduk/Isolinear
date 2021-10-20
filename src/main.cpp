@@ -59,6 +59,9 @@ int main(int argc, char* argv[]) {
   Quad corner_quad{window.grid.MultiCellRegion(1,1, 3,2), 0xff0000ff};
   window.Add(&corner_quad);
 
+  GridRegion col = window.grid.Column(2);
+  window.Add(&col);
+
   SDL_RenderPresent(window.sdl_renderer);
 
   bool running = true;

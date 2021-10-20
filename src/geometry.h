@@ -207,12 +207,17 @@ class Region : public Drawable {
     Region LeftHalf()   const { return Region{ NorthWest(), South()     }; }
     Region RightHalf()  const { return Region{ North(),     SouthEast() }; }
 
-    bool Encloses(Coordinate& point) const {
+    bool Encloses(Coordinate point) const {
       return ( NearX() <= point.x )
           && ( NearY() <= point.y )
           && ( point.x <= FarX()  )
           && ( point.y <= FarY()  );
-    };
+    }
+
+    bool Encloses(Region r) const {
+      return Encloses(r.Near())
+          && Encloses(r.Far());
+    }
 
 
 

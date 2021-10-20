@@ -31,12 +31,14 @@ class Grid {
     {};
 
     GridRegion MultiCellRegion(int, int, int, int) const;
-    GridRegion PositionRegion(Position& p) const;
+    GridRegion PositionRegion(Position p) const;
     GridRegion SingleCellRegion(int, int) const;
     GridRegion Row(int row) const;
     GridRegion Column(int col) const;
 
     Region CalculateGridRegion(GridRegion const& gr) const;
+    Region CalculateGridRegion(int, int, int, int) const;
+    Region CalculateGridRegion(int, int) const;
 
     void DrawCells(SDL_Renderer* renderer) const;
 
@@ -45,13 +47,30 @@ class Grid {
       return Size{ width, row_height };
     }
 
-    int PositionColumn(Position& p) const {
+    int PositionColumnIndex(Position p) const {
       Size s = CellSize();
       return floor(p.x / s.x) + 1;
     }
 
-    int PositionRow(Position& p) const {
+    int PositionRowIndex(Position p) const {
       return floor(p.y / row_height) + 1;
+    }
+
+    int MaxColumns() const {
+      return num_cols;
+    }
+
+    int MaxRows() const {
+      int max_row = PositionRowIndex(bounds.Far());
+      Region proposed = CalculateGridRegion(
+          1, max_row
+        );
+
+      if (bounds.Encloses(proposed)) {
+        return max_row;
+      }
+
+      return max_row - 1;
     }
 
 
