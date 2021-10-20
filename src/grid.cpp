@@ -13,24 +13,6 @@ GridRegion Grid::MultiCellRegion(
 }
 
 
-Grid Grid::SubGrid(
-    int near_col, int near_row,
-    int  far_col, int  far_row
-) const {
-  GridRegion gr = MultiCellRegion(
-      near_col, near_row,
-      far_col,  far_row
-    );
-
-  return Grid{
-    CalculateGridRegion(gr),
-    row_height,
-    (far_col - near_col) + 1,
-    Margin{0,0},
-    gutter
-  };
-}
-
 GridRegion Grid::PositionRegion(Position& p) const {
   return SingleCellRegion(
     PositionColumn(p),

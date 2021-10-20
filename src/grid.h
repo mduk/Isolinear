@@ -21,13 +21,11 @@ class Grid {
     Grid(
         Region b,
         int rh,
-        int nc,
         Margin m,
         Gutter g
       ) :
         bounds{b},
         row_height{rh},
-        num_cols{nc},
         margin{m},
         gutter{g}
     {};
@@ -37,8 +35,6 @@ class Grid {
     GridRegion SingleCellRegion(int, int) const;
     GridRegion Row(int row) const;
     GridRegion Column(int col) const;
-
-    Grid SubGrid( int, int, int, int) const;
 
     Region CalculateGridRegion(GridRegion const& gr) const;
 

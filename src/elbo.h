@@ -40,7 +40,6 @@ class Elbo : public Drawable {
         button_grid{
           VerticalRegion(),
           100, // row height
-          1, // num cols
           Margin{0,0},
           Gutter{0,10}
         }

@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
 
   Window window(
       win_w, win_h,
-      12,
       Size{10,10},
       Size{10,10}
     );

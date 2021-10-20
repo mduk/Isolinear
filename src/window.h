@@ -29,12 +29,10 @@ class Window {
 
     Window(
         int _w, int _h,
-        int _num_columns,
         Coordinate _margin,
         Coordinate _gutter
     ) :
       size{_w, _h},
-      g_num_columns{_num_columns},
       g_margin{_margin},
       g_gutter{_gutter}
     {
@@ -43,7 +41,6 @@ class Window {
       grid = Grid{
           Region{size},
           header_font.Height(), // Row height
-          g_num_columns,
           g_margin,
           g_gutter
         };
