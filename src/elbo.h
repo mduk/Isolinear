@@ -19,9 +19,6 @@
 
 using namespace std;
 
-using InnerRadius = int;
-using OuterRadius = int;
-using ButtonList = std::list<Button>;
 
 class Elbo : public Drawable {
   public:
@@ -71,11 +68,11 @@ class Elbo : public Drawable {
         0xff664466, 0xffcc9999,
         0xffff9999, 0xff6666cc
       };
-    InnerRadius inner_radius;
-    OuterRadius outer_radius;
+    int inner_radius;
+    int outer_radius;
     Gutter gutter{10, 10};
     Grid button_grid;
-    ButtonList buttons{};
+    std::list<Button> buttons{};
     std::string header;
 
     bool wireframe = false;
