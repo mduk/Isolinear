@@ -109,11 +109,11 @@ class GridRegion : public Region {
     int FarColumn()  const { return far_col;  }
     int FarRow()     const { return far_row;  }
 
-    virtual Position Origin() const {
+    virtual Position Origin() const override {
       return grid->CalculateGridRegion(*this).Origin();
     }
 
-    virtual Size GetSize() const {
+    virtual Size GetSize() const override {
       return grid->CalculateGridRegion(*this).GetSize();
     }
 

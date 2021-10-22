@@ -9,9 +9,9 @@
 
 class Quad : public Drawable {
   public:
-    Quad(Region r, uint32_t fc) :
-        fill_colour{fc}
-    { region = r; };
+    Quad(Region& r, uint32_t fc) :
+        fill_colour{fc},
+        region{r} {};
 
     void Draw(SDL_Renderer* renderer) const {
       printf("Quad<0x%08X>::Draw %d,%d %d,%d\n",
@@ -32,6 +32,6 @@ class Quad : public Drawable {
     }
 
   protected:
-    Region region;
+    Region& region;
     uint32_t fill_colour;
 };

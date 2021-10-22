@@ -132,7 +132,7 @@ class Region : public Drawable {
       _size = newsize;
     }
 
-    void Print() const {
+    virtual void Print() const {
       printf("Region<0x%08X> %d,%d (%d,%d) %d,%d\n",
           this,
           _position.x, _position.y,
@@ -155,13 +155,13 @@ class Region : public Drawable {
     int H() const { return GetSize().y; }
 
     // Near and Far Point Positions
-    Position Near()  const { return Origin(); }
-         int NearX() const { return Origin().x; }
-         int NearY() const { return Origin().y; }
+    virtual Position Near()  const { return Origin(); }
+    virtual      int NearX() const { return Origin().x; }
+    virtual      int NearY() const { return Origin().y; }
 
-    Position Far()  const { return Origin().Add(GetSize()); }
-         int FarX() const { return Far().x; }
-         int FarY() const { return Far().y; }
+    virtual Position Far()  const { return Origin().Add(GetSize()); }
+    virtual      int FarX() const { return Far().x; }
+    virtual      int FarY() const { return Far().y; }
 
     // Compass points
     Position Centre()     const { return Origin().Add(GetSize().Centre());    }
