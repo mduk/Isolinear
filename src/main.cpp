@@ -51,13 +51,10 @@ int main(int argc, char* argv[]) {
       Size{10,10}
     );
 
+  GridRegion multicellregion = window.grid.MultiCellRegion(1,1, 3,2);
 
-  Quad corner_quad{window.grid.MultiCellRegion(1,1, 3,2), 0xff0000ff};
-  //Quad corner_quad{window.grid.CalculateGridRegion(1,1, 3,2), 0xff0000ff};
-
+  Quad corner_quad{multicellregion, 0xff0000ff}; // ABGR
   window.Add(&corner_quad);
-
-  SDL_RenderPresent(window.sdl_renderer);
 
   bool running = true;
   while (running) {
@@ -97,8 +94,17 @@ int main(int argc, char* argv[]) {
       }
     }
 
+    // Render the grid cells as shaded boxes with white stroke
     window.grid.DrawCells(window.sdl_renderer);
+
+    // Renders the region as a grey area with compass points highlighted
+    //   region resizes with the grid on window resize
     multicellregion.Draw(window.sdl_renderer);
+
+    // Draw the corner_quad shape should draw over the grey with red
+    // and resize with the grid
+    corner_quad.Draw(window.sdl_renderer);
+
     window.Draw();
   }
 
