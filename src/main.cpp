@@ -97,8 +97,8 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    window.grid.Print();
     window.grid.DrawCells(window.sdl_renderer);
+    multicellregion.Draw(window.sdl_renderer);
     window.Draw();
   }
 
