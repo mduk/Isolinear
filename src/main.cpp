@@ -101,10 +101,6 @@ int main(int argc, char* argv[]) {
     //   region resizes with the grid on window resize
     multicellregion.Draw(window.sdl_renderer);
 
-    // Draw the corner_quad shape should draw over the grey with red
-    // and resize with the grid
-    corner_quad.Draw(window.sdl_renderer);
-
     window.Draw();
   }
 
