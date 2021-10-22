@@ -94,13 +94,7 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    // Render the grid cells as shaded boxes with white stroke
     window.grid.DrawCells(window.sdl_renderer);
-
-    // Renders the region as a grey area with compass points highlighted
-    //   region resizes with the grid on window resize
-    multicellregion.Draw(window.sdl_renderer);
-
     window.Draw();
   }
 
