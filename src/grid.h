@@ -119,9 +119,10 @@ class GridRegion : public Region {
 
     void Print() const {
       Region r = grid->CalculateGridRegion(*this);
-      printf("%d,%d %d,%d\n",
-          r.Origin().x, r.Origin().y,
-          r.GetSize().x, r.GetSize().y
+      printf("GridRegion<%d,%d (%d,%d) %d,%d\n",
+          r.Near().x, r.Near().y,
+          r.GetSize().x, r.GetSize().y,
+          r.Far().x, r.Far().y
         );
     }
 
