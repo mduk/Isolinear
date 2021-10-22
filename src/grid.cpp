@@ -39,7 +39,7 @@ GridRegion Grid::Column(int col) const {
   Position2D far = bounds.Far();
   return MultiCellRegion(
       col, 1,
-      col, PositionRowIndex(far) // Indeterminate
+      col, PositionRowIndex(far)
     );
 }
 
