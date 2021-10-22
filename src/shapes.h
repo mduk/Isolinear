@@ -14,12 +14,6 @@ class Quad : public Drawable {
         region{r} {};
 
     void Draw(SDL_Renderer* renderer) const {
-      printf("Quad<0x%08X>::Draw %d,%d %d,%d\n",
-          this,
-          region.NearX(), region.NearY(),
-          region.FarX(), region.FarY()
-        );
-      region.Print();
       boxColor(renderer,
           region.NearX(), region.NearY(),
           region.FarX(), region.FarY(),
