@@ -15,6 +15,7 @@
 #include "window.h"
 #include "grid.h"
 #include "shapes.h"
+#include "elbo.h"
 
 using namespace std;
 using namespace curlpp::options;
@@ -51,17 +52,10 @@ int main(int argc, char* argv[]) {
       Size2D{10,10}
     );
 
-  GridRegion sweepregion = window.grid.MultiCellRegion(1,1, 3,2);
-  Quad sweepquad{sweepregion, 0xff0000ff}; // ABGR
-  window.Add(&sweepquad);
+  int reachweight = 30;
 
-  GridRegion horizontalregion = window.grid.MultiCellRegion(4,1, 12,2);
-  Quad horizontalquad{horizontalregion, 0xff0000ff};
-  window.Add(&horizontalquad);
-
-  GridRegion verticalregion = window.grid.MultiCellRegion(1,3, 2,12);
-  Quad verticalquad{verticalregion, 0xff0000ff};
-  window.Add(&verticalquad);
+  Elbo elbo{window.grid};
+  window.Add(&elbo);
 
   bool running = true;
   while (running) {
