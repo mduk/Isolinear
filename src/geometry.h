@@ -155,13 +155,13 @@ class Region : public Drawable {
     int H() const { return GetSize().y; }
 
     // Near and Far Point Positions
-    virtual Position Near()  const { return Origin(); }
-    virtual      int NearX() const { return Origin().x; }
-    virtual      int NearY() const { return Origin().y; }
+    Position Near()  const { return Origin(); }
+         int NearX() const { return Origin().x; }
+         int NearY() const { return Origin().y; }
 
-    virtual Position Far()  const { return Origin().Add(GetSize()); }
-    virtual      int FarX() const { return Far().x; }
-    virtual      int FarY() const { return Far().y; }
+    Position Far()  const { return Origin().Add(GetSize()); }
+         int FarX() const { return Far().x; }
+         int FarY() const { return Far().y; }
 
     // Compass points
     Position Centre()     const { return Origin().Add(GetSize().Centre());    }
