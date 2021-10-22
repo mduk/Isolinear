@@ -47,8 +47,8 @@ int main(int argc, char* argv[]) {
 
   Window window(
       win_w, win_h,
-      Size{10,10},
-      Size{10,10}
+      Size2D{10,10},
+      Size2D{10,10}
     );
 
   GridRegion multicellregion = window.grid.MultiCellRegion(1,1, 3,2);

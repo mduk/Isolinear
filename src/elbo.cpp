@@ -4,7 +4,7 @@
 Region Elbo::SweepRegion() const {
   return Region{
       bounds.Origin(),
-      Size{ corner.W() + inner_radius,
+      Size2D{ corner.W() + inner_radius,
             corner.H() + inner_radius }
     };
 }
@@ -12,8 +12,8 @@ Region Elbo::SweepRegion() const {
 Region Elbo::HorizontalRegion() const {
   Region sweep = SweepRegion();
   return Region{
-      Position{ sweep.FarX(), sweep.NearY() },
-      Size{ bounds.W() - corner.W() - inner_radius,
+      Position2D{ sweep.FarX(), sweep.NearY() },
+      Size2D{ bounds.W() - corner.W() - inner_radius,
             corner.H()
       }
     };
@@ -22,10 +22,10 @@ Region Elbo::HorizontalRegion() const {
 Region Elbo::VerticalRegion() const {
   Region sweep = SweepRegion();
   return Region{
-      Position{ sweep.NearX(),
+      Position2D{ sweep.NearX(),
                 sweep.FarY() + gutter.y
       },
-      Size{ corner.W(),
+      Size2D{ corner.W(),
             bounds.H() - sweep.H() - gutter.y
       }
     };
@@ -33,26 +33,26 @@ Region Elbo::VerticalRegion() const {
 
 Region Elbo::InnerRadiusRegion() const {
   return Region{
-      Position{ corner.FarX(), corner.FarY() + 1 },
-      Size{ inner_radius, inner_radius }
+      Position2D{ corner.FarX(), corner.FarY() + 1 },
+      Size2D{ inner_radius, inner_radius }
     };
 }
 
 Region Elbo::OuterRadiusRegion() const {
   return Region{
       bounds.Origin(),
-      Size{ outer_radius, outer_radius }
+      Size2D{ outer_radius, outer_radius }
     };
 }
 
 Region Elbo::HeaderRegion() const {
   Region sweep = SweepRegion();
   return Region{
-      Position{
+      Position2D{
           sweep.FarX(),
           sweep.FarY() - inner_radius
       },
-      Size{
+      Size2D{
           bounds.W() - sweep.W(),
           inner_radius
       }
@@ -61,8 +61,8 @@ Region Elbo::HeaderRegion() const {
 
 Region Elbo::ContainerRegion() const {
   return Region{
-    Position{corner.FarX(), corner.FarY() + inner_radius},
-    Size{bounds.W() - corner.W(),
+    Position2D{corner.FarX(), corner.FarY() + inner_radius},
+    Size2D{bounds.W() - corner.W(),
          bounds.H() - corner.H() - inner_radius}
     };
 }
@@ -89,7 +89,7 @@ void Elbo::AddButton() {
 
 void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
   printf("Elbo::OnMouseButtonDown\n");
-  Position cursor{e};
+  Position2D cursor{e};
 
   if (SweepRegion().Encloses(cursor)) {
     printf("      Sweep click\n");

@@ -28,7 +28,7 @@ class Elbo : public Drawable {
     Elbo(
         Window& w,
         Region b,
-        Size s,
+        Size2D s,
         std::string h
       ) :
         window{w},

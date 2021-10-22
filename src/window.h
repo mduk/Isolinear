@@ -23,7 +23,7 @@ using namespace std;
 
 class Window {
   public:
-    Size size;
+    Size2D size;
     Grid grid;
     SDL_Renderer* sdl_renderer;
 
@@ -71,7 +71,7 @@ class Window {
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-      Position cursor{event};
+      Position2D cursor{event};
 
       for (auto* drawable : drawables) {
         if (Region{drawable->SdlRect()}.Encloses(cursor)) {
@@ -88,18 +88,6 @@ class Window {
         );
 
       grid.bounds.Resize(size);
-    }
-
-    void draw(Position p, uint32_t c) {
-      filledCircleColor(sdl_renderer, p.x, p.y, 10, c);
-    }
-
-    void draw(Region re, uint32_t c) {
-      boxColor(sdl_renderer,
-          re.NearX(), re.NearY(),
-          re.FarX(),  re.FarY(),
-          c
-        );
     }
 
   protected:

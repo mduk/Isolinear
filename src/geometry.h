@@ -79,34 +79,34 @@ class Coordinate {
 };
 
 
-class Position : public Coordinate {
+class Position2D : public Coordinate {
   public:
-    Position() : Coordinate() {}
-    Position(Coordinate c) : Coordinate{c} {}
-    Position(int x, int y) : Coordinate(x, y) {};
-    Position(SDL_MouseButtonEvent e) : Coordinate(e) {};
+    Position2D() : Coordinate() {}
+    Position2D(Coordinate c) : Coordinate{c} {}
+    Position2D(int x, int y) : Coordinate(x, y) {};
+    Position2D(SDL_MouseButtonEvent e) : Coordinate(e) {};
 };
 
-class Size : public Coordinate {
+class Size2D : public Coordinate {
   public:
-    Size() : Coordinate() {};
-    Size(int w) : Coordinate{w, w} {};
-    Size(int w, int h) : Coordinate(w, h) {};
-    Size(SDL_Surface* s) : Coordinate(s) {};
+    Size2D() : Coordinate() {};
+    Size2D(int w) : Coordinate{w, w} {};
+    Size2D(int w, int h) : Coordinate(w, h) {};
+    Size2D(SDL_Surface* s) : Coordinate(s) {};
 };
 
 
 class Region : public Drawable {
   protected:
-    Position _position;
-    Size _size;
+    Position2D _position;
+    Size2D _size;
 
   public:
     Region()
         : _position{0,0}, _size{0,0}
       {};
 
-    Region(Size s)
+    Region(Size2D s)
         : _position{0,0}, _size{s}
       {};
 
@@ -114,11 +114,11 @@ class Region : public Drawable {
         : _position{r.x, r.y}, _size{r.w, r.h}
       {};
 
-    Region(Position _p, Size _s)
+    Region(Position2D _p, Size2D _s)
         : _position{_p}, _size{_s}
       {};
 
-    Region(Position n, Position f)
+    Region(Position2D n, Position2D f)
         : _position{n}, _size{ f.x - n.x,
                              f.y - n.y }
       {};
@@ -128,7 +128,7 @@ class Region : public Drawable {
       {};
 
 
-    void Resize(Size newsize) {
+    void Resize(Size2D newsize) {
       _size = newsize;
     }
 
@@ -142,37 +142,37 @@ class Region : public Drawable {
     }
 
 
-
     // Sources of truth
-    virtual Position Origin()  const { return _position; };
-    virtual Size     GetSize() const { return _size; };
+    virtual Position2D Origin() const { return _position; };
+    virtual Size2D     Size()   const { return _size; };
 
 
     // X, Y, W, H shortcuts
     int X() const { return Origin().x; }
     int Y() const { return Origin().y; }
-    int W() const { return GetSize().x; }
-    int H() const { return GetSize().y; }
+    int W() const { return Size().x; }
+    int H() const { return Size().y; }
+
 
     // Near and Far Point Positions
-    Position Near()  const { return Origin(); }
-         int NearX() const { return Origin().x; }
-         int NearY() const { return Origin().y; }
+    Position2D Near() const { return Origin(); }
+          int NearX() const { return Origin().x; }
+          int NearY() const { return Origin().y; }
 
-    Position Far()  const { return Origin().Add(GetSize()); }
-         int FarX() const { return Far().x; }
-         int FarY() const { return Far().y; }
+    Position2D Far() const { return Origin().Add(Size()); }
+          int FarX() const { return Far().x; }
+          int FarY() const { return Far().y; }
 
     // Compass points
-    Position Centre()     const { return Origin().Add(GetSize().Centre());    }
-    Position North()      const { return Origin().Add(GetSize().North());     }
-    Position East()       const { return Origin().Add(GetSize().East());      }
-    Position South()      const { return Origin().Add(GetSize().South());     }
-    Position West()       const { return Origin().Add(GetSize().West());      }
-    Position SouthWest()  const { return Origin().Add(GetSize().SouthWest()); }
-    Position NorthWest()  const { return Origin().Add(GetSize().NorthWest()); }
-    Position SouthEast()  const { return Origin().Add(GetSize().SouthEast()); }
-    Position NorthEast()  const { return Origin().Add(GetSize().NorthEast()); }
+    Position2D Centre()     const { return Origin().Add(Size().Centre());    }
+    Position2D North()      const { return Origin().Add(Size().North());     }
+    Position2D East()       const { return Origin().Add(Size().East());      }
+    Position2D South()      const { return Origin().Add(Size().South());     }
+    Position2D West()       const { return Origin().Add(Size().West());      }
+    Position2D SouthWest()  const { return Origin().Add(Size().SouthWest()); }
+    Position2D NorthWest()  const { return Origin().Add(Size().NorthWest()); }
+    Position2D SouthEast()  const { return Origin().Add(Size().SouthEast()); }
+    Position2D NorthEast()  const { return Origin().Add(Size().NorthEast()); }
 
     int CentreX()    const { return Centre().x;    }
     int CentreY()    const { return Centre().y;    }
@@ -194,15 +194,15 @@ class Region : public Drawable {
     int NorthWestY() const { return NorthWest().y; }
 
     // Compass Alignment
-    Region AlignCentre(Size s)    const { return Region{    Centre().Subtract(s.Centre()   ), s }; }
-    Region AlignNorth(Size s)     const { return Region{     North().Subtract(s.North()    ), s }; }
-    Region AlignEast(Size s)      const { return Region{      East().Subtract(s.East()     ), s }; }
-    Region AlignSouth(Size s)     const { return Region{     South().Subtract(s.South()    ), s }; }
-    Region AlignWest(Size s)      const { return Region{      West().Subtract(s.West()     ), s }; }
-    Region AlignNorthEast(Size s) const { return Region{ NorthEast().Subtract(s.NorthEast()), s }; }
-    Region AlignSouthEast(Size s) const { return Region{ SouthEast().Subtract(s.SouthEast()), s }; }
-    Region AlignSouthWest(Size s) const { return Region{ SouthWest().Subtract(s.SouthWest()), s }; }
-    Region AlignNorthWest(Size s) const { return Region{ NorthWest().Subtract(s.NorthWest()), s }; }
+    Region AlignCentre(Size2D s)    const { return Region{    Centre().Subtract(s.Centre()   ), s }; }
+    Region AlignNorth(Size2D s)     const { return Region{     North().Subtract(s.North()    ), s }; }
+    Region AlignEast(Size2D s)      const { return Region{      East().Subtract(s.East()     ), s }; }
+    Region AlignSouth(Size2D s)     const { return Region{     South().Subtract(s.South()    ), s }; }
+    Region AlignWest(Size2D s)      const { return Region{      West().Subtract(s.West()     ), s }; }
+    Region AlignNorthEast(Size2D s) const { return Region{ NorthEast().Subtract(s.NorthEast()), s }; }
+    Region AlignSouthEast(Size2D s) const { return Region{ SouthEast().Subtract(s.SouthEast()), s }; }
+    Region AlignSouthWest(Size2D s) const { return Region{ SouthWest().Subtract(s.SouthWest()), s }; }
+    Region AlignNorthWest(Size2D s) const { return Region{ NorthWest().Subtract(s.NorthWest()), s }; }
 
     // Compass Quadrants
     Region NorthEastQuadrant() const { return Region{ North(),       East() }; }
@@ -234,15 +234,15 @@ class Region : public Drawable {
       return SDL_Rect{
           _position.x,
           _position.y,
-          GetSize().x,
-          GetSize().y
+          Size().x,
+          Size().y
         };
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
       printf("Region: %d,%d (%d,%d) %d,%d \n",
           NearX(), NearY(),
-          GetSize().x,  GetSize().y,
+          Size().x,  Size().y,
           FarX(),  FarY()
         );
       printf(" Click: %d,%d (%d,%d local)\n",
@@ -288,7 +288,7 @@ class Region : public Drawable {
     void ArcNorthWest(SDL_Renderer* renderer, Colour colour) const {
       filledPieColor(renderer,
         FarX(), FarY(),
-        GetSize().x,
+        Size().x,
         180, 270,
         colour
       );

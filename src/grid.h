@@ -15,7 +15,7 @@ class Grid {
   public:
 
     Grid() {}
-    Grid(Size s) : bounds{Position{0,0}, s} {};
+    Grid(Size2D s) : bounds{Position2D{0,0}, s} {};
     Grid(Region b) : bounds{b} {};
 
     Grid(
@@ -31,7 +31,7 @@ class Grid {
     {};
 
     GridRegion MultiCellRegion(int, int, int, int) const;
-    GridRegion PositionRegion(Position p) const;
+    GridRegion PositionRegion(Position2D p) const;
     GridRegion SingleCellRegion(int, int) const;
     GridRegion Row(int row) const;
     GridRegion Column(int col) const;
@@ -42,17 +42,17 @@ class Grid {
 
     void DrawCells(SDL_Renderer* renderer) const;
 
-    Size CellSize() const {
+    Size2D CellSize() const {
       int width = floor(bounds.W() / num_cols);
-      return Size{ width, row_height };
+      return Size2D{ width, row_height };
     }
 
-    int PositionColumnIndex(Position p) const {
-      Size s = CellSize();
+    int PositionColumnIndex(Position2D p) const {
+      Size2D s = CellSize();
       return floor(p.x / s.x) + 1;
     }
 
-    int PositionRowIndex(Position p) const {
+    int PositionRowIndex(Position2D p) const {
       return floor(p.y / row_height) + 1;
     }
 
@@ -109,19 +109,19 @@ class GridRegion : public Region {
     int FarColumn()  const { return far_col;  }
     int FarRow()     const { return far_row;  }
 
-    virtual Position Origin() const override {
+    virtual Position2D Origin() const override {
       return grid->CalculateGridRegion(*this).Origin();
     }
 
-    virtual Size GetSize() const override {
-      return grid->CalculateGridRegion(*this).GetSize();
+    virtual Size2D Size() const override {
+      return grid->CalculateGridRegion(*this).Size();
     }
 
     void Print() const {
       Region r = grid->CalculateGridRegion(*this);
       printf("GridRegion<%d,%d (%d,%d) %d,%d\n",
           r.Near().x, r.Near().y,
-          r.GetSize().x, r.GetSize().y,
+          r.Size().x, r.Size().y,
           r.Far().x, r.Far().y
         );
     }

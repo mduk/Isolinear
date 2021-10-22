@@ -45,7 +45,7 @@ class Font {
       );
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-      Size surface_size{surface};
+      Size2D surface_size{surface};
       Region label_region = bounds.AlignSouthEast(surface_size);
       label_region.Origin().Subtract(Coordinate{5,0});
 
@@ -70,7 +70,7 @@ class Font {
       );
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-      Size surface_size{surface};
+      Size2D surface_size{surface};
       Region label_region = bounds.AlignWest(surface_size);
       label_region.Origin().Subtract(Coordinate{5,0});
 

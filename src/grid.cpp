@@ -13,7 +13,7 @@ GridRegion Grid::MultiCellRegion(
 }
 
 
-GridRegion Grid::PositionRegion(Position p) const {
+GridRegion Grid::PositionRegion(Position2D p) const {
   return SingleCellRegion(
     PositionColumnIndex(p),
     PositionRowIndex(p)
@@ -36,7 +36,7 @@ GridRegion Grid::Row(int row) const {
 }
 
 GridRegion Grid::Column(int col) const {
-  Position far = bounds.Far();
+  Position2D far = bounds.Far();
   return MultiCellRegion(
       col, 1,
       col, PositionRowIndex(far) // Indeterminate
@@ -72,7 +72,7 @@ Region Grid::CalculateGridRegion(
 ) const {
   int x, y, w, h;
 
-  Size s = CellSize();
+  Size2D s = CellSize();
 
   x = bounds.Origin().x
     + margin.x
