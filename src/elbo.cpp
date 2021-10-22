@@ -56,7 +56,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     );
 
   Region2D inner_radius = inner_corner.AlignNorthWest(
-      Size2D{50}
+      Size2D{150}
     );
 
   Region2D reach{
@@ -67,20 +67,53 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
       }
     };
 
-  Quad sweepq{ sweep, colours.base };
-  Quad reachq{ reach, colours.base };
-  Quad headerq{ header, 0xff000000 };
-  Quad inner_cornerq{ inner_corner, 0xff000000 };
-  Quad inner_radiusq{ inner_radius, 0xaa00ffff };
-  Quad verticalq{ vertical, colours.base };
-  Quad containerq{ container, colours.disabled };
+  boxColor(renderer,
+      sweep.NearX(), sweep.NearY(),
+      sweep.FarX(), sweep.FarY(),
+      colours.base
+    );
 
-  sweepq.Draw(renderer);
-  outer_radius.Draw(renderer);
-  inner_cornerq.Draw(renderer);
-  inner_radiusq.Draw(renderer);
-  reachq.Draw(renderer);
-  headerq.Draw(renderer);
-  verticalq.Draw(renderer);
-  containerq.Draw(renderer);
+  boxColor(renderer,
+      inner_corner.NearX(), inner_corner.NearY(),
+      inner_corner.FarX(), inner_corner.FarY(),
+      0xff000000
+    );
+
+  boxColor(renderer,
+      inner_radius.NearX(), inner_radius.NearY(),
+      inner_radius.FarX(), inner_radius.FarY(),
+      colours.base
+    );
+
+  filledPieColor(renderer,
+      inner_radius.FarX(), inner_radius.FarY(),
+      inner_radius.H(),
+      180, 270,
+      0xff000000
+    );
+
+  boxColor(renderer,
+      outer_radius.NearX(), outer_radius.NearY(),
+      outer_radius.FarX(), outer_radius.FarY(),
+      0xff000000
+    );
+
+  filledPieColor(renderer,
+      outer_radius.FarX(), outer_radius.FarY(),
+      outer_radius.H(),
+      180, 270,
+      colours.base
+    );
+
+  boxColor(renderer,
+      reach.NearX(), reach.NearY(),
+      reach.FarX(), reach.FarY(),
+      colours.base
+    );
+
+  boxColor(renderer,
+      vertical.NearX(), vertical.NearY(),
+      vertical.FarX(), vertical.FarY(),
+      colours.base
+    );
 }

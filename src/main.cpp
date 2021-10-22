@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    window.grid.DrawCells(window.sdl_renderer);
+    //window.grid.DrawCells(window.sdl_renderer);
     window.Draw();
   }
 
