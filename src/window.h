@@ -39,7 +39,7 @@ class Window {
       InitSdl();
 
       grid = Grid{
-          Region{size},
+          Region2D{size},
           header_font.Height(), // Row height
           g_margin,
           g_gutter
@@ -74,7 +74,7 @@ class Window {
       Position2D cursor{event};
 
       for (auto* drawable : drawables) {
-        if (Region{drawable->SdlRect()}.Encloses(cursor)) {
+        if (Region2D{drawable->SdlRect()}.Encloses(cursor)) {
           drawable->OnMouseButtonDown(event);
         }
       }

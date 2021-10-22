@@ -96,34 +96,34 @@ class Size2D : public Coordinate {
 };
 
 
-class Region : public Drawable {
+class Region2D : public Drawable {
   protected:
     Position2D _position;
     Size2D _size;
 
   public:
-    Region()
+    Region2D()
         : _position{0,0}, _size{0,0}
       {};
 
-    Region(Size2D s)
+    Region2D(Size2D s)
         : _position{0,0}, _size{s}
       {};
 
-    Region(SDL_Rect r)
+    Region2D(SDL_Rect r)
         : _position{r.x, r.y}, _size{r.w, r.h}
       {};
 
-    Region(Position2D _p, Size2D _s)
+    Region2D(Position2D _p, Size2D _s)
         : _position{_p}, _size{_s}
       {};
 
-    Region(Position2D n, Position2D f)
+    Region2D(Position2D n, Position2D f)
         : _position{n}, _size{ f.x - n.x,
                              f.y - n.y }
       {};
 
-    Region(int _x, int _y, int _w, int _h)
+    Region2D(int _x, int _y, int _w, int _h)
         : _position{_x, _y}, _size{_w, _h}
       {};
 
@@ -194,27 +194,27 @@ class Region : public Drawable {
     int NorthWestY() const { return NorthWest().y; }
 
     // Compass Alignment
-    Region AlignCentre(Size2D s)    const { return Region{    Centre().Subtract(s.Centre()   ), s }; }
-    Region AlignNorth(Size2D s)     const { return Region{     North().Subtract(s.North()    ), s }; }
-    Region AlignEast(Size2D s)      const { return Region{      East().Subtract(s.East()     ), s }; }
-    Region AlignSouth(Size2D s)     const { return Region{     South().Subtract(s.South()    ), s }; }
-    Region AlignWest(Size2D s)      const { return Region{      West().Subtract(s.West()     ), s }; }
-    Region AlignNorthEast(Size2D s) const { return Region{ NorthEast().Subtract(s.NorthEast()), s }; }
-    Region AlignSouthEast(Size2D s) const { return Region{ SouthEast().Subtract(s.SouthEast()), s }; }
-    Region AlignSouthWest(Size2D s) const { return Region{ SouthWest().Subtract(s.SouthWest()), s }; }
-    Region AlignNorthWest(Size2D s) const { return Region{ NorthWest().Subtract(s.NorthWest()), s }; }
+    Region2D AlignCentre(Size2D s)    const { return Region2D{    Centre().Subtract(s.Centre()   ), s }; }
+    Region2D AlignNorth(Size2D s)     const { return Region2D{     North().Subtract(s.North()    ), s }; }
+    Region2D AlignEast(Size2D s)      const { return Region2D{      East().Subtract(s.East()     ), s }; }
+    Region2D AlignSouth(Size2D s)     const { return Region2D{     South().Subtract(s.South()    ), s }; }
+    Region2D AlignWest(Size2D s)      const { return Region2D{      West().Subtract(s.West()     ), s }; }
+    Region2D AlignNorthEast(Size2D s) const { return Region2D{ NorthEast().Subtract(s.NorthEast()), s }; }
+    Region2D AlignSouthEast(Size2D s) const { return Region2D{ SouthEast().Subtract(s.SouthEast()), s }; }
+    Region2D AlignSouthWest(Size2D s) const { return Region2D{ SouthWest().Subtract(s.SouthWest()), s }; }
+    Region2D AlignNorthWest(Size2D s) const { return Region2D{ NorthWest().Subtract(s.NorthWest()), s }; }
 
     // Compass Quadrants
-    Region NorthEastQuadrant() const { return Region{ North(),       East() }; }
-    Region SouthEastQuadrant() const { return Region{ Centre(), SouthEast() }; }
-    Region SouthWestQuadrant() const { return Region{ West(),       South() }; }
-    Region NorthWestQuadrant() const { return Region{ NorthWest(), Centre() }; }
+    Region2D NorthEastQuadrant() const { return Region2D{ North(),       East() }; }
+    Region2D SouthEastQuadrant() const { return Region2D{ Centre(), SouthEast() }; }
+    Region2D SouthWestQuadrant() const { return Region2D{ West(),       South() }; }
+    Region2D NorthWestQuadrant() const { return Region2D{ NorthWest(), Centre() }; }
 
     // Halfs
-    Region TopHalf()    const { return Region{ NorthWest(), East()      }; }
-    Region BottomHalf() const { return Region{ West(),      SouthEast() }; }
-    Region LeftHalf()   const { return Region{ NorthWest(), South()     }; }
-    Region RightHalf()  const { return Region{ North(),     SouthEast() }; }
+    Region2D TopHalf()    const { return Region2D{ NorthWest(), East()      }; }
+    Region2D BottomHalf() const { return Region2D{ West(),      SouthEast() }; }
+    Region2D LeftHalf()   const { return Region2D{ NorthWest(), South()     }; }
+    Region2D RightHalf()  const { return Region2D{ North(),     SouthEast() }; }
 
     bool Encloses(Coordinate point) const {
       return ( NearX() <= point.x )
@@ -223,7 +223,7 @@ class Region : public Drawable {
           && ( point.y <= FarY()  );
     }
 
-    bool Encloses(Region r) const {
+    bool Encloses(Region2D r) const {
       return Encloses(r.Near())
           && Encloses(r.Far());
     }

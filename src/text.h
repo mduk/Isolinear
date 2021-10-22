@@ -33,7 +33,7 @@ class Font {
 
     void RenderTextSouthEast(
         SDL_Renderer* renderer,
-        Region bounds,
+        Region2D bounds,
         std::string text
     ) const {
       SDL_Surface* surface = TTF_RenderUTF8_Blended(
@@ -46,7 +46,7 @@ class Font {
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
       Size2D surface_size{surface};
-      Region label_region = bounds.AlignSouthEast(surface_size);
+      Region2D label_region = bounds.AlignSouthEast(surface_size);
       label_region.Origin().Subtract(Coordinate{5,0});
 
       SDL_Rect label_rect = label_region.SdlRect();
@@ -58,7 +58,7 @@ class Font {
 
     void RenderTextWest(
         SDL_Renderer* renderer,
-        Region bounds,
+        Region2D bounds,
         std::string text
     ) const {
       SDL_Surface* surface = TTF_RenderUTF8_Blended(
@@ -71,7 +71,7 @@ class Font {
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
       Size2D surface_size{surface};
-      Region label_region = bounds.AlignWest(surface_size);
+      Region2D label_region = bounds.AlignWest(surface_size);
       label_region.Origin().Subtract(Coordinate{5,0});
 
       SDL_Rect label_rect = label_region.SdlRect();

@@ -16,10 +16,10 @@ class Grid {
 
     Grid() {}
     Grid(Size2D s) : bounds{Position2D{0,0}, s} {};
-    Grid(Region b) : bounds{b} {};
+    Grid(Region2D b) : bounds{b} {};
 
     Grid(
-        Region b,
+        Region2D b,
         int rh,
         Margin m,
         Gutter g
@@ -36,9 +36,9 @@ class Grid {
     GridRegion Row(int row) const;
     GridRegion Column(int col) const;
 
-    Region CalculateGridRegion(GridRegion const& gr) const;
-    Region CalculateGridRegion(int, int, int, int) const;
-    Region CalculateGridRegion(int, int) const;
+    Region2D CalculateGridRegion(GridRegion const& gr) const;
+    Region2D CalculateGridRegion(int, int, int, int) const;
+    Region2D CalculateGridRegion(int, int) const;
 
     void DrawCells(SDL_Renderer* renderer) const;
 
@@ -62,7 +62,7 @@ class Grid {
 
     int MaxRows() const {
       int max_row = PositionRowIndex(bounds.Far());
-      Region proposed = CalculateGridRegion(
+      Region2D proposed = CalculateGridRegion(
           1, max_row
         );
 
@@ -81,7 +81,7 @@ class Grid {
         );
     }
 
-    Region bounds;
+    Region2D bounds;
   protected:
     int num_cols{12};
     int row_height{100};
@@ -90,7 +90,7 @@ class Grid {
     std::list<GridRegion> regions{};
 };
 
-class GridRegion : public Region {
+class GridRegion : public Region2D {
   public:
     GridRegion(
         Grid const* g,
@@ -118,7 +118,7 @@ class GridRegion : public Region {
     }
 
     void Print() const {
-      Region r = grid->CalculateGridRegion(*this);
+      Region2D r = grid->CalculateGridRegion(*this);
       printf("GridRegion<%d,%d (%d,%d) %d,%d\n",
           r.Near().x, r.Near().y,
           r.Size().x, r.Size().y,

@@ -12,15 +12,15 @@
 #include "geometry.h"
 
 
-class Button : public Region {
+class Button : public Region2D {
   public:
     Button(
         Window& w,
-        Region b,
+        Region2D b,
         ColourScheme cs,
         Label l
       ) :
-        Region{b},
+        Region2D{b},
         window{w},
         colours{cs},
         label{l}
@@ -38,7 +38,7 @@ class Button : public Region {
 
       window.ButtonFont().RenderTextSouthEast(
           renderer,
-          Region{_position, _size},
+          Region2D{_position, _size},
           label
         );
     }
@@ -46,7 +46,7 @@ class Button : public Region {
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
       printf("OnMouseButtonDown\n");
-      Region::OnMouseButtonDown(event);
+      Region2D::OnMouseButtonDown(event);
       active = !active;
     }
 

@@ -27,7 +27,7 @@ class Elbo : public Drawable {
   public:
     Elbo(
         Window& w,
-        Region b,
+        Region2D b,
         Size2D s,
         std::string h
       ) :
@@ -45,13 +45,13 @@ class Elbo : public Drawable {
         }
     {};
 
-    Region SweepRegion() const;
-    Region HorizontalRegion() const;
-    Region VerticalRegion() const;
-    Region InnerRadiusRegion() const;
-    Region OuterRadiusRegion() const;
-    Region HeaderRegion() const;
-    Region ContainerRegion() const;
+    Region2D SweepRegion() const;
+    Region2D HorizontalRegion() const;
+    Region2D VerticalRegion() const;
+    Region2D InnerRadiusRegion() const;
+    Region2D OuterRadiusRegion() const;
+    Region2D HeaderRegion() const;
+    Region2D ContainerRegion() const;
 
     void AddButton();
 
@@ -65,8 +65,8 @@ class Elbo : public Drawable {
 
   protected:
     Window window;
-    Region bounds;
-    Region corner;
+    Region2D bounds;
+    Region2D corner;
     ColourScheme colours{
         0xff664466, 0xffcc9999,
         0xffff9999, 0xff6666cc

@@ -1,17 +1,17 @@
 #include "elbo.h"
 
 
-Region Elbo::SweepRegion() const {
-  return Region{
+Region2D Elbo::SweepRegion() const {
+  return Region2D{
       bounds.Origin(),
       Size2D{ corner.W() + inner_radius,
             corner.H() + inner_radius }
     };
 }
 
-Region Elbo::HorizontalRegion() const {
-  Region sweep = SweepRegion();
-  return Region{
+Region2D Elbo::HorizontalRegion() const {
+  Region2D sweep = SweepRegion();
+  return Region2D{
       Position2D{ sweep.FarX(), sweep.NearY() },
       Size2D{ bounds.W() - corner.W() - inner_radius,
             corner.H()
@@ -19,9 +19,9 @@ Region Elbo::HorizontalRegion() const {
     };
 }
 
-Region Elbo::VerticalRegion() const {
-  Region sweep = SweepRegion();
-  return Region{
+Region2D Elbo::VerticalRegion() const {
+  Region2D sweep = SweepRegion();
+  return Region2D{
       Position2D{ sweep.NearX(),
                 sweep.FarY() + gutter.y
       },
@@ -31,23 +31,23 @@ Region Elbo::VerticalRegion() const {
     };
 }
 
-Region Elbo::InnerRadiusRegion() const {
-  return Region{
+Region2D Elbo::InnerRadiusRegion() const {
+  return Region2D{
       Position2D{ corner.FarX(), corner.FarY() + 1 },
       Size2D{ inner_radius, inner_radius }
     };
 }
 
-Region Elbo::OuterRadiusRegion() const {
-  return Region{
+Region2D Elbo::OuterRadiusRegion() const {
+  return Region2D{
       bounds.Origin(),
       Size2D{ outer_radius, outer_radius }
     };
 }
 
-Region Elbo::HeaderRegion() const {
-  Region sweep = SweepRegion();
-  return Region{
+Region2D Elbo::HeaderRegion() const {
+  Region2D sweep = SweepRegion();
+  return Region2D{
       Position2D{
           sweep.FarX(),
           sweep.FarY() - inner_radius
@@ -59,8 +59,8 @@ Region Elbo::HeaderRegion() const {
     };
 }
 
-Region Elbo::ContainerRegion() const {
-  return Region{
+Region2D Elbo::ContainerRegion() const {
+  return Region2D{
     Position2D{corner.FarX(), corner.FarY() + inner_radius},
     Size2D{bounds.W() - corner.W(),
          bounds.H() - corner.H() - inner_radius}
@@ -128,13 +128,13 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
 }
 
 void Elbo::Draw(SDL_Renderer* renderer) const {
-  Region sweep = SweepRegion();
-  Region hbar = HorizontalRegion();
-  Region vbar = VerticalRegion();
-  Region oradius = OuterRadiusRegion();
-  Region iradius = InnerRadiusRegion();
-  Region header_region = HeaderRegion();
-  Region container = ContainerRegion();
+  Region2D sweep = SweepRegion();
+  Region2D hbar = HorizontalRegion();
+  Region2D vbar = VerticalRegion();
+  Region2D oradius = OuterRadiusRegion();
+  Region2D iradius = InnerRadiusRegion();
+  Region2D header_region = HeaderRegion();
+  Region2D container = ContainerRegion();
 
   if (wireframe) {
     sweep.Stroke(renderer, 0xffffffff);

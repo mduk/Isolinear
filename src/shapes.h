@@ -9,7 +9,7 @@
 
 class Quad : public Drawable {
   public:
-    Quad(Region& r, uint32_t fc) :
+    Quad(Region2D& r, uint32_t fc) :
         fill_colour{fc},
         region{r} {};
 
@@ -26,6 +26,6 @@ class Quad : public Drawable {
     }
 
   protected:
-    Region& region;
+    Region2D& region;
     uint32_t fill_colour;
 };

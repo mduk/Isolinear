@@ -43,7 +43,7 @@ GridRegion Grid::Column(int col) const {
     );
 }
 
-Region Grid::CalculateGridRegion(
+Region2D Grid::CalculateGridRegion(
     GridRegion const& gr
 ) const {
 
@@ -58,7 +58,7 @@ Region Grid::CalculateGridRegion(
     );
 }
 
-Region Grid::CalculateGridRegion(
+Region2D Grid::CalculateGridRegion(
   int col, int row
 ) const {
   return CalculateGridRegion(
@@ -66,7 +66,7 @@ Region Grid::CalculateGridRegion(
     );
 }
 
-Region Grid::CalculateGridRegion(
+Region2D Grid::CalculateGridRegion(
   int near_col, int near_row,
   int  far_col, int  far_row
 ) const {
@@ -92,7 +92,7 @@ Region Grid::CalculateGridRegion(
     - gutter.y
     ;
 
-  return Region{ x, y, w, h };
+  return Region2D{ x, y, w, h };
 }
 
 void Grid::DrawCells(SDL_Renderer* renderer) const {
