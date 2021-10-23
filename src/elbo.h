@@ -47,6 +47,35 @@ class Elbo : public Drawable {
       );
     }
 
+    Region2D ReachRegion() const {
+      GridRegion horizontal = HorizontalRegion();
+      return Region2D{
+          horizontal.Origin(),
+          Size2D{
+            horizontal.W(),
+            reach_weight
+          }
+        };
+    }
+
+    Region2D HeaderRegion() const {
+      GridRegion horizontal = HorizontalRegion();
+      return Region2D{
+          Position2D{
+            horizontal.Origin().x,
+            horizontal.Origin().y
+              + reach_weight
+              + gutter.y
+          },
+          Size2D{
+            horizontal.Size().x,
+            horizontal.Size().y
+              - reach_weight
+              - gutter.y
+          }
+        };
+    }
+
     GridRegion VerticalRegion() const {
       return grid.MultiCellRegion(
         1, sweep_cells.y + 1,

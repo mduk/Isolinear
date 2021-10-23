@@ -10,24 +10,12 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   GridRegion vertical = VerticalRegion();
   GridRegion container = ContainerRegion();
 
+  Region2D reach = ReachRegion();
+  Region2D header = HeaderRegion();
+
   Region2D outer_radius{
       sweep.Origin(),
       Size2D{sweep.H() / 2}
-    };
-
-  Region2D header{
-      Position2D{
-        horizontal.Origin().x,
-        horizontal.Origin().y
-          + reach_weight
-          + gutter.y
-      },
-      Size2D{
-        horizontal.Size().x,
-        horizontal.Size().y
-          - reach_weight
-          - gutter.y
-      }
     };
 
   Region2D inner_corner = sweep.AlignSouthEast(
@@ -41,13 +29,6 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
       Size2D{75}
     );
 
-  Region2D reach{
-      horizontal.Origin(),
-      Size2D{
-        horizontal.W(),
-        reach_weight
-      }
-    };
 
   boxColor(renderer,
       sweep.NearX(), sweep.NearY(),
