@@ -22,12 +22,24 @@ class Grid {
         int rh,
         Vector2D m,
         Vector2D g
+      ) : Grid(b, rh, m, g, 12)
+    {};
+
+    Grid(
+        Region2D b,
+        int rh,
+        Vector2D m,
+        Vector2D g,
+        int nc
       ) :
         bounds{b},
         row_height{rh},
         margin{m},
-        gutter{g}
+        gutter{g},
+        num_cols{nc}
     {};
+
+    Grid SubGrid(int, int, int, int) const;
 
     GridRegion MultiCellRegion(int, int, int, int) const;
     GridRegion PositionRegion(Position2D p) const;

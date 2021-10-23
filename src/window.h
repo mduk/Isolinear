@@ -63,6 +63,8 @@ class Window {
     }
 
     void Draw() {
+      SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
+      SDL_RenderClear(sdl_renderer);
       for (auto* drawable : drawables) {
         drawable->Draw(sdl_renderer);
       }

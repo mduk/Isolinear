@@ -1,5 +1,21 @@
 #include "grid.h"
 
+Grid Grid::SubGrid(
+  int near_col, int near_row,
+  int  far_col, int  far_row
+) const {
+  return Grid{
+      CalculateGridRegion(
+          near_col, near_row,
+          far_col, far_row
+        ),
+      row_height,
+      Vector2D{0,0},
+      gutter,
+      (far_col - near_col) + 1
+    };
+}
+
 GridRegion Grid::MultiCellRegion(
   int near_col, int near_row,
   int  far_col, int  far_row

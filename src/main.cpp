@@ -54,11 +54,21 @@ int main(int argc, char* argv[]) {
 
   int reachweight = 30;
 
-  Elbo elbo{ window, "D-BUS NAVIGATOR" };
-  window.Add(&elbo);
+  //Elbo elbo{ window, elbogrid, "D-BUS NAVIGATOR" };
+  //window.Add(&elbo);
+
 
   bool running = true;
   while (running) {
+
+    Grid elbo1grid = window.grid.SubGrid(1,1, 6,12);
+    Elbo elbo1{ window, elbo1grid, "SYSTEM BUS" };
+    window.Add(&elbo1);
+
+    Grid elbo2grid = window.grid.SubGrid(7,1, 12,12);
+    Elbo elbo2{ window, elbo2grid, "USER BUS" };
+    window.Add(&elbo2);
+
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {

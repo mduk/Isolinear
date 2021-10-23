@@ -6,9 +6,7 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
 
 void Elbo::Draw(SDL_Renderer* renderer) const {
   GridRegion sweep = SweepRegion();
-  GridRegion horizontal = HorizontalRegion();
   GridRegion vertical = VerticalRegion();
-  GridRegion container = ContainerRegion();
 
   Region2D reach = ReachRegion();
   Region2D header = HeaderRegion();

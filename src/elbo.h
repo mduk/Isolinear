@@ -25,13 +25,14 @@ class Elbo : public Drawable {
     Grid& grid;
 
     int reach_weight{20};
-    Vector2D sweep_cells{3,2};
+    Vector2D sweep_cells{2,2};
     Vector2D gutter{10,10};
     ColourScheme colours{
         0xff664466, 0xffcc9999,
         0xffff9999, 0xff6666cc
       };
     std::string header_string{""};
+    std::list<Button> buttons{};
 
     GridRegion SweepRegion() const {
       return grid.MultiCellRegion(
@@ -97,10 +98,28 @@ class Elbo : public Drawable {
         Window& w,
         std::string h
       ) :
+        Elbo{ w, w.grid, h }
+    {};
+
+    Elbo(
+        Window& w,
+        Grid& g,
+        std::string h
+      ) :
         window{w},
-        grid{w.grid},
+        grid{g},
         header_string{h}
     {};
+
+
+    void AddButton(std::string label) {
+      buttons.emplace_back(
+          window,
+          Region2D{},
+          colours,
+          label
+        );
+    }
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);
