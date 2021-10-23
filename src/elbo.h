@@ -21,7 +21,9 @@ using namespace std;
 
 class Elbo : public Drawable {
   protected:
+    Window& window;
     Grid& grid;
+
     int reach_weight{20};
     Vector2D sweep_cells{3,2};
     Vector2D gutter{10,10};
@@ -29,9 +31,17 @@ class Elbo : public Drawable {
         0xff664466, 0xffcc9999,
         0xffff9999, 0xff6666cc
       };
+    std::string header_string{""};
 
   public:
-    Elbo(Grid& g) : grid{g} {};
+    Elbo(
+        Window& w,
+        std::string h
+      ) :
+        window{w},
+        grid{w.grid},
+        header_string{h}
+    {};
 
     void Draw(SDL_Renderer*) const;
     void OnMouseButtonDown(SDL_MouseButtonEvent&);

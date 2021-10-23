@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 
   int reachweight = 30;
 
-  Elbo elbo{window.grid};
+  Elbo elbo{ window, "D-BUS NAVIGATOR" };
   window.Add(&elbo);
 
   bool running = true;

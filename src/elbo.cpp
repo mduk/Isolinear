@@ -113,4 +113,10 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
       vertical.FarX(), vertical.FarY(),
       colours.base
     );
+
+  window.HeaderFont().RenderTextWest(
+      renderer,
+      header,
+      header_string
+    );
 }
