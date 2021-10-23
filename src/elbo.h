@@ -8,7 +8,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "types.h"
 #include "drawable.h"
 #include "grid.h"
 #include "button.h"
@@ -24,8 +23,8 @@ class Elbo : public Drawable {
   protected:
     Grid& grid;
     int reach_weight{20};
-    Coordinate sweep_cells{3,2};
-    Coordinate gutter{10,10};
+    Vector2D sweep_cells{3,2};
+    Vector2D gutter{10,10};
     ColourScheme colours{
         0xff664466, 0xffcc9999,
         0xffff9999, 0xff6666cc

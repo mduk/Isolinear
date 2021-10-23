@@ -8,7 +8,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "types.h"
 #include "drawable.h"
 #include "grid.h"
 #include "colours.h"
@@ -29,8 +28,8 @@ class Window {
 
     Window(
         int _w, int _h,
-        Coordinate _margin,
-        Coordinate _gutter
+        Vector2D _margin,
+        Vector2D _gutter
     ) :
       size{_w, _h},
       g_margin{_margin},
@@ -100,8 +99,8 @@ class Window {
     const Font button_font{ FONT, 64 };
 
     int g_num_columns;
-    Coordinate g_margin;
-    Coordinate g_gutter;
+    Vector2D g_margin;
+    Vector2D g_gutter;
 
     void InitSdl() {
       sdl_window = SDL_CreateWindow(

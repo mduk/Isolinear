@@ -10,39 +10,39 @@
 #include "colours.h"
 
 
-class Coordinate {
+class Vector2D {
   public:
     int x, y;
 
-    Coordinate()
+    Vector2D()
         : x{0}, y{0}
       {};
 
-    Coordinate(int _x, int _y)
+    Vector2D(int _x, int _y)
         : x{_x}, y{_y}
       {};
 
-    Coordinate(SDL_MouseButtonEvent e)
+    Vector2D(SDL_MouseButtonEvent e)
         : x{e.x}, y{e.y}
       {};
 
-    Coordinate(SDL_MouseMotionEvent e)
+    Vector2D(SDL_MouseMotionEvent e)
         : x{e.x}, y{e.y}
       {};
 
-    Coordinate(SDL_Surface* s)
+    Vector2D(SDL_Surface* s)
         : x{s->w}, y{s->h}
       {};
 
-    Coordinate Add(Coordinate c) const {
-      return Coordinate{
+    Vector2D Add(Vector2D c) const {
+      return Vector2D{
           x + c.x,
           y + c.y
         };
     }
 
-    Coordinate Subtract(Coordinate c) const {
-      return Coordinate{
+    Vector2D Subtract(Vector2D c) const {
+      return Vector2D{
           x - c.x,
           y - c.y
         };
@@ -67,32 +67,32 @@ class Coordinate {
     int NorthWestX() const { return 0;     }
     int NorthWestY() const { return 0;     }
 
-    Coordinate Centre()    const { return Coordinate{ CentreX(),    CentreY()    }; }
-    Coordinate North()     const { return Coordinate{ NorthX(),     NorthY()     }; }
-    Coordinate East()      const { return Coordinate{ EastX(),      EastY()      }; }
-    Coordinate South()     const { return Coordinate{ SouthX(),     SouthY()     }; }
-    Coordinate West()      const { return Coordinate{ WestX(),      WestY()      }; }
-    Coordinate NorthEast() const { return Coordinate{ NorthEastX(), NorthEastY() }; }
-    Coordinate SouthEast() const { return Coordinate{ SouthEastX(), SouthEastY() }; }
-    Coordinate SouthWest() const { return Coordinate{ SouthWestX(), SouthWestY() }; }
-    Coordinate NorthWest() const { return Coordinate{ NorthWestX(), NorthWestY() }; }
+    Vector2D Centre()    const { return Vector2D{ CentreX(),    CentreY()    }; }
+    Vector2D North()     const { return Vector2D{ NorthX(),     NorthY()     }; }
+    Vector2D East()      const { return Vector2D{ EastX(),      EastY()      }; }
+    Vector2D South()     const { return Vector2D{ SouthX(),     SouthY()     }; }
+    Vector2D West()      const { return Vector2D{ WestX(),      WestY()      }; }
+    Vector2D NorthEast() const { return Vector2D{ NorthEastX(), NorthEastY() }; }
+    Vector2D SouthEast() const { return Vector2D{ SouthEastX(), SouthEastY() }; }
+    Vector2D SouthWest() const { return Vector2D{ SouthWestX(), SouthWestY() }; }
+    Vector2D NorthWest() const { return Vector2D{ NorthWestX(), NorthWestY() }; }
 };
 
 
-class Position2D : public Coordinate {
+class Position2D : public Vector2D {
   public:
-    Position2D() : Coordinate() {}
-    Position2D(Coordinate c) : Coordinate{c} {}
-    Position2D(int x, int y) : Coordinate(x, y) {};
-    Position2D(SDL_MouseButtonEvent e) : Coordinate(e) {};
+    Position2D() : Vector2D() {}
+    Position2D(Vector2D c) : Vector2D{c} {}
+    Position2D(int x, int y) : Vector2D(x, y) {};
+    Position2D(SDL_MouseButtonEvent e) : Vector2D(e) {};
 };
 
-class Size2D : public Coordinate {
+class Size2D : public Vector2D {
   public:
-    Size2D() : Coordinate() {};
-    Size2D(int w) : Coordinate{w, w} {};
-    Size2D(int w, int h) : Coordinate(w, h) {};
-    Size2D(SDL_Surface* s) : Coordinate(s) {};
+    Size2D() : Vector2D() {};
+    Size2D(int w) : Vector2D{w, w} {};
+    Size2D(int w, int h) : Vector2D(w, h) {};
+    Size2D(SDL_Surface* s) : Vector2D(s) {};
 };
 
 
@@ -216,7 +216,7 @@ class Region2D : public Drawable {
     Region2D LeftHalf()   const { return Region2D{ NorthWest(), South()     }; }
     Region2D RightHalf()  const { return Region2D{ North(),     SouthEast() }; }
 
-    bool Encloses(Coordinate point) const {
+    bool Encloses(Vector2D point) const {
       return ( NearX() <= point.x )
           && ( NearY() <= point.y )
           && ( point.x <= FarX()  )

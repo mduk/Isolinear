@@ -6,7 +6,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "types.h"
 #include "geometry.h"
 
 class GridRegion;
@@ -21,8 +20,8 @@ class Grid {
     Grid(
         Region2D b,
         int rh,
-        Margin m,
-        Gutter g
+        Vector2D m,
+        Vector2D g
       ) :
         bounds{b},
         row_height{rh},
@@ -85,8 +84,8 @@ class Grid {
   protected:
     int num_cols{12};
     int row_height{100};
-    Gutter gutter{50, 50};
-    Margin margin{10, 10};
+    Vector2D gutter{50, 50};
+    Vector2D margin{10, 10};
     std::list<GridRegion> regions{};
 };
 

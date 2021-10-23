@@ -4,8 +4,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "geometry.h"
-
 class Drawable {
   public:
     virtual void Draw(

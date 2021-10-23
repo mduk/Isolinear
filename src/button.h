@@ -6,19 +6,27 @@
 
 #include "window.h"
 #include "drawable.h"
-#include "types.h"
 #include "grid.h"
 #include "colours.h"
 #include "geometry.h"
 
 
+using namespace std;
+
+
 class Button : public Region2D {
+  protected:
+    Window window;
+    ColourScheme colours;
+    std::string label;
+    bool active = false;
+
   public:
     Button(
         Window& w,
         Region2D b,
         ColourScheme cs,
-        Label l
+        std::string l
       ) :
         Region2D{b},
         window{w},
@@ -49,11 +57,5 @@ class Button : public Region2D {
       Region2D::OnMouseButtonDown(event);
       active = !active;
     }
-
-  protected:
-    Window window;
-    ColourScheme colours;
-    Label label;
-    bool active = false;
 };
 
