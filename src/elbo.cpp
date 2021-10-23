@@ -5,25 +5,10 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
 }
 
 void Elbo::Draw(SDL_Renderer* renderer) const {
-  int max_cols = grid.MaxColumns();
-  int max_rows = grid.MaxRows();
-
-  GridRegion sweep = grid.MultiCellRegion(
-      1,1,
-      sweep_cells.x,sweep_cells.y
-    );
-  GridRegion horizontal = grid.MultiCellRegion(
-      sweep_cells.x + 1,1,
-      max_cols,2
-    );
-  GridRegion vertical = grid.MultiCellRegion(
-      1,sweep_cells.y + 1,
-      sweep_cells.x-1,max_rows
-    );
-  GridRegion container = grid.MultiCellRegion(
-      sweep_cells.x, sweep_cells.y + 1,
-      max_cols, max_rows
-    );
+  GridRegion sweep = SweepRegion();
+  GridRegion horizontal = HorizontalRegion();
+  GridRegion vertical = VerticalRegion();
+  GridRegion container = ContainerRegion();
 
   Region2D outer_radius{
       sweep.Origin(),

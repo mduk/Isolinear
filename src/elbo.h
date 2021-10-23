@@ -33,6 +33,36 @@ class Elbo : public Drawable {
       };
     std::string header_string{""};
 
+    GridRegion SweepRegion() const {
+      return grid.MultiCellRegion(
+        1, 1,
+        sweep_cells.x, sweep_cells.y
+      );
+    }
+
+    GridRegion HorizontalRegion() const {
+      return grid.MultiCellRegion(
+        sweep_cells.x + 1, 1,
+        grid.MaxColumns(), 2
+      );
+    }
+
+    GridRegion VerticalRegion() const {
+      return grid.MultiCellRegion(
+        1, sweep_cells.y + 1,
+        sweep_cells.x - 1, grid.MaxRows()
+      );
+    }
+
+    GridRegion ContainerRegion() const {
+      return grid.MultiCellRegion(
+        sweep_cells.x, sweep_cells.y + 1,
+        grid.MaxColumns(), grid.MaxRows()
+      );
+    }
+
+
+
   public:
     Elbo(
         Window& w,
