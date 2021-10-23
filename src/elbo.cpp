@@ -5,32 +5,29 @@ void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
 }
 
 void Elbo::Draw(SDL_Renderer* renderer) const {
-  int sweep_w = 3;
-  int sweep_h = 2;
-
   int max_cols = grid.MaxColumns();
   int max_rows = grid.MaxRows();
 
   GridRegion sweep = grid.MultiCellRegion(
       1,1,
-      sweep_w,sweep_h
+      sweep_cells.x,sweep_cells.y
     );
   GridRegion horizontal = grid.MultiCellRegion(
-      sweep_w + 1,1,
+      sweep_cells.x + 1,1,
       max_cols,2
     );
   GridRegion vertical = grid.MultiCellRegion(
-      1,sweep_h + 1,
-      sweep_w-1,max_rows
+      1,sweep_cells.y + 1,
+      sweep_cells.x-1,max_rows
     );
   GridRegion container = grid.MultiCellRegion(
-      sweep_w, sweep_h + 1,
+      sweep_cells.x, sweep_cells.y + 1,
       max_cols, max_rows
     );
 
   Region2D outer_radius{
       sweep.Origin(),
-      Size2D{sweep.H()}
+      Size2D{sweep.H() / 2}
     };
 
   Region2D header{
@@ -56,7 +53,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     );
 
   Region2D inner_radius = inner_corner.AlignNorthWest(
-      Size2D{150}
+      Size2D{75}
     );
 
   Region2D reach{
@@ -70,6 +67,19 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
   boxColor(renderer,
       sweep.NearX(), sweep.NearY(),
       sweep.FarX(), sweep.FarY(),
+      colours.base
+    );
+
+  boxColor(renderer,
+      outer_radius.NearX(), outer_radius.NearY(),
+      outer_radius.FarX(), outer_radius.FarY(),
+      0xff000000
+    );
+
+  filledPieColor(renderer,
+      outer_radius.FarX(), outer_radius.FarY(),
+      outer_radius.H(),
+      180, 270,
       colours.base
     );
 
@@ -90,19 +100,6 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
       inner_radius.H(),
       180, 270,
       0xff000000
-    );
-
-  boxColor(renderer,
-      outer_radius.NearX(), outer_radius.NearY(),
-      outer_radius.FarX(), outer_radius.FarY(),
-      0xff000000
-    );
-
-  filledPieColor(renderer,
-      outer_radius.FarX(), outer_radius.FarY(),
-      outer_radius.H(),
-      180, 270,
-      colours.base
     );
 
   boxColor(renderer,

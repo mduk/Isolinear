@@ -23,7 +23,8 @@ using namespace std;
 class Elbo : public Drawable {
   protected:
     Grid& grid;
-    int reach_weight{30};
+    int reach_weight{20};
+    Coordinate sweep_cells{3,2};
     Coordinate gutter{10,10};
     ColourScheme colours{
         0xff664466, 0xffcc9999,
