@@ -30,8 +30,8 @@ class Elbo : public Drawable {
     Vector2D sweep_cells{2,2};
     Vector2D gutter{10,10};
     ColourScheme colours{
-        0xff664466, 0xffcc9999,
-        0xffff9999, 0xff6666cc
+        0xaa664466, 0xaacc9999,
+        0xaaff9999, 0xaa6666cc
       };
     std::string header_string{""};
     std::list<Button> buttons{};
@@ -56,10 +56,10 @@ class Elbo : public Drawable {
 
 
 
-    virtual GridRegion ContainerRegion() const = 0;
-    virtual GridRegion VerticalRegion() const = 0;
-    virtual GridRegion SweepRegion() const = 0;
-    virtual GridRegion HorizontalRegion() const = 0;
+    virtual Region2D ContainerRegion() const = 0;
+    virtual Region2D VerticalRegion() const = 0;
+    virtual Region2D SweepRegion() const = 0;
+    virtual Region2D HorizontalRegion() const = 0;
 
     virtual Region2D ReachRegion() const = 0;
     virtual Region2D HeaderRegion() const = 0;
@@ -69,6 +69,7 @@ class Elbo : public Drawable {
     void Draw(SDL_Renderer* renderer) const {
       ContainerRegion().Draw(renderer);
       VerticalRegion().Draw(renderer);
+      //HorizontalRegion().Draw(renderer);
       SweepRegion().Draw(renderer);
       ReachRegion().Draw(renderer);
       HeaderRegion().Draw(renderer);
@@ -100,22 +101,22 @@ class NorthWestElbo : public Elbo {
     void Draw(SDL_Renderer*) const;
 
   protected:
-    GridRegion SweepRegion() const override {
-      return grid.MultiCellRegion(
+    Region2D SweepRegion() const override {
+      return grid.CalculateGridRegion(
         1, 1,
         sweep_cells.x, sweep_cells.y
       );
     }
 
-    GridRegion HorizontalRegion() const override {
-      return grid.MultiCellRegion(
+    Region2D HorizontalRegion() const override {
+      return grid.CalculateGridRegion(
         sweep_cells.x + 1, 1,
         grid.MaxColumns(), 2
       );
     }
 
     Region2D ReachRegion() const override {
-      GridRegion horizontal = HorizontalRegion();
+      Region2D horizontal = HorizontalRegion();
       return Region2D{
           horizontal.Origin(),
           Size2D{
@@ -126,7 +127,7 @@ class NorthWestElbo : public Elbo {
     }
 
     Region2D HeaderRegion() const override {
-      GridRegion horizontal = HorizontalRegion();
+      Region2D horizontal = HorizontalRegion();
       return Region2D{
           Position2D{
             horizontal.Origin().x,
@@ -143,18 +144,84 @@ class NorthWestElbo : public Elbo {
         };
     }
 
-    GridRegion VerticalRegion() const override {
-      return grid.MultiCellRegion(
+    Region2D VerticalRegion() const override {
+      return grid.CalculateGridRegion(
         1, sweep_cells.y + 1,
         sweep_cells.x - 1, grid.MaxRows()
       );
     }
 
-    GridRegion ContainerRegion() const override {
-      return grid.MultiCellRegion(
+    Region2D ContainerRegion() const override {
+      return grid.CalculateGridRegion(
         sweep_cells.x, sweep_cells.y + 1,
         grid.MaxColumns(), grid.MaxRows()
       );
+    }
+};
+
+
+
+class SouthWestElbo : public Elbo {
+
+  public:
+    SouthWestElbo(Window& w, Grid& g, std::string h)
+      : Elbo(w, g, h)
+    {}
+
+    void Draw(SDL_Renderer*) const;
+
+  protected:
+    Region2D SweepRegion() const override {
+      return grid.CalculateGridRegion(
+        1, grid.MaxRows() - sweep_cells.y + 1,
+        sweep_cells.x, grid.MaxRows()
+      );
+    }
+
+    Region2D HorizontalRegion() const override {
+      return grid.CalculateGridRegion(
+        sweep_cells.x + 1, grid.MaxRows() - sweep_cells.y + 1,
+        grid.MaxColumns(), grid.MaxRows()
+      );
+    }
+
+    Region2D ReachRegion() const override {
+      Region2D horizontal = HorizontalRegion();
+      return Region2D{
+          Position2D{
+            horizontal.X(),
+            horizontal.Y() + horizontal.H() - reach_weight
+          },
+          Size2D{
+              horizontal.W(),
+              reach_weight
+            }
+        };
+    }
+
+    Region2D HeaderRegion() const override {
+      Region2D horizontal = HorizontalRegion();
+      return Region2D{
+          Position2D{
+            horizontal.X(),
+            horizontal.Y()
+          },
+          Size2D{
+              horizontal.W(),
+              horizontal.H() - reach_weight - gutter.y
+            }
+        };
+    }
+
+    Region2D VerticalRegion() const override {
+      return grid.CalculateGridRegion(
+          1,1,
+          sweep_cells.x -1, grid.MaxRows() - sweep_cells.y
+        );
+    }
+
+    Region2D ContainerRegion() const override {
+      return Region2D{ };
     }
 
 

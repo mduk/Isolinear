@@ -61,13 +61,20 @@ int main(int argc, char* argv[]) {
   bool running = true;
   while (running) {
 
-    Grid elbo1grid = window.grid.SubGrid(1,1, 6,12);
-    NorthWestElbo elbo1{ window, elbo1grid, "SYSTEM BUS" };
-    window.Add(&elbo1);
+    Grid elbogrid = window.grid.SubGrid(1,1, 6,12);
+    NorthWestElbo elbo{ window, elbogrid, "SYSTEMD: SERVICE MODULES" };
+    //elbogrid.DrawCells(window.sdl_renderer);
+    elbo.Draw(window.sdl_renderer);
 
-    Grid elbo2grid = window.grid.SubGrid(7,1, 12,12);
-    NorthWestElbo elbo2{ window, elbo2grid, "USER BUS" };
-    window.Add(&elbo2);
+    Grid swelbogrid = window.grid.SubGrid(7,1, 12,6);
+    SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
+    //swelbogrid.DrawCells(window.sdl_renderer);
+    swelbo.Draw(window.sdl_renderer);
+
+    Grid nwelbogrid = window.grid.SubGrid(7,7, 12,12);
+    NorthWestElbo nwelbo{ window, nwelbogrid, "D-BUS: USER BUS" };
+    //nwelbogrid.DrawCells(window.sdl_renderer);
+    nwelbo.Draw(window.sdl_renderer);
 
 
     SDL_Event e;

@@ -1,8 +1,8 @@
 #include "elbo.h"
 
 void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
-  GridRegion sweep = SweepRegion();
-  GridRegion vertical = VerticalRegion();
+  Region2D sweep = SweepRegion();
+  Region2D vertical = VerticalRegion();
 
   Region2D reach = ReachRegion();
   Region2D header = HeaderRegion();
@@ -79,4 +79,53 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
       header,
       header_string
     );
+}
+
+void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
+  Region2D sweep = SweepRegion();
+  Region2D vertical = VerticalRegion();
+
+  Region2D reach = ReachRegion();
+  Region2D header = HeaderRegion();
+
+  boxColor(renderer,
+      sweep.NearX(), sweep.NearY(),
+      sweep.FarX(), sweep.FarY(),
+      colours.base
+    );
+
+  Region2D outer_radius = sweep.AlignSouthWest(Size2D{sweep.W()/3});
+
+  boxColor(renderer,
+      outer_radius.NearX(), outer_radius.NearY(),
+      outer_radius.FarX(), outer_radius.FarY(),
+      0xff000000
+    );
+
+  filledPieColor(renderer,
+      outer_radius.NorthEastX(),
+      outer_radius.NorthEastY(),
+      outer_radius.H(),
+      90, 180,
+      colours.base
+    );
+
+  boxColor(renderer,
+      reach.NearX(), reach.NearY(),
+      reach.FarX(), reach.FarY(),
+      colours.base
+    );
+
+  boxColor(renderer,
+      vertical.NearX(), vertical.NearY(),
+      vertical.FarX(), vertical.FarY(),
+      colours.base
+    );
+
+  window.HeaderFont().RenderTextWest(
+      renderer,
+      header,
+      header_string
+    );
+
 }
