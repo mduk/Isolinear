@@ -1,9 +1,5 @@
 #include "elbo.h"
 
-
-void NorthWestElbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
-}
-
 void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
   GridRegion sweep = SweepRegion();
   GridRegion vertical = VerticalRegion();

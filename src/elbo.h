@@ -19,7 +19,9 @@
 
 using namespace std;
 
-class NorthWestElbo : public Drawable {
+
+class Elbo : public Drawable {
+
   protected:
     Window& window;
     Grid& grid;
@@ -34,21 +36,76 @@ class NorthWestElbo : public Drawable {
     std::string header_string{""};
     std::list<Button> buttons{};
 
-    GridRegion SweepRegion() const {
+  public:
+    Elbo(
+        Window& w,
+        std::string h
+      ) :
+        Elbo{ w, w.grid, h }
+    {};
+
+    Elbo(
+        Window& w,
+        Grid& g,
+        std::string h
+      ) :
+        window{w},
+        grid{g},
+        header_string{h}
+    {};
+
+
+
+    virtual GridRegion ContainerRegion() const = 0;
+    virtual GridRegion VerticalRegion() const = 0;
+    virtual GridRegion SweepRegion() const = 0;
+    virtual GridRegion HorizontalRegion() const = 0;
+
+    virtual Region2D ReachRegion() const = 0;
+    virtual Region2D HeaderRegion() const = 0;
+
+    void OnMouseButtonDown(SDL_MouseButtonEvent&) {};
+    SDL_Rect SdlRect() const {
+      return grid.bounds.SdlRect();
+    }
+
+    void AddButton(std::string label) {
+      buttons.emplace_back(
+          window,
+          Region2D{},
+          colours,
+          label
+        );
+    }
+
+};
+
+
+class NorthWestElbo : public Elbo {
+
+  public:
+    NorthWestElbo(Window& w, Grid& g, std::string h)
+      : Elbo(w, g, h)
+    {}
+
+    void Draw(SDL_Renderer*) const;
+
+  protected:
+    GridRegion SweepRegion() const override {
       return grid.MultiCellRegion(
         1, 1,
         sweep_cells.x, sweep_cells.y
       );
     }
 
-    GridRegion HorizontalRegion() const {
+    GridRegion HorizontalRegion() const override {
       return grid.MultiCellRegion(
         sweep_cells.x + 1, 1,
         grid.MaxColumns(), 2
       );
     }
 
-    Region2D ReachRegion() const {
+    Region2D ReachRegion() const override {
       GridRegion horizontal = HorizontalRegion();
       return Region2D{
           horizontal.Origin(),
@@ -59,7 +116,7 @@ class NorthWestElbo : public Drawable {
         };
     }
 
-    Region2D HeaderRegion() const {
+    Region2D HeaderRegion() const override {
       GridRegion horizontal = HorizontalRegion();
       return Region2D{
           Position2D{
@@ -77,14 +134,14 @@ class NorthWestElbo : public Drawable {
         };
     }
 
-    GridRegion VerticalRegion() const {
+    GridRegion VerticalRegion() const override {
       return grid.MultiCellRegion(
         1, sweep_cells.y + 1,
         sweep_cells.x - 1, grid.MaxRows()
       );
     }
 
-    GridRegion ContainerRegion() const {
+    GridRegion ContainerRegion() const override {
       return grid.MultiCellRegion(
         sweep_cells.x, sweep_cells.y + 1,
         grid.MaxColumns(), grid.MaxRows()
@@ -93,37 +150,4 @@ class NorthWestElbo : public Drawable {
 
 
 
-  public:
-    NorthWestElbo(
-        Window& w,
-        std::string h
-      ) :
-        NorthWestElbo{ w, w.grid, h }
-    {};
-
-    NorthWestElbo(
-        Window& w,
-        Grid& g,
-        std::string h
-      ) :
-        window{w},
-        grid{g},
-        header_string{h}
-    {};
-
-
-    void AddButton(std::string label) {
-      buttons.emplace_back(
-          window,
-          Region2D{},
-          colours,
-          label
-        );
-    }
-
-    void Draw(SDL_Renderer*) const;
-    void OnMouseButtonDown(SDL_MouseButtonEvent&);
-    SDL_Rect SdlRect() const {
-      return grid.bounds.SdlRect();
-    }
 };
