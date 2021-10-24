@@ -9,7 +9,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
 
   Region2D outer_radius{
       sweep.Origin(),
-      Size2D{sweep.H()}
+      Size2D{sweep.W()/3}
     };
 
   Region2D inner_corner = sweep.AlignSouthEast(
@@ -20,7 +20,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
     );
 
   Region2D inner_radius = inner_corner.AlignNorthWest(
-      Size2D{sweep.H()}
+      Size2D{sweep.W()/4}
     );
 
 
