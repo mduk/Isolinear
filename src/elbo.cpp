@@ -1,10 +1,10 @@
 #include "elbo.h"
 
 
-void Elbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
+void NorthWestElbo::OnMouseButtonDown(SDL_MouseButtonEvent& e) {
 }
 
-void Elbo::Draw(SDL_Renderer* renderer) const {
+void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
   GridRegion sweep = SweepRegion();
   GridRegion vertical = VerticalRegion();
 
@@ -13,7 +13,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
 
   Region2D outer_radius{
       sweep.Origin(),
-      Size2D{sweep.H() / 2}
+      Size2D{sweep.H()}
     };
 
   Region2D inner_corner = sweep.AlignSouthEast(
@@ -24,7 +24,7 @@ void Elbo::Draw(SDL_Renderer* renderer) const {
     );
 
   Region2D inner_radius = inner_corner.AlignNorthWest(
-      Size2D{75}
+      Size2D{sweep.H()}
     );
 
 

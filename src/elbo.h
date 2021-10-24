@@ -19,12 +19,12 @@
 
 using namespace std;
 
-class Elbo : public Drawable {
+class NorthWestElbo : public Drawable {
   protected:
     Window& window;
     Grid& grid;
 
-    int reach_weight{20};
+    int reach_weight{15};
     Vector2D sweep_cells{2,2};
     Vector2D gutter{10,10};
     ColourScheme colours{
@@ -94,14 +94,14 @@ class Elbo : public Drawable {
 
 
   public:
-    Elbo(
+    NorthWestElbo(
         Window& w,
         std::string h
       ) :
-        Elbo{ w, w.grid, h }
+        NorthWestElbo{ w, w.grid, h }
     {};
 
-    Elbo(
+    NorthWestElbo(
         Window& w,
         Grid& g,
         std::string h
