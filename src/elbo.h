@@ -30,8 +30,8 @@ class Elbo : public Drawable {
     Vector2D sweep_cells{2,2};
     Vector2D gutter{10,10};
     ColourScheme colours{
-        0xaa664466, 0xaacc9999,
-        0xaaff9999, 0xaa6666cc
+        0xff664466, 0xffcc9999,
+        0xffff9999, 0xff6666cc
       };
     std::string header_string{""};
     std::list<Button> buttons{};

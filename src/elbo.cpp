@@ -33,7 +33,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
   boxColor(renderer,
       outer_radius.NearX(), outer_radius.NearY(),
       outer_radius.FarX(), outer_radius.FarY(),
-      0xff000000
+      colours.background
     );
 
   filledPieColor(renderer,
@@ -46,7 +46,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
   boxColor(renderer,
       inner_corner.NearX(), inner_corner.NearY(),
       inner_corner.FarX(), inner_corner.FarY(),
-      0xff000000
+      colours.background
     );
 
   boxColor(renderer,
@@ -59,7 +59,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
       inner_radius.FarX(), inner_radius.FarY(),
       inner_radius.H(),
       180, 270,
-      0xff000000
+      colours.background
     );
 
   boxColor(renderer,
@@ -94,12 +94,14 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.base
     );
 
-  Region2D outer_radius = sweep.AlignSouthWest(Size2D{sweep.W()/3});
+  Region2D outer_radius = sweep.AlignSouthWest(
+      Size2D{ sweep.W() / 3 }
+    );
 
   boxColor(renderer,
       outer_radius.NearX(), outer_radius.NearY(),
       outer_radius.FarX(), outer_radius.FarY(),
-      0xff000000
+      colours.background
     );
 
   filledPieColor(renderer,
@@ -110,16 +112,31 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.base
     );
 
+  Region2D inner_corner = sweep.AlignNorthEast(
+      Size2D{
+          sweep.FarX() - vertical.FarX(),
+          header.H() + gutter.y
+        }
+    );
+
+  boxColor(renderer,
+      inner_corner.NearX(), inner_corner.NearY(),
+      inner_corner.FarX(), inner_corner.FarY(),
+      colours.background
+    );
+
+
   boxColor(renderer,
       reach.NearX(), reach.NearY(),
       reach.FarX(), reach.FarY(),
-      colours.base
+      colours.active
     );
+
 
   boxColor(renderer,
       vertical.NearX(), vertical.NearY(),
       vertical.FarX(), vertical.FarY(),
-      colours.base
+      colours.inactive
     );
 
   window.HeaderFont().RenderTextWest(
