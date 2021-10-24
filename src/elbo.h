@@ -65,6 +65,15 @@ class Elbo : public Drawable {
     virtual Region2D HeaderRegion() const = 0;
 
     void OnMouseButtonDown(SDL_MouseButtonEvent&) {};
+
+    void Draw(SDL_Renderer* renderer) const {
+      ContainerRegion().Draw(renderer);
+      VerticalRegion().Draw(renderer);
+      SweepRegion().Draw(renderer);
+      ReachRegion().Draw(renderer);
+      HeaderRegion().Draw(renderer);
+    }
+
     SDL_Rect SdlRect() const {
       return grid.bounds.SdlRect();
     }
