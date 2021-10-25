@@ -73,8 +73,8 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
       vertical.FarX(), vertical.FarY(),
       colours.base
     );
-return;
-  window.HeaderFont().RenderTextWest(
+
+  window.HeaderFont().RenderTextNorthWest(
       renderer,
       header,
       header_string
@@ -125,6 +125,23 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.background
     );
 
+  Region2D inner_radius = inner_corner.AlignSouthWest(
+      Size2D{sweep.W()/4}
+    );
+
+  boxColor(renderer,
+      inner_radius.NearX(), inner_radius.NearY(),
+      inner_radius.FarX(), inner_radius.FarY(),
+      colours.base
+    );
+
+  filledPieColor(renderer,
+      inner_radius.NorthEastX(),
+      inner_radius.NorthEastY(),
+      inner_radius.H(),
+      90, 180,
+      colours.background
+    );
 
   boxColor(renderer,
       reach.NearX(), reach.NearY(),
@@ -138,11 +155,10 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       vertical.FarX(), vertical.FarY(),
       colours.inactive
     );
-return;
-  window.HeaderFont().RenderTextWest(
+
+  window.HeaderFont().RenderTextSouthWest(
       renderer,
       header,
       header_string
     );
-
 }

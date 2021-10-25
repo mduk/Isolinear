@@ -56,6 +56,56 @@ class Font {
       SDL_DestroyTexture(texture);
     };
 
+    void RenderTextNorthWest(
+        SDL_Renderer* renderer,
+        Region2D bounds,
+        std::string text
+    ) const {
+      SDL_Surface* surface = TTF_RenderUTF8_Blended(
+          sdl_font, text.c_str(), SDL_Color{255,255,255}
+      );
+
+      SDL_Texture* texture = SDL_CreateTextureFromSurface(
+          renderer, surface
+      );
+      SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+      Size2D surface_size{surface};
+      Region2D label_region = bounds.AlignNorthWest(surface_size);
+      label_region.Origin().Subtract(Vector2D{5,0});
+
+      SDL_Rect label_rect = label_region.SdlRect();
+      SDL_RenderCopy(renderer, texture, NULL, &label_rect);
+
+      SDL_FreeSurface(surface);
+      SDL_DestroyTexture(texture);
+    }
+
+    void RenderTextSouthWest(
+        SDL_Renderer* renderer,
+        Region2D bounds,
+        std::string text
+    ) const {
+      SDL_Surface* surface = TTF_RenderUTF8_Blended(
+          sdl_font, text.c_str(), SDL_Color{255,255,255}
+      );
+
+      SDL_Texture* texture = SDL_CreateTextureFromSurface(
+          renderer, surface
+      );
+      SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+      Size2D surface_size{surface};
+      Region2D label_region = bounds.AlignSouthWest(surface_size);
+      label_region.Origin().Subtract(Vector2D{5,0});
+
+      SDL_Rect label_rect = label_region.SdlRect();
+      SDL_RenderCopy(renderer, texture, NULL, &label_rect);
+
+      SDL_FreeSurface(surface);
+      SDL_DestroyTexture(texture);
+    };
+
     void RenderTextWest(
         SDL_Renderer* renderer,
         Region2D bounds,

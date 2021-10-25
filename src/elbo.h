@@ -64,7 +64,53 @@ class Elbo : public Drawable {
     virtual Region2D ReachRegion() const = 0;
     virtual Region2D HeaderRegion() const = 0;
 
-    void OnMouseButtonDown(SDL_MouseButtonEvent&) {};
+    void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+      Position2D cursor{event};
+
+      auto const container_region = ContainerRegion();
+      if (container_region.Encloses(cursor)) {
+        printf("Container: ");
+        container_region.Print();
+        return;
+      }
+
+      auto const vertical_region = VerticalRegion();
+      if (vertical_region.Encloses(cursor)) {
+        printf("Vertical: ");
+        vertical_region.Print();
+        return;
+      }
+
+      auto const sweep_region = SweepRegion();
+      if (sweep_region.Encloses(cursor)) {
+        printf("Sweep: ");
+        sweep_region.Print();
+        return;
+      }
+
+      auto const horizontal_region = HorizontalRegion();
+      if (horizontal_region.Encloses(cursor)) {
+        printf("Horizontal: ");
+        horizontal_region.Print();
+
+        auto const reach_region = ReachRegion();
+        if (reach_region.Encloses(cursor)) {
+          printf("Reach: ");
+          reach_region.Print();
+          return;
+        }
+
+        auto const header_region = HeaderRegion();
+        if (header_region.Encloses(cursor)) {
+          printf("Header: ");
+          header_region.Print();
+          return;
+        }
+
+        return;
+      }
+
+    };
 
     void Draw(SDL_Renderer* renderer) const {
       ContainerRegion().Draw(renderer);

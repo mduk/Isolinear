@@ -52,6 +52,15 @@ int main(int argc, char* argv[]) {
       Size2D{10,10}
     );
 
+  //Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),3);
+  //SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
+
+  Grid nwelbogrid = window.grid.SubGrid(1,4, window.grid.MaxColumns(),window.grid.MaxRows());
+  NorthWestElbo nwelbo{ window, window.grid, "D-BUS: USER BUS" };
+
+  //window.Add(&swelbo);
+  window.Add(&nwelbo);
+
   bool running = true;
   bool drawgrid = false;
   while (running) {
@@ -64,13 +73,8 @@ int main(int argc, char* argv[]) {
       window.grid.DrawCells(window.sdl_renderer);
     }
 
-    Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),3);
-    SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
-    swelbo.Draw(window.sdl_renderer);
-
-    Grid nwelbogrid = window.grid.SubGrid(1,4, window.grid.MaxColumns(),window.grid.MaxRows());
-    NorthWestElbo nwelbo{ window, nwelbogrid, "D-BUS: USER BUS" };
-    nwelbo.Draw(window.sdl_renderer);
+    //swelbo.Draw(window.sdl_renderer);
+    //nwelbo.Draw(window.sdl_renderer);
 
 
     SDL_Event e;
@@ -89,6 +93,10 @@ int main(int argc, char* argv[]) {
             }
           }
           break;
+        }
+
+        case SDL_MOUSEMOTION: {
+                                break;
         }
 
         case SDL_MOUSEBUTTONDOWN: {
