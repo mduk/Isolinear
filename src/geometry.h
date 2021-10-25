@@ -253,25 +253,25 @@ class Region2D : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const {
-      Fill(renderer, 0xaaffffff);
-      filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0xaa000000);
-      filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0xaaff0000);
-      filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0xaa00ffff);
-      filledCircleColor(renderer,      EastX(),      EastY(), 4, 0xaaff0000);
-      filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0xaaffff00);
-      filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0xaa00ff00);
-      filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0xaa00ffff);
-      filledCircleColor(renderer,      WestX(),      WestY(), 4, 0xaa00ff00);
-      filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0xaaffff00);
+      Fill(renderer, 0x33ffffff);
+      filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x33000000);
+      filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0x33ff0000);
+      filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0x3300ffff);
+      filledCircleColor(renderer,      EastX(),      EastY(), 4, 0x33ff0000);
+      filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0x33ffff00);
+      filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0x3300ff00);
+      filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0x3300ffff);
+      filledCircleColor(renderer,      WestX(),      WestY(), 4, 0x3300ff00);
+      filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0x33ffff00);
       lineColor(renderer,
           NorthWestX(), NorthWestY(),
           SouthEastX(), SouthEastY(),
-          0xaa000000
+          0x33000000
         );
       lineColor(renderer,
           NorthEastX(), NorthEastY(),
           SouthWestX(), SouthWestY(),
-          0xaa000000
+          0x33000000
         );
     }
 
