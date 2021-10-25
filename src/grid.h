@@ -46,8 +46,12 @@ class Grid {
 
     void DrawCells(SDL_Renderer* renderer) const;
 
+    void ResizeBounds(Size2D size) {
+      bounds.Resize(size);
+    }
+
     Size2D CellSize() const {
-      return Size2D{ row_height * 2, row_height };
+      return Size2D{ row_height * 1.6, row_height };
     }
 
     int PositionColumnIndex(Position2D p) const {

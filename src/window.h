@@ -85,7 +85,7 @@ class Window {
           &size.y
         );
 
-      grid.bounds.Resize(size);
+      grid.ResizeBounds(size);
     }
 
   protected:
