@@ -281,6 +281,7 @@ class Region2D : public Drawable {
     }
 
     void Stroke(SDL_Renderer* renderer, Colour colour) const {
+      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
       boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
     }

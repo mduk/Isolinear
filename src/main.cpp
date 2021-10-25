@@ -52,28 +52,21 @@ int main(int argc, char* argv[]) {
       Size2D{10,10}
     );
 
-  int reachweight = 30;
-
-  //NorthWestElbo elbo{ window, elbogrid, "D-BUS NAVIGATOR" };
-  //window.Add(&elbo);
-
-
   bool running = true;
   while (running) {
 
-    Grid elbogrid = window.grid.SubGrid(1,1, 6,12);
-    NorthWestElbo elbo{ window, elbogrid, "SYSTEMD: SERVICE MODULES" };
-    //elbogrid.DrawCells(window.sdl_renderer);
-    elbo.Draw(window.sdl_renderer);
+    SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
+    SDL_RenderClear(window.sdl_renderer);
+    SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
 
-    Grid swelbogrid = window.grid.SubGrid(7,1, 12,6);
+    window.grid.DrawCells(window.sdl_renderer);
+
+    Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),3);
     SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
-    //swelbogrid.DrawCells(window.sdl_renderer);
     swelbo.Draw(window.sdl_renderer);
 
-    Grid nwelbogrid = window.grid.SubGrid(7,7, 12,12);
+    Grid nwelbogrid = window.grid.SubGrid(1,4, window.grid.MaxColumns(),window.grid.MaxRows());
     NorthWestElbo nwelbo{ window, nwelbogrid, "D-BUS: USER BUS" };
-    //nwelbogrid.DrawCells(window.sdl_renderer);
     nwelbo.Draw(window.sdl_renderer);
 
 
@@ -112,8 +105,9 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    //window.grid.DrawCells(window.sdl_renderer);
     window.Draw();
+
+    SDL_RenderPresent(window.sdl_renderer);
   }
 
   return 0;

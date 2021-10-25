@@ -115,7 +115,7 @@ void Grid::DrawCells(SDL_Renderer* renderer) const {
   for (int i=1; i<=num_cols; i++) {
     for (int j=1; j<=MaxRows(); j++) {
       SingleCellRegion(i, j)
-        .Stroke(renderer, 0xfeffffff);
+        .Fill(renderer, 0x33ffffff);
     }
   }
 }

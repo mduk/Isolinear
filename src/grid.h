@@ -55,7 +55,7 @@ class Grid {
 
     Size2D CellSize() const {
       int width = floor(bounds.W() / num_cols);
-      return Size2D{ width, row_height };
+      return Size2D{ row_height, row_height };
     }
 
     int PositionColumnIndex(Position2D p) const {

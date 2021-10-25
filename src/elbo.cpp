@@ -73,7 +73,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
       vertical.FarX(), vertical.FarY(),
       colours.base
     );
-
+return;
   window.HeaderFont().RenderTextWest(
       renderer,
       header,
@@ -138,7 +138,7 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       vertical.FarX(), vertical.FarY(),
       colours.inactive
     );
-
+return;
   window.HeaderFont().RenderTextWest(
       renderer,
       header,

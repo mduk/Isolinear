@@ -63,12 +63,9 @@ class Window {
     }
 
     void Draw() {
-      SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
-      //SDL_RenderClear(sdl_renderer);
       for (auto* drawable : drawables) {
         drawable->Draw(sdl_renderer);
       }
-      SDL_RenderPresent(sdl_renderer);
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
@@ -133,8 +130,6 @@ class Window {
       SDL_SetRenderDrawBlendMode(
           sdl_renderer, SDL_BLENDMODE_BLEND
         );
-      SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
-      SDL_RenderPresent(sdl_renderer);
 
       SDL_GetWindowSize(
           sdl_window,
