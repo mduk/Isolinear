@@ -53,13 +53,16 @@ int main(int argc, char* argv[]) {
     );
 
   bool running = true;
+  bool drawgrid = false;
   while (running) {
 
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
     SDL_RenderClear(window.sdl_renderer);
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
 
-    window.grid.DrawCells(window.sdl_renderer);
+    if (drawgrid) {
+      window.grid.DrawCells(window.sdl_renderer);
+    }
 
     Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),3);
     SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
@@ -79,6 +82,11 @@ int main(int argc, char* argv[]) {
             case SDLK_ESCAPE:
               running = false;
               break;
+
+            case 'g': {
+              drawgrid = !drawgrid;
+              break;
+            }
           }
           break;
         }
