@@ -8,8 +8,6 @@
 
 #include "geometry.h"
 
-class GridRegion;
-
 class Grid {
   public:
 
