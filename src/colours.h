@@ -4,7 +4,7 @@ typedef u_int32_t Colour;
 
 class ColourScheme {
   public:
-    Colour background{0x99000000};
+    Colour background{0xff000000};
     Colour base;
     Colour active;
     Colour inactive;

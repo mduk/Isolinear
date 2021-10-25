@@ -26,7 +26,7 @@ class Elbo : public Drawable {
     Window& window;
     Grid& grid;
 
-    int reach_weight{15};
+    int reach_weight{10};
     Vector2D sweep_cells{2,2};
     Vector2D gutter{10,10};
     ColourScheme colours{
