@@ -130,6 +130,15 @@ class Elbo : public Drawable {
         );
     }
 
+    void DrawReach(SDL_Renderer* renderer) const {
+      Region2D reach = ReachRegion();
+      boxColor(renderer,
+          reach.NearX(), reach.NearY(),
+          reach.FarX(), reach.FarY(),
+          colours.base
+        );
+    }
+
     void DrawHeader(SDL_Renderer* renderer) const {
       window.HeaderFont().RenderText(
           renderer,

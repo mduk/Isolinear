@@ -64,12 +64,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.background
     );
 
-  boxColor(renderer,
-      reach.NearX(), reach.NearY(),
-      reach.FarX(), reach.FarY(),
-      colours.base
-    );
-
+  DrawReach(renderer);
   DrawVertical(renderer);
   DrawHeader(renderer);
 }
@@ -139,13 +134,7 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.background
     );
 
-  boxColor(renderer,
-      reach.NearX(), reach.NearY(),
-      reach.FarX(), reach.FarY(),
-      colours.active
-    );
-
-
+  DrawReach(renderer);
   DrawVertical(renderer);
   DrawHeader(renderer);
 }
