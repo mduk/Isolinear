@@ -79,12 +79,16 @@ class Window {
     }
 
     void OnWindowResize(SDL_WindowEvent& event) {
+      printf("Window::OnWindowResize\n");
+
+      printf("        Querying Window Size\n");
       SDL_GetWindowSize(
           sdl_window,
           &size.x,
           &size.y
         );
 
+      printf("        Resizing Window Grid\n");
       grid.ResizeBounds(size);
     }
 

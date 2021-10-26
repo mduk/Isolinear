@@ -36,10 +36,11 @@ string http_req(string url) {
 }
 
 int main(int argc, char* argv[]) {
+  printf("INIT\n");
+
   srand(time(NULL));
 
-  curlpp::initialize();
-
+  //curlpp::initialize();
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
 
@@ -49,7 +50,12 @@ int main(int argc, char* argv[]) {
       Size2D{10,10}
     );
 
-  printf("INIT\n");
+
+  int maxcols = window.grid.MaxColumns(),
+      maxrows = window.grid.MaxRows();
+
+  printf("main()::window.grid.MaxColumns() = %d\n", maxcols);
+  printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
   Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),4);
   SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
@@ -67,6 +73,17 @@ int main(int argc, char* argv[]) {
 
   printf("LOOP\n");
   while (running) {
+
+    int newmaxcols = window.grid.MaxColumns();
+    int newmaxrows = window.grid.MaxRows();
+
+    if (newmaxcols != maxcols || newmaxrows != maxrows) {
+      maxcols = newmaxcols;
+      maxrows = newmaxrows;
+
+      printf("main()::window.grid.MaxColumns() = %d\n", maxcols);
+      printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
+    }
 
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
     SDL_RenderClear(window.sdl_renderer);
