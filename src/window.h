@@ -50,6 +50,10 @@ class Window {
       SDL_DestroyWindow(sdl_window);
     }
 
+    void SetTitle(std::string newtitle) {
+      SDL_SetWindowTitle(sdl_window, newtitle.c_str());
+    }
+
     Font const& HeaderFont() const {
       return header_font;
     }
