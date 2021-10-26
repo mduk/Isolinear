@@ -34,24 +34,20 @@ class Elbo : public Drawable {
         0xffff9999, 0xff6666cc
       };
     std::string header_string{""};
+    Compass header_alignment{CENTRE};
     std::list<Button> buttons{};
 
   public:
     Elbo(
         Window& w,
-        std::string h
-      ) :
-        Elbo{ w, w.grid, h }
-    {};
-
-    Elbo(
-        Window& w,
         Grid& g,
-        std::string h
+        std::string h,
+        Compass ha
       ) :
         window{w},
         grid{g},
-        header_string{h}
+        header_string{h},
+        header_alignment{ha}
     {};
 
 
@@ -134,6 +130,15 @@ class Elbo : public Drawable {
         );
     }
 
+    void DrawHeader(SDL_Renderer* renderer) const {
+      window.HeaderFont().RenderText(
+          renderer,
+          HeaderRegion(),
+          header_alignment,
+          header_string
+        );
+    }
+
 };
 
 
@@ -141,7 +146,7 @@ class NorthWestElbo : public Elbo {
 
   public:
     NorthWestElbo(Window& w, Grid& g, std::string h)
-      : Elbo(w, g, h)
+      : Elbo(w, g, h, Compass{NORTHWEST})
     {}
 
     void Draw(SDL_Renderer*) const;
@@ -211,7 +216,7 @@ class SouthWestElbo : public Elbo {
 
   public:
     SouthWestElbo(Window& w, Grid& g, std::string h)
-      : Elbo(w, g, h)
+      : Elbo(w, g, h, Compass{SOUTHWEST})
     {}
 
     void Draw(SDL_Renderer*) const;

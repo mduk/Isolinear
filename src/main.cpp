@@ -58,9 +58,9 @@ int main(int argc, char* argv[]) {
   printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
   Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),4);
-  SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
+  Grid nwelbogrid = window.grid.SubGrid(1,5, window.grid.MaxColumns(),24);
 
-  Grid nwelbogrid = window.grid.SubGrid(1,5, window.grid.MaxColumns(),window.grid.MaxRows());
+  SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
   NorthWestElbo nwelbo{ window, nwelbogrid, "D-BUS: USER BUS" };
 
   window.Add(&swelbo);
