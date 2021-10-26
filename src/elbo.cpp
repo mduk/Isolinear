@@ -74,9 +74,10 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.base
     );
 
-  window.HeaderFont().RenderTextNorthWest(
+  window.HeaderFont().RenderText(
       renderer,
       header,
+      Compass{CENTRE},
       header_string
     );
 }
@@ -156,9 +157,10 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.inactive
     );
 
-  window.HeaderFont().RenderTextSouthWest(
+  window.HeaderFont().RenderText(
       renderer,
       header,
+      Compass{CENTRE},
       header_string
     );
 }

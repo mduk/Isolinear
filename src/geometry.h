@@ -10,6 +10,12 @@
 #include "colours.h"
 
 
+enum Compass {
+  CENTRE,
+  NORTH, NORTHEAST, EAST, SOUTHEAST,
+  SOUTH, SOUTHWEST, WEST, NORTHWEST
+};
+
 class Vector2D {
   public:
     int x, y;
