@@ -139,6 +139,17 @@ class Elbo : public Drawable {
         );
     }
 
+    void DrawVertical(SDL_Renderer* renderer) const {
+      Region2D vertical = VerticalRegion();
+      boxColor(renderer,
+          vertical.NearX(), vertical.NearY(),
+          vertical.FarX(), vertical.FarY(),
+          colours.inactive
+        );
+    }
+
+
+
 };
 
 
