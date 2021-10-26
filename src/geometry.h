@@ -200,15 +200,19 @@ class Region2D : public Drawable {
     int NorthWestY() const { return NorthWest().y; }
 
     // Compass Alignment
-    Region2D AlignCentre(Size2D s)    const { return Region2D{    Centre().Subtract(s.Centre()   ), s }; }
-    Region2D AlignNorth(Size2D s)     const { return Region2D{     North().Subtract(s.North()    ), s }; }
-    Region2D AlignEast(Size2D s)      const { return Region2D{      East().Subtract(s.East()     ), s }; }
-    Region2D AlignSouth(Size2D s)     const { return Region2D{     South().Subtract(s.South()    ), s }; }
-    Region2D AlignWest(Size2D s)      const { return Region2D{      West().Subtract(s.West()     ), s }; }
-    Region2D AlignNorthEast(Size2D s) const { return Region2D{ NorthEast().Subtract(s.NorthEast()), s }; }
-    Region2D AlignSouthEast(Size2D s) const { return Region2D{ SouthEast().Subtract(s.SouthEast()), s }; }
-    Region2D AlignSouthWest(Size2D s) const { return Region2D{ SouthWest().Subtract(s.SouthWest()), s }; }
-    Region2D AlignNorthWest(Size2D s) const { return Region2D{ NorthWest().Subtract(s.NorthWest()), s }; }
+    Region2D Align(Compass align, Size2D s) const {
+      switch (align) {
+        case    Compass::CENTRE: return Region2D{    Centre().Subtract(s.Centre()   ), s };
+        case     Compass::NORTH: return Region2D{     North().Subtract(s.North()    ), s };
+        case Compass::NORTHEAST: return Region2D{ NorthEast().Subtract(s.NorthEast()), s };
+        case      Compass::EAST: return Region2D{      East().Subtract(s.East()     ), s };
+        case Compass::SOUTHEAST: return Region2D{ SouthEast().Subtract(s.SouthEast()), s };
+        case     Compass::SOUTH: return Region2D{     South().Subtract(s.South()    ), s };
+        case Compass::SOUTHWEST: return Region2D{ SouthWest().Subtract(s.SouthWest()), s };
+        case      Compass::WEST: return Region2D{      West().Subtract(s.West()     ), s };
+        case Compass::NORTHWEST: return Region2D{ NorthWest().Subtract(s.NorthWest()), s };
+      }
+    }
 
     // Compass Quadrants
     Region2D NorthEastQuadrant() const { return Region2D{ North(),       East() }; }

@@ -12,14 +12,16 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
       Size2D{sweep.W()/3}
     };
 
-  Region2D inner_corner = sweep.AlignSouthEast(
+  Region2D inner_corner = sweep.Align(
+      Compass{SOUTHEAST},
       Size2D{
           sweep.FarX() - vertical.FarX(),
           header.H() + gutter.y
         }
     );
 
-  Region2D inner_radius = inner_corner.AlignNorthWest(
+  Region2D inner_radius = inner_corner.Align(
+      Compass{NORTHWEST},
       Size2D{sweep.W()/4}
     );
 
@@ -95,7 +97,8 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.base
     );
 
-  Region2D outer_radius = sweep.AlignSouthWest(
+  Region2D outer_radius = sweep.Align(
+      Compass{SOUTHWEST},
       Size2D{ sweep.W() / 3 }
     );
 
@@ -113,7 +116,8 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.base
     );
 
-  Region2D inner_corner = sweep.AlignNorthEast(
+  Region2D inner_corner = sweep.Align(
+      Compass{NORTHEAST},
       Size2D{
           sweep.FarX() - vertical.FarX(),
           header.H() + gutter.y
@@ -126,7 +130,8 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
       colours.background
     );
 
-  Region2D inner_radius = inner_corner.AlignSouthWest(
+  Region2D inner_radius = inner_corner.Align(
+      Compass{SOUTHWEST},
       Size2D{sweep.W()/4}
     );
 
