@@ -79,7 +79,7 @@ void NorthWestElbo::Draw(SDL_Renderer* renderer) const {
   window.HeaderFont().RenderText(
       renderer,
       header,
-      Compass{CENTRE},
+      Compass{NORTHWEST},
       header_string
     );
 }
@@ -165,7 +165,7 @@ void SouthWestElbo::Draw(SDL_Renderer* renderer) const {
   window.HeaderFont().RenderText(
       renderer,
       header,
-      Compass{CENTRE},
+      Compass{SOUTHWEST},
       header_string
     );
 }
