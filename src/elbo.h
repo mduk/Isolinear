@@ -195,7 +195,7 @@ class Elbo : public Drawable {
       boxColor(renderer,
           vertical.NearX(), vertical.NearY(),
           vertical.FarX(), vertical.FarY(),
-          colours.inactive
+          colours.base
         );
     }
 };
@@ -428,8 +428,8 @@ class SouthWestElbo : public Elbo {
 
     Region2D ButtonRegion(int i) const override {
       return grid.CalculateGridRegion(
-          1,1,
-          sweep_cells.x -1, grid.MaxRows() - sweep_cells.y - buttons.size()
+          sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size(),
+          sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size()
         );
     };
 

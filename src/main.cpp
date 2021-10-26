@@ -60,8 +60,8 @@ int main(int argc, char* argv[]) {
   Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),4);
   Grid nwelbogrid = window.grid.SubGrid(1,5, window.grid.MaxColumns(),24);
 
-  SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
-  NorthWestElbo nwelbo{ window, nwelbogrid, "D-BUS: USER BUS" };
+  SouthWestElbo swelbo{ window, swelbogrid, "UPPER SUMMARY AREA" };
+  NorthWestElbo nwelbo{ window, nwelbogrid, "LOWER CONTENT AREA" };
 
   swelbo.AddButton("ONE");
   nwelbo.AddButton("ONE");

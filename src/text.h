@@ -12,8 +12,8 @@ using namespace std;
 
 class Font {
   public:
-    Font(std::string p, int s)
-        : path{p}, size_pt{s}
+    Font(std::string p, int s, Colour c)
+        : path{p}, size_pt{s}, colour{c}
     {
       sdl_font = TTF_OpenFont(path.c_str(), size_pt);
 
@@ -39,8 +39,12 @@ class Font {
         Compass align,
         std::string text
     ) const {
+      uint8_t r = colour,
+              g = colour >> 8,
+              b = colour >> 16;
+
       SDL_Surface* surface = TTF_RenderUTF8_Blended(
-          sdl_font, text.c_str(), SDL_Color{255,255,255}
+          sdl_font, text.c_str(), SDL_Color{r,g,b}
       );
 
       SDL_Texture* texture = SDL_CreateTextureFromSurface(
@@ -61,6 +65,7 @@ class Font {
   protected:
     std::string path;
     int size_pt;
+    Colour colour;
     TTF_Font* sdl_font;
 };
 
