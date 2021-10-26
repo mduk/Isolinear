@@ -50,11 +50,12 @@ class Elbo : public Drawable {
         header_alignment{ha}
     {};
 
-
-
     virtual Region2D ContainerRegion() const = 0;
     virtual Region2D VerticalRegion() const = 0;
     virtual Region2D SweepRegion() const = 0;
+    virtual Region2D SweepOuterRadiusRegion() const = 0;
+    virtual Region2D SweepInnerCornerRegion() const = 0;
+    virtual Region2D SweepInnerRadiusRegion() const = 0;
     virtual Region2D HorizontalRegion() const = 0;
 
     virtual Region2D ReachRegion() const = 0;
@@ -108,15 +109,6 @@ class Elbo : public Drawable {
 
     };
 
-    void Draw(SDL_Renderer* renderer) const {
-      ContainerRegion().Draw(renderer);
-      VerticalRegion().Draw(renderer);
-      //HorizontalRegion().Draw(renderer);
-      SweepRegion().Draw(renderer);
-      ReachRegion().Draw(renderer);
-      HeaderRegion().Draw(renderer);
-    }
-
     SDL_Rect SdlRect() const {
       return grid.bounds.SdlRect();
     }
@@ -130,7 +122,46 @@ class Elbo : public Drawable {
         );
     }
 
-    void DrawReach(SDL_Renderer* renderer) const {
+    virtual void Draw(SDL_Renderer* renderer) const {
+      DrawSweep(renderer);
+      DrawReach(renderer);
+      DrawVertical(renderer);
+      DrawHeader(renderer);
+    }
+
+    virtual void DrawSweep(SDL_Renderer* renderer) const {
+      Region2D sweep = SweepRegion();
+      Region2D outer_radius = SweepOuterRadiusRegion();
+      Region2D inner_corner = SweepInnerCornerRegion();
+      Region2D inner_radius = SweepInnerRadiusRegion();
+
+      boxColor(renderer,
+          sweep.NearX(), sweep.NearY(),
+          sweep.FarX(), sweep.FarY(),
+          colours.base
+        );
+
+      boxColor(renderer,
+          outer_radius.NearX(), outer_radius.NearY(),
+          outer_radius.FarX(), outer_radius.FarY(),
+          colours.background
+        );
+
+      boxColor(renderer,
+          inner_corner.NearX(), inner_corner.NearY(),
+          inner_corner.FarX(), inner_corner.FarY(),
+          colours.background
+        );
+
+      boxColor(renderer,
+          inner_radius.NearX(), inner_radius.NearY(),
+          inner_radius.FarX(), inner_radius.FarY(),
+          colours.base
+        );
+
+    };
+
+    virtual void DrawReach(SDL_Renderer* renderer) const {
       Region2D reach = ReachRegion();
       boxColor(renderer,
           reach.NearX(), reach.NearY(),
@@ -139,7 +170,7 @@ class Elbo : public Drawable {
         );
     }
 
-    void DrawHeader(SDL_Renderer* renderer) const {
+    virtual void DrawHeader(SDL_Renderer* renderer) const {
       window.HeaderFont().RenderText(
           renderer,
           HeaderRegion(),
@@ -148,7 +179,7 @@ class Elbo : public Drawable {
         );
     }
 
-    void DrawVertical(SDL_Renderer* renderer) const {
+    virtual void DrawVertical(SDL_Renderer* renderer) const {
       Region2D vertical = VerticalRegion();
       boxColor(renderer,
           vertical.NearX(), vertical.NearY(),
@@ -156,10 +187,10 @@ class Elbo : public Drawable {
           colours.inactive
         );
     }
-
-
-
 };
+
+
+// // // // // // // // // // // // // // // // // // // //
 
 
 class NorthWestElbo : public Elbo {
@@ -169,14 +200,40 @@ class NorthWestElbo : public Elbo {
       : Elbo(w, g, h, Compass{NORTHWEST})
     {}
 
-    void Draw(SDL_Renderer*) const;
-
   protected:
     Region2D SweepRegion() const override {
       return grid.CalculateGridRegion(
         1, 1,
         sweep_cells.x, sweep_cells.y
       );
+    }
+
+    Region2D SweepOuterRadiusRegion() const override {
+      Region2D sweep = SweepRegion();
+
+      return Region2D{
+          sweep.Origin(),
+          Size2D{sweep.W()/3}
+        };
+    }
+
+    Region2D SweepInnerCornerRegion() const override {
+      Region2D sweep = SweepRegion();
+
+      return sweep.Align(
+          Compass{SOUTHEAST},
+          Size2D{
+              sweep.FarX() - VerticalRegion().FarX(),
+              HeaderRegion().H() + gutter.y
+            }
+        );
+    }
+
+    Region2D SweepInnerRadiusRegion() const override {
+      return SweepInnerCornerRegion().Align(
+          Compass{NORTHWEST},
+          Size2D{SweepRegion().W()/4}
+        );
     }
 
     Region2D HorizontalRegion() const override {
@@ -188,6 +245,7 @@ class NorthWestElbo : public Elbo {
 
     Region2D ReachRegion() const override {
       Region2D horizontal = HorizontalRegion();
+
       return Region2D{
           horizontal.Origin(),
           Size2D{
@@ -199,6 +257,7 @@ class NorthWestElbo : public Elbo {
 
     Region2D HeaderRegion() const override {
       Region2D horizontal = HorizontalRegion();
+
       return Region2D{
           Position2D{
             horizontal.Origin().x,
@@ -228,6 +287,28 @@ class NorthWestElbo : public Elbo {
         grid.MaxColumns(), grid.MaxRows()
       );
     }
+
+    void DrawSweep(SDL_Renderer* renderer) const {
+      Region2D outer_radius = SweepOuterRadiusRegion();
+      Region2D inner_radius = SweepInnerRadiusRegion();
+
+      Elbo::DrawSweep(renderer);
+
+      filledPieColor(renderer,
+          outer_radius.FarX(), outer_radius.FarY(),
+          outer_radius.H(),
+          180, 270,
+          colours.base
+        );
+
+      filledPieColor(renderer,
+          inner_radius.FarX(), inner_radius.FarY(),
+          inner_radius.H(),
+          180, 270,
+          colours.background
+        );
+    }
+
 };
 
 
@@ -239,14 +320,44 @@ class SouthWestElbo : public Elbo {
       : Elbo(w, g, h, Compass{SOUTHWEST})
     {}
 
-    void Draw(SDL_Renderer*) const;
-
   protected:
     Region2D SweepRegion() const override {
       return grid.CalculateGridRegion(
         1, grid.MaxRows() - sweep_cells.y + 1,
         sweep_cells.x, grid.MaxRows()
       );
+    }
+
+    Region2D SweepOuterRadiusRegion() const override {
+      Region2D sweep = SweepRegion();
+
+      return sweep.Align(
+          Compass{SOUTHWEST},
+          Size2D{ sweep.W() / 3 }
+        );
+    }
+
+    Region2D SweepInnerCornerRegion() const override {
+      Region2D sweep = SweepRegion();
+      Region2D vertical = VerticalRegion();
+      Region2D header = HeaderRegion();
+
+      return sweep.Align(
+          Compass{NORTHEAST},
+          Size2D{
+              sweep.FarX() - vertical.FarX(),
+              header.H() + gutter.y
+            }
+        );
+    }
+
+    Region2D SweepInnerRadiusRegion() const override {
+      Region2D sweep = SweepRegion();
+
+      return SweepInnerCornerRegion().Align(
+          Compass{SOUTHWEST},
+          Size2D{sweep.W()/4}
+        );
     }
 
     Region2D HorizontalRegion() const override {
@@ -258,6 +369,7 @@ class SouthWestElbo : public Elbo {
 
     Region2D ReachRegion() const override {
       Region2D horizontal = HorizontalRegion();
+
       return Region2D{
           Position2D{
             horizontal.X(),
@@ -272,6 +384,7 @@ class SouthWestElbo : public Elbo {
 
     Region2D HeaderRegion() const override {
       Region2D horizontal = HorizontalRegion();
+
       return Region2D{
           Position2D{
             horizontal.X(),
@@ -295,6 +408,27 @@ class SouthWestElbo : public Elbo {
       return Region2D{ };
     }
 
+    void DrawSweep(SDL_Renderer* renderer) const override {
+      Region2D outer_radius = SweepOuterRadiusRegion();
+      Region2D inner_radius = SweepInnerRadiusRegion();
+
+      Elbo::DrawSweep(renderer);
+
+      filledPieColor(renderer,
+          outer_radius.NorthEastX(),
+          outer_radius.NorthEastY(),
+          outer_radius.H(),
+          90, 180,
+          colours.base
+        );
 
 
+      filledPieColor(renderer,
+          inner_radius.NorthEastX(),
+          inner_radius.NorthEastY(),
+          inner_radius.H(),
+          90, 180,
+          colours.background
+        );
+    }
 };
