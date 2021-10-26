@@ -43,26 +43,29 @@ int main(int argc, char* argv[]) {
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
 
-  int win_h = 125,
-      win_w = win_h * 1.618;
-
   Window window(
-      win_w, win_h,
+      200, 200, // Just seed values. Window immediately resizes
       Size2D{10,10},
       Size2D{10,10}
     );
 
-  //Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),3);
-  //SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
+  printf("INIT\n");
 
-  Grid nwelbogrid = window.grid.SubGrid(1,4, window.grid.MaxColumns(),window.grid.MaxRows());
-  NorthWestElbo nwelbo{ window, window.grid, "D-BUS: USER BUS" };
+  Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),4);
+  SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
 
-  //window.Add(&swelbo);
+  Grid nwelbogrid = window.grid.SubGrid(1,5, window.grid.MaxColumns(),window.grid.MaxRows());
+  NorthWestElbo nwelbo{ window, nwelbogrid, "D-BUS: USER BUS" };
+
+  window.Add(&swelbo);
   window.Add(&nwelbo);
+
+  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
   bool drawgrid = false;
+
+  printf("LOOP\n");
   while (running) {
 
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
@@ -72,10 +75,6 @@ int main(int argc, char* argv[]) {
     if (drawgrid) {
       window.grid.DrawCells(window.sdl_renderer);
     }
-
-    //swelbo.Draw(window.sdl_renderer);
-    //nwelbo.Draw(window.sdl_renderer);
-
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
