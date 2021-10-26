@@ -112,7 +112,18 @@ int main(int argc, char* argv[]) {
         }
 
         case SDL_MOUSEMOTION: {
-                                break;
+          int x = e.motion.x,
+              y = e.motion.y;
+
+          Position2D pos{x, y};
+          int gx = window.grid.PositionColumnIndex(pos),
+              gy = window.grid.PositionRowIndex(pos);
+
+          std::stringstream ss;
+          ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
+
+          window.SetTitle(ss.str());
+          break;
         }
 
         case SDL_MOUSEBUTTONDOWN: {
