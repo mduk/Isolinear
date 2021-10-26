@@ -57,6 +57,7 @@ class Elbo : public Drawable {
     virtual Region2D SweepInnerCornerRegion() const = 0;
     virtual Region2D SweepInnerRadiusRegion() const = 0;
     virtual Region2D HorizontalRegion() const = 0;
+    virtual Region2D ButtonRegion(int) const = 0;
 
     virtual Region2D ReachRegion() const = 0;
     virtual Region2D HeaderRegion() const = 0;
@@ -76,6 +77,13 @@ class Elbo : public Drawable {
         printf("Vertical: ");
         vertical_region.Print();
         return;
+      }
+
+      for (auto& button : buttons) {
+        if (button.Encloses(cursor)) {
+          button.OnMouseButtonDown(event);
+          return;
+        }
       }
 
       auto const sweep_region = SweepRegion();
@@ -116,7 +124,7 @@ class Elbo : public Drawable {
     void AddButton(std::string label) {
       buttons.emplace_back(
           window,
-          Region2D{},
+          ButtonRegion(buttons.size() + 1),
           colours,
           label
         );
@@ -127,6 +135,9 @@ class Elbo : public Drawable {
       DrawReach(renderer);
       DrawVertical(renderer);
       DrawHeader(renderer);
+      for (auto const& button : buttons) {
+        button.Draw(renderer);
+      }
     }
 
     virtual void DrawSweep(SDL_Renderer* renderer) const {
@@ -276,16 +287,23 @@ class NorthWestElbo : public Elbo {
 
     Region2D VerticalRegion() const override {
       return grid.CalculateGridRegion(
-        1, sweep_cells.y + 1,
-        sweep_cells.x - 1, grid.MaxRows()
-      );
+          1, sweep_cells.y + 1 + buttons.size(),
+          sweep_cells.x - 1, grid.MaxRows()
+        );
     }
 
     Region2D ContainerRegion() const override {
       return grid.CalculateGridRegion(
-        sweep_cells.x, sweep_cells.y + 1,
-        grid.MaxColumns(), grid.MaxRows()
-      );
+          sweep_cells.x, sweep_cells.y + 1,
+          grid.MaxColumns(), grid.MaxRows()
+        );
+    }
+
+    Region2D ButtonRegion(int i) const override {
+      return grid.CalculateGridRegion(
+          1, sweep_cells.y +  i,
+          sweep_cells.x - 1, sweep_cells.y  + i
+        );
     }
 
     void DrawSweep(SDL_Renderer* renderer) const {
@@ -400,13 +418,20 @@ class SouthWestElbo : public Elbo {
     Region2D VerticalRegion() const override {
       return grid.CalculateGridRegion(
           1,1,
-          sweep_cells.x -1, grid.MaxRows() - sweep_cells.y
+          sweep_cells.x -1, grid.MaxRows() - sweep_cells.y - buttons.size()
         );
     }
 
     Region2D ContainerRegion() const override {
       return Region2D{ };
     }
+
+    Region2D ButtonRegion(int i) const override {
+      return grid.CalculateGridRegion(
+          1,1,
+          sweep_cells.x -1, grid.MaxRows() - sweep_cells.y - buttons.size()
+        );
+    };
 
     void DrawSweep(SDL_Renderer* renderer) const override {
       Region2D outer_radius = SweepOuterRadiusRegion();

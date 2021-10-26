@@ -47,7 +47,7 @@ class Button : public Region2D {
       window.ButtonFont().RenderText(
           renderer,
           Region2D{_position, _size},
-          Compass{CENTRE},
+          Compass{SOUTHEAST},
           label
         );
     }

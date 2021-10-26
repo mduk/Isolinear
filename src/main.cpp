@@ -63,8 +63,18 @@ int main(int argc, char* argv[]) {
   SouthWestElbo swelbo{ window, swelbogrid, "D-BUS: SYSTEM BUS" };
   NorthWestElbo nwelbo{ window, nwelbogrid, "D-BUS: USER BUS" };
 
+  swelbo.AddButton("ONE");
+  nwelbo.AddButton("ONE");
+  nwelbo.AddButton("TWO");
+  nwelbo.AddButton("THREE");
+
   window.Add(&swelbo);
   window.Add(&nwelbo);
+
+  ColourScheme colours{
+      0xff664466, 0xffcc9999,
+      0xffff9999, 0xff6666cc
+    };
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
