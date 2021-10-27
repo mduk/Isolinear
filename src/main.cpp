@@ -71,11 +71,6 @@ int main(int argc, char* argv[]) {
   window.Add(&swelbo);
   window.Add(&nwelbo);
 
-  ColourScheme colours{
-      0xff664466, 0xffcc9999,
-      0xffff9999, 0xff6666cc
-    };
-
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;

@@ -56,7 +56,7 @@ class Button : public Region2D {
     void Draw(SDL_Renderer* renderer) const {
       Colour drawcolour = active == true
                         ? colours.active
-                        : colours.base;
+                        : colours.dark;
 
 
       boxColor(renderer,
@@ -68,12 +68,12 @@ class Button : public Region2D {
 
       if (left_cap) {
         Region2D left_cap = LeftCapRegion();
-        left_cap.Draw(renderer);
+        //left_cap.Draw(renderer);
       }
 
       if (right_cap) {
         Region2D right_cap = RightCapRegion();
-        right_cap.Draw(renderer);
+        //right_cap.Draw(renderer);
       }
 
       window.ButtonFont().RenderText(

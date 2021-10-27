@@ -3,6 +3,7 @@
 #include <exception>
 #include <list>
 #include <stdexcept>
+#include <algorithm>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -29,10 +30,7 @@ class Elbo : public Drawable {
     int reach_weight{30};
     Vector2D sweep_cells{2,2};
     Vector2D gutter{10,10};
-    ColourScheme colours{
-        0xff664466, 0xffcc9999,
-        0xffff9999, 0xff6666cc
-      };
+    ColourScheme colours{ red_alert_colours };
     std::string header_string{""};
     Compass header_alignment{CENTRE};
     std::list<Button> buttons{};
@@ -63,11 +61,14 @@ class Elbo : public Drawable {
     virtual Region2D HeaderRegion() const = 0;
 
     virtual int SweepOuterRadius() const {
-      return 100;
+      return min(
+          SweepRegion().W() / 2,
+          VerticalRegion().W()
+        );
     }
 
     virtual int SweepInnerRadius() const {
-      return 50;
+      return SweepRegion().H() / 2;
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
@@ -140,15 +141,18 @@ class Elbo : public Drawable {
 
     virtual void Draw(SDL_Renderer* renderer) const {
       DrawSweep(renderer);
+      //SweepRegion().Draw(renderer);
       DrawReach(renderer);
       DrawVertical(renderer);
       DrawHeader(renderer);
       for (auto const& button : buttons) {
         button.Draw(renderer);
       }
-      SweepInnerCornerRegion().Draw(renderer);
-      SweepInnerRadiusRegion().Draw(renderer);
-      SweepOuterRadiusRegion().Draw(renderer);
+      if (false) {
+        SweepInnerCornerRegion().Draw(renderer);
+        SweepInnerRadiusRegion().Draw(renderer);
+        SweepOuterRadiusRegion().Draw(renderer);
+      }
     }
 
     virtual void DrawSweep(SDL_Renderer* renderer) const {
@@ -160,7 +164,7 @@ class Elbo : public Drawable {
       boxColor(renderer,
           sweep.NearX(), sweep.NearY(),
           sweep.FarX(), sweep.FarY(),
-          colours.base
+          colours.frame
         );
 
       boxColor(renderer,
@@ -178,7 +182,7 @@ class Elbo : public Drawable {
       boxColor(renderer,
           inner_radius.NearX(), inner_radius.NearY(),
           inner_radius.FarX(), inner_radius.FarY(),
-          colours.base
+          colours.frame
         );
 
     };
@@ -188,7 +192,7 @@ class Elbo : public Drawable {
       boxColor(renderer,
           reach.NearX(), reach.NearY(),
           reach.FarX(), reach.FarY(),
-          colours.base
+          colours.frame
         );
     }
 
@@ -206,7 +210,7 @@ class Elbo : public Drawable {
       boxColor(renderer,
           vertical.NearX(), vertical.NearY(),
           vertical.FarX(), vertical.FarY(),
-          colours.base
+          colours.frame
         );
     }
 };
@@ -327,7 +331,7 @@ class NorthWestElbo : public Elbo {
           outer_radius.FarX(), outer_radius.FarY(),
           outer_radius.H(),
           180, 270,
-          colours.base
+          colours.frame
         );
 
       filledPieColor(renderer,
@@ -455,7 +459,7 @@ class SouthWestElbo : public Elbo {
           outer_radius.NorthEastY(),
           outer_radius.H(),
           90, 180,
-          colours.base
+          colours.frame
         );
 
 
