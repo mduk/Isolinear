@@ -20,6 +20,8 @@ class Button : public Region2D {
     ColourScheme colours;
     std::string label;
     bool active = false;
+    bool left_cap = true;
+    bool right_cap = true;
 
   public:
     Button(
@@ -34,15 +36,45 @@ class Button : public Region2D {
         label{l}
     {}
 
+    Region2D LeftCapRegion() const {
+      return Region2D{
+          _position,
+          Size2D{_size.y}
+        };
+    }
+
+    Region2D RightCapRegion() const {
+      return Region2D{
+          Position2D{
+              _position.x + (_size.x - _size.y),
+              _position.y
+            },
+          Size2D{_size.y}
+        };
+    }
+
     void Draw(SDL_Renderer* renderer) const {
       Colour drawcolour = active == true
                         ? colours.active
                         : colours.base;
+
+
       boxColor(renderer,
           NearX(), NearY(),
           FarX(),  FarY(),
           drawcolour
         );
+
+
+      if (left_cap) {
+        Region2D left_cap = LeftCapRegion();
+        left_cap.Draw(renderer);
+      }
+
+      if (right_cap) {
+        Region2D right_cap = RightCapRegion();
+        right_cap.Draw(renderer);
+      }
 
       window.ButtonFont().RenderText(
           renderer,

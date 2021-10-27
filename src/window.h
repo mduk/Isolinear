@@ -103,7 +103,7 @@ class Window {
     std::list<Drawable*> drawables;
 
     const Font header_font{ FONT, 96, 0xff0099ff };
-    const Font button_font{ FONT, 64, 0xffffffff };
+    const Font button_font{ FONT, 52, 0xffffffff };
 
     int g_num_columns;
     Vector2D g_margin;

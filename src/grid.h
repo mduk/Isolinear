@@ -104,7 +104,7 @@ class Grid {
     }
 
     Size2D CellSize() const {
-      return Size2D{ row_height, row_height/2 };
+      return Size2D{ row_height*2, row_height };
     }
 
     int PositionColumnIndex(Position2D p) const {
