@@ -26,7 +26,7 @@ class Elbo : public Drawable {
     Window& window;
     Grid& grid;
 
-    int reach_weight{10};
+    int reach_weight{30};
     Vector2D sweep_cells{2,2};
     Vector2D gutter{10,10};
     ColourScheme colours{
@@ -61,6 +61,14 @@ class Elbo : public Drawable {
 
     virtual Region2D ReachRegion() const = 0;
     virtual Region2D HeaderRegion() const = 0;
+
+    virtual int SweepOuterRadius() const {
+      return 100;
+    }
+
+    virtual int SweepInnerRadius() const {
+      return 50;
+    }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
       Position2D cursor{event};
@@ -138,6 +146,9 @@ class Elbo : public Drawable {
       for (auto const& button : buttons) {
         button.Draw(renderer);
       }
+      SweepInnerCornerRegion().Draw(renderer);
+      SweepInnerRadiusRegion().Draw(renderer);
+      SweepOuterRadiusRegion().Draw(renderer);
     }
 
     virtual void DrawSweep(SDL_Renderer* renderer) const {
@@ -224,7 +235,7 @@ class NorthWestElbo : public Elbo {
 
       return Region2D{
           sweep.Origin(),
-          Size2D{sweep.W()/3}
+          Size2D{SweepOuterRadius()}
         };
     }
 
@@ -243,7 +254,7 @@ class NorthWestElbo : public Elbo {
     Region2D SweepInnerRadiusRegion() const override {
       return SweepInnerCornerRegion().Align(
           Compass{NORTHWEST},
-          Size2D{SweepRegion().W()/4}
+          Size2D{SweepInnerRadius()}
         );
     }
 
@@ -351,7 +362,7 @@ class SouthWestElbo : public Elbo {
 
       return sweep.Align(
           Compass{SOUTHWEST},
-          Size2D{ sweep.W() / 3 }
+          Size2D{SweepOuterRadius()}
         );
     }
 
@@ -374,7 +385,7 @@ class SouthWestElbo : public Elbo {
 
       return SweepInnerCornerRegion().Align(
           Compass{SOUTHWEST},
-          Size2D{sweep.W()/4}
+          Size2D{SweepInnerRadius()}
         );
     }
 
