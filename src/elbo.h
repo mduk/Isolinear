@@ -60,6 +60,10 @@ class Elbo : public Drawable {
     virtual Region2D ReachRegion() const = 0;
     virtual Region2D HeaderRegion() const = 0;
 
+    void Colours(ColourScheme cs) {
+      colours = cs;
+    }
+
     virtual int SweepOuterRadius() const {
       return min(
           SweepRegion().W() / 2,
