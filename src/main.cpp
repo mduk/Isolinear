@@ -59,12 +59,14 @@ int main(int argc, char* argv[]) {
 
   Grid hgrid = window.grid.Row(1);
   Grid fgrid = window.grid.Row(-1);
+  Grid main  = window.grid.Rows(3, -3);
 
   Header header{hgrid, window, " HEADER BAR TITLE "};
   Header footer{fgrid, window};
 
   window.Add(&header);
   window.Add(&footer);
+  window.Add(&main.bounds);
 
   window.Colours(blue_alert_colours);
 

@@ -61,6 +61,29 @@ class Grid {
         };
     }
 
+    Grid Rows(int from, int to) const {
+      int cols = MaxColumns();
+      int rows = MaxRows();
+
+      if (from < 0) {
+        from = rows + from;
+      }
+
+      if (to < 0) {
+        to = rows + to;
+      }
+
+      return Grid{
+          CalculateGridRegion(
+              1, from,
+              cols, to+1
+            ),
+          row_height,
+          Vector2D{0,0},
+          gutter
+        };
+    }
+
     Grid Column(int col) const {
       int cols = MaxColumns();
       int rows = MaxRows();
