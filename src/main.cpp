@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
   printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
 
-  Header h{window.grid};
+  Header h{window.grid, window};
   window.Add(&h);
 
 
