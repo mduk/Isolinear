@@ -12,6 +12,14 @@ class ColourScheme {
     Colour light_alternate;
     Colour active;
 
+    ColourScheme()
+      : ColourScheme{
+          0x33ffffff, 0x33ffffff,
+          0x33ffffff, 0x33ffffff,
+          0x33ffffff, 0x33ffffff
+        }
+    {};
+
     ColourScheme(
         Colour di,
         Colour d,
