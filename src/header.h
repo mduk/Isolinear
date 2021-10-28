@@ -23,9 +23,9 @@ class Header : public Region2D {
           w = grid.MaxColumns() - 1,
           h = grid.MaxRows() - 2;
 
-      Region2D  left_cap = grid.CalculateGridRegion(  x  ,   y  ,   x  ,   y+1);
-      Region2D right_cap = grid.CalculateGridRegion(w+x  ,   y  , w+x  ,   y+1);
-      Region2D       bar = grid.CalculateGridRegion(  x+1,   y  , w+x-1,   y+1);
+      Region2D  left_cap = grid.CalculateGridRegion(  x  , y,   x  , y+1);
+      Region2D right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
+      Region2D       bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
        left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
       right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
