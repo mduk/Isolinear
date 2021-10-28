@@ -16,6 +16,7 @@
 #include "grid.h"
 #include "shapes.h"
 #include "elbo.h"
+#include "header.h"
 
 using namespace std;
 
@@ -56,24 +57,18 @@ int main(int argc, char* argv[]) {
   printf("main()::window.grid.MaxColumns() = %d\n", maxcols);
   printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
-  Grid swelbogrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),4);
-  Grid nwelbogrid = window.grid.SubGrid(1,5, window.grid.MaxColumns(),24);
 
-  SouthWestElbo swelbo{ window, swelbogrid, "UPPER SUMMARY AREA" };
-  NorthWestElbo nwelbo{ window, nwelbogrid, "LOWER CONTENT AREA" };
+  Header h{window.grid.SubGrid(
+      1, 1,
+      window.grid.MaxColumns(), 2
+    )};
+  window.Add(&h);
 
-  swelbo.AddButton("ONE");
-  nwelbo.AddButton("ONE");
-  nwelbo.AddButton("TWO");
-  nwelbo.AddButton("THREE");
-
-  window.Add(&swelbo);
-  window.Add(&nwelbo);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  bool drawgrid = false;
+  bool drawgrid = true;
 
   printf("LOOP\n");
   while (running) {
