@@ -65,7 +65,6 @@ class Button : public Region2D {
           drawcolour
         );
 
-
       if (left_cap) {
         Region2D left_cap = LeftCapRegion();
         //left_cap.Draw(renderer);
