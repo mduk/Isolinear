@@ -53,8 +53,6 @@ class Font {
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
       Region2D label_region = bounds.Align(align, Size2D{surface});
-      label_region.Origin().Subtract(Vector2D{5,0});
-
       SDL_Rect label_rect = label_region.SdlRect();
       SDL_RenderCopy(renderer, texture, NULL, &label_rect);
 
