@@ -28,9 +28,8 @@ class Elbo : public Drawable {
     Grid& grid;
 
     int reach_weight{30};
-    Vector2D sweep_cells{2,2};
+    Vector2D sweep_cells{4,4};
     Vector2D gutter{10,10};
-    ColourScheme colours{ red_alert_colours };
     std::string header_string{""};
     Compass header_alignment{CENTRE};
     std::list<Button> buttons{};
@@ -59,10 +58,6 @@ class Elbo : public Drawable {
 
     virtual Region2D ReachRegion() const = 0;
     virtual Region2D HeaderRegion() const = 0;
-
-    void Colours(ColourScheme cs) {
-      colours = cs;
-    }
 
     virtual int SweepOuterRadius() const {
       return min(
@@ -138,7 +133,7 @@ class Elbo : public Drawable {
       buttons.emplace_back(
           window,
           ButtonRegion(buttons.size() + 1),
-          colours,
+          Colours(),
           label
         );
     }
@@ -168,25 +163,25 @@ class Elbo : public Drawable {
       boxColor(renderer,
           sweep.NearX(), sweep.NearY(),
           sweep.FarX(), sweep.FarY(),
-          colours.frame
+          Colours().frame
         );
 
       boxColor(renderer,
           outer_radius.NearX(), outer_radius.NearY(),
           outer_radius.FarX(), outer_radius.FarY(),
-          colours.background
+          Colours().background
         );
 
       boxColor(renderer,
           inner_corner.NearX(), inner_corner.NearY(),
           inner_corner.FarX(), inner_corner.FarY(),
-          colours.background
+          Colours().background
         );
 
       boxColor(renderer,
           inner_radius.NearX(), inner_radius.NearY(),
           inner_radius.FarX(), inner_radius.FarY(),
-          colours.frame
+          Colours().frame
         );
 
     };
@@ -196,7 +191,7 @@ class Elbo : public Drawable {
       boxColor(renderer,
           reach.NearX(), reach.NearY(),
           reach.FarX(), reach.FarY(),
-          colours.frame
+          Colours().frame
         );
     }
 
@@ -214,7 +209,7 @@ class Elbo : public Drawable {
       boxColor(renderer,
           vertical.NearX(), vertical.NearY(),
           vertical.FarX(), vertical.FarY(),
-          colours.frame
+          Colours().frame
         );
     }
 };
@@ -335,14 +330,14 @@ class NorthWestElbo : public Elbo {
           outer_radius.FarX(), outer_radius.FarY(),
           outer_radius.H(),
           180, 270,
-          colours.frame
+          Colours().frame
         );
 
       filledPieColor(renderer,
           inner_radius.FarX(), inner_radius.FarY(),
           inner_radius.H(),
           180, 270,
-          colours.background
+          Colours().background
         );
     }
 
@@ -463,7 +458,7 @@ class SouthWestElbo : public Elbo {
           outer_radius.NorthEastY(),
           outer_radius.H(),
           90, 180,
-          colours.frame
+          Colours().frame
         );
 
 
@@ -472,7 +467,7 @@ class SouthWestElbo : public Elbo {
           inner_radius.NorthEastY(),
           inner_radius.H(),
           90, 180,
-          colours.background
+          Colours().background
         );
     }
 };
