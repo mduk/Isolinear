@@ -115,7 +115,7 @@ class Window {
     ColourScheme colours;
 
     const Font header_font{ FONT, 96, 0xff0099ff };
-    const Font button_font{ FONT, 52, 0xff000000 };
+    const Font button_font{ FONT, 44, 0xff000000 };
 
     int g_num_columns;
     Vector2D g_margin;

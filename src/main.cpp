@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  bool drawgrid = false;
+  bool drawgrid = true;
 
   printf("LOOP\n");
   while (running) {

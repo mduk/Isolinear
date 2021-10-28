@@ -42,7 +42,10 @@ class Header : public Region2D {
       Region2D cell = grid.CalculateGridRegion(col, y, col, y+1);
       Region2D fillerregion{
           cell.Origin(),
-          headerregion.SouthWest()
+          Position2D{
+              headerregion.SouthWestX(),
+              cell.FarY()
+            }
         };
 
       grid.CalculateGridRegion(x+1, y, col-1, y+1).Fill(renderer, Colours().dark);
