@@ -17,8 +17,8 @@ class Header : public Region2D {
     void Draw(SDL_Renderer* renderer) const override {
       int x = 1,
           y = 1,
-          w = 17,
-          h = 62;
+          w = grid.MaxColumns() - 1,
+          h = grid.MaxRows() - 2;
 
       if (header_bar) {
         Region2D  left_cap = grid.CalculateGridRegion(  x  ,   y  ,   x  ,   y+1);
