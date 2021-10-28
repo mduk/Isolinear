@@ -18,7 +18,6 @@
 #include "elbo.h"
 
 using namespace std;
-using namespace curlpp::options;
 
 string http_req(string url) {
   list<string> headers;
@@ -27,9 +26,9 @@ string http_req(string url) {
   curlpp::Cleanup myCleanup;
   ostringstream response_stream;
   curlpp::Easy req;
-  req.setOpt<Url>(url);
-  req.setOpt<HttpHeader>(headers);
-  req.setOpt<WriteStream>(&response_stream);
+  req.setOpt<curlpp::options::Url>(url);
+  req.setOpt<curlpp::options::HttpHeader>(headers);
+  req.setOpt<curlpp::options::WriteStream>(&response_stream);
   req.perform();
 
   return string(response_stream.str());
