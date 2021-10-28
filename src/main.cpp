@@ -107,12 +107,9 @@ int main(int argc, char* argv[]) {
               running = false;
               break;
 
-            case 'r': swelbo.Colours(red_alert_colours);
-                      nwelbo.Colours(red_alert_colours); break;
-            case 'y': swelbo.Colours(yellow_alert_colours);
-                      nwelbo.Colours(yellow_alert_colours); break;
-            case 'b': swelbo.Colours(blue_alert_colours);
-                      nwelbo.Colours(blue_alert_colours); break;
+            case 'r': window.Colours(red_alert_colours); break;
+            case 'y': window.Colours(yellow_alert_colours); break;
+            case 'b': window.Colours(blue_alert_colours); break;
 
             case 'g': {
               drawgrid = !drawgrid;

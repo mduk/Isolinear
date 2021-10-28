@@ -50,6 +50,16 @@ class Window {
       SDL_DestroyWindow(sdl_window);
     }
 
+    ColourScheme Colours() {
+      return colours;
+    }
+    void Colours(ColourScheme cs) {
+      colours = cs;
+      for (auto* drawable : drawables) {
+        drawable->Colours(cs);
+      }
+    }
+
     void SetTitle(std::string newtitle) {
       SDL_SetWindowTitle(sdl_window, newtitle.c_str());
     }
@@ -101,6 +111,8 @@ class Window {
 
     std::string title{"Isolinear"};
     std::list<Drawable*> drawables;
+
+    ColourScheme colours;
 
     const Font header_font{ FONT, 96, 0xff0099ff };
     const Font button_font{ FONT, 52, 0xffffffff };
