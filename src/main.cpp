@@ -58,8 +58,12 @@ int main(int argc, char* argv[]) {
   printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
 
-  Header h{window.grid, window};
-  window.Add(&h);
+  Grid hgrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),1);
+  Grid fgrid = window.grid.SubGrid(1,window.grid.MaxRows()-1, window.grid.MaxColumns(), window.grid.MaxRows()-1);
+  Header header{hgrid, window, "HEADER BAR TITLE"};
+  Header footer{fgrid, window};
+  window.Add(&header);
+  window.Add(&footer);
 
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //

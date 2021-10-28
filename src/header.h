@@ -6,10 +6,13 @@ class Header : public Region2D {
   protected:
     Grid grid;
     Window& window;
-    bool header_bar{true};
-    bool footer_bar{true};
+    std::string text{""};
 
   public:
+    Header(Grid g, Window& w, std::string t)
+      : grid{g}, window{w}, text{t}
+    {};
+
     Header(Grid g, Window& w)
       : grid{g}, window{w}
     {};
@@ -20,47 +23,32 @@ class Header : public Region2D {
           w = grid.MaxColumns() - 1,
           h = grid.MaxRows() - 2;
 
-      if (header_bar) {
-        Region2D  left_cap = grid.CalculateGridRegion(  x  ,   y  ,   x  ,   y+1);
-        Region2D right_cap = grid.CalculateGridRegion(w+x  ,   y  , w+x  ,   y+1);
-        Region2D       bar = grid.CalculateGridRegion(  x+1,   y  , w+x-1,   y+1);
+      Region2D  left_cap = grid.CalculateGridRegion(  x  ,   y  ,   x  ,   y+1);
+      Region2D right_cap = grid.CalculateGridRegion(w+x  ,   y  , w+x  ,   y+1);
+      Region2D       bar = grid.CalculateGridRegion(  x+1,   y  , w+x-1,   y+1);
 
-         left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
-        right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
-              bar.Fill    (renderer, Colours().dark);
+       left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
+      right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
 
-        std::string text{"WINDOW TITLE HERE "};
-        RenderedText headertext = window.HeaderFont().RenderText(Colours().background, text);
-        headertext.Draw(renderer, Compass::EAST, bar);
+      if (text.length() == 0) {
+        bar.Fill(renderer, Colours().dark);
+        return;
       }
 
-      if (footer_bar) {
-        Region2D  left_cap = grid.CalculateGridRegion(  x  , h+y  ,   x  , h+y+1);
-        Region2D right_cap = grid.CalculateGridRegion(w+x  , h+y  , w+x  , h+y+1);
-        Region2D       bar = grid.CalculateGridRegion(  x+1, h+y  , w+x-1, h+y+1);
+      RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
+      Region2D headerregion = bar.Align(Compass::EAST, headertext.Size());
 
-         left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
-        right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
-              bar.Fill    (renderer, Colours().dark);
-      }
+      int col = grid.PositionColumnIndex(headerregion.Near());
+      Region2D cell = grid.CalculateGridRegion(col, y, col, y+1);
+      Region2D fillerregion{
+          cell.Origin(),
+          headerregion.SouthWest()
+        };
 
+      grid.CalculateGridRegion(x+1, y, col-1, y+1).Fill(renderer, Colours().dark);
+      fillerregion.Fill(renderer, Colours().light);
 
-      return;
-
-      grid.CalculateGridRegion(  x  ,   y  ,   x  ,   y+1).QuadrantArc(renderer, Compass::NORTHWEST, Colours().light);
-      grid.CalculateGridRegion(w+x  ,   y  , w+x  ,   y+1).QuadrantArc(renderer, Compass::NORTHEAST, Colours().light);
-      grid.CalculateGridRegion(  x  , h+y  ,   x  , h+y+1).QuadrantArc(renderer, Compass::SOUTHWEST, Colours().light);
-      grid.CalculateGridRegion(w+x  , h+y  , w+x  , h+y+1).QuadrantArc(renderer, Compass::SOUTHEAST, Colours().light);
-
-      grid.CalculateGridRegion(  x+1,   y  , w+x-1,   y+1).Fill(renderer, Colours().dark);
-      grid.CalculateGridRegion(  x+1, h+y  , w+x-1, h+y+1).Fill(renderer, Colours().dark);
-      grid.CalculateGridRegion(  x  ,   y+2,   x  , h+y-1).Fill(renderer, Colours().dark);
-      grid.CalculateGridRegion(w+x  ,   y+2, w+x  , h+y-1).Fill(renderer, Colours().dark);
-
-      grid.CalculateGridRegion( 4,4, 4,5 ).Bullnose(renderer, Compass::WEST,  Colours().light_alternate);
-      grid.CalculateGridRegion( 5,4, 5,5 ).Bullnose(renderer, Compass::SOUTH, Colours().light_alternate);
-      grid.CalculateGridRegion( 6,4, 6,5 ).Bullnose(renderer, Compass::NORTH, Colours().light_alternate);
-      grid.CalculateGridRegion( 7,4, 7,5 ).Bullnose(renderer, Compass::EAST,  Colours().light_alternate);
+      headertext.Draw(renderer, Compass::EAST, bar);
     }
 
 
