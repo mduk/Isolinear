@@ -91,7 +91,7 @@ class Grid {
     }
 
     void DrawCells(SDL_Renderer* renderer) const {
-      for (int i=1; i<=num_cols; i++) {
+      for (int i=1; i<=MaxColumns(); i++) {
         for (int j=1; j<=MaxRows(); j++) {
           CalculateGridRegion(i, j)
             .Fill(renderer, 0x33ffffff);
@@ -117,7 +117,16 @@ class Grid {
     }
 
     int MaxColumns() const {
-      return num_cols;
+      int max_col = PositionColumnIndex(bounds.Far());
+      Region2D proposed = CalculateGridRegion(
+          max_col, 1
+        );
+
+      if (bounds.Encloses(proposed)) {
+        return max_col;
+      }
+
+      return max_col - 1;
     }
 
     int MaxRows() const {
