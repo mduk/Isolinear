@@ -290,9 +290,17 @@ class Region2D : public Drawable {
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
     }
 
+    virtual void Ellipse(SDL_Renderer* renderer, Colour colour) const {
+      filledEllipseColor(renderer,
+          CentreX(), CentreY(),
+          W()/2, H()/2,
+          colour
+        );
+    }
+
     virtual void Stroke(SDL_Renderer* renderer, Colour colour) const {
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-      boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
+      boxColor(renderer, NearX()  , NearY()  , FarX()  , FarY()  , colour);
       boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
     }
 
@@ -302,6 +310,30 @@ class Region2D : public Drawable {
         case Compass::SOUTHEAST: filledPieColor(renderer, NorthWestX(), NorthWestY(), W(),   0,  90, colour); break;
         case Compass::NORTHWEST: filledPieColor(renderer, SouthEastX(), SouthEastY(), W(), 180, 270, colour); break;
         case Compass::SOUTHWEST: filledPieColor(renderer, NorthEastX(), NorthEastY(), W(),  90, 180, colour); break;
+      }
+    }
+
+    virtual void Bullnose(SDL_Renderer* renderer, Compass orientation, Colour colour) const {
+      switch (orientation) {
+        case Compass::NORTH:
+          Align(Compass::NORTH, Size2D{W()}).Ellipse(renderer, colour);
+          Align(Compass::SOUTH, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
+          break;
+
+        case Compass::EAST:
+          Align(Compass::EAST, Size2D{H()}).Ellipse(renderer, colour);
+          Align(Compass::WEST, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
+          break;
+
+        case Compass::SOUTH:
+          Align(Compass::SOUTH, Size2D{W()}).Ellipse(renderer, colour);
+          Align(Compass::NORTH, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
+          break;
+
+        case Compass::WEST:
+          Align(Compass::WEST, Size2D{H()}).Ellipse(renderer, colour);
+          Align(Compass::EAST, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
+          break;
       }
     }
 
