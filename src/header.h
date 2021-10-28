@@ -50,22 +50,4 @@ class Header : public Region2D {
 
       headertext.Draw(renderer, Compass::EAST, bar);
     }
-
-
-    void DrawLeftCap(SDL_Renderer* renderer) const {
-      Region2D region = grid.CalculateGridRegion(
-          1,1,
-          1,2
-        );
-      region.QuadrantArc(renderer, Compass::SOUTHWEST, Colours().light);
-    }
-
-    void DrawRightCap(SDL_Renderer* renderer) const {
-      Region2D region = grid.CalculateGridRegion(
-          1,1,
-          12,2
-        );
-      region.Fill(renderer, Colours().light);
-    }
-
 };

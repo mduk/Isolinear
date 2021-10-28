@@ -66,7 +66,7 @@ class Grid {
       int rows = MaxRows();
 
       if (col < 0) {
-        col = cols + row;
+        col = cols + col;
       }
 
       return Grid{
