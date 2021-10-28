@@ -20,21 +20,11 @@ class Grid {
         int rh,
         Vector2D m,
         Vector2D g
-      ) : Grid(b, rh, m, g, 12)
-    {};
-
-    Grid(
-        Region2D b,
-        int rh,
-        Vector2D m,
-        Vector2D g,
-        int nc
       ) :
         bounds{b},
         row_height{rh},
         margin{m},
-        gutter{g},
-        num_cols{nc}
+        gutter{g}
     {};
 
     Grid SubGrid(
@@ -48,8 +38,45 @@ class Grid {
             ),
           row_height,
           Vector2D{0,0},
-          gutter,
-          (far_col - near_col) + 1
+          gutter
+        };
+    }
+
+    Grid Row(int row) const {
+      int cols = MaxColumns();
+      int rows = MaxRows();
+
+      if (row < 0) {
+        row = rows + row;
+      }
+
+      return Grid{
+          CalculateGridRegion(
+              1, row,
+              cols, row
+            ),
+          row_height,
+          Vector2D{0,0},
+          gutter
+        };
+    }
+
+    Grid Column(int col) const {
+      int cols = MaxColumns();
+      int rows = MaxRows();
+
+      if (col < 0) {
+        col = cols + row;
+      }
+
+      return Grid{
+          CalculateGridRegion(
+              col, 1,
+              col, rows
+            ),
+          row_height,
+          Vector2D{0,0},
+          gutter
         };
     }
 
@@ -152,7 +179,6 @@ class Grid {
 
     Region2D bounds;
   protected:
-    int num_cols{12};
     int row_height{100};
     Vector2D gutter{50, 50};
     Vector2D margin{0,0};

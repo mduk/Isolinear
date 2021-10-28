@@ -58,18 +58,20 @@ int main(int argc, char* argv[]) {
   printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
 
-  Grid hgrid = window.grid.SubGrid(1,1, window.grid.MaxColumns(),1);
-  Grid fgrid = window.grid.SubGrid(1,window.grid.MaxRows()-1, window.grid.MaxColumns(), window.grid.MaxRows()-1);
-  Header header{hgrid, window, "HEADER BAR TITLE"};
+  Grid hgrid = window.grid.Row(1);
+  Grid fgrid = window.grid.Row(-1);
+
+  Header header{hgrid, window, " HEADER BAR TITLE "};
   Header footer{fgrid, window};
   window.Add(&header);
   window.Add(&footer);
 
+  window.Colours(blue_alert_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  bool drawgrid = true;
+  bool drawgrid = false;
 
   printf("LOOP\n");
   while (running) {
