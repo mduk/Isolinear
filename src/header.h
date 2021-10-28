@@ -2,7 +2,7 @@
 
 #include "geometry.h"
 
-class Header : public Drawable {
+class Header : public Region2D {
   protected:
     Grid grid;
 
@@ -12,11 +12,10 @@ class Header : public Drawable {
     {};
 
     void Draw(SDL_Renderer* renderer) const override {
-      grid.CalculateGridRegion(2,1, grid.MaxColumns()-1,1)
-        .Fill(renderer, colours.dark);
-
-      DrawLeftCap(renderer);
-      DrawRightCap(renderer);
+      grid.CalculateGridRegion(1,1, 1,2).QuadrantArc(renderer, Compass::NORTHEAST, Colours().light);
+      grid.CalculateGridRegion(2,1, 2,2).QuadrantArc(renderer, Compass::SOUTHEAST, Colours().light);
+      grid.CalculateGridRegion(3,1, 3,2).QuadrantArc(renderer, Compass::SOUTHWEST, Colours().light);
+      grid.CalculateGridRegion(4,1, 4,2).QuadrantArc(renderer, Compass::NORTHWEST, Colours().light);
     }
 
     void DrawLeftCap(SDL_Renderer* renderer) const {
@@ -24,7 +23,7 @@ class Header : public Drawable {
           1,1,
           1,2
         );
-      region.Fill(renderer, colours.light);
+      region.QuadrantArc(renderer, Compass::SOUTHWEST, Colours().light);
     }
 
     void DrawRightCap(SDL_Renderer* renderer) const {
@@ -32,7 +31,7 @@ class Header : public Drawable {
           grid.MaxColumns(),1,
           grid.MaxColumns(),2
         );
-      region.Fill(renderer, colours.light_alternate);
+      region.Fill(renderer, Colours().light);
     }
 
 };

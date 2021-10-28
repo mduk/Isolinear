@@ -296,13 +296,13 @@ class Region2D : public Drawable {
       boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
     }
 
-    virtual void ArcNorthWest(SDL_Renderer* renderer, Colour colour) const {
-      filledPieColor(renderer,
-        FarX(), FarY(),
-        Size().x,
-        180, 270,
-        colour
-      );
+    virtual void QuadrantArc(SDL_Renderer* renderer, Compass orientation, Colour colour) const {
+      switch (orientation) {
+        case Compass::NORTHEAST: filledPieColor(renderer, SouthWestX(), SouthWestY(), W(), 270,   0, colour); break;
+        case Compass::SOUTHEAST: filledPieColor(renderer, NorthWestX(), NorthWestY(), W(),   0,  90, colour); break;
+        case Compass::NORTHWEST: filledPieColor(renderer, SouthEastX(), SouthEastY(), W(), 180, 270, colour); break;
+        case Compass::SOUTHWEST: filledPieColor(renderer, NorthEastX(), NorthEastY(), W(),  90, 180, colour); break;
+      }
     }
 
 };
