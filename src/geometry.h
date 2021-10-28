@@ -249,7 +249,7 @@ class Region2D : public Drawable {
         };
     }
 
-    void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
+    virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
       printf("Region: %d,%d (%d,%d) %d,%d \n",
           NearX(), NearY(),
           Size().x,  Size().y,
@@ -262,7 +262,7 @@ class Region2D : public Drawable {
         );
     }
 
-    void Draw(SDL_Renderer* renderer) const {
+    virtual void Draw(SDL_Renderer* renderer) const {
       Fill(renderer, 0x33ffffff);
       filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x33000000);
       filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0x33ff0000);
@@ -286,17 +286,17 @@ class Region2D : public Drawable {
     }
 
 
-    void Fill(SDL_Renderer* renderer, Colour colour) const {
+    virtual void Fill(SDL_Renderer* renderer, Colour colour) const {
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
     }
 
-    void Stroke(SDL_Renderer* renderer, Colour colour) const {
+    virtual void Stroke(SDL_Renderer* renderer, Colour colour) const {
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
       boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
     }
 
-    void ArcNorthWest(SDL_Renderer* renderer, Colour colour) const {
+    virtual void ArcNorthWest(SDL_Renderer* renderer, Colour colour) const {
       filledPieColor(renderer,
         FarX(), FarY(),
         Size().x,
