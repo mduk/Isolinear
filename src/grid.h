@@ -47,7 +47,7 @@ class Grid {
       int rows = MaxRows();
 
       if (row < 0) {
-        row = rows + row;
+        row = rows + row + 1;
       }
 
       return Grid{
