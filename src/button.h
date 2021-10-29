@@ -7,7 +7,6 @@
 #include "window.h"
 #include "drawable.h"
 #include "grid.h"
-#include "colours.h"
 #include "geometry.h"
 
 
@@ -17,13 +16,12 @@ using namespace std;
 class Button : public Region2D {
   protected:
     Window window;
-    ColourScheme colours;
-    std::string label;
     bool active = false;
     bool left_cap = true;
     bool right_cap = true;
 
   public:
+    std::string label;
     Button(
         Window& w,
         Region2D b,
@@ -32,7 +30,6 @@ class Button : public Region2D {
       ) :
         Region2D{b},
         window{w},
-        colours{cs},
         label{l}
     {}
 
@@ -55,8 +52,8 @@ class Button : public Region2D {
 
     void Draw(SDL_Renderer* renderer) const {
       Colour drawcolour = active == true
-                        ? colours.active
-                        : colours.dark;
+                        ? Colours().active
+                        : Colours().light_alternate;
 
 
       boxColor(renderer,

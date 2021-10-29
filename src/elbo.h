@@ -28,7 +28,7 @@ class Elbo : public Drawable {
     Grid& grid;
 
     int reach_weight{30};
-    Vector2D sweep_cells{4,4};
+    Vector2D sweep_cells{4,2};
     Vector2D gutter{10,10};
     std::string header_string{""};
     Compass header_alignment{CENTRE};
@@ -139,14 +139,14 @@ class Elbo : public Drawable {
     }
 
     virtual void Draw(SDL_Renderer* renderer) const {
-      DrawSweep(renderer);
-      //SweepRegion().Draw(renderer);
-      DrawReach(renderer);
-      DrawVertical(renderer);
-      DrawHeader(renderer);
-      for (auto const& button : buttons) {
-        button.Draw(renderer);
-      }
+      //DrawSweep(renderer);
+      SweepRegion().Draw(renderer);
+      //DrawReach(renderer);
+      //DrawVertical(renderer);
+      //DrawHeader(renderer);
+      //for (auto const& button : buttons) {
+       // button.Draw(renderer);
+      //}
       if (false) {
         SweepInnerCornerRegion().Draw(renderer);
         SweepInnerRadiusRegion().Draw(renderer);
@@ -228,7 +228,7 @@ class NorthWestElbo : public Elbo {
   protected:
     Region2D SweepRegion() const override {
       return grid.CalculateGridRegion(
-        1, 1,
+        1,1,
         sweep_cells.x, sweep_cells.y
       );
     }

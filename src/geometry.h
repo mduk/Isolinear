@@ -91,7 +91,7 @@ class Position2D : public Vector2D {
     Position2D(Vector2D c) : Vector2D{c} {}
     Position2D(int x, int y) : Vector2D(x, y) {};
     Position2D(SDL_MouseButtonEvent e) : Vector2D(e) {};
-    Position2D(SDL_Rect r): Vector2D(r.x, r.y) {};
+    Position2D(SDL_Rect r) : Vector2D(r.x, r.y) {};
 };
 
 class Size2D : public Vector2D {
@@ -100,7 +100,7 @@ class Size2D : public Vector2D {
     Size2D(int w) : Vector2D{w, w} {};
     Size2D(int w, int h) : Vector2D(w, h) {};
     Size2D(SDL_Surface* s) : Vector2D(s) {};
-    Size2D(SDL_Rect r): Vector2D(r.w, r.h) {};
+    Size2D(SDL_Rect r) : Vector2D(r.w, r.h) {};
 };
 
 

@@ -11,15 +11,12 @@ class Drawable {
     ColourScheme colours;
 
   public:
-    virtual void Draw(
-        SDL_Renderer*
-      ) const = 0;
+    virtual SDL_Rect SdlRect() const = 0;
+    virtual void Draw(SDL_Renderer*) const = 0;
 
     virtual void OnMouseButtonDown(
         SDL_MouseButtonEvent&
       ) {};
-
-    virtual SDL_Rect SdlRect() const = 0;
 
     virtual ColourScheme Colours() const {
       return colours;

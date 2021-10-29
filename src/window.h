@@ -120,7 +120,6 @@ class Window {
     const Font header_font{ FONT, 96, 0xff0099ff };
     const Font button_font{ FONT, 44, 0xff000000 };
 
-    int g_num_columns;
     Vector2D g_margin;
     Vector2D g_gutter;
 
@@ -136,6 +135,7 @@ class Window {
           position.x, position.y,
           size.x, size.y,
           0 | SDL_WINDOW_ALLOW_HIGHDPI
+            | SDL_WINDOW_FULLSCREEN_DESKTOP
             | SDL_WINDOW_BORDERLESS
         );
 

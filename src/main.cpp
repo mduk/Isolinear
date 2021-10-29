@@ -79,16 +79,18 @@ int main(int argc, char* argv[]) {
   printf("main()::window.grid.MaxColumns() = %d\n", maxcols);
   printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
-  Grid hgrid = window.grid.Rows(1,2);
-  Grid fgrid = window.grid.Rows(-1,0);
-  Grid main  = window.grid.Rows(3, -3);
+  Grid hgrid = window.grid.Rows( 1,  2);
+  Grid main  = window.grid.Rows( 3, -3);
+  Grid fgrid = window.grid.Rows(-1,  0);
 
   Header header{hgrid, window, " HEADER BAR TITLE "};
-  Header footer{fgrid, window};
+         header.AddButton("04-8854");
+         header.AddButton("04-5861");
+  Header footer{fgrid, window, " FOOTER BAR TITLE "};
+
 
   window.Add(&header);
   window.Add(&footer);
-  //window.Add(&main.bounds);
 
   window.Colours(blue_alert_colours);
 
