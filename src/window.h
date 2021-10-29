@@ -22,16 +22,19 @@ using namespace std;
 
 class Window {
   public:
+    Position2D position;
     Size2D size;
     Grid grid;
     SDL_Renderer* sdl_renderer;
 
     Window(
-        int _w, int _h,
+        Position2D p,
+        Size2D s,
         Vector2D _margin,
         Vector2D _gutter
     ) :
-      size{_w, _h},
+      position{p},
+      size{s},
       g_margin{_margin},
       g_gutter{_gutter}
     {

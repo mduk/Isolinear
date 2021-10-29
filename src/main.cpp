@@ -65,7 +65,8 @@ int main(int argc, char* argv[]) {
   SDL_Rect display = displays.back();
 
   Window window(
-      display.w, display.h,
+      Position2D{0,0},
+      Size2D{display},
       Size2D{10,10},
       Size2D{10,10}
     );

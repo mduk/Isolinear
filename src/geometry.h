@@ -99,6 +99,7 @@ class Size2D : public Vector2D {
     Size2D(int w) : Vector2D{w, w} {};
     Size2D(int w, int h) : Vector2D(w, h) {};
     Size2D(SDL_Surface* s) : Vector2D(s) {};
+    Size2D(SDL_Rect r): Vector2D(r.w, r.h) {};
 };
 
 
