@@ -246,8 +246,8 @@ class Region2D : public Drawable {
       return SDL_Rect{
           _position.x,
           _position.y,
-          Size().x,
-          Size().y
+          _size.x,
+          _size.y
         };
     }
 

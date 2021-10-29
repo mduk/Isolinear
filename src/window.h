@@ -86,12 +86,18 @@ class Window {
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+      printf("Window::OnMouseButtonDown\n");
       Position2D cursor{event};
-
       for (auto* drawable : drawables) {
-        if (Region2D{drawable->SdlRect()}.Encloses(cursor)) {
+        printf("        Checking, ");
+        Region2D clickablearea{drawable->SdlRect()};
+        clickablearea.Print();
+        if (clickablearea.Encloses(cursor)) {
           drawable->OnMouseButtonDown(event);
+          printf("yup. Calling\n");
+          continue;
         }
+        printf("nope.\n");
       }
     }
 

@@ -159,6 +159,7 @@ int main(int argc, char* argv[]) {
         }
 
         case SDL_MOUSEBUTTONDOWN: {
+          printf("main():SDL_MOUSEBUTTONDOWN\n");
           window.OnMouseButtonDown(e.button);
           break;
         }

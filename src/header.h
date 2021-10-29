@@ -53,7 +53,8 @@ class Header : public Region2D {
         );
     }
 
-    virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
+    virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) override {
+      printf("Header::OnMouseButtonDown()\n");
       Position2D cursor{e};
       for (auto& button : buttons) {
         if (button.Encloses(cursor)) {
@@ -62,6 +63,10 @@ class Header : public Region2D {
         }
       }
     };
+
+    SDL_Rect SdlRect() const override {
+      return grid.bounds.SdlRect();
+    }
 
     void Draw(SDL_Renderer* renderer) const override {
       int x = 1,

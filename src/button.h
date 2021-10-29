@@ -82,7 +82,7 @@ class Button : public Region2D {
 
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-      printf("OnMouseButtonDown\n");
+      printf("Button::OnMouseButtonDown()\n");
       Region2D::OnMouseButtonDown(event);
       active = !active;
     }
