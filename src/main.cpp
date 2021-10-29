@@ -2,6 +2,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <time.h>
+#include <vector>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -44,8 +45,25 @@ int main(int argc, char* argv[]) {
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
 
+  int number_of_displays = SDL_GetNumVideoDisplays();
+  std::vector<SDL_Rect> displays;
+
+  for (int i=0; i<number_of_displays; i++) {
+    SDL_Rect bounds{};
+    SDL_GetDisplayBounds(i, &bounds);
+    displays.push_back(bounds);
+
+    printf("%d,%d +(%d,%d) [%d]\n",
+        bounds.w,
+        bounds.h,
+        bounds.x,
+        bounds.y,
+        bounds.w * bounds.h
+      );
+  }
+
   Window window(
-      200, 200, // Just seed values. Window immediately resizes
+      1280, 1024,
       Size2D{10,10},
       Size2D{10,10}
     );
@@ -66,7 +84,7 @@ int main(int argc, char* argv[]) {
 
   window.Add(&header);
   window.Add(&footer);
-  window.Add(&main.bounds);
+  //window.Add(&main.bounds);
 
   window.Colours(blue_alert_colours);
 

@@ -127,8 +127,8 @@ class Window {
           SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
           size.x, size.y,
           0 | SDL_WINDOW_OPENGL
-            | SDL_WINDOW_RESIZABLE
-            | SDL_WINDOW_FULLSCREEN_DESKTOP
+          //  | SDL_WINDOW_RESIZABLE
+          //  | SDL_WINDOW_FULLSCREEN_DESKTOP
         );
 
       if (!sdl_window) {
