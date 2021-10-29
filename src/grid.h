@@ -65,11 +65,11 @@ class Grid {
       int cols = MaxColumns();
       int rows = MaxRows();
 
-      if (from < 0) {
+      if (from <= 0) {
         from = rows + from;
       }
 
-      if (to < 0) {
+      if (to <= 0) {
         to = rows + to;
       }
 

@@ -79,8 +79,8 @@ int main(int argc, char* argv[]) {
   printf("main()::window.grid.MaxColumns() = %d\n", maxcols);
   printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
 
-  Grid hgrid = window.grid.Row(1);
-  Grid fgrid = window.grid.Row(-2);
+  Grid hgrid = window.grid.Rows(1,2);
+  Grid fgrid = window.grid.Rows(-1,0);
   Grid main  = window.grid.Rows(3, -3);
 
   Header header{hgrid, window, " HEADER BAR TITLE "};
