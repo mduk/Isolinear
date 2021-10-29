@@ -135,10 +135,8 @@ class Window {
           title.c_str(),
           position.x, position.y,
           size.x, size.y,
-          0 | SDL_WINDOW_OPENGL
+          0 | SDL_WINDOW_ALLOW_HIGHDPI
             | SDL_WINDOW_BORDERLESS
-          //  | SDL_WINDOW_RESIZABLE
-          //  | SDL_WINDOW_FULLSCREEN_DESKTOP
         );
 
       if (!sdl_window) {
