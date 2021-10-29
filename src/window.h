@@ -86,32 +86,25 @@ class Window {
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-      printf("Window::OnMouseButtonDown\n");
       Position2D cursor{event};
       for (auto* drawable : drawables) {
-        printf("        Checking, ");
         Region2D clickablearea{drawable->SdlRect()};
         clickablearea.Print();
         if (clickablearea.Encloses(cursor)) {
           drawable->OnMouseButtonDown(event);
-          printf("yup. Calling\n");
           continue;
         }
-        printf("nope.\n");
       }
     }
 
     void OnWindowResize(SDL_WindowEvent& event) {
-      printf("Window::OnWindowResize\n");
 
-      printf("        Querying Window Size\n");
       SDL_GetWindowSize(
           sdl_window,
           &size.x,
           &size.y
         );
 
-      printf("        Resizing Window Grid\n");
       grid.ResizeBounds(size);
     }
 

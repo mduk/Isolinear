@@ -28,9 +28,7 @@ class Header : public Region2D {
     }
 
     virtual void Colours(ColourScheme cs) {
-      printf("Header::Colours()\n");
       for (auto& button : buttons) {
-        printf("        Setting for button %s\n", button.label.c_str());
         button.Colours(cs);
       }
       Region2D::Colours(cs);
@@ -54,7 +52,6 @@ class Header : public Region2D {
     }
 
     virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) override {
-      printf("Header::OnMouseButtonDown()\n");
       Position2D cursor{e};
       for (auto& button : buttons) {
         if (button.Encloses(cursor)) {
