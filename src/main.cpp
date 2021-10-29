@@ -53,7 +53,8 @@ int main(int argc, char* argv[]) {
     SDL_GetDisplayBounds(i, &bounds);
     displays.push_back(bounds);
 
-    printf("%d,%d +(%d,%d) [%d]\n",
+    printf("%d: %d,%d +(%d,%d) [%d]\n",
+        i,
         bounds.w,
         bounds.h,
         bounds.x,
@@ -62,10 +63,10 @@ int main(int argc, char* argv[]) {
       );
   }
 
-  SDL_Rect display = displays.back();
+  SDL_Rect display = displays.front();
 
   Window window(
-      Position2D{0,0},
+      Position2D{display},
       Size2D{display},
       Size2D{10,10},
       Size2D{10,10}

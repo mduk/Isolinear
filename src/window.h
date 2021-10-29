@@ -125,9 +125,15 @@ class Window {
     Vector2D g_gutter;
 
     void InitSdl() {
+      printf("Window::InitSdl()\n");
+      printf("        Position: %d,%d\n", position.x, position.y);
+      printf("        Size: %d,%d\n", size.x, size.y);
+      printf("        Orientation: %s\n", (size.x >= size.y)
+                                          ? "landscape"
+                                          : "portrait");
       sdl_window = SDL_CreateWindow(
           title.c_str(),
-          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+          position.x, position.y,
           size.x, size.y,
           0 | SDL_WINDOW_OPENGL
             | SDL_WINDOW_BORDERLESS

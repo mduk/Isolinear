@@ -91,6 +91,7 @@ class Position2D : public Vector2D {
     Position2D(Vector2D c) : Vector2D{c} {}
     Position2D(int x, int y) : Vector2D(x, y) {};
     Position2D(SDL_MouseButtonEvent e) : Vector2D(e) {};
+    Position2D(SDL_Rect r): Vector2D(r.x, r.y) {};
 };
 
 class Size2D : public Vector2D {
