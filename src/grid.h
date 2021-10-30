@@ -70,11 +70,12 @@ class Grid {
       return CalculateGridRegion(col, row, col, row);
     }
 
-    Region2D CalculateGridRegion(int near_col, int near_row, int  far_col, int  far_row) const {
+    Region2D CalculateGridRegion(int near_col, int near_row, int far_col, int far_row) const {
+      Position2D origin = bounds.Origin();
       Size2D cell_size = CellSize();
       return Region2D{
-        /* x */ bounds.Origin().x + (cell_size.x * (near_col - 1)),
-        /* y */ bounds.Origin().y + (cell_size.y * (near_row - 1)),
+        /* x */ origin.x + (cell_size.x * (near_col - 1)),
+        /* y */ origin.y + (cell_size.y * (near_row - 1)),
         /* w */ cell_size.x * ((far_col - near_col) + 1) - gutter.x,
         /* h */ cell_size.y * ((far_row - near_row) + 1) - gutter.y
       };
