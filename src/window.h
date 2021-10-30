@@ -27,21 +27,15 @@ class Window {
     Grid grid;
     SDL_Renderer* sdl_renderer;
 
-    Window(
-        Position2D p,
-        Size2D s,
-        Vector2D _gutter
-    ) :
-      position{p},
-      size{s},
-      g_gutter{_gutter}
+    Window(Position2D p, Size2D s)
+      : position{p}, size{s}
     {
       InitSdl();
 
       grid = Grid{
           Region2D{size},
           button_font.Height(), // Row height
-          g_gutter
+          Vector2D(10,10)
         };
     };
 
@@ -115,8 +109,6 @@ class Window {
 
     const Font header_font{ FONT, 96, 0xff0099ff };
     const Font button_font{ FONT, 44, 0xff000000 };
-
-    Vector2D g_gutter;
 
     void InitSdl() {
       printf("Window::InitSdl()\n");
