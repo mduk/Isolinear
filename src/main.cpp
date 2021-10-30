@@ -18,6 +18,7 @@
 #include "shapes.h"
 #include "elbo.h"
 #include "header.h"
+#include "sweep.h"
 
 using namespace std;
 
@@ -86,11 +87,20 @@ int main(int argc, char* argv[]) {
   Header header{hgrid, window, " HEADER BAR TITLE "};
          header.AddButton("04-8854");
          header.AddButton("04-5861");
-  Header footer{fgrid, window, " FOOTER BAR TITLE "};
-
-
+         header.AddButton("04-8854");
+         header.AddButton("04-5861");
+         header.AddButton("04-8854");
+         header.AddButton("04-8854");
+         header.AddButton("04-5861");
+         header.AddButton("04-5861");
   window.Add(&header);
+
+  Header footer{fgrid, window};
   window.Add(&footer);
+
+  Grid sweepgrid = window.grid.SubGrid(1,3, 4,5);
+  Sweep sweep(window, sweepgrid);
+  window.Add(&sweep);
 
   window.Colours(blue_alert_colours);
 

@@ -135,7 +135,7 @@ class Window {
           size.x, size.y,
           0 | SDL_WINDOW_ALLOW_HIGHDPI
             | SDL_WINDOW_FULLSCREEN_DESKTOP
-            | SDL_WINDOW_BORDERLESS
+            //| SDL_WINDOW_BORDERLESS
         );
 
       if (!sdl_window) {
