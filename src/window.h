@@ -30,12 +30,10 @@ class Window {
     Window(
         Position2D p,
         Size2D s,
-        Vector2D _margin,
         Vector2D _gutter
     ) :
       position{p},
       size{s},
-      g_margin{_margin},
       g_gutter{_gutter}
     {
       InitSdl();
@@ -43,7 +41,6 @@ class Window {
       grid = Grid{
           Region2D{size},
           button_font.Height(), // Row height
-          g_margin,
           g_gutter
         };
     };
@@ -119,7 +116,6 @@ class Window {
     const Font header_font{ FONT, 96, 0xff0099ff };
     const Font button_font{ FONT, 44, 0xff000000 };
 
-    Vector2D g_margin;
     Vector2D g_gutter;
 
     void InitSdl() {

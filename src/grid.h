@@ -18,12 +18,10 @@ class Grid {
     Grid(
         Region2D b,
         int rh,
-        Vector2D m,
         Vector2D g
       ) :
         bounds{b},
         row_height{rh},
-        margin{m},
         gutter{g}
     {};
 
@@ -37,7 +35,6 @@ class Grid {
               far_col, far_row
             ),
           row_height,
-          Vector2D{0,0},
           gutter
         };
     }
@@ -56,7 +53,6 @@ class Grid {
               cols, row
             ),
           row_height,
-          Vector2D{0,0},
           gutter
         };
     }
@@ -79,7 +75,6 @@ class Grid {
               cols, to+1
             ),
           row_height,
-          Vector2D{0,0},
           gutter
         };
     }
@@ -98,7 +93,6 @@ class Grid {
               col, rows
             ),
           row_height,
-          Vector2D{0,0},
           gutter
         };
     }
@@ -120,12 +114,10 @@ class Grid {
       Size2D s = CellSize();
 
       x = bounds.Origin().x
-        + margin.x
         + (s.x * (near_col - 1))
         ;
 
       y = bounds.Origin().y
-        + margin.y
         + row_height * (near_row - 1)
         ;
 
@@ -204,6 +196,5 @@ class Grid {
   protected:
     int row_height{100};
     Vector2D gutter{50, 50};
-    Vector2D margin{0,0};
 };
 

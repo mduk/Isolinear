@@ -69,7 +69,6 @@ int main(int argc, char* argv[]) {
   Window window(
       Position2D{display},
       Size2D{display},
-      Size2D{10,10},
       Size2D{10,10}
     );
 
