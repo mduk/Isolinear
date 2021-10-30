@@ -72,25 +72,19 @@ int main(int argc, char* argv[]) {
     );
 
 
-  int maxcols = window.grid.MaxColumns(),
-      maxrows = window.grid.MaxRows();
-
-  printf("main()::window.grid.MaxColumns() = %d\n", maxcols);
-  printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
-
   Grid hgrid = window.grid.Rows( 1,  2);
   Grid main  = window.grid.Rows( 3, -3);
   Grid fgrid = window.grid.Rows(-1,  0);
 
   Header header{hgrid, window, " HEADER BAR TITLE "};
-         header.AddButton("04-8854");
+         header.AddButton("01-8854");
+         header.AddButton("02-5861");
+         header.AddButton("03-8854");
          header.AddButton("04-5861");
-         header.AddButton("04-8854");
-         header.AddButton("04-5861");
-         header.AddButton("04-8854");
-         header.AddButton("04-8854");
-         header.AddButton("04-5861");
-         header.AddButton("04-5861");
+         header.AddButton("05-8854");
+         header.AddButton("06-8854");
+         header.AddButton("07-5861");
+         header.AddButton("08-5861");
   window.Add(&header);
 
   Header footer{fgrid, window};
@@ -109,17 +103,6 @@ int main(int argc, char* argv[]) {
 
   printf("LOOP\n");
   while (running) {
-
-    int newmaxcols = window.grid.MaxColumns();
-    int newmaxrows = window.grid.MaxRows();
-
-    if (newmaxcols != maxcols || newmaxrows != maxrows) {
-      maxcols = newmaxcols;
-      maxrows = newmaxrows;
-
-      printf("main()::window.grid.MaxColumns() = %d\n", maxcols);
-      printf("main()::window.grid.MaxRows()    = %d\n", maxrows);
-    }
 
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
     SDL_RenderClear(window.sdl_renderer);

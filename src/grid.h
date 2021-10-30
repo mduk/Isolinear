@@ -10,7 +10,6 @@
 
 class Grid {
   public:
-
     Grid() {}
     Grid(Size2D s) : bounds{Position2D{0,0}, s} {};
     Grid(Region2D b) : bounds{b} {};
@@ -43,100 +42,48 @@ class Grid {
       int cols = MaxColumns();
       int rows = MaxRows();
 
-      if (row < 0) {
-        row = rows + row + 1;
-      }
+      row = (row > 0) ? row : rows + row;
 
-      return Grid{
-          CalculateGridRegion(
-              1, row,
-              cols, row
-            ),
-          row_height,
-          gutter
-        };
+      return SubGrid(1, row, cols, row);
     }
 
     Grid Rows(int from, int to) const {
       int cols = MaxColumns();
       int rows = MaxRows();
 
-      if (from <= 0) {
-        from = rows + from;
-      }
+      from = (from > 0) ? from : rows + from;
+        to = (  to > 0) ?   to : rows +   to;
 
-      if (to <= 0) {
-        to = rows + to;
-      }
-
-      return Grid{
-          CalculateGridRegion(
-              1, from,
-              cols, to+1
-            ),
-          row_height,
-          gutter
-        };
+      return SubGrid(1, from, cols, to);
     }
 
     Grid Column(int col) const {
       int cols = MaxColumns();
       int rows = MaxRows();
 
-      if (col < 0) {
-        col = cols + col;
-      }
+      col = (col > 0) ? col : cols + col;
 
-      return Grid{
-          CalculateGridRegion(
-              col, 1,
-              col, rows
-            ),
-          row_height,
-          gutter
-        };
+      return SubGrid(col, 1, col, rows);
     }
 
-    Region2D CalculateGridRegion(
-      int col, int row
-    ) const {
-      return CalculateGridRegion(
-          col, row, col, row
-        );
+    Region2D Cell(int col, int row) const {
+      return CalculateGridRegion(col, row, col, row);
     }
 
-    Region2D CalculateGridRegion(
-      int near_col, int near_row,
-      int  far_col, int  far_row
-    ) const {
-      int x, y, w, h;
-
+    Region2D CalculateGridRegion(int near_col, int near_row, int  far_col, int  far_row) const {
       Size2D s = CellSize();
-
-      x = bounds.Origin().x
-        + (s.x * (near_col - 1))
-        ;
-
-      y = bounds.Origin().y
-        + row_height * (near_row - 1)
-        ;
-
-      w = s.x * ((far_col - near_col) + 1)
-        - gutter.x
-        ;
-
-      h = row_height * ((far_row - near_row) + 1)
-        - gutter.y
-        ;
-
-      return Region2D{ x, y, w, h };
+      return Region2D{
+        /* x */ bounds.Origin().x + (s.x * (near_col - 1)),
+        /* y */ bounds.Origin().y + row_height * (near_row - 1),
+        /* w */ s.x * ((far_col - near_col) + 1) - gutter.x,
+        /* h */ row_height * ((far_row - near_row) + 1) - gutter.y
+      };
     }
 
     void DrawCells(SDL_Renderer* renderer) const {
       for (int i=1; i<=MaxColumns(); i++) {
         for (int j=1; j<=MaxRows(); j++) {
-          CalculateGridRegion(i, j)
-            .Fill(renderer, 0x33ffffff);
+          Cell(i, j).Fill(renderer, 0x33ffffff);
         }
       }
     }
@@ -173,9 +120,7 @@ class Grid {
 
     int MaxRows() const {
       int max_row = PositionRowIndex(bounds.Far());
-      Region2D proposed = CalculateGridRegion(
-          1, max_row
-        );
+      Region2D proposed = CalculateGridRegion(1, max_row);
 
       if (bounds.Encloses(proposed)) {
         return max_row;
