@@ -118,14 +118,11 @@ int main(int argc, char* argv[]) {
 
         case SDL_KEYDOWN: {
           switch (e.key.keysym.sym) {
-            case SDLK_ESCAPE:
-              running = false;
-              break;
-
-            case 'r': window.Colours(red_alert_colours); break;
-            case 'y': window.Colours(yellow_alert_colours); break;
-            case 'b': window.Colours(blue_alert_colours); break;
-            case 'g': drawgrid = !drawgrid; break;
+            case SDLK_ESCAPE: running = false; break;
+            case         'r': window.Colours(red_alert_colours); break;
+            case         'y': window.Colours(yellow_alert_colours); break;
+            case         'b': window.Colours(blue_alert_colours); break;
+            case         'g': drawgrid = !drawgrid; break;
           }
           break;
         }
