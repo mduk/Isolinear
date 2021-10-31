@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
 
     if (drawgrid) {
-      window.grid.DrawCells(window.sdl_renderer);
+      window.grid.Draw(window.sdl_renderer);
     }
 
     SDL_Event e;
