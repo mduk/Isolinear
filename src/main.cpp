@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
           std::stringstream ss;
           ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
 
-          window.SetTitle(ss.str());
+          window.Title(ss.str());
           break;
         }
 

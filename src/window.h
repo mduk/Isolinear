@@ -54,7 +54,7 @@ class Window {
       }
     }
 
-    void SetTitle(std::string newtitle) {
+    void Title(std::string newtitle) {
       SDL_SetWindowTitle(sdl_window, newtitle.c_str());
     }
 
