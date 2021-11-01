@@ -5,6 +5,7 @@
 
 #include "geometry.h"
 #include "window.h"
+#include "button.h"
 
 class Header : public Region2D {
   protected:
@@ -99,7 +100,7 @@ class Header : public Region2D {
       grid.CalculateGridRegion(
           x+1+(buttons.size()*button_width), y,
                                       col-1, y+1
-        ).Fill(renderer, Colours().dark);
+        ).Fill(renderer, Colours().frame);
 
       for (auto const& button : buttons) {
         button.Draw(renderer);

@@ -77,15 +77,15 @@ int main(int argc, char* argv[]) {
   Grid fgrid = window.grid.Rows(-1,  0);
 
   Header header{hgrid, window, " HEADER BAR TITLE "};
-         header.AddButton("01-8854");
-         header.AddButton("02-5861");
-         header.AddButton("03-8854");
-         header.AddButton("04-5861");
-         header.AddButton("05-8854");
-         header.AddButton("06-8854");
   window.Add(&header);
 
-  Header footer{fgrid, window};
+  Header footer{fgrid, window, " VIEW OPTIONS "};
+  footer.AddButton("01-8854");
+  footer.AddButton("02-5861");
+  footer.AddButton("03-8854");
+  footer.AddButton("04-5861");
+  footer.AddButton("05-8854");
+  footer.AddButton("06-8854");
   window.Add(&footer);
 
   Vector2D sweepsize{5,3};
@@ -97,6 +97,16 @@ int main(int argc, char* argv[]) {
       1, sweepsize.y+1, sweepsize.x-1, sweepsize.y+2
     ), window.Colours(), "85-9436"};
   window.Add(&button);
+
+  Button buttona{window, window.grid.CalculateGridRegion(
+      1, sweepsize.y+3, 2, sweepsize.y+4
+    ), window.Colours(), "85-9436"};
+  window.Add(&buttona);
+
+  Button buttonb{window, window.grid.CalculateGridRegion(
+      3, sweepsize.y+3, 4, sweepsize.y+4
+    ), window.Colours(), "85-9436"};
+  window.Add(&buttonb);
 
   window.Colours(blue_alert_colours);
 
