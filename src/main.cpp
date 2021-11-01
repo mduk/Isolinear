@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
       );
   }
 
-  SDL_Rect display = displays.front();
+  SDL_Rect display = displays.back();
 
   Window window(
       Position2D{display},
@@ -83,16 +83,20 @@ int main(int argc, char* argv[]) {
          header.AddButton("04-5861");
          header.AddButton("05-8854");
          header.AddButton("06-8854");
-         header.AddButton("07-5861");
-         header.AddButton("08-5861");
   window.Add(&header);
 
   Header footer{fgrid, window};
   window.Add(&footer);
 
-  Grid sweepgrid = window.grid.SubGrid(1,3, 4,5);
-  Sweep sweep(window, sweepgrid);
+  Vector2D sweepsize{5,3};
+  Grid sweepgrid = window.grid.SubGrid(1,1, sweepsize.x,sweepsize.y);
+  Sweep sweep(window, sweepgrid, sweepsize, Vector2D{4,2}, 90, 50);
   window.Add(&sweep);
+
+  Button button{window, window.grid.CalculateGridRegion(
+      1, sweepsize.y+1, sweepsize.x-1, sweepsize.y+2
+    ), window.Colours(), "85-9436"};
+  window.Add(&button);
 
   window.Colours(blue_alert_colours);
 
