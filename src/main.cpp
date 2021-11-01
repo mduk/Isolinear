@@ -72,41 +72,78 @@ int main(int argc, char* argv[]) {
     );
 
 
-  Grid hgrid = window.grid.Rows( 1,  2);
-  Grid main  = window.grid.Rows( 3, -3);
-  Grid fgrid = window.grid.Rows(-1,  0);
+  Header header1{window.grid.Rows(1,2), window};
+  window.Add(&header1);
 
-  Header header{hgrid, window, " HEADER BAR TITLE "};
-  window.Add(&header);
+  Header header2{window.grid.Rows(3,4), window};
+  header2.AddButton("01-8854");
+  window.Add(&header2);
 
-  Header footer{fgrid, window, " VIEW OPTIONS "};
-  footer.AddButton("01-8854");
-  footer.AddButton("02-5861");
-  footer.AddButton("03-8854");
-  footer.AddButton("04-5861");
-  footer.AddButton("05-8854");
-  footer.AddButton("06-8854");
-  window.Add(&footer);
+  Header header3{window.grid.Rows(5,6), window};
+  header3.AddButton("01-8854");
+  header3.AddButton("02-5861");
+  window.Add(&header3);
 
-  Vector2D sweepsize{5,3};
-  Grid sweepgrid = window.grid.SubGrid(1,1, sweepsize.x,sweepsize.y);
-  Sweep sweep(window, sweepgrid, sweepsize, Vector2D{4,2}, 90, 50);
-  window.Add(&sweep);
+  Header header4{window.grid.Rows(7,8), window};
+  header4.AddButton("01-8854");
+  header4.AddButton("02-5861");
+  header4.AddButton("03-8854");
+  window.Add(&header4);
 
-  Button button{window, window.grid.CalculateGridRegion(
-      1, sweepsize.y+1, sweepsize.x-1, sweepsize.y+2
-    ), window.Colours(), "85-9436"};
-  window.Add(&button);
+  Header header5{window.grid.Rows(9,10), window, " HEADER TITLE "};
+  window.Add(&header5);
 
-  Button buttona{window, window.grid.CalculateGridRegion(
-      1, sweepsize.y+3, 2, sweepsize.y+4
-    ), window.Colours(), "85-9436"};
-  window.Add(&buttona);
+  Header header6{window.grid.Rows(11,12), window, " HEADER TITLE ONE "};
+  header6.AddButton("01-8854");
+  window.Add(&header6);
 
-  Button buttonb{window, window.grid.CalculateGridRegion(
-      3, sweepsize.y+3, 4, sweepsize.y+4
-    ), window.Colours(), "85-9436"};
-  window.Add(&buttonb);
+  Header header7{window.grid.Rows(13,14), window, " HEADER TITLE ONE TWO"};
+  header7.AddButton("01-8854");
+  header7.AddButton("02-5861");
+  window.Add(&header7);
+
+  Header header8{window.grid.Rows(15,16), window, " HEADER TITLE ONE TWO THREE"};
+  header8.AddButton("01-8854");
+  header8.AddButton("02-5861");
+  header8.AddButton("03-8854");
+  window.Add(&header8);
+
+  Vector2D sweep1size{3,2};
+  Sweep sweep1{window,
+      window.grid.SubGrid(1,17, sweep1size.x,17+sweep1size.y),
+      sweep1size,
+      Vector2D{2,1},
+      90,
+      50
+    };
+  window.Add(&sweep1);
+
+  Vector2D sweep2size{3,2};
+  Sweep sweep2{window,
+      window.grid.SubGrid(
+          1+sweep1size.x,17,
+          sweep1size.x+sweep2size.x,17+sweep2size.y
+        ),
+      sweep2size,
+      Vector2D{2,2},
+      90,
+      50
+    };
+  window.Add(&sweep2);
+
+  Vector2D sweep3size{5,2};
+  Sweep sweep3{window,
+      window.grid.SubGrid(
+          1+sweep1size.x+sweep2size.x,17,
+          sweep1size.x+sweep2size.x+sweep3size.x,17+sweep3size.y
+        ),
+      sweep3size,
+      Vector2D{4,1},
+      90,
+      50
+    };
+  window.Add(&sweep3);
+
 
   window.Colours(blue_alert_colours);
 

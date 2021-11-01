@@ -69,45 +69,56 @@ class Header : public Region2D {
     void Draw(SDL_Renderer* renderer) const override {
       int x = 1,
           y = 1,
-          w = grid.MaxColumns() - 1,
-          h = grid.MaxRows() - 2;
+          w = grid.MaxColumns() - 1
+        ;
 
-      Region2D  left_cap = grid.CalculateGridRegion(  x  , y,   x  , y+1);
-      Region2D right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
-      Region2D       bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
+      int westcap_width = 1,
+          eastcap_width = 1
+        ;
 
-      left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
-      right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
+      int filler_start = westcap_width + 1;
+      int filler_end = w;
 
-      if (text.length() == 0) {
-        bar.Fill(renderer, Colours().dark);
-        return;
+      Region2D   left_cap = grid.CalculateGridRegion(  x  , y,   x  , y+1);
+      Region2D  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
+      Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
+
+        left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
+       right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
+      centre_bar.Fill    (renderer, Colours().background);
+
+      if (buttons.size() > 0) {
+        for (auto const& button : buttons) {
+          button.Draw(renderer);
+          filler_start += button_width;
+        }
       }
 
-      RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
-      Region2D headerregion = bar.Align(Compass::EAST, headertext.Size());
+      if (text.length() > 0) {
+        RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
+        Region2D headerregion = centre_bar.Align(Compass::EAST, headertext.Size());
 
-      int col = grid.PositionColumnIndex(headerregion.Near());
-      Region2D cell = grid.CalculateGridRegion(col, y, col, y+1);
-      Region2D fillerregion{
-          cell.Origin(),
-          Position2D{
-              headerregion.SouthWestX(),
-              cell.FarY()
-            }
-        };
+        int near = grid.PositionColumnIndex(headerregion.Near());
+        int  far = grid.PositionColumnIndex(headerregion.Far());
+        filler_end -= (far - near) + 1;
+
+        int col = grid.PositionColumnIndex(headerregion.Near());
+        Region2D cell = grid.CalculateGridRegion(col, y, col, y+1);
+        Region2D fillerregion{
+            cell.Origin(),
+            Position2D{
+                headerregion.SouthWestX(),
+                cell.FarY()
+              }
+          };
+        fillerregion.Fill(renderer, Colours().light);
+
+        headertext.Draw(renderer, Compass::EAST, centre_bar);
+      }
 
       grid.CalculateGridRegion(
-          x+1+(buttons.size()*button_width), y,
-                                      col-1, y+1
+          filler_start, y,
+          filler_end, y+1
         ).Fill(renderer, Colours().frame);
-
-      for (auto const& button : buttons) {
-        button.Draw(renderer);
-      }
-
-      fillerregion.Fill(renderer, Colours().light);
-
-      headertext.Draw(renderer, Compass::EAST, bar);
     }
 };
