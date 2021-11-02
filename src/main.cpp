@@ -115,6 +115,9 @@ int main(int argc, char* argv[]) {
          int outer_radius{90};
          int inner_radius{50};
 
+         int max_cols = 10;
+         int max_rows = 10;
+
     NorthWestSweep northwestsweep{window,
         window.grid.SubGrid(
             1,
@@ -127,9 +130,9 @@ int main(int argc, char* argv[]) {
 
     NorthEastSweep northeastsweep{window,
         window.grid.SubGrid(
-            window.grid.MaxColumns() - sweepsize.x +1,
+            max_cols - sweepsize.x +1,
             1,
-            window.grid.MaxColumns(),
+            max_cols,
             sweepsize.y
           ),
         sweepsize, ports, outer_radius, inner_radius
@@ -137,10 +140,10 @@ int main(int argc, char* argv[]) {
 
     SouthEastSweep southeastsweep{window,
         window.grid.SubGrid(
-            window.grid.MaxColumns()-sweepsize.x+1,
-            window.grid.MaxRows()-sweepsize.y+1,
-            window.grid.MaxColumns(),
-            window.grid.MaxRows()
+            max_cols-sweepsize.x+1,
+            max_rows-sweepsize.y+1,
+            max_cols,
+            max_rows
           ),
         sweepsize, ports, outer_radius, inner_radius
       };
@@ -148,9 +151,9 @@ int main(int argc, char* argv[]) {
     SouthWestSweep southwestsweep{window,
         window.grid.SubGrid(
             1,
-            window.grid.MaxRows() - sweepsize.y+1,
+            max_rows - sweepsize.y+1,
             sweepsize.x,
-            window.grid.MaxRows()
+            max_rows
           ),
         sweepsize, ports, outer_radius, inner_radius
       };
