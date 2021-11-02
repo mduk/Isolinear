@@ -97,12 +97,12 @@ int main(int argc, char* argv[]) {
   header6.AddButton("01-8854");
   window.Add(&header6);
 
-  Header header7{window.grid.Rows(13,14), window, " HEADER TITLE ONE TWO"};
+  Header header7{window.grid.Rows(13,14), window, " HEADER TITLE ONE TWO "};
   header7.AddButton("01-8854");
   header7.AddButton("02-5861");
   window.Add(&header7);
 
-  Header header8{window.grid.Rows(15,16), window, " HEADER TITLE ONE TWO THREE"};
+  Header header8{window.grid.Rows(15,16), window, " HEADER TITLE ONE TWO THREE "};
   header8.AddButton("01-8854");
   header8.AddButton("02-5861");
   header8.AddButton("03-8854");
