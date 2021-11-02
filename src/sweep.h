@@ -45,21 +45,37 @@ class Sweep : public Drawable {
       region.QuadrantArc(renderer, alignment, Colours().frame);
     }
 
-    void Draw(SDL_Renderer* renderer) const override {
-      Region2D hport = grid.CalculateGridRegion(1, 1, 1, ports.y);
-      Region2D vport = grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
+    Region2D HorizontalPort() const {
+      return grid.CalculateGridRegion(1, 1, 1, ports.y);
+    }
 
-      Position2D hportn = hport.NorthWest();
+    Region2D VerticalPort() const {
+      return grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
+    }
+
+    Region2D InnerCornerRegion() const {
+      Region2D hport = HorizontalPort();
+      Region2D vport = VerticalPort();
+
       Position2D hports = hport.SouthWest();
       Position2D vportw = vport.SouthWest();
-      Position2D vporte = vport.SouthEast();
 
       Size2D icorner_size{
           vportw.x - hports.x,
           vportw.y - hports.y
         };
 
-      Region2D icorner = grid.bounds.Align(opposite, icorner_size);
+      return grid.bounds.Align(opposite, icorner_size);
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      Region2D hport = HorizontalPort();
+      Region2D vport = VerticalPort();
+
+      Position2D hports = hport.SouthWest();
+      Position2D vportw = vport.SouthWest();
+
+      Region2D icorner = InnerCornerRegion();
 
       Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
