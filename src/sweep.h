@@ -8,7 +8,7 @@
 
 #include "geometry.h"
 
-class Sweep : public Region2D {
+class NorthWestSweep : public Region2D {
   protected:
     Window& window;
     Grid grid;
@@ -18,7 +18,7 @@ class Sweep : public Region2D {
     int inner_radius;
 
   public:
-    Sweep(Window& w, Grid g, Vector2D s, Vector2D p, int oradius, int iradius)
+    NorthWestSweep(Window& w, Grid g, Vector2D s, Vector2D p, int oradius, int iradius)
       : window{w}, grid{g}, size{s}, ports{p}, outer_radius{oradius}, inner_radius{iradius}
     {
       printf("Sweep Grid: %d,%d\n", grid.MaxColumns(), grid.MaxRows());

@@ -70,7 +70,7 @@ class Elbo : public Drawable {
       return SweepRegion().H() / 2;
     }
 
-    void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
+    void OnMouseButtonDown(SDL_MouseButtonEvent& event) override {
       Position2D cursor{event};
 
       auto const container_region = ContainerRegion();
@@ -125,7 +125,7 @@ class Elbo : public Drawable {
 
     };
 
-    SDL_Rect SdlRect() const {
+    SDL_Rect SdlRect() const override {
       return grid.bounds.SdlRect();
     }
 
@@ -138,7 +138,7 @@ class Elbo : public Drawable {
         );
     }
 
-    virtual void Draw(SDL_Renderer* renderer) const {
+    virtual void Draw(SDL_Renderer* renderer) const override {
       //DrawSweep(renderer);
       SweepRegion().Draw(renderer);
       //DrawReach(renderer);
