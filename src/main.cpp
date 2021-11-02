@@ -72,97 +72,96 @@ int main(int argc, char* argv[]) {
     );
 
 
-  if (false) {
-    Header header1{window.grid.Rows(1,2), window};
-    window.Add(&header1);
+  Header header1{window.grid.Rows(1,2), window};
+  window.Add(&header1);
 
-    Header header2{window.grid.Rows(3,4), window};
-    header2.AddButton("01-8854");
-    window.Add(&header2);
+  Header header2{window.grid.Rows(3,4), window};
+  header2.AddButton("01-8854");
+  window.Add(&header2);
 
-    Header header3{window.grid.Rows(5,6), window};
-    header3.AddButton("01-8854");
-    header3.AddButton("02-5861");
-    window.Add(&header3);
+  Header header3{window.grid.Rows(5,6), window};
+  header3.AddButton("01-8854");
+  header3.AddButton("02-5861");
+  window.Add(&header3);
 
-    Header header4{window.grid.Rows(7,8), window};
-    header4.AddButton("01-8854");
-    header4.AddButton("02-5861");
-    header4.AddButton("03-8854");
-    window.Add(&header4);
+  Header header4{window.grid.Rows(7,8), window};
+  header4.AddButton("01-8854");
+  header4.AddButton("02-5861");
+  header4.AddButton("03-8854");
+  window.Add(&header4);
 
-    Header header5{window.grid.Rows(9,10), window, " HEADER TITLE "};
-    window.Add(&header5);
+  Header header5{window.grid.Rows(9,10), window, " HEADER TITLE "};
+  window.Add(&header5);
 
-    Header header6{window.grid.Rows(11,12), window, " HEADER TITLE ONE "};
-    header6.AddButton("01-8854");
-    window.Add(&header6);
+  Header header6{window.grid.Rows(11,12), window, " HEADER TITLE ONE "};
+  header6.AddButton("01-8854");
+  window.Add(&header6);
 
-    Header header7{window.grid.Rows(13,14), window, " HEADER TITLE ONE TWO"};
-    header7.AddButton("01-8854");
-    header7.AddButton("02-5861");
-    window.Add(&header7);
+  Header header7{window.grid.Rows(13,14), window, " HEADER TITLE ONE TWO"};
+  header7.AddButton("01-8854");
+  header7.AddButton("02-5861");
+  window.Add(&header7);
 
-    Header header8{window.grid.Rows(15,16), window, " HEADER TITLE ONE TWO THREE"};
-    header8.AddButton("01-8854");
-    header8.AddButton("02-5861");
-    header8.AddButton("03-8854");
-    window.Add(&header8);
-  }
-  else {
-    Vector2D sweepsize{4,3};
-    Vector2D ports{3,1};
-         int outer_radius{90};
-         int inner_radius{50};
+  Header header8{window.grid.Rows(15,16), window, " HEADER TITLE ONE TWO THREE"};
+  header8.AddButton("01-8854");
+  header8.AddButton("02-5861");
+  header8.AddButton("03-8854");
+  window.Add(&header8);
 
-         int max_cols = 10;
-         int max_rows = 10;
+  Vector2D sweepsize{4,3};
+  Vector2D ports{3,1};
+       int outer_radius{90};
+       int inner_radius{50};
 
-    NorthWestSweep northwestsweep{window,
-        window.grid.SubGrid(
-            1,
-            1,
-            sweepsize.x,
-            sweepsize.y
-          ),
-        sweepsize, ports, outer_radius, inner_radius
-      };
+       int max_cols = 21;
+       int max_rows = 8;
 
-    NorthEastSweep northeastsweep{window,
-        window.grid.SubGrid(
-            max_cols - sweepsize.x +1,
-            1,
-            max_cols,
-            sweepsize.y
-          ),
-        sweepsize, ports, outer_radius, inner_radius
-      };
+       int sweep_offset = 16;
 
-    SouthEastSweep southeastsweep{window,
-        window.grid.SubGrid(
-            max_cols-sweepsize.x+1,
-            max_rows-sweepsize.y+1,
-            max_cols,
-            max_rows
-          ),
-        sweepsize, ports, outer_radius, inner_radius
-      };
+  NorthWestSweep northwestsweep{window,
+      window.grid.SubGrid(
+          1,
+          1 + sweep_offset,
+          sweepsize.x,
+          sweepsize.y + sweep_offset
+        ),
+      sweepsize, ports, outer_radius, inner_radius
+    };
 
-    SouthWestSweep southwestsweep{window,
-        window.grid.SubGrid(
-            1,
-            max_rows - sweepsize.y+1,
-            sweepsize.x,
-            max_rows
-          ),
-        sweepsize, ports, outer_radius, inner_radius
-      };
+  NorthEastSweep northeastsweep{window,
+      window.grid.SubGrid(
+          max_cols - sweepsize.x +1,
+          1 + sweep_offset,
+          max_cols,
+          sweepsize.y + sweep_offset
+        ),
+      sweepsize, ports, outer_radius, inner_radius
+    };
 
-    window.Add(&northeastsweep);
-    window.Add(&southeastsweep);
-    window.Add(&southwestsweep);
-    window.Add(&northwestsweep);
-  }
+  SouthEastSweep southeastsweep{window,
+      window.grid.SubGrid(
+          max_cols-sweepsize.x+1,
+          max_rows-sweepsize.y+1 + sweep_offset,
+          max_cols,
+          max_rows + sweep_offset
+        ),
+      sweepsize, ports, outer_radius, inner_radius
+    };
+
+  SouthWestSweep southwestsweep{window,
+      window.grid.SubGrid(
+          1,
+          max_rows - sweepsize.y+1 + sweep_offset,
+          sweepsize.x,
+          max_rows + sweep_offset
+        ),
+      sweepsize, ports, outer_radius, inner_radius
+    };
+
+  window.Add(&northeastsweep);
+  window.Add(&southeastsweep);
+  window.Add(&southwestsweep);
+  window.Add(&northwestsweep);
 
 
   window.Colours(blue_alert_colours);
