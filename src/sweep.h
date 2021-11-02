@@ -36,40 +36,34 @@ class NorthEastSweep : public Sweep {
     {}
 
     void Draw(SDL_Renderer* renderer) const override {
-      Position2D near_corner = grid.bounds.Near();
-      Position2D  far_corner = grid.bounds.Far();
+      Compass alignment{NORTHEAST};
+      Compass opposite{SOUTHWEST};
 
-        Region2D hport  = grid.CalculateGridRegion(size.x, 1, size.x, ports.y);
-      Position2D hportn = hport.NorthEast();
-      Position2D hports = hport.SouthEast();
+      Region2D hport = grid.CalculateGridRegion(1, 1, 1, ports.y);
+      Region2D vport = grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
 
-        Region2D vport  = grid.CalculateGridRegion(1, size.y, ports.x, size.y);
+      Position2D hportn = hport.NorthWest();
+      Position2D hports = hport.SouthWest();
       Position2D vportw = vport.SouthWest();
       Position2D vporte = vport.SouthEast();
 
-      Region2D ocorner = grid.bounds.Align(Compass::NORTHWEST, Size2D{outer_radius});
-      Region2D icorner = grid.bounds.Align(Compass::SOUTHEAST, Size2D{
-          far_corner.x - vporte.x,
-          far_corner.y - hports.y
+      Region2D ocorner = grid.bounds.Align(alignment, Size2D{outer_radius});
+
+      Region2D icorner = grid.bounds.Align(opposite, Size2D{
+          vportw.x - hports.x,
+          vportw.y - hports.y
         });
 
-      Region2D iradius = icorner.Align(Compass::NORTHWEST, Size2D{inner_radius});
+      Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
       grid.bounds.Fill(renderer, Colours().frame);
 
       ocorner.Fill(renderer, Colours().background);
-      ocorner.QuadrantArc(renderer, Compass::NORTHWEST, Colours().frame);
+      ocorner.QuadrantArc(renderer, alignment, Colours().frame);
 
       icorner.Fill(renderer, Colours().background);
       iradius.Fill(renderer, Colours().frame);
-      iradius.QuadrantArc(renderer, Compass::NORTHWEST, Colours().background);
-
-      if (false) {
-        hportn.Draw(renderer);
-        hports.Draw(renderer);
-        vportw.Draw(renderer);
-        vporte.Draw(renderer);
-      }
+      iradius.QuadrantArc(renderer, alignment, Colours().background);
     }
 };
 
@@ -80,40 +74,34 @@ class SouthEastSweep : public Sweep {
     {}
 
     void Draw(SDL_Renderer* renderer) const override {
-      Position2D near_corner = grid.bounds.Near();
-      Position2D  far_corner = grid.bounds.Far();
+      Compass alignment{SOUTHEAST};
+      Compass opposite{NORTHWEST};
 
-        Region2D hport  = grid.CalculateGridRegion(size.x, 1, size.x, ports.y);
-      Position2D hportn = hport.NorthEast();
-      Position2D hports = hport.SouthEast();
+      Region2D hport = grid.CalculateGridRegion(1, 1, 1, ports.y);
+      Region2D vport = grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
 
-        Region2D vport  = grid.CalculateGridRegion(1, size.y, ports.x, size.y);
+      Position2D hportn = hport.NorthWest();
+      Position2D hports = hport.SouthWest();
       Position2D vportw = vport.SouthWest();
       Position2D vporte = vport.SouthEast();
 
-      Region2D ocorner = grid.bounds.Align(Compass::NORTHWEST, Size2D{outer_radius});
-      Region2D icorner = grid.bounds.Align(Compass::SOUTHEAST, Size2D{
-          far_corner.x - vporte.x,
-          far_corner.y - hports.y
+      Region2D ocorner = grid.bounds.Align(alignment, Size2D{outer_radius});
+
+      Region2D icorner = grid.bounds.Align(opposite, Size2D{
+          vportw.x - hports.x,
+          vportw.y - hports.y
         });
 
-      Region2D iradius = icorner.Align(Compass::NORTHWEST, Size2D{inner_radius});
+      Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
       grid.bounds.Fill(renderer, Colours().frame);
 
       ocorner.Fill(renderer, Colours().background);
-      ocorner.QuadrantArc(renderer, Compass::NORTHWEST, Colours().frame);
+      ocorner.QuadrantArc(renderer, alignment, Colours().frame);
 
       icorner.Fill(renderer, Colours().background);
       iradius.Fill(renderer, Colours().frame);
-      iradius.QuadrantArc(renderer, Compass::NORTHWEST, Colours().background);
-
-      if (false) {
-        hportn.Draw(renderer);
-        hports.Draw(renderer);
-        vportw.Draw(renderer);
-        vporte.Draw(renderer);
-      }
+      iradius.QuadrantArc(renderer, alignment, Colours().background);
     }
 };
 
@@ -124,40 +112,34 @@ class SouthWestSweep : public Sweep {
     {}
 
     void Draw(SDL_Renderer* renderer) const override {
-      Position2D near_corner = grid.bounds.Near();
-      Position2D  far_corner = grid.bounds.Far();
+      Compass alignment{SOUTHWEST};
+      Compass opposite{NORTHEAST};
 
-        Region2D hport  = grid.CalculateGridRegion(size.x, 1, size.x, ports.y);
-      Position2D hportn = hport.NorthEast();
-      Position2D hports = hport.SouthEast();
+      Region2D hport = grid.CalculateGridRegion(1, 1, 1, ports.y);
+      Region2D vport = grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
 
-        Region2D vport  = grid.CalculateGridRegion(1, size.y, ports.x, size.y);
+      Position2D hportn = hport.NorthWest();
+      Position2D hports = hport.SouthWest();
       Position2D vportw = vport.SouthWest();
       Position2D vporte = vport.SouthEast();
 
-      Region2D ocorner = grid.bounds.Align(Compass::NORTHWEST, Size2D{outer_radius});
-      Region2D icorner = grid.bounds.Align(Compass::SOUTHEAST, Size2D{
-          far_corner.x - vporte.x,
-          far_corner.y - hports.y
+      Region2D ocorner = grid.bounds.Align(alignment, Size2D{outer_radius});
+
+      Region2D icorner = grid.bounds.Align(opposite, Size2D{
+          vportw.x - hports.x,
+          vportw.y - hports.y
         });
 
-      Region2D iradius = icorner.Align(Compass::NORTHWEST, Size2D{inner_radius});
+      Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
       grid.bounds.Fill(renderer, Colours().frame);
 
       ocorner.Fill(renderer, Colours().background);
-      ocorner.QuadrantArc(renderer, Compass::NORTHWEST, Colours().frame);
+      ocorner.QuadrantArc(renderer, alignment, Colours().frame);
 
       icorner.Fill(renderer, Colours().background);
       iradius.Fill(renderer, Colours().frame);
-      iradius.QuadrantArc(renderer, Compass::NORTHWEST, Colours().background);
-
-      if (false) {
-        hportn.Draw(renderer);
-        hports.Draw(renderer);
-        vportw.Draw(renderer);
-        vporte.Draw(renderer);
-      }
+      iradius.QuadrantArc(renderer, alignment, Colours().background);
     }
 };
 
@@ -168,39 +150,33 @@ class NorthWestSweep : public Sweep {
     {}
 
     void Draw(SDL_Renderer* renderer) const override {
-      Position2D near_corner = grid.bounds.Near();
-      Position2D  far_corner = grid.bounds.Far();
+      Compass alignment{NORTHWEST};
+      Compass opposite{SOUTHEAST};
 
-        Region2D hport  = grid.CalculateGridRegion(size.x, 1, size.x, ports.y);
-      Position2D hportn = hport.NorthEast();
-      Position2D hports = hport.SouthEast();
+      Region2D hport = grid.CalculateGridRegion(1, 1, 1, ports.y);
+      Region2D vport = grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
 
-        Region2D vport  = grid.CalculateGridRegion(1, size.y, ports.x, size.y);
+      Position2D hportn = hport.NorthWest();
+      Position2D hports = hport.SouthWest();
       Position2D vportw = vport.SouthWest();
       Position2D vporte = vport.SouthEast();
 
-      Region2D ocorner = grid.bounds.Align(Compass::NORTHWEST, Size2D{outer_radius});
-      Region2D icorner = grid.bounds.Align(Compass::SOUTHEAST, Size2D{
-          far_corner.x - vporte.x,
-          far_corner.y - hports.y
+      Region2D ocorner = grid.bounds.Align(alignment, Size2D{outer_radius});
+
+      Region2D icorner = grid.bounds.Align(opposite, Size2D{
+          vportw.x - hports.x,
+          vportw.y - hports.y
         });
 
-      Region2D iradius = icorner.Align(Compass::NORTHWEST, Size2D{inner_radius});
+      Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
       grid.bounds.Fill(renderer, Colours().frame);
 
       ocorner.Fill(renderer, Colours().background);
-      ocorner.QuadrantArc(renderer, Compass::NORTHWEST, Colours().frame);
+      ocorner.QuadrantArc(renderer, alignment, Colours().frame);
 
       icorner.Fill(renderer, Colours().background);
       iradius.Fill(renderer, Colours().frame);
-      iradius.QuadrantArc(renderer, Compass::NORTHWEST, Colours().background);
-
-      if (false) {
-        hportn.Draw(renderer);
-        hports.Draw(renderer);
-        vportw.Draw(renderer);
-        vporte.Draw(renderer);
-      }
+      iradius.QuadrantArc(renderer, alignment, Colours().background);
     }
 };
