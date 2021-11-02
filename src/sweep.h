@@ -35,6 +35,16 @@ class Sweep : public Drawable {
       return grid.bounds.SdlRect();
     }
 
+    Region2D OuterRadiusRegion() const {
+      return grid.bounds.Align(alignment, Size2D{outer_radius});
+    }
+
+    void DrawOuterRadius(SDL_Renderer* renderer) const {
+      Region2D region = OuterRadiusRegion();
+      region.Fill(renderer, Colours().background);
+      region.QuadrantArc(renderer, alignment, Colours().frame);
+    }
+
     void Draw(SDL_Renderer* renderer) const override {
       Region2D hport = grid.CalculateGridRegion(1, 1, 1, ports.y);
       Region2D vport = grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
@@ -43,8 +53,6 @@ class Sweep : public Drawable {
       Position2D hports = hport.SouthWest();
       Position2D vportw = vport.SouthWest();
       Position2D vporte = vport.SouthEast();
-
-      Region2D ocorner = grid.bounds.Align(alignment, Size2D{outer_radius});
 
       Size2D icorner_size{
           vportw.x - hports.x,
@@ -57,12 +65,11 @@ class Sweep : public Drawable {
 
       grid.bounds.Fill(renderer, Colours().frame);
 
-      ocorner.Fill(renderer, Colours().background);
-      ocorner.QuadrantArc(renderer, alignment, Colours().frame);
-
       icorner.Fill(renderer, Colours().background);
       iradius.Fill(renderer, Colours().frame);
       iradius.QuadrantArc(renderer, alignment, Colours().background);
+
+      DrawOuterRadius(renderer);
 
        hport.Draw(renderer);
        vport.Draw(renderer);
