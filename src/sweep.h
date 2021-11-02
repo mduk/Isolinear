@@ -46,10 +46,12 @@ class Sweep : public Drawable {
 
       Region2D ocorner = grid.bounds.Align(alignment, Size2D{outer_radius});
 
-      Region2D icorner = grid.bounds.Align(opposite, Size2D{
+      Size2D icorner_size{
           vportw.x - hports.x,
           vportw.y - hports.y
-        });
+        };
+
+      Region2D icorner = grid.bounds.Align(opposite, icorner_size);
 
       Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
@@ -61,6 +63,13 @@ class Sweep : public Drawable {
       icorner.Fill(renderer, Colours().background);
       iradius.Fill(renderer, Colours().frame);
       iradius.QuadrantArc(renderer, alignment, Colours().background);
+
+       hport.Draw(renderer);
+       vport.Draw(renderer);
+      hports.Draw(renderer);
+      vportw.Draw(renderer);
+
+
     }
 };
 

@@ -9,15 +9,14 @@
 
 class Quad : public Drawable {
   public:
-    Quad(Region2D& r, uint32_t fc) :
-        fill_colour{fc},
+    Quad(Region2D& r) :
         region{r} {};
 
     void Draw(SDL_Renderer* renderer) const {
       boxColor(renderer,
           region.NearX(), region.NearY(),
           region.FarX(), region.FarY(),
-          fill_colour
+          Colours().frame
         );
     }
 
@@ -27,5 +26,4 @@ class Quad : public Drawable {
 
   protected:
     Region2D& region;
-    uint32_t fill_colour;
 };
