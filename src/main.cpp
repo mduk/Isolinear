@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
          int outer_radius{90};
          int inner_radius{50};
 
-    NorthWestSweep northwestsweep{window,
+    NorthEastSweep northeastsweep{window,
         window.grid.SubGrid(
             1,
             1,
@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
         sweepsize, ports, outer_radius, inner_radius
       };
 
-    NorthWestSweep northeastsweep{window,
+    SouthEastSweep southeastsweep{window,
         window.grid.SubGrid(
             window.grid.MaxColumns() - sweepsize.x + 1,
             1,
@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
         sweepsize, ports, outer_radius, inner_radius
       };
 
-    NorthWestSweep southeastsweep{window,
+    SouthWestSweep southwestsweep{window,
         window.grid.SubGrid(
             window.grid.MaxColumns()-sweepsize.x+1,
             window.grid.MaxRows()-sweepsize.y+1,
@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
         sweepsize, ports, outer_radius, inner_radius
       };
 
-    NorthWestSweep southwestsweep{window,
+    NorthWestSweep northwestsweep{window,
         window.grid.SubGrid(
             1,
             window.grid.MaxRows() - sweepsize.y,
@@ -155,10 +155,10 @@ int main(int argc, char* argv[]) {
         sweepsize, ports, outer_radius, inner_radius
       };
 
-    window.Add(&northwestsweep);
     window.Add(&northeastsweep);
     window.Add(&southeastsweep);
     window.Add(&southwestsweep);
+    window.Add(&northwestsweep);
   }
 
 
@@ -194,7 +194,7 @@ int main(int argc, char* argv[]) {
           }
           break;
         }
-
+/*
         case SDL_MOUSEMOTION: {
           int x = e.motion.x,
               y = e.motion.y;
@@ -209,7 +209,7 @@ int main(int argc, char* argv[]) {
           window.Title(ss.str());
           break;
         }
-
+*/
         case SDL_MOUSEBUTTONDOWN: {
           window.OnMouseButtonDown(e.button);
           break;
