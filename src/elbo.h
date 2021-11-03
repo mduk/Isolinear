@@ -70,8 +70,8 @@ class Elbo : public Drawable {
       return SweepRegion().H() / 2;
     }
 
-    void OnMouseButtonDown(SDL_MouseButtonEvent& event) override {
-      Position2D cursor{event};
+    void OnPointerEvent(PointerEvent event) override {
+      Position2D cursor = event.Position();
 
       auto const container_region = ContainerRegion();
       if (container_region.Encloses(cursor)) {
@@ -89,7 +89,7 @@ class Elbo : public Drawable {
 
       for (auto& button : buttons) {
         if (button.bounds.Encloses(cursor)) {
-          button.OnMouseButtonDown(event);
+          button.OnPointerEvent(event);
           return;
         }
       }

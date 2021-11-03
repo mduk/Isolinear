@@ -13,15 +13,22 @@ class Drawable {
 
   public:
     virtual void Draw(SDL_Renderer*) const = 0;
+    virtual Region2D Bounds() const = 0;
 
-    virtual void OnMouseButtonDown(
-        SDL_MouseButtonEvent&
-      ) {};
+    virtual void OnPointerEvent(PointerEvent event) {
+      Region2D   b = Bounds();
+      Position2D p = event.Position();
 
-    virtual void OnPointerEvent(PointerEvent e) {};
-
-    virtual Region2D Bounds() const {
-      return bounds;
+      printf("Region: %d,%d (%d,%d) %d,%d \n",
+          b.NearX(), b.NearY(),
+          b.W(),     b.H(),
+          b.FarX(),  b.FarY()
+        );
+      printf(" Click: %d,%d (%d,%d local)\n",
+          p.x, p.y,
+          p.x - b.NearX(),
+          p.y - b.NearY()
+        );
     }
 
     virtual ColourScheme Colours() const {

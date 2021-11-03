@@ -294,19 +294,6 @@ class Region2D {
       }
     }
 /*
-    virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
-      printf("Region: %d,%d (%d,%d) %d,%d \n",
-          NearX(), NearY(),
-          Size().x,  Size().y,
-          FarX(),  FarY()
-        );
-      printf(" Click: %d,%d (%d,%d local)\n",
-          e.x, e.y,
-          e.x - NearX(),
-          e.y - NearY()
-        );
-    }
-
     virtual void Draw(SDL_Renderer* renderer) const {
       Fill(renderer, 0x66ffffff);
       filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x66000000);

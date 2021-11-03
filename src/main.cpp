@@ -238,7 +238,7 @@ int main(int argc, char* argv[]) {
           break;
         }
 */
-        //case SDL_FINGERDOWN:      window.OnPointerEvent(PointerEvent{e.tfinger}); break;
+        case SDL_FINGERDOWN:      window.OnPointerEvent(PointerEvent{e.tfinger, window.size}); break;
         case SDL_MOUSEBUTTONDOWN: window.OnPointerEvent(PointerEvent{e.button }); break;
 
         case SDL_WINDOWEVENT: {

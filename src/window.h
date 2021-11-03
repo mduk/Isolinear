@@ -79,13 +79,11 @@ class Window {
     }
 
     void OnPointerEvent(PointerEvent event) {
-    }
-
-    void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-      Position2D cursor{event};
       for (auto* drawable : drawables) {
-        if (drawable->Bounds().Encloses(cursor)) {
-          drawable->OnMouseButtonDown(event);
+        Region2D bounds = drawable->Bounds();
+        bounds.Print();
+        if (bounds.Encloses(event.Position())) {
+          drawable->OnPointerEvent(event);
           continue;
         }
       }

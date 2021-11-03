@@ -52,15 +52,18 @@ class Header : public Drawable {
         );
     }
 
-    virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) override {
-      Position2D cursor{e};
+    virtual void OnPointerEvent(PointerEvent event) override {
       for (auto& button : buttons) {
-        if (button.bounds.Encloses(cursor)) {
-          button.OnMouseButtonDown(e);
+        if (button.Bounds().Encloses(event.Position())) {
+          button.OnPointerEvent(event);
           return;
         }
       }
     };
+
+    virtual Region2D Bounds() const override {
+      return grid.bounds;
+    }
 
     void Draw(SDL_Renderer* renderer) const override {
       int x = 1,

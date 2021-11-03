@@ -8,18 +8,23 @@
 
 
 class Quad : public Drawable {
+  protected:
+    Region2D& bounds;
+
   public:
     Quad(Region2D& r) :
-        region{r} {};
+        bounds{r} {};
 
-    void Draw(SDL_Renderer* renderer) const {
+    Region2D Bounds() const override {
+      return bounds;
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
       boxColor(renderer,
-          region.NearX(), region.NearY(),
-          region.FarX(), region.FarY(),
+          bounds.NearX(), bounds.NearY(),
+          bounds.FarX(), bounds.FarY(),
           Colours().frame
         );
     }
 
-  protected:
-    Region2D& region;
 };

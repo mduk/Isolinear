@@ -8,6 +8,7 @@
 #include "drawable.h"
 #include "grid.h"
 #include "geometry.h"
+#include "pointerevent.h"
 
 
 using namespace std;
@@ -51,6 +52,10 @@ class Button : public Drawable {
         };
     }
 
+    virtual Region2D Bounds() const override {
+      return bounds;
+    }
+
     void Draw(SDL_Renderer* renderer) const override {
       Colour drawcolour = active == true
                         ? Colours().active
@@ -82,8 +87,7 @@ class Button : public Drawable {
     }
 
 
-    void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
-      printf("Button::OnMouseButtonDown()\n");
+    void OnPointerEvent(PointerEvent event) {
       active = !active;
     }
 };

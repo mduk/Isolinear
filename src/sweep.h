@@ -64,6 +64,10 @@ class Sweep : public Drawable {
       return grid.bounds.Align(opposite, icorner_size);
     }
 
+    Region2D Bounds() const override {
+      return grid.bounds;
+    }
+
     void Draw(SDL_Renderer* renderer) const override {
       Region2D icorner = InnerCornerRegion();
       Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
