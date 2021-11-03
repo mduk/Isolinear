@@ -62,15 +62,6 @@ class Header : public Drawable {
       }
     };
 
-    SDL_Rect SdlRect() const override {
-      return SDL_Rect{
-          grid.bounds.X(),
-          grid.bounds.Y(),
-          grid.bounds.W(),
-          grid.bounds.H()
-        };
-    }
-
     void Draw(SDL_Renderer* renderer) const override {
       int x = 1,
           y = 1,

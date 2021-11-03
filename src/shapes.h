@@ -20,15 +20,6 @@ class Quad : public Drawable {
         );
     }
 
-    SDL_Rect SdlRect() const {
-      return SDL_Rect{
-          region.X(),
-          region.Y(),
-          region.W(),
-          region.H()
-        };
-    }
-
   protected:
     Region2D& region;
 };

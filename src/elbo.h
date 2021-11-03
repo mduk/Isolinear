@@ -125,15 +125,6 @@ class Elbo : public Drawable {
 
     };
 
-    SDL_Rect SdlRect() const override {
-      return SDL_Rect{
-          grid.bounds.X(),
-          grid.bounds.Y(),
-          grid.bounds.W(),
-          grid.bounds.H()
-        };
-    }
-
     void AddButton(std::string label) {
       buttons.emplace_back(
           window,

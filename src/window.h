@@ -84,9 +84,7 @@ class Window {
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
       Position2D cursor{event};
       for (auto* drawable : drawables) {
-        Region2D clickablearea{drawable->SdlRect()};
-        clickablearea.Print();
-        if (clickablearea.Encloses(cursor)) {
+        if (drawable->Bounds().Encloses(cursor)) {
           drawable->OnMouseButtonDown(event);
           continue;
         }

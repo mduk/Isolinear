@@ -294,15 +294,6 @@ class Region2D {
       }
     }
 /*
-    SDL_Rect SdlRect() const {
-      return SDL_Rect{
-          _position.x,
-          _position.y,
-          _size.x,
-          _size.y
-        };
-    }
-
     virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
       printf("Region: %d,%d (%d,%d) %d,%d \n",
           NearX(), NearY(),

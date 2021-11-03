@@ -8,10 +8,10 @@
 
 class Drawable {
   protected:
+    Region2D bounds;
     ColourScheme colours;
 
   public:
-    virtual SDL_Rect SdlRect() const = 0;
     virtual void Draw(SDL_Renderer*) const = 0;
 
     virtual void OnMouseButtonDown(
@@ -19,6 +19,10 @@ class Drawable {
       ) {};
 
     virtual void OnPointerEvent(PointerEvent e) {};
+
+    virtual Region2D Bounds() const {
+      return bounds;
+    }
 
     virtual ColourScheme Colours() const {
       return colours;

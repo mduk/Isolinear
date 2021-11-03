@@ -31,15 +31,6 @@ class Sweep : public Drawable {
       }
     }
 
-    virtual SDL_Rect SdlRect() const {
-      return SDL_Rect{
-          grid.bounds.X(),
-          grid.bounds.Y(),
-          grid.bounds.W(),
-          grid.bounds.H()
-        };
-    }
-
     Region2D OuterRadiusRegion() const {
       return grid.bounds.Align(alignment, Size2D{outer_radius});
     }

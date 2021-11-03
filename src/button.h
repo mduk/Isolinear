@@ -15,7 +15,7 @@ using namespace std;
 
 class Button : public Drawable {
   protected:
-    Window window;
+    Window& window;
     bool active = false;
     bool left_cap = true;
     bool right_cap = true;
@@ -48,15 +48,6 @@ class Button : public Drawable {
               bounds.Origin().y
             },
           Size2D{bounds.Size().y}
-        };
-    }
-
-    virtual SDL_Rect SdlRect() const {
-      return SDL_Rect{
-          bounds.X(),
-          bounds.Y(),
-          bounds.W(),
-          bounds.H()
         };
     }
 
