@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
   //curlpp::initialize();
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
+  SDL_ShowCursor(SDL_DISABLE);
 
   int number_of_displays = SDL_GetNumVideoDisplays();
   std::vector<SDL_Rect> displays;
