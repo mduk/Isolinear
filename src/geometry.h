@@ -6,7 +6,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "drawable.h"
 #include "colours.h"
 
 
@@ -108,7 +107,7 @@ class Size2D : public Vector2D {
 };
 
 
-class Region2D : public Drawable {
+class Region2D {
   protected:
     Position2D _position;
     Size2D _size;
@@ -244,54 +243,6 @@ class Region2D : public Drawable {
           && Encloses(r.Far());
     }
 
-
-
-    SDL_Rect SdlRect() const {
-      return SDL_Rect{
-          _position.x,
-          _position.y,
-          _size.x,
-          _size.y
-        };
-    }
-
-    virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
-      printf("Region: %d,%d (%d,%d) %d,%d \n",
-          NearX(), NearY(),
-          Size().x,  Size().y,
-          FarX(),  FarY()
-        );
-      printf(" Click: %d,%d (%d,%d local)\n",
-          e.x, e.y,
-          e.x - NearX(),
-          e.y - NearY()
-        );
-    }
-
-    virtual void Draw(SDL_Renderer* renderer) const {
-      Fill(renderer, 0x66ffffff);
-      filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x66000000);
-      filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0x66ff0000);
-      filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0x6600ffff);
-      filledCircleColor(renderer,      EastX(),      EastY(), 4, 0x66ff0000);
-      filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0x66ffff00);
-      filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0x6600ff00);
-      filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0x6600ffff);
-      filledCircleColor(renderer,      WestX(),      WestY(), 4, 0x6600ff00);
-      filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0x66ffff00);
-      lineColor(renderer,
-          NorthWestX(), NorthWestY(),
-          SouthEastX(), SouthEastY(),
-          0x66000000
-        );
-      lineColor(renderer,
-          NorthEastX(), NorthEastY(),
-          SouthWestX(), SouthWestY(),
-          0x66000000
-        );
-    }
-
-
     virtual void Fill(SDL_Renderer* renderer, Colour colour) const {
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
     }
@@ -342,5 +293,50 @@ class Region2D : public Drawable {
           break;
       }
     }
+/*
+    SDL_Rect SdlRect() const {
+      return SDL_Rect{
+          _position.x,
+          _position.y,
+          _size.x,
+          _size.y
+        };
+    }
 
+    virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) {
+      printf("Region: %d,%d (%d,%d) %d,%d \n",
+          NearX(), NearY(),
+          Size().x,  Size().y,
+          FarX(),  FarY()
+        );
+      printf(" Click: %d,%d (%d,%d local)\n",
+          e.x, e.y,
+          e.x - NearX(),
+          e.y - NearY()
+        );
+    }
+
+    virtual void Draw(SDL_Renderer* renderer) const {
+      Fill(renderer, 0x66ffffff);
+      filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x66000000);
+      filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0x66ff0000);
+      filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0x6600ffff);
+      filledCircleColor(renderer,      EastX(),      EastY(), 4, 0x66ff0000);
+      filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0x66ffff00);
+      filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0x6600ff00);
+      filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0x6600ffff);
+      filledCircleColor(renderer,      WestX(),      WestY(), 4, 0x6600ff00);
+      filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0x66ffff00);
+      lineColor(renderer,
+          NorthWestX(), NorthWestY(),
+          SouthEastX(), SouthEastY(),
+          0x66000000
+        );
+      lineColor(renderer,
+          NorthEastX(), NorthEastY(),
+          SouthWestX(), SouthWestY(),
+          0x66000000
+        );
+    }
+*/
 };

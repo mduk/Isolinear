@@ -7,7 +7,7 @@
 #include "window.h"
 #include "button.h"
 
-class Header : public Region2D {
+class Header : public Drawable {
   protected:
     Grid grid;
     Window& window;
@@ -25,14 +25,14 @@ class Header : public Region2D {
     {};
 
     virtual ColourScheme Colours() const {
-      return Region2D::Colours();
+      return Drawable::Colours();
     }
 
     virtual void Colours(ColourScheme cs) {
       for (auto& button : buttons) {
         button.Colours(cs);
       }
-      Region2D::Colours(cs);
+      Drawable::Colours(cs);
     }
 
     void AddButton(std::string label) {
@@ -55,7 +55,7 @@ class Header : public Region2D {
     virtual void OnMouseButtonDown(SDL_MouseButtonEvent& e) override {
       Position2D cursor{e};
       for (auto& button : buttons) {
-        if (button.Encloses(cursor)) {
+        if (button.bounds.Encloses(cursor)) {
           button.OnMouseButtonDown(e);
           return;
         }
@@ -63,7 +63,12 @@ class Header : public Region2D {
     };
 
     SDL_Rect SdlRect() const override {
-      return grid.bounds.SdlRect();
+      return SDL_Rect{
+          grid.bounds.X(),
+          grid.bounds.Y(),
+          grid.bounds.W(),
+          grid.bounds.H()
+        };
     }
 
     void Draw(SDL_Renderer* renderer) const override {

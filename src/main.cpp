@@ -19,6 +19,7 @@
 #include "elbo.h"
 #include "header.h"
 #include "sweep.h"
+#include "pointerevent.h"
 
 using namespace std;
 
@@ -113,7 +114,7 @@ int main(int argc, char* argv[]) {
        int outer_radius{90};
        int inner_radius{50};
 
-       int max_cols = 10;//25;
+       int max_cols = 21;
        int max_rows = 8;
 
        int sweep_offset = 16;
@@ -155,16 +156,16 @@ int main(int argc, char* argv[]) {
           sweepsize.x,
           max_rows + sweep_offset
         ),
-      sweepsize, Vector2D{3,1}, outer_radius, inner_radius
+      sweepsize, Vector2D{3,2}, outer_radius, inner_radius
     };
 
   window.Add(&northeastsweep);
   window.Add(&southeastsweep);
   window.Add(&southwestsweep);
   window.Add(&northwestsweep);
-/*
+
   Button rightbutton{window, window.grid.CalculateGridRegion(
-      max_cols - sweepsize.x + 2, sweep_offset + sweepsize.y + 1,
+      max_cols - sweepsize.x + 4, sweep_offset + sweepsize.y + 1,
       max_cols                  , sweep_offset + sweepsize.y + 2
     ), window.Colours(), "65-8858"};
   window.Add(&rightbutton);
@@ -174,7 +175,7 @@ int main(int argc, char* argv[]) {
       sweepsize.x - 1, sweep_offset + sweepsize.y + 2
     ), window.Colours(), "65-8858"};
   window.Add(&leftbutton);
-*/
+
   Region2D topbarregion = window.grid.CalculateGridRegion(
       sweepsize.x + 1, sweep_offset + 1,
       max_cols - sweepsize.x, sweep_offset + 1
@@ -183,7 +184,7 @@ int main(int argc, char* argv[]) {
   window.Add(&topbar);
 
   Region2D bottombarregion = window.grid.CalculateGridRegion(
-      sweepsize.x + 1, sweep_offset + max_rows,
+      sweepsize.x + 1,        sweep_offset + max_rows - 1,
       max_cols - sweepsize.x, sweep_offset + max_rows
     );
   Quad bottombar(bottombarregion);
@@ -237,10 +238,8 @@ int main(int argc, char* argv[]) {
           break;
         }
 */
-        case SDL_MOUSEBUTTONDOWN: {
-          window.OnMouseButtonDown(e.button);
-          break;
-        }
+        //case SDL_FINGERDOWN:      window.OnPointerEvent(PointerEvent{e.tfinger}); break;
+        case SDL_MOUSEBUTTONDOWN: window.OnPointerEvent(PointerEvent{e.button }); break;
 
         case SDL_WINDOWEVENT: {
           switch (e.window.event) {

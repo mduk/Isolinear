@@ -42,7 +42,13 @@ class RenderedText {
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
       Region2D label_region = bounds.Align(alignment, Size());
-      SDL_Rect label_rect = label_region.SdlRect();
+      SDL_Rect label_rect{
+          label_region.X(),
+          label_region.Y(),
+          label_region.W(),
+          label_region.H()
+        };
+
       SDL_RenderCopy(renderer, texture, NULL, &label_rect);
       SDL_DestroyTexture(texture);
     }
@@ -91,7 +97,12 @@ class Font {
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
       Region2D label_region = bounds.Align(align, Size2D{surface});
-      SDL_Rect label_rect = label_region.SdlRect();
+      SDL_Rect label_rect{
+          label_region.X(),
+          label_region.Y(),
+          label_region.W(),
+          label_region.H()
+        };
       SDL_RenderCopy(renderer, texture, NULL, &label_rect);
 
       SDL_FreeSurface(surface);

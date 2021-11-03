@@ -88,7 +88,7 @@ class Elbo : public Drawable {
       }
 
       for (auto& button : buttons) {
-        if (button.Encloses(cursor)) {
+        if (button.bounds.Encloses(cursor)) {
           button.OnMouseButtonDown(event);
           return;
         }
@@ -126,7 +126,12 @@ class Elbo : public Drawable {
     };
 
     SDL_Rect SdlRect() const override {
-      return grid.bounds.SdlRect();
+      return SDL_Rect{
+          grid.bounds.X(),
+          grid.bounds.Y(),
+          grid.bounds.W(),
+          grid.bounds.H()
+        };
     }
 
     void AddButton(std::string label) {
@@ -139,18 +144,12 @@ class Elbo : public Drawable {
     }
 
     virtual void Draw(SDL_Renderer* renderer) const override {
-      //DrawSweep(renderer);
-      SweepRegion().Draw(renderer);
-      //DrawReach(renderer);
-      //DrawVertical(renderer);
-      //DrawHeader(renderer);
-      //for (auto const& button : buttons) {
-       // button.Draw(renderer);
-      //}
-      if (false) {
-        SweepInnerCornerRegion().Draw(renderer);
-        SweepInnerRadiusRegion().Draw(renderer);
-        SweepOuterRadiusRegion().Draw(renderer);
+      DrawSweep(renderer);
+      DrawReach(renderer);
+      DrawVertical(renderer);
+      DrawHeader(renderer);
+      for (auto const& button : buttons) {
+        button.Draw(renderer);
       }
     }
 

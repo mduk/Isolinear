@@ -13,7 +13,7 @@
 using namespace std;
 
 
-class Button : public Region2D {
+class Button : public Drawable {
   protected:
     Window window;
     bool active = false;
@@ -21,6 +21,7 @@ class Button : public Region2D {
     bool right_cap = true;
 
   public:
+    Region2D bounds;
     std::string label;
     Button(
         Window& w,
@@ -28,37 +29,46 @@ class Button : public Region2D {
         ColourScheme cs,
         std::string l
       ) :
-        Region2D{b},
+        bounds{b},
         window{w},
         label{l}
     {}
 
     Region2D LeftCapRegion() const {
       return Region2D{
-          _position,
-          Size2D{_size.y}
+          bounds.Origin(),
+          Size2D{bounds.Size().y}
         };
     }
 
     Region2D RightCapRegion() const {
       return Region2D{
           Position2D{
-              _position.x + (_size.x - _size.y),
-              _position.y
+              bounds.Origin().x + (bounds.Size().x - bounds.Size().y),
+              bounds.Origin().y
             },
-          Size2D{_size.y}
+          Size2D{bounds.Size().y}
         };
     }
 
-    void Draw(SDL_Renderer* renderer) const {
+    virtual SDL_Rect SdlRect() const {
+      return SDL_Rect{
+          bounds.X(),
+          bounds.Y(),
+          bounds.W(),
+          bounds.H()
+        };
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
       Colour drawcolour = active == true
                         ? Colours().active
                         : Colours().light_alternate;
 
 
       boxColor(renderer,
-          NearX(), NearY(),
-          FarX(),  FarY(),
+          bounds.NearX(), bounds.NearY(),
+          bounds.FarX(),  bounds.FarY(),
           drawcolour
         );
 
@@ -74,7 +84,7 @@ class Button : public Region2D {
 
       window.ButtonFont().RenderText(
           renderer,
-          Region2D{_position, _size},
+          Region2D{bounds.Origin(), bounds.Size()},
           Compass{SOUTHEAST},
           label
         );
@@ -83,7 +93,6 @@ class Button : public Region2D {
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {
       printf("Button::OnMouseButtonDown()\n");
-      Region2D::OnMouseButtonDown(event);
       active = !active;
     }
 };

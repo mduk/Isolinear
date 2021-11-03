@@ -8,7 +8,9 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "pointerevent.h"
 #include "drawable.h"
+#include "pointerevent.h"
 #include "grid.h"
 #include "colours.h"
 #include "geometry.h"
@@ -74,6 +76,9 @@ class Window {
       for (auto* drawable : drawables) {
         drawable->Draw(sdl_renderer);
       }
+    }
+
+    void OnPointerEvent(PointerEvent event) {
     }
 
     void OnMouseButtonDown(SDL_MouseButtonEvent& event) {

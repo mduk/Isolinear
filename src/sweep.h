@@ -32,7 +32,12 @@ class Sweep : public Drawable {
     }
 
     virtual SDL_Rect SdlRect() const {
-      return grid.bounds.SdlRect();
+      return SDL_Rect{
+          grid.bounds.X(),
+          grid.bounds.Y(),
+          grid.bounds.W(),
+          grid.bounds.H()
+        };
     }
 
     Region2D OuterRadiusRegion() const {
@@ -69,30 +74,14 @@ class Sweep : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
-      Region2D hport = HorizontalPort();
-      Region2D vport = VerticalPort();
-
-      Position2D hports = hport.SouthWest();
-      Position2D vportw = vport.SouthWest();
-
       Region2D icorner = InnerCornerRegion();
-
       Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
       grid.bounds.Fill(renderer, Colours().frame);
-
       icorner.Fill(renderer, Colours().background);
       iradius.Fill(renderer, Colours().frame);
       iradius.QuadrantArc(renderer, alignment, Colours().background);
-
       DrawOuterRadius(renderer);
-
-       hport.Draw(renderer);
-       vport.Draw(renderer);
-      hports.Draw(renderer);
-      vportw.Draw(renderer);
-
-
     }
 };
 

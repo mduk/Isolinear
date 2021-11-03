@@ -18,6 +18,8 @@ class Drawable {
         SDL_MouseButtonEvent&
       ) {};
 
+    virtual void OnPointerEvent(PointerEvent e) {};
+
     virtual ColourScheme Colours() const {
       return colours;
     }
