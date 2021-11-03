@@ -216,6 +216,7 @@ int main(int argc, char* argv[]) {
         case SDL_KEYDOWN: {
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE: running = false; break;
+            case         'c': SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY)); break;
             case         'r': window.Colours(red_alert_colours); break;
             case         'y': window.Colours(yellow_alert_colours); break;
             case         'b': window.Colours(blue_alert_colours); break;
