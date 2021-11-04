@@ -98,10 +98,10 @@ int main(int argc, char* argv[]) {
     };
   window.Add(&northeastsweep);
 
-  VerticalButtonBar eastbar{framegrid.SubGrid(
+  VerticalButtonBar eastbar{window, framegrid.SubGrid(
       framegrid.MaxColumns() - northeastsweep.VerticalPortSize() - 1, sweepsize.y + 1,
       framegrid.MaxColumns(), framegrid.MaxRows() - sweepsize.y - 1
-    ), window};
+    )};
   window.Add(&eastbar);
 
   SouthEastSweep southeastsweep{window,

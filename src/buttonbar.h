@@ -15,8 +15,8 @@ class ButtonBar : public Drawable {
     Vector2D button_size{2,2};
 
   public:
-    ButtonBar(Grid g, Window& w)
-      : grid{g}, window{w}
+    ButtonBar(Window& w, Grid g)
+      : window{w}, grid{g}
     {};
 
     virtual Region2D ButtonRegion(int i) const = 0;
@@ -73,7 +73,7 @@ class ButtonBar : public Drawable {
 
 class HorizontalButtonBar : public ButtonBar {
   public:
-    HorizontalButtonBar(Grid g, Window& w) : ButtonBar(g, w) {}
+    HorizontalButtonBar(Window& w, Grid g) : ButtonBar(w, g) {}
 
     Region2D ButtonRegion(int i) const override {
       int near_col = button_size.x * (i-1) + 1;
@@ -102,7 +102,7 @@ class HorizontalButtonBar : public ButtonBar {
 
 class VerticalButtonBar : public ButtonBar {
   public:
-    VerticalButtonBar(Grid g, Window& w) : ButtonBar(g, w) {}
+    VerticalButtonBar(Window& w, Grid g) : ButtonBar(w, g) {}
 
     Region2D ButtonRegion(int i) const override {
       int near_col = 1;
