@@ -158,10 +158,17 @@ int main(int argc, char* argv[]) {
       sweepsize.x + 1,        sweep_offset + max_rows - 1,
       max_cols - sweepsize.x, sweep_offset + max_rows
     );
-  ButtonBar bottombar(bottombargrid, window);
+  HorizontalButtonBar bottombar(bottombargrid, window);
   bottombar.AddButton("04-2993");
   bottombar.AddButton("07-9825");
   window.Add(&bottombar);
+
+  Grid mygrid = window.grid.Rows(sweep_offset + max_rows + 3,
+                                 sweep_offset + max_rows + 20);
+  VerticalButtonBar verticalbar(mygrid.Columns(1,2), window);
+  verticalbar.AddButton("12-3456");
+  verticalbar.AddButton("12-7891");
+  window.Add(&verticalbar);
 
 
   window.Colours(blue_alert_colours);

@@ -78,6 +78,16 @@ class Grid {
       return SubGrid(col, 1, col, rows);
     }
 
+    Grid Columns(int from, int to) const {
+      int cols = MaxColumns();
+      int rows = MaxRows();
+
+      from = (from > 0) ? from : rows + from;
+        to = (  to > 0) ?   to : rows +   to;
+
+      return SubGrid(from, 1, to, rows);
+    }
+
     Region2D Cell(int col, int row) const {
       return CalculateGridRegion(col, row, col, row);
     }
