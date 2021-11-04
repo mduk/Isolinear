@@ -12,7 +12,6 @@ class Sweep : public Drawable {
   protected:
     Window& window;
     Grid grid;
-    Vector2D size;
     Vector2D ports;
     int outer_radius;
     int inner_radius;
@@ -20,8 +19,8 @@ class Sweep : public Drawable {
     Compass opposite;
 
   public:
-    Sweep(Window& w, Grid g, Vector2D s, Vector2D p, int oradius, int iradius, Compass ali)
-      : window{w}, grid{g}, size{s}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
+    Sweep(Window& w, Grid g, Vector2D p, int oradius, int iradius, Compass ali)
+      : window{w}, grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
     {
       switch (alignment) {
         case Compass::NORTHEAST: opposite = Compass::SOUTHWEST; break;
@@ -39,6 +38,9 @@ class Sweep : public Drawable {
       return ports.y;
     }
 
+    virtual Region2D HorizontalPort() const = 0;
+    virtual Region2D VerticalPort() const = 0;
+
     Region2D OuterRadiusRegion() const {
       return grid.bounds.Align(alignment, Size2D{outer_radius});
     }
@@ -47,14 +49,6 @@ class Sweep : public Drawable {
       Region2D region = OuterRadiusRegion();
       region.Fill(renderer, Colours().background);
       region.QuadrantArc(renderer, alignment, Colours().frame);
-    }
-
-    Region2D HorizontalPort() const {
-      return grid.CalculateGridRegion(1, 1, 1, ports.y);
-    }
-
-    Region2D VerticalPort() const {
-      return grid.CalculateGridRegion(size.x - ports.x+1, size.y, size.x, size.y);
     }
 
     Region2D InnerCornerRegion() const {
@@ -81,37 +75,100 @@ class Sweep : public Drawable {
       Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
       grid.bounds.Fill(renderer, Colours().frame);
-      icorner.Fill(renderer, Colours().background);
-      iradius.Fill(renderer, Colours().frame);
-      iradius.QuadrantArc(renderer, alignment, Colours().background);
-      DrawOuterRadius(renderer);
+      //icorner.Fill(renderer, Colours().background);
+      //iradius.Fill(renderer, Colours().frame);
+      //iradius.QuadrantArc(renderer, alignment, Colours().background);
+      //DrawOuterRadius(renderer);
+
+      HorizontalPort().Draw(renderer);
+      VerticalPort().Draw(renderer);
     }
 };
 
 class NorthEastSweep : public Sweep {
   public:
-    NorthEastSweep(Window& window, Grid grid, Vector2D size, Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, size, ports, oradius, iradius, Compass::NORTHEAST}
+    NorthEastSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+      : Sweep{window, grid, ports, oradius, iradius, Compass::NORTHEAST}
     {}
+
+    Region2D HorizontalPort() const override {
+      return grid.CalculateGridRegion(
+          1, 1,
+          1, ports.y
+        );
+    }
+
+    Region2D VerticalPort() const override {
+      return grid.CalculateGridRegion(
+          grid.MaxColumns() - ports.x + 1, grid.MaxRows(),
+                        grid.MaxColumns(), grid.MaxRows()
+        );
+    }
+
 };
 
 class SouthEastSweep : public Sweep {
   public:
-    SouthEastSweep(Window& window, Grid grid, Vector2D size, Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, size, ports, oradius, iradius, Compass::SOUTHEAST}
+    SouthEastSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+      : Sweep{window, grid, ports, oradius, iradius, Compass::SOUTHEAST}
     {}
+
+    Region2D HorizontalPort() const override {
+      return grid.CalculateGridRegion(
+          1, grid.MaxRows() - ports.y + 1,
+          1, grid.MaxRows()
+        );
+    }
+
+    Region2D VerticalPort() const override {
+      return grid.CalculateGridRegion(
+          grid.MaxColumns() - ports.x + 1, 1,
+          grid.MaxColumns(), 1
+        );
+    }
+
 };
 
 class SouthWestSweep : public Sweep {
   public:
-    SouthWestSweep(Window& window, Grid grid, Vector2D size, Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, size, ports, oradius, iradius, Compass::SOUTHWEST}
+    SouthWestSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+      : Sweep{window, grid, ports, oradius, iradius, Compass::SOUTHWEST}
     {}
+
+    Region2D VerticalPort() const override {
+      return grid.CalculateGridRegion(
+          1, 1,
+          ports.x, 1
+        );
+    }
+
+    Region2D HorizontalPort() const override {
+      return grid.CalculateGridRegion(
+          grid.MaxColumns() - ports.y + 1, grid.MaxRows(),
+                        grid.MaxColumns(), grid.MaxRows()
+        );
+    }
+
 };
 
 class NorthWestSweep : public Sweep {
   public:
-    NorthWestSweep(Window& window, Grid grid, Vector2D size, Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, size, ports, oradius, iradius, Compass::NORTHWEST}
+    NorthWestSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+      : Sweep{window, grid, ports, oradius, iradius, Compass::NORTHWEST}
     {}
+
+    Region2D HorizontalPort() const override {
+      return grid.CalculateGridRegion(
+          1, grid.MaxRows(),
+          ports.x, grid.MaxRows()
+        );
+    }
+
+    Region2D VerticalPort() const override {
+      return grid.CalculateGridRegion(
+          grid.MaxColumns(), 1,
+          grid.MaxColumns(), 1
+        );
+    }
+
 };

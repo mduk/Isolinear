@@ -293,7 +293,7 @@ class Region2D {
           break;
       }
     }
-/*
+
     virtual void Draw(SDL_Renderer* renderer) const {
       Fill(renderer, 0x66ffffff);
       filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x66000000);
@@ -316,5 +316,4 @@ class Region2D {
           0x66000000
         );
     }
-*/
 };

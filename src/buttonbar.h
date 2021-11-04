@@ -33,7 +33,7 @@ class ButtonBar : public Drawable {
       Drawable::Colours(cs);
     }
 
-    void AddButton(std::string label) {
+    virtual void AddButton(std::string label) {
       buttons.emplace_back(
           window,
           ButtonRegion(buttons.size() + 1),
@@ -50,6 +50,14 @@ class ButtonBar : public Drawable {
         }
       }
     };
+
+    virtual int Height() const {
+      return grid.MaxRows();
+    }
+
+    virtual int Width() const {
+      return grid.MaxColumns();
+    }
 
     virtual Region2D Bounds() const override {
       return grid.bounds;

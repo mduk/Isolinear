@@ -87,95 +87,96 @@ int main(int argc, char* argv[]) {
        int outer_radius{90};
        int inner_radius{50};
 
+       int north_frame = 1,
+           east_frame = 2,
+           south_frame = 1,
+           west_frame = 2;
+
+  Vector2D nesize{4,2};
+  Vector2D sesize{5,3};
+  Vector2D swsize{6,4};
+  Vector2D nwsize{7,5};
+
+  VerticalButtonBar eastbar{window, framegrid.SubGrid(
+      framegrid.MaxColumns() - (east_frame-1),
+      nesize.y + 1,
+
+      framegrid.MaxColumns(),
+      framegrid.MaxRows() - sesize.y
+    )};
+  window.Add(&eastbar);
+
+  VerticalButtonBar westbar{window, framegrid.SubGrid(
+      1,
+      nwsize.y + 1,
+
+      west_frame,
+      framegrid.MaxRows() - swsize.y
+    )};
+  window.Add(&westbar);
+
+
+
 
 
   NorthEastSweep northeastsweep{window,
       framegrid.SubGrid(
-          framegrid.MaxColumns() - sweepsize.x - 1, 1,
-          framegrid.MaxColumns(), sweepsize.y
+          framegrid.MaxColumns() - (nesize.x - 1),
+          1,
+
+          framegrid.MaxColumns(),
+          nesize.y
         ),
-      sweepsize, Vector2D{2,1}, outer_radius, inner_radius
+      Vector2D{ east_frame, north_frame },
+      outer_radius,
+      inner_radius
     };
   window.Add(&northeastsweep);
 
-  VerticalButtonBar eastbar{window, framegrid.SubGrid(
-      framegrid.MaxColumns() - northeastsweep.VerticalPortSize() - 1, sweepsize.y + 1,
-      framegrid.MaxColumns(), framegrid.MaxRows() - sweepsize.y - 1
-    )};
-  window.Add(&eastbar);
-
   SouthEastSweep southeastsweep{window,
       framegrid.SubGrid(
-          framegrid.MaxColumns() - sweepsize.x - 1, framegrid.MaxRows() - sweepsize.y - 1,
-          framegrid.MaxColumns(), framegrid.MaxRows()
+          framegrid.MaxColumns() - (sesize.x - 1),
+          framegrid.MaxRows() - (sesize.y - 1),
+
+          framegrid.MaxColumns(),
+          framegrid.MaxRows()
         ),
-      sweepsize, Vector2D{2,2}, outer_radius, inner_radius
+      Vector2D{ east_frame, south_frame },
+      outer_radius,
+      inner_radius
     };
   window.Add(&southeastsweep);
 
   SouthWestSweep southwestsweep{window,
       framegrid.SubGrid(
-          1, framegrid.MaxRows() - sweepsize.y - 1,
-          sweepsize.x, framegrid.MaxRows()
+          1,
+          framegrid.MaxRows() - (swsize.y - 1),
+
+          swsize.x,
+          framegrid.MaxRows()
         ),
-      sweepsize, Vector2D{3,2}, outer_radius, inner_radius
+      Vector2D{ west_frame, south_frame },
+      outer_radius,
+      inner_radius
     };
   window.Add(&southwestsweep);
 
   NorthWestSweep northwestsweep{window,
       framegrid.SubGrid(
-          1, 1,
-          sweepsize.x, sweepsize.y
+          1,
+          1,
+
+          nwsize.x,
+          nwsize.y
         ),
-      sweepsize, Vector2D{3,1}, outer_radius, inner_radius
+      Vector2D{ west_frame, north_frame },
+      outer_radius,
+      inner_radius
     };
   window.Add(&northwestsweep);
 
 
-/*
-
-       int max_cols = window.grid.MaxColumns();
-       int max_rows = 8;
-
-       int sweep_offset = 3;
-
-  window.Add(&northeastsweep);
-  window.Add(&southeastsweep);
-  window.Add(&southwestsweep);
-  window.Add(&northwestsweep);
-
-  Button rightbutton{window, window.grid.CalculateGridRegion(
-      max_cols - sweepsize.x + 3, sweep_offset + sweepsize.y + 1,
-      max_cols                  , sweep_offset + sweepsize.y + 2
-    ), window.Colours(), "65-8858"};
-  window.Add(&rightbutton);
-
-
-  Region2D topbarregion = window.grid.CalculateGridRegion(
-      sweepsize.x + 1, sweep_offset + 1,
-      max_cols - sweepsize.x, sweep_offset + 1
-    );
-  Quad topbar(topbarregion);
-  window.Add(&topbar);
-
-  Grid bottombargrid = window.grid.SubGrid(
-      sweepsize.x + 1,        sweep_offset + max_rows - 1,
-      max_cols - sweepsize.x, sweep_offset + max_rows
-    );
-  HorizontalButtonBar bottombar(bottombargrid, window);
-  bottombar.AddButton("04-2993");
-  bottombar.AddButton("07-9825");
-  window.Add(&bottombar);
-
-  Grid mygrid = window.grid.Rows(sweep_offset + max_rows + 3,
-                                 sweep_offset + max_rows + 20);
-  VerticalButtonBar verticalbar(mygrid.Columns(1,2), window);
-  verticalbar.AddButton("12-3456");
-  verticalbar.AddButton("12-7891");
-  window.Add(&verticalbar);
-*/
-
-  window.Colours(blue_alert_colours);
+  //window.Colours(blue_alert_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -201,6 +202,7 @@ int main(int argc, char* argv[]) {
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE: running = false; break;
             case         'c': SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY)); break;
+            case         'd': window.Colours(debug_colours); break;
             case         'r': window.Colours(red_alert_colours); break;
             case         'y': window.Colours(yellow_alert_colours); break;
             case         'b': window.Colours(blue_alert_colours); break;

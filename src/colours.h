@@ -4,7 +4,7 @@ typedef u_int32_t Colour;
 
 class ColourScheme {
   public:
-    Colour background{0xff000000};
+    Colour background{0x33000000};
     Colour disabled;
     Colour dark;
     Colour frame;
@@ -28,6 +28,7 @@ class ColourScheme {
         Colour la,
         Colour a
       ) :
+        background{0xff000000},
         disabled{di},
         dark{d},
         frame{f},
@@ -38,6 +39,8 @@ class ColourScheme {
 
 };
 
+
+ColourScheme debug_colours{};
 
 ColourScheme blue_alert_colours{
     0xff4d4d4d, 0xffcc0000,
