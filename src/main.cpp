@@ -80,55 +80,64 @@ int main(int argc, char* argv[]) {
   header.AddButton("03-8854");
   window.Add(&header);
 
+  Grid framegrid = window.grid.Rows(4, window.grid.MaxRows());
+
   Vector2D sweepsize{4,3};
   Vector2D ports{3,1};
        int outer_radius{90};
        int inner_radius{50};
 
-       int max_cols = 15;
-       int max_rows = 8;
 
-       int sweep_offset = 3;
-
-  NorthWestSweep northwestsweep{window,
-      window.grid.SubGrid(
-          1,
-          1 + sweep_offset,
-          sweepsize.x,
-          sweepsize.y + sweep_offset
-        ),
-      sweepsize, Vector2D{3,1}, outer_radius, inner_radius
-    };
 
   NorthEastSweep northeastsweep{window,
-      window.grid.SubGrid(
-          max_cols - sweepsize.x +1,
-          1 + sweep_offset,
-          max_cols,
-          sweepsize.y + sweep_offset
+      framegrid.SubGrid(
+          framegrid.MaxColumns() - sweepsize.x - 1, 1,
+          framegrid.MaxColumns(), sweepsize.y
         ),
       sweepsize, Vector2D{2,1}, outer_radius, inner_radius
     };
+  window.Add(&northeastsweep);
+
+  VerticalButtonBar eastbar{framegrid.SubGrid(
+      framegrid.MaxColumns() - northeastsweep.VerticalPortSize() - 1, sweepsize.y + 1,
+      framegrid.MaxColumns(), framegrid.MaxRows() - sweepsize.y - 1
+    ), window};
+  window.Add(&eastbar);
 
   SouthEastSweep southeastsweep{window,
-      window.grid.SubGrid(
-          max_cols-sweepsize.x+1,
-          max_rows-sweepsize.y+1 + sweep_offset,
-          max_cols,
-          max_rows + sweep_offset
+      framegrid.SubGrid(
+          framegrid.MaxColumns() - sweepsize.x - 1, framegrid.MaxRows() - sweepsize.y - 1,
+          framegrid.MaxColumns(), framegrid.MaxRows()
         ),
       sweepsize, Vector2D{2,2}, outer_radius, inner_radius
     };
+  window.Add(&southeastsweep);
 
   SouthWestSweep southwestsweep{window,
-      window.grid.SubGrid(
-          1,
-          max_rows - sweepsize.y+1 + sweep_offset,
-          sweepsize.x,
-          max_rows + sweep_offset
+      framegrid.SubGrid(
+          1, framegrid.MaxRows() - sweepsize.y - 1,
+          sweepsize.x, framegrid.MaxRows()
         ),
       sweepsize, Vector2D{3,2}, outer_radius, inner_radius
     };
+  window.Add(&southwestsweep);
+
+  NorthWestSweep northwestsweep{window,
+      framegrid.SubGrid(
+          1, 1,
+          sweepsize.x, sweepsize.y
+        ),
+      sweepsize, Vector2D{3,1}, outer_radius, inner_radius
+    };
+  window.Add(&northwestsweep);
+
+
+/*
+
+       int max_cols = window.grid.MaxColumns();
+       int max_rows = 8;
+
+       int sweep_offset = 3;
 
   window.Add(&northeastsweep);
   window.Add(&southeastsweep);
@@ -141,11 +150,6 @@ int main(int argc, char* argv[]) {
     ), window.Colours(), "65-8858"};
   window.Add(&rightbutton);
 
-  Button leftbutton{window, window.grid.CalculateGridRegion(
-                    1, sweep_offset + sweepsize.y + 1,
-      sweepsize.x - 1, sweep_offset + sweepsize.y + 2
-    ), window.Colours(), "65-8858"};
-  window.Add(&leftbutton);
 
   Region2D topbarregion = window.grid.CalculateGridRegion(
       sweepsize.x + 1, sweep_offset + 1,
@@ -169,7 +173,7 @@ int main(int argc, char* argv[]) {
   verticalbar.AddButton("12-3456");
   verticalbar.AddButton("12-7891");
   window.Add(&verticalbar);
-
+*/
 
   window.Colours(blue_alert_colours);
 

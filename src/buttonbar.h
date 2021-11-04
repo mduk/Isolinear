@@ -117,6 +117,8 @@ class VerticalButtonBar : public ButtonBar {
     }
 
     Region2D BarRegion() const override {
+      return Region2D();
+
       int near_col = 1;
       int near_row = button_size.y * buttons.size() + 1;
       int  far_col = grid.MaxColumns();

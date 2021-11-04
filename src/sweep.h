@@ -31,6 +31,14 @@ class Sweep : public Drawable {
       }
     }
 
+    int VerticalPortSize() const {
+      return ports.x;
+    }
+
+    int HorizontalPortSize() const {
+      return ports.y;
+    }
+
     Region2D OuterRadiusRegion() const {
       return grid.bounds.Align(alignment, Size2D{outer_radius});
     }
