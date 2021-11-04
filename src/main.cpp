@@ -18,6 +18,7 @@
 #include "shapes.h"
 #include "elbo.h"
 #include "header.h"
+#include "buttonbar.h"
 #include "sweep.h"
 #include "pointerevent.h"
 
@@ -73,52 +74,21 @@ int main(int argc, char* argv[]) {
       Size2D{display}
     );
 
-
-  Header header1{window.grid.Rows(1,2), window};
-  window.Add(&header1);
-
-  Header header2{window.grid.Rows(3,4), window};
-  header2.AddButton("01-8854");
-  window.Add(&header2);
-
-  Header header3{window.grid.Rows(5,6), window};
-  header3.AddButton("01-8854");
-  header3.AddButton("02-5861");
-  window.Add(&header3);
-
-  Header header4{window.grid.Rows(7,8), window};
-  header4.AddButton("01-8854");
-  header4.AddButton("02-5861");
-  header4.AddButton("03-8854");
-  window.Add(&header4);
-
-  Header header5{window.grid.Rows(9,10), window, " HEADER TITLE "};
-  window.Add(&header5);
-
-  Header header6{window.grid.Rows(11,12), window, " HEADER TITLE ONE "};
-  header6.AddButton("01-8854");
-  window.Add(&header6);
-
-  Header header7{window.grid.Rows(13,14), window, " HEADER TITLE ONE TWO "};
-  header7.AddButton("01-8854");
-  header7.AddButton("02-5861");
-  window.Add(&header7);
-
-  Header header8{window.grid.Rows(15,16), window, " HEADER TITLE ONE TWO THREE "};
-  header8.AddButton("01-8854");
-  header8.AddButton("02-5861");
-  header8.AddButton("03-8854");
-  window.Add(&header8);
+  Header header{window.grid.Rows(1,2), window, " HEADER TITLE "};
+  header.AddButton("01-8854");
+  header.AddButton("02-5861");
+  header.AddButton("03-8854");
+  window.Add(&header);
 
   Vector2D sweepsize{4,3};
   Vector2D ports{3,1};
        int outer_radius{90};
        int inner_radius{50};
 
-       int max_cols = 21;
+       int max_cols = 15;
        int max_rows = 8;
 
-       int sweep_offset = 16;
+       int sweep_offset = 3;
 
   NorthWestSweep northwestsweep{window,
       window.grid.SubGrid(
@@ -137,7 +107,7 @@ int main(int argc, char* argv[]) {
           max_cols,
           sweepsize.y + sweep_offset
         ),
-      sweepsize, Vector2D{1,1}, outer_radius, inner_radius
+      sweepsize, Vector2D{2,1}, outer_radius, inner_radius
     };
 
   SouthEastSweep southeastsweep{window,
@@ -147,7 +117,7 @@ int main(int argc, char* argv[]) {
           max_cols,
           max_rows + sweep_offset
         ),
-      sweepsize, Vector2D{1,2}, outer_radius, inner_radius
+      sweepsize, Vector2D{2,2}, outer_radius, inner_radius
     };
 
   SouthWestSweep southwestsweep{window,
@@ -166,7 +136,7 @@ int main(int argc, char* argv[]) {
   window.Add(&northwestsweep);
 
   Button rightbutton{window, window.grid.CalculateGridRegion(
-      max_cols - sweepsize.x + 4, sweep_offset + sweepsize.y + 1,
+      max_cols - sweepsize.x + 3, sweep_offset + sweepsize.y + 1,
       max_cols                  , sweep_offset + sweepsize.y + 2
     ), window.Colours(), "65-8858"};
   window.Add(&rightbutton);
@@ -184,19 +154,22 @@ int main(int argc, char* argv[]) {
   Quad topbar(topbarregion);
   window.Add(&topbar);
 
-  Region2D bottombarregion = window.grid.CalculateGridRegion(
+  Grid bottombargrid = window.grid.SubGrid(
       sweepsize.x + 1,        sweep_offset + max_rows - 1,
       max_cols - sweepsize.x, sweep_offset + max_rows
     );
-  Quad bottombar(bottombarregion);
+  ButtonBar bottombar(bottombargrid, window);
+  bottombar.AddButton("04-2993");
+  bottombar.AddButton("07-9825");
   window.Add(&bottombar);
+
 
   window.Colours(blue_alert_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  bool drawgrid = true;
+  bool drawgrid = false;
 
   printf("LOOP\n");
   while (running) {

@@ -9,10 +9,10 @@
 
 class Quad : public Drawable {
   protected:
-    Region2D& bounds;
+    Region2D bounds;
 
   public:
-    Quad(Region2D& r) :
+    Quad(Region2D r) :
         bounds{r} {};
 
     Region2D Bounds() const override {

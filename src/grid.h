@@ -9,19 +9,27 @@
 #include "geometry.h"
 
 class Grid {
+
+  protected:
+    int row_height{100};
+    Vector2D gutter{50, 50};
+    Vector2D size{3,3};
+
   public:
-    Grid() {}
-    Grid(Size2D s) : bounds{Position2D{0,0}, s} {};
-    Grid(Region2D b) : bounds{b} {};
+    Region2D bounds;
+
+    Grid() {};
 
     Grid(
         Region2D b,
         int rh,
-        Vector2D g
+        Vector2D g,
+        Vector2D s
       ) :
         bounds{b},
         row_height{rh},
-        gutter{g}
+        gutter{g},
+        size{s}
     {};
 
     Grid SubGrid(
@@ -34,7 +42,11 @@ class Grid {
               far_col, far_row
             ),
           row_height,
-          gutter
+          gutter,
+          Vector2D(
+              far_col - near_col + 1,
+              far_row - near_row + 1
+            )
         };
     }
 
@@ -107,25 +119,11 @@ class Grid {
     }
 
     int MaxColumns() const {
-      int max_col = PositionColumnIndex(bounds.Far());
-      Region2D proposed = Cell(max_col, 1);
-
-      if (bounds.Encloses(proposed)) {
-        return max_col;
-      }
-
-      return max_col - 1;
+      return size.x;
     }
 
     int MaxRows() const {
-      int max_row = PositionRowIndex(bounds.Far());
-      Region2D proposed = Cell(1, max_row);
-
-      if (bounds.Encloses(proposed)) {
-        return max_row;
-      }
-
-      return max_row - 1;
+      return size.y;
     }
 
     void Print() const {
@@ -135,10 +133,5 @@ class Grid {
           bounds.W(), bounds.H()
         );
     }
-
-    Region2D bounds;
-  protected:
-    int row_height{100};
-    Vector2D gutter{50, 50};
 };
 

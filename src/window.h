@@ -37,7 +37,9 @@ class Window {
       grid = Grid{
           Region2D{size},
           button_font.Height(), // Row height
-          Vector2D(10,10)
+          Vector2D(10,10),
+          Vector2D(15,28)
+          //Vector2D(25,28)
         };
     };
 
