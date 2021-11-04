@@ -82,15 +82,13 @@ int main(int argc, char* argv[]) {
 
   Grid framegrid = window.grid.Rows(4, window.grid.MaxRows());
 
-  Vector2D sweepsize{4,3};
-  Vector2D ports{3,1};
-       int outer_radius{90};
-       int inner_radius{50};
+  int outer_radius{90};
+  int inner_radius{50};
 
-       int north_frame = 1,
-           east_frame = 2,
-           south_frame = 1,
-           west_frame = 2;
+  int north_frame = 2,
+       east_frame = 2,
+      south_frame = 2,
+       west_frame = 2;
 
   Vector2D nesize{4,2};
   Vector2D sesize{5,3};
@@ -115,7 +113,17 @@ int main(int argc, char* argv[]) {
     )};
   window.Add(&westbar);
 
+  HorizontalButtonBar northbar{window, framegrid.SubGrid(
+      nwsize.x + 1, 1,
+      framegrid.MaxColumns() - nesize.x, north_frame
+    )};
+  window.Add(&northbar);
 
+  HorizontalButtonBar southbar{window, framegrid.SubGrid(
+      swsize.x + 1, framegrid.MaxRows() - (south_frame-1),
+      framegrid.MaxColumns() - sesize.x, framegrid.MaxRows()
+    )};
+  window.Add(&southbar);
 
 
 

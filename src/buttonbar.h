@@ -96,6 +96,8 @@ class HorizontalButtonBar : public ButtonBar {
     }
 
     Region2D BarRegion() const override {
+      return Region2D();
+
       int near_col = button_size.x * buttons.size() + 1;
       int near_row = 1;
       int  far_col = grid.MaxColumns();

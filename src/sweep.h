@@ -144,7 +144,7 @@ class SouthWestSweep : public Sweep {
 
     Region2D HorizontalPort() const override {
       return grid.CalculateGridRegion(
-          grid.MaxColumns() - ports.y + 1, grid.MaxRows(),
+          grid.MaxColumns(), grid.MaxRows() - ports.y + 1,
                         grid.MaxColumns(), grid.MaxRows()
         );
     }
@@ -167,7 +167,7 @@ class NorthWestSweep : public Sweep {
     Region2D VerticalPort() const override {
       return grid.CalculateGridRegion(
           grid.MaxColumns(), 1,
-          grid.MaxColumns(), 1
+          grid.MaxColumns(), ports.y
         );
     }
 
