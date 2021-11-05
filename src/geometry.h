@@ -188,15 +188,15 @@ class Region2D {
           int FarY() const { return Far().y; }
 
     // Compass points
-    Position2D Centre()     const { return Origin().Add(Size().Centre());    }
-    Position2D North()      const { return Origin().Add(Size().North());     }
-    Position2D NorthEast()  const { return Origin().Add(Size().NorthEast()); }
-    Position2D East()       const { return Origin().Add(Size().East());      }
-    Position2D SouthEast()  const { return Origin().Add(Size().SouthEast()); }
-    Position2D South()      const { return Origin().Add(Size().South());     }
-    Position2D SouthWest()  const { return Origin().Add(Size().SouthWest()); }
-    Position2D West()       const { return Origin().Add(Size().West());      }
-    Position2D NorthWest()  const { return Origin().Add(Size().NorthWest()); }
+    Position2D Centre()     const { return Point(Compass::CENTRE   ); }
+    Position2D North()      const { return Point(Compass::NORTH    ); }
+    Position2D NorthEast()  const { return Point(Compass::NORTHEAST); }
+    Position2D East()       const { return Point(Compass::EAST     ); }
+    Position2D SouthEast()  const { return Point(Compass::SOUTHEAST); }
+    Position2D South()      const { return Point(Compass::SOUTH    ); }
+    Position2D SouthWest()  const { return Point(Compass::SOUTHWEST); }
+    Position2D West()       const { return Point(Compass::WEST     ); }
+    Position2D NorthWest()  const { return Point(Compass::NORTHWEST); }
 
     int CentreX()    const { return Centre().x;    }
     int CentreY()    const { return Centre().y;    }
@@ -216,6 +216,21 @@ class Region2D {
     int SouthWestY() const { return SouthWest().y; }
     int NorthWestX() const { return NorthWest().x; }
     int NorthWestY() const { return NorthWest().y; }
+
+    // Compass Points
+    Position2D Point(Compass align) const {
+      switch (align) {
+        case    Compass::CENTRE: return Origin().Add(Size().Centre());
+        case     Compass::NORTH: return Origin().Add(Size().North());
+        case Compass::NORTHEAST: return Origin().Add(Size().NorthEast());
+        case      Compass::EAST: return Origin().Add(Size().East());
+        case Compass::SOUTHEAST: return Origin().Add(Size().SouthEast());
+        case     Compass::SOUTH: return Origin().Add(Size().South());
+        case Compass::SOUTHWEST: return Origin().Add(Size().SouthWest());
+        case      Compass::WEST: return Origin().Add(Size().West());
+        case Compass::NORTHWEST: return Origin().Add(Size().NorthWest());
+      }
+    }
 
     // Compass Alignment
     Region2D Align(Compass align, Size2D s) const {
