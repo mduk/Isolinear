@@ -12,6 +12,7 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
+#include "frame.h"
 #include "geometry.h"
 #include "window.h"
 #include "grid.h"
@@ -83,111 +84,8 @@ int main(int argc, char* argv[]) {
   window.Add(&header);
 
   Grid framegrid = window.grid.Rows(4, window.grid.MaxRows());
-
-  int outer_radius{90};
-  int inner_radius{50};
-
-  int north_frame = 2,
-       east_frame = 3,
-      south_frame = 2,
-       west_frame = 4;
-
-  Vector2D nesize{4,3};
-  Vector2D sesize{5,4};
-  Vector2D swsize{6,5};
-  Vector2D nwsize{7,6};
-
-  VerticalButtonBar eastbar{window, framegrid.SubGrid(
-      framegrid.MaxColumns() - (east_frame-1),
-      nesize.y + 1,
-
-      framegrid.MaxColumns(),
-      framegrid.MaxRows() - sesize.y
-    )};
-  eastbar.AddButton("92-5668");
-  window.Add(&eastbar);
-
-  VerticalButtonBar westbar{window, framegrid.SubGrid(
-      1,
-      nwsize.y + 1,
-
-      west_frame,
-      framegrid.MaxRows() - swsize.y
-    )};
-  westbar.AddButton("92-5668");
-  window.Add(&westbar);
-
-  HorizontalButtonBar northbar{window, framegrid.SubGrid(
-      nwsize.x + 1, 1,
-      framegrid.MaxColumns() - nesize.x, north_frame
-    )};
-  northbar.AddButton("92-5668");
-  window.Add(&northbar);
-
-  HorizontalButtonBar southbar{window, framegrid.SubGrid(
-      swsize.x + 1, framegrid.MaxRows() - (south_frame-1),
-      framegrid.MaxColumns() - sesize.x, framegrid.MaxRows()
-    )};
-  southbar.AddButton("516.375");
-  window.Add(&southbar);
-
-
-
-  NorthEastSweep northeastsweep{window,
-      framegrid.SubGrid(
-          framegrid.MaxColumns() - (nesize.x - 1),
-          1,
-
-          framegrid.MaxColumns(),
-          nesize.y
-        ),
-      Vector2D{ east_frame, north_frame },
-      outer_radius,
-      inner_radius
-    };
-  window.Add(&northeastsweep);
-
-  SouthEastSweep southeastsweep{window,
-      framegrid.SubGrid(
-          framegrid.MaxColumns() - (sesize.x - 1),
-          framegrid.MaxRows() - (sesize.y - 1),
-
-          framegrid.MaxColumns(),
-          framegrid.MaxRows()
-        ),
-      Vector2D{ east_frame, south_frame },
-      outer_radius,
-      inner_radius
-    };
-  window.Add(&southeastsweep);
-
-  SouthWestSweep southwestsweep{window,
-      framegrid.SubGrid(
-          1,
-          framegrid.MaxRows() - (swsize.y - 1),
-
-          swsize.x,
-          framegrid.MaxRows()
-        ),
-      Vector2D{ west_frame, south_frame },
-      outer_radius,
-      inner_radius
-    };
-  window.Add(&southwestsweep);
-
-  NorthWestSweep northwestsweep{window,
-      framegrid.SubGrid(
-          1,
-          1,
-
-          nwsize.x,
-          nwsize.y
-        ),
-      Vector2D{ west_frame, north_frame },
-      outer_radius,
-      inner_radius
-    };
-  window.Add(&northwestsweep);
+  Frame mainframe{framegrid, window};
+  window.Add(&mainframe);
 
 
   window.Colours(blue_alert_colours);

@@ -5,6 +5,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "colours.h"
+#include "pointerevent.h"
 
 class Drawable {
   protected:
