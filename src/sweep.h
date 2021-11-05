@@ -42,7 +42,13 @@ class Sweep : public Drawable {
 
     virtual Region2D HorizontalPort() const = 0;
     virtual Region2D VerticalPort() const = 0;
-    virtual Region2D InnerCornerRegion() const = 0;
+
+    virtual Region2D InnerCornerRegion() const {
+      return Region2D{
+          HorizontalPort().Point(opposite),
+          VerticalPort().Point(opposite)
+        };
+    }
 
     Region2D OuterRadiusRegion() const {
       return grid.bounds.Align(alignment, Size2D{outer_radius});
@@ -96,13 +102,6 @@ class NorthEastSweep : public Sweep {
         );
     }
 
-    virtual Region2D InnerCornerRegion() const {
-      return Region2D{
-          HorizontalPort().SouthWest(),
-          VerticalPort().SouthWest()
-        };
-    }
-
 };
 
 class SouthEastSweep : public Sweep {
@@ -123,13 +122,6 @@ class SouthEastSweep : public Sweep {
           grid.MaxColumns() - ports.x + 1, 1,
           grid.MaxColumns(), 1
         );
-    }
-
-    virtual Region2D InnerCornerRegion() const {
-      return Region2D{
-          HorizontalPort().NorthWest(),
-          VerticalPort().NorthWest()
-        };
     }
 
 };
@@ -154,13 +146,6 @@ class SouthWestSweep : public Sweep {
         );
     }
 
-    virtual Region2D InnerCornerRegion() const {
-      return Region2D{
-          HorizontalPort().NorthEast(),
-          VerticalPort().NorthEast()
-        };
-    }
-
 };
 
 class NorthWestSweep : public Sweep {
@@ -183,11 +168,5 @@ class NorthWestSweep : public Sweep {
         );
     }
 
-    virtual Region2D InnerCornerRegion() const {
-      return Region2D{
-          HorizontalPort().SouthEast(),
-          VerticalPort().SouthEast()
-        };
-    }
 
 };
