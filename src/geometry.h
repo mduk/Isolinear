@@ -190,13 +190,13 @@ class Region2D {
     // Compass points
     Position2D Centre()     const { return Origin().Add(Size().Centre());    }
     Position2D North()      const { return Origin().Add(Size().North());     }
-    Position2D East()       const { return Origin().Add(Size().East());      }
-    Position2D South()      const { return Origin().Add(Size().South());     }
-    Position2D West()       const { return Origin().Add(Size().West());      }
-    Position2D SouthWest()  const { return Origin().Add(Size().SouthWest()); }
-    Position2D NorthWest()  const { return Origin().Add(Size().NorthWest()); }
-    Position2D SouthEast()  const { return Origin().Add(Size().SouthEast()); }
     Position2D NorthEast()  const { return Origin().Add(Size().NorthEast()); }
+    Position2D East()       const { return Origin().Add(Size().East());      }
+    Position2D SouthEast()  const { return Origin().Add(Size().SouthEast()); }
+    Position2D South()      const { return Origin().Add(Size().South());     }
+    Position2D SouthWest()  const { return Origin().Add(Size().SouthWest()); }
+    Position2D West()       const { return Origin().Add(Size().West());      }
+    Position2D NorthWest()  const { return Origin().Add(Size().NorthWest()); }
 
     int CentreX()    const { return Centre().x;    }
     int CentreY()    const { return Centre().y;    }
