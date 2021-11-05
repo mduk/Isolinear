@@ -25,14 +25,14 @@ class Frame : public Drawable {
     int inner_radius{50};
 
     int north_frame = 2;
-    int east_frame = 3;
+    int east_frame = 2;
     int south_frame = 2;
     int west_frame = 4;
 
-    Vector2D nesize{4,3};
-    Vector2D sesize{5,4};
-    Vector2D swsize{6,5};
-    Vector2D nwsize{7,6};
+    Vector2D northeast_sweep_size{4,3};
+    Vector2D southeast_sweep_size{5,4};
+    Vector2D southwest_sweep_size{6,5};
+    Vector2D northwest_sweep_size{7,6};
 
     HorizontalButtonBar north_bar;
          NorthEastSweep northeast_sweep;
@@ -50,38 +50,38 @@ class Frame : public Drawable {
         window{w},
 
         north_bar{window, grid.SubGrid(
-          nwsize.x + 1, 1,
-          grid.MaxColumns() - nesize.x, north_frame
+          northwest_sweep_size.x + 1, 1,
+          grid.MaxColumns() - northeast_sweep_size.x, north_frame
         )},
 
         east_bar{window, grid.SubGrid(
           grid.MaxColumns() - (east_frame-1),
-          nesize.y + 1,
+          northeast_sweep_size.y + 1,
 
           grid.MaxColumns(),
-          grid.MaxRows() - sesize.y
+          grid.MaxRows() - southeast_sweep_size.y
         )},
 
         west_bar{window, grid.SubGrid(
           1,
-          nwsize.y + 1,
+          northwest_sweep_size.y + 1,
 
           west_frame,
-          grid.MaxRows() - swsize.y
+          grid.MaxRows() - southwest_sweep_size.y
         )},
 
         south_bar{window, grid.SubGrid(
-          swsize.x + 1, grid.MaxRows() - (south_frame-1),
-          grid.MaxColumns() - sesize.x, grid.MaxRows()
+          southwest_sweep_size.x + 1, grid.MaxRows() - (south_frame-1),
+          grid.MaxColumns() - southeast_sweep_size.x, grid.MaxRows()
         )},
 
         northeast_sweep{window,
           grid.SubGrid(
-              grid.MaxColumns() - (nesize.x - 1),
+              grid.MaxColumns() - (northeast_sweep_size.x - 1),
               1,
 
               grid.MaxColumns(),
-              nesize.y
+              northeast_sweep_size.y
             ),
           Vector2D{ east_frame, north_frame },
           outer_radius,
@@ -90,8 +90,8 @@ class Frame : public Drawable {
 
         southeast_sweep{window,
           grid.SubGrid(
-              grid.MaxColumns() - (sesize.x - 1),
-              grid.MaxRows() - (sesize.y - 1),
+              grid.MaxColumns() - (southeast_sweep_size.x - 1),
+              grid.MaxRows() - (southeast_sweep_size.y - 1),
 
               grid.MaxColumns(),
               grid.MaxRows()
@@ -104,9 +104,9 @@ class Frame : public Drawable {
         southwest_sweep{window,
           grid.SubGrid(
               1,
-              grid.MaxRows() - (swsize.y - 1),
+              grid.MaxRows() - (southwest_sweep_size.y - 1),
 
-              swsize.x,
+              southwest_sweep_size.x,
               grid.MaxRows()
             ),
           Vector2D{ west_frame, south_frame },
@@ -119,8 +119,8 @@ class Frame : public Drawable {
               1,
               1,
 
-              nwsize.x,
-              nwsize.y
+              northwest_sweep_size.x,
+              northwest_sweep_size.y
             ),
           Vector2D{ west_frame, north_frame },
           outer_radius,
@@ -154,13 +154,14 @@ class Frame : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
-            north_bar.Draw(renderer);
+      if (north_frame > 0) north_bar.Draw(renderer);
+      if ( east_frame > 0)  east_bar.Draw(renderer);
+      if (south_frame > 0) south_bar.Draw(renderer);
+      if ( west_frame > 0)  west_bar.Draw(renderer);
+
       northeast_sweep.Draw(renderer);
-             east_bar.Draw(renderer);
       southeast_sweep.Draw(renderer);
-            south_bar.Draw(renderer);
       southwest_sweep.Draw(renderer);
-             west_bar.Draw(renderer);
       northwest_sweep.Draw(renderer);
     }
 };
