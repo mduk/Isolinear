@@ -64,7 +64,6 @@ class ButtonBar : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
-      grid.Draw(renderer);
       for (auto const& button : buttons) {
         button.Draw(renderer);
       }
@@ -96,8 +95,6 @@ class HorizontalButtonBar : public ButtonBar {
     }
 
     Region2D BarRegion() const override {
-      return Region2D();
-
       int near_col = button_size.x * buttons.size() + 1;
       int near_row = 1;
       int  far_col = grid.MaxColumns();
@@ -127,8 +124,6 @@ class VerticalButtonBar : public ButtonBar {
     }
 
     Region2D BarRegion() const override {
-      return Region2D();
-
       int near_col = 1;
       int near_row = button_size.y * buttons.size() + 1;
       int  far_col = grid.MaxColumns();

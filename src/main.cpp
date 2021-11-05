@@ -24,6 +24,8 @@
 
 using namespace std;
 
+bool drawdebug = false;
+
 string http_req(string url) {
   list<string> headers;
   headers.push_back("Accept: application/json");
@@ -86,14 +88,14 @@ int main(int argc, char* argv[]) {
   int inner_radius{50};
 
   int north_frame = 2,
-       east_frame = 2,
+       east_frame = 3,
       south_frame = 2,
-       west_frame = 2;
+       west_frame = 4;
 
-  Vector2D nesize{4,2};
-  Vector2D sesize{5,3};
-  Vector2D swsize{6,4};
-  Vector2D nwsize{7,5};
+  Vector2D nesize{4,3};
+  Vector2D sesize{5,4};
+  Vector2D swsize{6,5};
+  Vector2D nwsize{7,6};
 
   VerticalButtonBar eastbar{window, framegrid.SubGrid(
       framegrid.MaxColumns() - (east_frame-1),
@@ -102,6 +104,7 @@ int main(int argc, char* argv[]) {
       framegrid.MaxColumns(),
       framegrid.MaxRows() - sesize.y
     )};
+  eastbar.AddButton("92-5668");
   window.Add(&eastbar);
 
   VerticalButtonBar westbar{window, framegrid.SubGrid(
@@ -111,18 +114,21 @@ int main(int argc, char* argv[]) {
       west_frame,
       framegrid.MaxRows() - swsize.y
     )};
+  westbar.AddButton("92-5668");
   window.Add(&westbar);
 
   HorizontalButtonBar northbar{window, framegrid.SubGrid(
       nwsize.x + 1, 1,
       framegrid.MaxColumns() - nesize.x, north_frame
     )};
+  northbar.AddButton("92-5668");
   window.Add(&northbar);
 
   HorizontalButtonBar southbar{window, framegrid.SubGrid(
       swsize.x + 1, framegrid.MaxRows() - (south_frame-1),
       framegrid.MaxColumns() - sesize.x, framegrid.MaxRows()
     )};
+  southbar.AddButton("516.375");
   window.Add(&southbar);
 
 
@@ -184,12 +190,11 @@ int main(int argc, char* argv[]) {
   window.Add(&northwestsweep);
 
 
-  //window.Colours(blue_alert_colours);
+  window.Colours(blue_alert_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  bool drawgrid = false;
 
   printf("LOOP\n");
   while (running) {
@@ -198,7 +203,7 @@ int main(int argc, char* argv[]) {
     SDL_RenderClear(window.sdl_renderer);
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
 
-    if (drawgrid) {
+    if (drawdebug) {
       window.grid.Draw(window.sdl_renderer);
     }
 
@@ -214,7 +219,7 @@ int main(int argc, char* argv[]) {
             case         'r': window.Colours(red_alert_colours); break;
             case         'y': window.Colours(yellow_alert_colours); break;
             case         'b': window.Colours(blue_alert_colours); break;
-            case         'g': drawgrid = !drawgrid; break;
+            case         'g': drawdebug = !drawdebug; break;
           }
           break;
         }

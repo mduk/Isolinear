@@ -8,6 +8,8 @@
 
 #include "geometry.h"
 
+extern bool drawdebug;
+
 class Sweep : public Drawable {
   protected:
     Window& window;
@@ -40,6 +42,7 @@ class Sweep : public Drawable {
 
     virtual Region2D HorizontalPort() const = 0;
     virtual Region2D VerticalPort() const = 0;
+    virtual Region2D InnerCornerRegion() const = 0;
 
     Region2D OuterRadiusRegion() const {
       return grid.bounds.Align(alignment, Size2D{outer_radius});
@@ -51,21 +54,6 @@ class Sweep : public Drawable {
       region.QuadrantArc(renderer, alignment, Colours().frame);
     }
 
-    Region2D InnerCornerRegion() const {
-      Region2D hport = HorizontalPort();
-      Region2D vport = VerticalPort();
-
-      Position2D hports = hport.SouthWest();
-      Position2D vportw = vport.SouthWest();
-
-      Size2D icorner_size{
-          vportw.x - hports.x,
-          vportw.y - hports.y
-        };
-
-      return grid.bounds.Align(opposite, icorner_size);
-    }
-
     Region2D Bounds() const override {
       return grid.bounds;
     }
@@ -75,13 +63,16 @@ class Sweep : public Drawable {
       Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
 
       grid.bounds.Fill(renderer, Colours().frame);
-      //icorner.Fill(renderer, Colours().background);
-      //iradius.Fill(renderer, Colours().frame);
-      //iradius.QuadrantArc(renderer, alignment, Colours().background);
-      //DrawOuterRadius(renderer);
+      icorner.Fill(renderer, Colours().background);
+      iradius.Fill(renderer, Colours().frame);
+      iradius.QuadrantArc(renderer, alignment, Colours().background);
+      DrawOuterRadius(renderer);
 
-      HorizontalPort().Draw(renderer);
-      VerticalPort().Draw(renderer);
+      if (drawdebug) {
+        HorizontalPort().Draw(renderer);
+        VerticalPort().Draw(renderer);
+        icorner.Draw(renderer);
+      }
     }
 };
 
@@ -103,6 +94,13 @@ class NorthEastSweep : public Sweep {
           grid.MaxColumns() - ports.x + 1, grid.MaxRows(),
                         grid.MaxColumns(), grid.MaxRows()
         );
+    }
+
+    virtual Region2D InnerCornerRegion() const {
+      return Region2D{
+          HorizontalPort().SouthWest(),
+          VerticalPort().SouthWest()
+        };
     }
 
 };
@@ -127,6 +125,13 @@ class SouthEastSweep : public Sweep {
         );
     }
 
+    virtual Region2D InnerCornerRegion() const {
+      return Region2D{
+          HorizontalPort().NorthWest(),
+          VerticalPort().NorthWest()
+        };
+    }
+
 };
 
 class SouthWestSweep : public Sweep {
@@ -149,6 +154,13 @@ class SouthWestSweep : public Sweep {
         );
     }
 
+    virtual Region2D InnerCornerRegion() const {
+      return Region2D{
+          HorizontalPort().NorthEast(),
+          VerticalPort().NorthEast()
+        };
+    }
+
 };
 
 class NorthWestSweep : public Sweep {
@@ -169,6 +181,13 @@ class NorthWestSweep : public Sweep {
           grid.MaxColumns(), 1,
           grid.MaxColumns(), ports.y
         );
+    }
+
+    virtual Region2D InnerCornerRegion() const {
+      return Region2D{
+          HorizontalPort().SouthEast(),
+          VerticalPort().SouthEast()
+        };
     }
 
 };
