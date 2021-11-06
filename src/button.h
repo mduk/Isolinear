@@ -24,7 +24,9 @@ class Button : public Drawable {
     bool right_cap = true;
 
   public:
-    miso::signal<const std::string> hello_signal;
+    miso::signal<const std::string> signal_activate;
+    miso::signal<const std::string> signal_deactivate;
+
     Region2D bounds;
     std::string label;
     Button(
@@ -92,7 +94,12 @@ class Button : public Drawable {
 
     void OnPointerEvent(PointerEvent event) {
       active = !active;
-      emit hello_signal(label);
+      if (active) {
+        emit signal_activate(label);
+      }
+      else {
+        emit signal_deactivate(label);
+      }
     }
 };
 

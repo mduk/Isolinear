@@ -44,8 +44,12 @@ string http_req(string url) {
   return string(response_stream.str());
 }
 
-void printout(const std::string msg) {
-  printf("%s\n", msg.c_str());
+void turn_thing_on(const std::string msg) {
+  printf("turning on thing: %s\n", msg.c_str());
+}
+
+void turn_thing_off(const std::string msg) {
+  printf("turning off thing: %s\n", msg.c_str());
 }
 
 int main(int argc, char* argv[]) {
@@ -100,7 +104,8 @@ int main(int argc, char* argv[]) {
   Button btn{window, window.grid.Rows(1,2).bounds, blue_alert_colours, "ONE"};
   window.Add(&btn);
 
-  miso::connect(btn.hello_signal, printout);
+  miso::connect(btn.signal_activate, turn_thing_on);
+  miso::connect(btn.signal_deactivate, turn_thing_off);
 
   window.Colours(blue_alert_colours);
 
