@@ -12,6 +12,8 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
+#include "miso.h"
+
 #include "frame.h"
 #include "geometry.h"
 #include "window.h"
@@ -40,6 +42,10 @@ string http_req(string url) {
   req.perform();
 
   return string(response_stream.str());
+}
+
+void printout(const std::string msg) {
+  printf("%s\n", msg.c_str());
 }
 
 int main(int argc, char* argv[]) {
@@ -77,6 +83,7 @@ int main(int argc, char* argv[]) {
       Size2D{display}
     );
 
+  /*
   Header header{window.grid.Rows(1,2), window, " HEADER TITLE "};
   header.AddButton("01-8854");
   header.AddButton("02-5861");
@@ -88,6 +95,12 @@ int main(int argc, char* argv[]) {
 
   Frame frame2{window.grid.Rows(13, 21), window, 2, 2, 0, 2};
   window.Add(&frame2);
+  */
+
+  Button btn{window, window.grid.Rows(1,2).bounds, blue_alert_colours, "ONE"};
+  window.Add(&btn);
+
+  miso::connect(btn.hello_signal, printout);
 
   window.Colours(blue_alert_colours);
 

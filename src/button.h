@@ -4,6 +4,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "miso.h"
+
 #include "window.h"
 #include "drawable.h"
 #include "grid.h"
@@ -22,6 +24,7 @@ class Button : public Drawable {
     bool right_cap = true;
 
   public:
+    miso::signal<const std::string> hello_signal;
     Region2D bounds;
     std::string label;
     Button(
@@ -89,6 +92,7 @@ class Button : public Drawable {
 
     void OnPointerEvent(PointerEvent event) {
       active = !active;
+      emit hello_signal(label);
     }
 };
 
