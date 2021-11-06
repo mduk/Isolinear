@@ -275,6 +275,10 @@ class Region2D {
       boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
     }
 
+    virtual void RoundedFill(SDL_Renderer* renderer, int radius, Colour colour) const {
+      roundedBoxColor(renderer, NearX(), NearY(), FarX(), FarY(), radius, colour);
+    }
+
     virtual void Ellipse(SDL_Renderer* renderer, Colour colour) const {
       filledEllipseColor(renderer,
           CentreX(), CentreY(),

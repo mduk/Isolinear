@@ -25,14 +25,14 @@ class Frame : public Drawable {
     int inner_radius{50};
 
     int north_frame = 2;
-    int east_frame = 2;
+    int east_frame  = 2;
     int south_frame = 2;
-    int west_frame = 4;
+    int west_frame  = 2;
 
-    Vector2D northeast_sweep_size{4,3};
-    Vector2D southeast_sweep_size{5,4};
-    Vector2D southwest_sweep_size{6,5};
-    Vector2D northwest_sweep_size{7,6};
+    Vector2D northeast_sweep_size{3,3};
+    Vector2D southeast_sweep_size{3,3};
+    Vector2D southwest_sweep_size{3,3};
+    Vector2D northwest_sweep_size{3,3};
 
     HorizontalButtonBar north_bar;
          NorthEastSweep northeast_sweep;
@@ -44,10 +44,14 @@ class Frame : public Drawable {
          NorthWestSweep northwest_sweep;
 
   public:
-    Frame(Grid g, Window& w)
+    Frame(Grid g, Window& w, int nf, int ef, int sf, int wf)
       :
         grid{g},
         window{w},
+        north_frame{nf},
+        east_frame{ef},
+        south_frame{sf},
+        west_frame{wf},
 
         north_bar{window, grid.SubGrid(
           northwest_sweep_size.x + 1, 1,
@@ -154,10 +158,12 @@ class Frame : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
+
       if (north_frame > 0) north_bar.Draw(renderer);
       if ( east_frame > 0)  east_bar.Draw(renderer);
       if (south_frame > 0) south_bar.Draw(renderer);
       if ( west_frame > 0)  west_bar.Draw(renderer);
+
 
       northeast_sweep.Draw(renderer);
       southeast_sweep.Draw(renderer);

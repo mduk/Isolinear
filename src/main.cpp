@@ -83,10 +83,11 @@ int main(int argc, char* argv[]) {
   header.AddButton("03-8854");
   window.Add(&header);
 
-  Grid framegrid = window.grid.Rows(4, window.grid.MaxRows());
-  Frame mainframe{framegrid, window};
-  window.Add(&mainframe);
+  Frame frame1{window.grid.Rows( 4, 12), window, 0, 2, 2, 2};
+  window.Add(&frame1);
 
+  Frame frame2{window.grid.Rows(13, 21), window, 2, 2, 0, 2};
+  window.Add(&frame2);
 
   window.Colours(blue_alert_colours);
 
