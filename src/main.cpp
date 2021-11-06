@@ -8,10 +8,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Options.hpp>
-
 #include "miso.h"
 
 #include "frame.h"
@@ -29,21 +25,6 @@ using namespace std;
 
 bool drawdebug = false;
 
-string http_req(string url) {
-  list<string> headers;
-  headers.push_back("Accept: application/json");
-
-  curlpp::Cleanup myCleanup;
-  ostringstream response_stream;
-  curlpp::Easy req;
-  req.setOpt<curlpp::options::Url>(url);
-  req.setOpt<curlpp::options::HttpHeader>(headers);
-  req.setOpt<curlpp::options::WriteStream>(&response_stream);
-  req.perform();
-
-  return string(response_stream.str());
-}
-
 void turn_thing_on(const std::string msg) {
   printf("turning on thing: %s\n", msg.c_str());
 }
@@ -57,7 +38,6 @@ int main(int argc, char* argv[]) {
 
   srand(time(NULL));
 
-  //curlpp::initialize();
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
   SDL_ShowCursor(SDL_DISABLE);
