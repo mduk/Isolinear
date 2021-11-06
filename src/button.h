@@ -19,6 +19,7 @@ using namespace std;
 class Button : public Drawable {
   protected:
     Window& window;
+    bool enabled = true;
     bool active = false;
     bool left_cap = true;
     bool right_cap = true;
@@ -38,6 +39,14 @@ class Button : public Drawable {
         window{w},
         label{l}
     {}
+
+    void Enable() { enabled = true; }
+    void Disable() { enabled = false; }
+    bool Enabled() { return enabled; }
+
+    void Activate() { active = true; }
+    void Deactivate() { active = false; }
+    bool Active() { return active; }
 
     Region2D LeftCapRegion() const {
       return Region2D{
@@ -61,9 +70,11 @@ class Button : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
-      Colour drawcolour = active == true
-                        ? Colours().active
-                        : Colours().light_alternate;
+      Colour drawcolour = enabled == true
+                        ? active == true
+                          ? Colours().active
+                          : Colours().light_alternate
+                        : Colours().disabled;
 
 
       boxColor(renderer,
@@ -92,7 +103,6 @@ class Button : public Drawable {
 
 
     void OnPointerEvent(PointerEvent event) {
-      active = !active;
       emit signal_press();
     }
 };
