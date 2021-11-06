@@ -25,14 +25,6 @@ using namespace std;
 
 bool drawdebug = false;
 
-void turn_thing_on(const std::string msg) {
-  printf("turning on thing: %s\n", msg.c_str());
-}
-
-void turn_thing_off(const std::string msg) {
-  printf("turning off thing: %s\n", msg.c_str());
-}
-
 int main(int argc, char* argv[]) {
   printf("INIT\n");
 
@@ -67,25 +59,29 @@ int main(int argc, char* argv[]) {
       Size2D{display}
     );
 
-  /*
-  Header header{window.grid.Rows(1,2), window, " HEADER TITLE "};
-  header.AddButton("01-8854");
-  header.AddButton("02-5861");
-  header.AddButton("03-8854");
+  Header header{window.grid.Rows(1,2), window, " MPD CONTROL "};
+  miso::connect(header.AddButton("PREV ").signal_press, []() {
+      printf("MPD Previous\n");
+    });
   window.Add(&header);
 
+  /*
   Frame frame1{window.grid.Rows( 4, 12), window, 0, 2, 2, 2};
   window.Add(&frame1);
 
   Frame frame2{window.grid.Rows(13, 21), window, 2, 2, 0, 2};
   window.Add(&frame2);
-  */
 
   Button btn{window, window.grid.Rows(1,2).bounds, blue_alert_colours, "ONE"};
   window.Add(&btn);
 
-  miso::connect(btn.signal_activate, turn_thing_on);
-  miso::connect(btn.signal_deactivate, turn_thing_off);
+  miso::connect(btn.signal_activate, [](std::string label) {
+      printf("activate %s\n", label.c_str());
+    });
+  miso::connect(btn.signal_deactivate, [](std::string label) {
+      printf("deactivate %s\n", label.c_str());
+    });
+  */
 
   window.Colours(blue_alert_colours);
 

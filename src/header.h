@@ -3,6 +3,8 @@
 #include <string>
 #include <list>
 
+#include "miso.h"
+
 #include "geometry.h"
 #include "window.h"
 #include "button.h"
@@ -35,13 +37,14 @@ class Header : public Drawable {
       Drawable::Colours(cs);
     }
 
-    void AddButton(std::string label) {
+    Button& AddButton(std::string label) {
       buttons.emplace_back(
           window,
           ButtonRegion(buttons.size() + 1),
           Colours(),
           label
         );
+        return buttons.back();
     }
 
     Region2D ButtonRegion(int i) const  {
