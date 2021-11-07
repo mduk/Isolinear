@@ -33,13 +33,14 @@ class ButtonBar : public Drawable {
       Drawable::Colours(cs);
     }
 
-    virtual void AddButton(std::string label) {
+    virtual Button& AddButton(std::string label) {
       buttons.emplace_back(
           window,
           ButtonRegion(buttons.size() + 1),
           Colours(),
           label
         );
+      return buttons.back();
     }
 
     virtual void OnPointerEvent(PointerEvent event) override {

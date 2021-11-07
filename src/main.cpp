@@ -21,7 +21,7 @@
 #include "shapes.h"
 #include "sweep.h"
 #include "window.h"
-#include "mpdremote.h"
+#include "mpd.h"
 
 using namespace std;
 
@@ -67,8 +67,11 @@ int main(int argc, char* argv[])
       Position2D{ display },
       Size2D{ display });
 
-  MpdRemote mpdremote{window.grid.Rows(1,2), window};
-  window.Add(&mpdremote);
+  MpdFrame mpdframe{
+      window.grid.Rows(1, window.grid.MaxRows()),
+      window
+    };
+  window.Add(&mpdframe);
 
   window.Colours(blue_alert_colours);
 
@@ -78,7 +81,6 @@ int main(int argc, char* argv[])
 
   printf("LOOP\n");
   while (running) {
-
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
     SDL_RenderClear(window.sdl_renderer);
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);

@@ -29,10 +29,10 @@ class Frame : public Drawable {
     int south_frame = 2;
     int west_frame  = 2;
 
-    Vector2D northeast_sweep_size{3,3};
-    Vector2D southeast_sweep_size{3,3};
-    Vector2D southwest_sweep_size{3,3};
-    Vector2D northwest_sweep_size{3,3};
+    Vector2D northeast_sweep_size{4,3};
+    Vector2D southeast_sweep_size{4,3};
+    Vector2D southwest_sweep_size{4,3};
+    Vector2D northwest_sweep_size{4,3};
 
     HorizontalButtonBar north_bar;
          NorthEastSweep northeast_sweep;
@@ -131,11 +131,13 @@ class Frame : public Drawable {
           inner_radius
         }
     {
-      north_bar.AddButton("92-5668");
-      east_bar.AddButton("92-5668");
-      west_bar.AddButton("92-5668");
-      south_bar.AddButton("516.375");
+      //
     }
+
+    HorizontalButtonBar& NorthBar() { return north_bar; }
+    VerticalButtonBar&   EastBar()  { return  east_bar; }
+    HorizontalButtonBar& SouthBar() { return south_bar; }
+    VerticalButtonBar&   WestBar()  { return  west_bar; }
 
     Region2D Bounds() const override {
       return grid.bounds;
