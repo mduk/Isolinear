@@ -58,10 +58,15 @@ class MpdFrame : public Frame {
   {
 
     conn = mpd_connection_new(NULL, 0, 30000);
-    status = mpd_run_status(conn);
 
     miso::connect(btnPlay.signal_press, [this]() {
-      mpd_run_play(conn);
+      if (btnPlay.Active()) {
+        mpd_run_stop(conn);
+      }
+      else {
+        mpd_run_play(conn);
+      }
+
       btnPlay.Activate();
       btnPause.Deactivate();
       btnStop.Deactivate();
@@ -79,7 +84,12 @@ class MpdFrame : public Frame {
     });
 
     miso::connect(btnStop.signal_press, [this]() {
-      mpd_run_stop(conn);
+      if (btnStop.Active()) {
+        mpd_run_play(conn);
+      }
+      else {
+        mpd_run_stop(conn);
+      }
       btnPlay.Deactivate();
       btnPause.Deactivate();
       btnStop.Activate();
@@ -99,6 +109,8 @@ class MpdFrame : public Frame {
   void Update()
   {
     status = mpd_run_status(conn);
+    song = mpd_run_current_song(conn);
+
     switch (mpd_status_get_state(status)) {
 
     case MPD_STATE_PLAY:
