@@ -16,6 +16,8 @@ class Drawable {
     virtual void Draw(SDL_Renderer*) const = 0;
     virtual Region2D Bounds() const = 0;
 
+    virtual void Update() {}
+
     virtual void OnPointerEvent(PointerEvent event) {
       Region2D   b = Bounds();
       Position2D p = event.Position();

@@ -114,9 +114,6 @@ int main(int argc, char* argv[])
         case 'g':
           drawdebug = !drawdebug;
           break;
-        case 'u':
-          mpdremote.Update();
-          break;
         }
         break;
       }
@@ -160,6 +157,7 @@ int main(int argc, char* argv[])
       }
     }
 
+    window.Update();
     window.Draw();
 
     SDL_RenderPresent(window.sdl_renderer);

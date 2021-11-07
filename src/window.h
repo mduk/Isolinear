@@ -74,6 +74,12 @@ class Window {
       drawables.push_back(drawable);
     }
 
+    void Update() {
+      for (auto* drawable : drawables) {
+        drawable->Update();
+      }
+    }
+
     void Draw() {
       for (auto* drawable : drawables) {
         drawable->Draw(sdl_renderer);
