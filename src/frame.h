@@ -16,8 +16,187 @@
 
 extern bool drawdebug;
 
+class CompassLayout : public Drawable {
+  protected:
+    Grid grid;
+    Window& window;
+
+         int north;
+    Vector2D northeast;
+         int east;
+    Vector2D southeast;
+         int south;
+    Vector2D southwest;
+         int west;
+    Vector2D northwest;
+
+  public:
+    CompassLayout(
+        Grid g, Window& win,
+        int n, int e, int s, int w,
+        Vector2D ne, Vector2D se,
+        Vector2D sw, Vector2D nw
+      ) :
+        grid(g), window(win),
+        north(n), east(e), south(s), west(w),
+        northeast(ne), southeast(se),
+        southwest(sw), northwest(nw)
+    {}
+
+    Grid North() const {
+      int near_col = northwest.x + 1;
+      int near_row = 1;
+      int  far_col = grid.MaxColumns() - northeast.x;
+      int  far_row = north;
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid NorthEast() const {
+      int near_col = grid.MaxColumns() - (northeast.x - 1);
+      int near_row = 1;
+      int  far_col = grid.MaxColumns();
+      int  far_row = northeast.x;
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid East() const {
+      int near_col = grid.MaxColumns() - (east - 1);
+      int near_row = northeast.y + 1;
+      int  far_col = grid.MaxColumns();
+      int  far_row = grid.MaxRows() - southeast.y;
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid SouthEast() const {
+      int near_col = grid.MaxColumns() - (southeast.x - 1);
+      int near_row = grid.MaxRows() - (southeast.y - 1);
+      int  far_col = grid.MaxColumns();;
+      int  far_row = grid.MaxRows();
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid South() const {
+      int near_col = southwest.x + 1;
+      int near_row = grid.MaxRows() - (south - 1);
+      int  far_col = grid.MaxColumns() - southeast.x;
+      int  far_row = grid.MaxRows();
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid SouthWest() const {
+      int near_col = 1;
+      int near_row = grid.MaxRows() - (southwest.y - 1);
+      int  far_col = southwest.x;
+      int  far_row = grid.MaxRows();
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid West() const {
+      int near_col = 1;
+      int near_row = northwest.y + 1;
+      int  far_col = west;
+      int  far_row = grid.MaxRows() - southwest.y;
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid NorthWest() const {
+      int near_col = 1;
+      int near_row = 1;
+      int  far_col = northwest.x;
+      int  far_row = northwest.y;
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Grid Centre() const {
+      int near_col = northwest.x + 1;
+      int near_row = northwest.y + 1;
+      int  far_col = grid.MaxColumns() - southeast.x;
+      int  far_row = grid.MaxRows() - southeast.y;
+
+      return grid.SubGrid(
+          near_col, near_row,
+           far_col, far_row
+        );
+    }
+
+    Region2D Bounds() const
+    {
+      return grid.bounds;
+    }
+
+    virtual void Draw(SDL_Renderer* renderer) const override
+    {
+      if (north > 0) {
+        North().bounds.Fill(renderer, 0x88888888);
+      }
+
+      if (northeast.x > 0 && northeast.y > 0) {
+        NorthEast().bounds.Fill(renderer, 0x88888888);
+      }
+
+      if (east > 0) {
+        East().bounds.Fill(renderer, 0x88888888);
+      }
+
+      if (southeast.x > 0 && southeast.y > 0) {
+        SouthEast().bounds.Fill(renderer, 0x88888888);
+      }
+
+      if (south > 0) {
+        South().bounds.Fill(renderer, 0x88888888);
+      }
+
+      if (southwest.x > 0 && southwest.y > 0) {
+        SouthWest().bounds.Fill(renderer, 0x88888888);
+      }
+
+      if (west > 0) {
+        West().bounds.Fill(renderer, 0x88888888);
+      }
+
+      if (northwest.x > 0 && northwest.y > 0) {
+        NorthWest().bounds.Fill(renderer, 0x88888888);
+      }
+
+      Centre().bounds.Fill(renderer, 0x88888888);
+    }
+};
+
 class Frame : public Drawable {
   protected:
+    CompassLayout layout;
     Grid grid;
     Window& window;
 
@@ -29,11 +208,6 @@ class Frame : public Drawable {
     int south_frame = 2;
     int west_frame  = 2;
 
-    Vector2D northeast_sweep_size{4,3};
-    Vector2D southeast_sweep_size{4,3};
-    Vector2D southwest_sweep_size{4,3};
-    Vector2D northwest_sweep_size{4,3};
-
     HorizontalButtonBar north_bar;
          NorthEastSweep northeast_sweep;
       VerticalButtonBar east_bar;
@@ -44,92 +218,21 @@ class Frame : public Drawable {
          NorthWestSweep northwest_sweep;
 
   public:
-    Frame(Grid g, Window& w, int nf, int ef, int sf, int wf)
+    Frame(Grid g, Window& win, int n, int e, int s, int w)
       :
+        layout{g, w, nf, ef, sf, wf, {ef+1,nf}, {ef+1,sf}, {wf+1,nf}, {wf+1,sf}},
         grid{g},
-        window{w},
-        north_frame{nf},
-        east_frame{ef},
-        south_frame{sf},
-        west_frame{wf},
+        window{win},
 
-        north_bar{window, grid.SubGrid(
-          northwest_sweep_size.x + 1, 1,
-          grid.MaxColumns() - northeast_sweep_size.x, north_frame
-        )},
+        north_bar{window, layout.North()},
+        east_bar{window, layout.East()},
+        south_bar{window, layout.South()},
+        west_bar{window, layout.West()},
 
-        east_bar{window, grid.SubGrid(
-          grid.MaxColumns() - (east_frame-1),
-          northeast_sweep_size.y + 1,
-
-          grid.MaxColumns(),
-          grid.MaxRows() - southeast_sweep_size.y
-        )},
-
-        west_bar{window, grid.SubGrid(
-          1,
-          northwest_sweep_size.y + 1,
-
-          west_frame,
-          grid.MaxRows() - southwest_sweep_size.y
-        )},
-
-        south_bar{window, grid.SubGrid(
-          southwest_sweep_size.x + 1, grid.MaxRows() - (south_frame-1),
-          grid.MaxColumns() - southeast_sweep_size.x, grid.MaxRows()
-        )},
-
-        northeast_sweep{window,
-          grid.SubGrid(
-              grid.MaxColumns() - (northeast_sweep_size.x - 1),
-              1,
-
-              grid.MaxColumns(),
-              northeast_sweep_size.y
-            ),
-          Vector2D{ east_frame, north_frame },
-          outer_radius,
-          inner_radius
-        },
-
-        southeast_sweep{window,
-          grid.SubGrid(
-              grid.MaxColumns() - (southeast_sweep_size.x - 1),
-              grid.MaxRows() - (southeast_sweep_size.y - 1),
-
-              grid.MaxColumns(),
-              grid.MaxRows()
-            ),
-          Vector2D{ east_frame, south_frame },
-          outer_radius,
-          inner_radius
-        },
-
-        southwest_sweep{window,
-          grid.SubGrid(
-              1,
-              grid.MaxRows() - (southwest_sweep_size.y - 1),
-
-              southwest_sweep_size.x,
-              grid.MaxRows()
-            ),
-          Vector2D{ west_frame, south_frame },
-          outer_radius,
-          inner_radius
-        },
-
-        northwest_sweep{window,
-          grid.SubGrid(
-              1,
-              1,
-
-              northwest_sweep_size.x,
-              northwest_sweep_size.y
-            ),
-          Vector2D{ west_frame, north_frame },
-          outer_radius,
-          inner_radius
-        }
+        northeast_sweep{window, layout.NorthEast(), Vector2D{ ef+1, nf }, outer_radius, inner_radius },
+        southeast_sweep{window, layout.SouthEast(), Vector2D{ ef+1, sf }, outer_radius, inner_radius },
+        southwest_sweep{window, layout.SouthWest(), Vector2D{ wf+1, sf }, outer_radius, inner_radius },
+        northwest_sweep{window, layout.NorthWest(), Vector2D{ wf+1, nf }, outer_radius, inner_radius }
     {
       //
     }
@@ -160,16 +263,25 @@ class Frame : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
+      if (north_frame > 0) {
+        north_bar.Draw(renderer);
+      }
 
-      if (north_frame > 0) north_bar.Draw(renderer);
-      if ( east_frame > 0)  east_bar.Draw(renderer);
-      if (south_frame > 0) south_bar.Draw(renderer);
-      if ( west_frame > 0)  west_bar.Draw(renderer);
+      if (east_frame > 0) {
+        east_bar.Draw(renderer);
+      }
 
+      if (south_frame > 0) {
+        south_bar.Draw(renderer);
+      }
 
+      if (west_frame > 0) {
+        west_bar.Draw(renderer);
+      }
+/*
       northeast_sweep.Draw(renderer);
       southeast_sweep.Draw(renderer);
       southwest_sweep.Draw(renderer);
       northwest_sweep.Draw(renderer);
-    }
+*/    }
 };

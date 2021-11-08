@@ -71,34 +71,9 @@ class Sweep : public Drawable {
       grid.bounds.Fill(renderer, Colours().frame);
       icorner.Fill(renderer, Colours().background);
 
-      if (ports.x > 0 && ports.y > 0) {
-        iradius.Fill(renderer, Colours().frame);
-        iradius.QuadrantArc(renderer, alignment, Colours().background);
-        DrawOuterRadius(renderer);
-      }
-      else {
-        if (ports.x == 0) {
-          Region2D cap_region = grid.bounds.Align(alignment, Size2D{HorizontalPort().H()});
-          cap_region.Fill(renderer, Colours().background);
-
-          Colour capcolour = Colours().frame;
-
-          switch (alignment) {
-            case Compass::NORTHEAST: cap_region.Bullnose(renderer, Compass::EAST, capcolour); break;
-            case Compass::SOUTHEAST: cap_region.Bullnose(renderer, Compass::EAST, capcolour); break;
-            case Compass::NORTHWEST: cap_region.Bullnose(renderer, Compass::WEST, capcolour); break;
-            case Compass::SOUTHWEST: cap_region.Bullnose(renderer, Compass::WEST, capcolour); break;
-          }
-
-          if (drawdebug) {
-            cap_region.Draw(renderer);
-          }
-        }
-
-        if (ports.y == 0) {
-          // Leave square for now
-        }
-      }
+      iradius.Fill(renderer, Colours().frame);
+      iradius.QuadrantArc(renderer, alignment, Colours().background);
+      DrawOuterRadius(renderer);
 
       if (drawdebug) {
         HorizontalPort().Draw(renderer);

@@ -65,12 +65,15 @@ int main(int argc, char* argv[])
 
   Window window(
       Position2D{ display },
-      Size2D{ display });
+      Size2D{ display }
+    );
 
   MpdFrame mpdframe{
-      window.grid.Rows(1, window.grid.MaxRows()),
+      window.grid,
       window
     };
+  mpdframe.EastBar().AddButton("94-1182");
+  mpdframe.NorthBar().AddButton("33-2837");
   window.Add(&mpdframe);
 
   window.Colours(blue_alert_colours);
