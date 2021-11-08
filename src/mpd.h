@@ -34,8 +34,6 @@ class MpdFrame : public Frame {
     Button& btnSearch;
     Button& btnOutputs;
 
-    Header  hdrSong;
-
   public:
     ~MpdFrame()
     {
@@ -45,7 +43,7 @@ class MpdFrame : public Frame {
     }
 
     MpdFrame(Grid g, Window& w)
-        : Frame{ g, w, 0, 0, 2, 3 }
+        : Frame{ g, w, 2, 0, 2, 3 }
         , btnPlay(SouthBar().AddButton("PLAY "))
         , btnPause(SouthBar().AddButton("PAUS "))
         , btnStop(SouthBar().AddButton("STOP "))
@@ -56,7 +54,6 @@ class MpdFrame : public Frame {
         , btnArtists(WestBar().AddButton("ARTISTS "))
         , btnSearch(WestBar().AddButton("SEARCH "))
         , btnOutputs(WestBar().AddButton("OUTPUTS "))
-        , hdrSong{g.SubGrid(1, 1, g.MaxColumns(), 2), w, " MPD CONTROL "}
     {
 
       conn = mpd_connection_new(NULL, 0, 30000);
@@ -161,6 +158,5 @@ class MpdFrame : public Frame {
 
     virtual void Colours(ColourScheme cs) override {
       Frame::Colours(cs);
-      hdrSong.Colours(cs);
     }
 };

@@ -72,8 +72,6 @@ int main(int argc, char* argv[])
       window.grid,
       window
     };
-  mpdframe.EastBar().AddButton("94-1182");
-  mpdframe.NorthBar().AddButton("33-2837");
   window.Add(&mpdframe);
 
   window.Colours(blue_alert_colours);

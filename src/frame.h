@@ -49,6 +49,11 @@ class CompassLayout : public Drawable {
       int  far_col = grid.MaxColumns() - northeast.x;
       int  far_row = north;
 
+      printf("North : %d,%d %d,%d\n",
+          near_col, near_row,
+           far_col, far_row
+        );
+
       return grid.SubGrid(
           near_col, near_row,
            far_col, far_row
@@ -159,38 +164,38 @@ class CompassLayout : public Drawable {
     virtual void Draw(SDL_Renderer* renderer) const override
     {
       if (north > 0) {
-        North().bounds.Fill(renderer, 0x88888888);
+        North().bounds.Draw(renderer);
       }
 
       if (northeast.x > 0 && northeast.y > 0) {
-        NorthEast().bounds.Fill(renderer, 0x88888888);
+        NorthEast().bounds.Draw(renderer);
       }
 
       if (east > 0) {
-        East().bounds.Fill(renderer, 0x88888888);
+        East().bounds.Draw(renderer);
       }
 
       if (southeast.x > 0 && southeast.y > 0) {
-        SouthEast().bounds.Fill(renderer, 0x88888888);
+        SouthEast().bounds.Draw(renderer);
       }
 
       if (south > 0) {
-        South().bounds.Fill(renderer, 0x88888888);
+        South().bounds.Draw(renderer);
       }
 
       if (southwest.x > 0 && southwest.y > 0) {
-        SouthWest().bounds.Fill(renderer, 0x88888888);
+        SouthWest().bounds.Draw(renderer);
       }
 
       if (west > 0) {
-        West().bounds.Fill(renderer, 0x88888888);
+        West().bounds.Draw(renderer);
       }
 
       if (northwest.x > 0 && northwest.y > 0) {
-        NorthWest().bounds.Fill(renderer, 0x88888888);
+        NorthWest().bounds.Draw(renderer);
       }
 
-      Centre().bounds.Fill(renderer, 0x88888888);
+      Centre().bounds.Draw(renderer);
     }
 };
 
@@ -203,10 +208,10 @@ class Frame : public Drawable {
     int outer_radius{90};
     int inner_radius{50};
 
-    int north_frame = 2;
-    int east_frame  = 2;
-    int south_frame = 2;
-    int west_frame  = 2;
+    int n_size{0};
+    int e_size{0};
+    int s_size{0};
+    int w_size{0};
 
     HorizontalButtonBar north_bar;
          NorthEastSweep northeast_sweep;
@@ -220,19 +225,26 @@ class Frame : public Drawable {
   public:
     Frame(Grid g, Window& win, int n, int e, int s, int w)
       :
-        layout{g, w, n, e, s, w, {e+1,n}, {e+1,s}, {w+1,n}, {w+1,s}},
+        n_size{n}, e_size{e}, s_size{s}, w_size{w},
+        layout{ g, win,
+                n, e, s, w,
+                { e ? e+1 : e, n ? n+1 : n },
+                { e ? e+1 : e, s ? s+1 : s },
+                { w ? w+1 : w, n ? n+1 : n },
+                { w ? w+1 : w, s ? s+1 : s }
+              },
         grid{g},
         window{win},
 
-        north_bar{window, layout.North()},
-        east_bar{window, layout.East()},
-        south_bar{window, layout.South()},
-        west_bar{window, layout.West()},
+        north_bar( window, layout.North() ),
+        east_bar( window, layout.East() ),
+        south_bar( window, layout.South() ),
+        west_bar( window, layout.West() ),
 
-        northeast_sweep{window, layout.NorthEast(), Vector2D{ e+1, n }, outer_radius, inner_radius },
-        southeast_sweep{window, layout.SouthEast(), Vector2D{ e+1, s }, outer_radius, inner_radius },
-        southwest_sweep{window, layout.SouthWest(), Vector2D{ w+1, s }, outer_radius, inner_radius },
-        northwest_sweep{window, layout.NorthWest(), Vector2D{ w+1, n }, outer_radius, inner_radius }
+        northeast_sweep( window, layout.NorthEast(), Vector2D( e, n ), outer_radius, inner_radius ),
+        southeast_sweep( window, layout.SouthEast(), Vector2D( e, s ), outer_radius, inner_radius ),
+        southwest_sweep( window, layout.SouthWest(), Vector2D( w, s ), outer_radius, inner_radius ),
+        northwest_sweep( window, layout.NorthWest(), Vector2D( w, n ), outer_radius, inner_radius )
     {
       //
     }
@@ -262,26 +274,35 @@ class Frame : public Drawable {
       northwest_sweep.Colours(cs);
     }
 
-    void Draw(SDL_Renderer* renderer) const override {
-      if (north_frame > 0) {
+    virtual void Draw(SDL_Renderer* renderer) const override {
+      if (n_size > 0) {
         north_bar.Draw(renderer);
       }
-
-      if (east_frame > 0) {
+      if (e_size > 0) {
         east_bar.Draw(renderer);
       }
-
-      if (south_frame > 0) {
+      if (s_size > 0) {
         south_bar.Draw(renderer);
       }
-
-      if (west_frame > 0) {
+      if (w_size > 0) {
         west_bar.Draw(renderer);
       }
-/*
-      northeast_sweep.Draw(renderer);
-      southeast_sweep.Draw(renderer);
-      southwest_sweep.Draw(renderer);
-      northwest_sweep.Draw(renderer);
-*/    }
+
+      if (n_size > 0 && e_size > 0) {
+        northeast_sweep.Draw(renderer);
+      }
+      if (s_size > 0 && e_size > 0) {
+        southeast_sweep.Draw(renderer);
+      }
+      if (s_size > 0 && w_size > 0) {
+        southwest_sweep.Draw(renderer);
+      }
+      if (n_size > 0 && w_size > 0) {
+        northwest_sweep.Draw(renderer);
+      }
+
+      if (drawdebug) {
+        layout.Draw(renderer);
+      }
+    }
 };

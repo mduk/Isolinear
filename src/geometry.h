@@ -327,45 +327,45 @@ class Region2D {
     }
 
     virtual void Draw(SDL_Renderer* renderer) const {
-      filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x66000000);
-      filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0x66ff0000);
-      filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0x6600ffff);
-      filledCircleColor(renderer,      EastX(),      EastY(), 4, 0x66ff0000);
-      filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0x66ffff00);
-      filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0x6600ff00);
-      filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0x6600ffff);
-      filledCircleColor(renderer,      WestX(),      WestY(), 4, 0x6600ff00);
-      filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0x66ffff00);
+      filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x99000000);
+      filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0x99ff0000);
+      filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0x9900ffff);
+      filledCircleColor(renderer,      EastX(),      EastY(), 4, 0x99ff0000);
+      filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0x99ffff00);
+      filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0x9900ff00);
+      filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0x9900ffff);
+      filledCircleColor(renderer,      WestX(),      WestY(), 4, 0x9900ff00);
+      filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0x99ffff00);
 
       lineColor(renderer,
           NorthWestX(), NorthWestY(),
           NorthEastX(), NorthEastY(),
-          0x66ffffff
+          0x99ffffff
         );
       lineColor(renderer,
           SouthWestX(), SouthWestY(),
           SouthEastX(), SouthEastY(),
-          0x66ffffff
+          0x99ffffff
         );
       lineColor(renderer,
           NorthEastX(), NorthEastY(),
           SouthEastX(), SouthEastY(),
-          0x66ffffff
+          0x99ffffff
         );
       lineColor(renderer,
           NorthWestX(), NorthWestY(),
           SouthWestX(), SouthWestY(),
-          0x66ffffff
+          0x99ffffff
         );
       lineColor(renderer,
           NorthWestX(), NorthWestY(),
           SouthEastX(), SouthEastY(),
-          0x66ffffff
+          0x99ffffff
         );
       lineColor(renderer,
           NorthEastX(), NorthEastY(),
           SouthWestX(), SouthWestY(),
-          0x66ffffff
+          0x99ffffff
         );
     }
 };
