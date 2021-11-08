@@ -2,6 +2,7 @@
 
 set -eu
 
+i3-msg focus output eDP-1
 touchscreen on
 ./Isolinear
 touchscreen off
