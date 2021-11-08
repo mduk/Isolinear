@@ -220,7 +220,7 @@ class Frame : public Drawable {
   public:
     Frame(Grid g, Window& win, int n, int e, int s, int w)
       :
-        layout{g, w, nf, ef, sf, wf, {ef+1,nf}, {ef+1,sf}, {wf+1,nf}, {wf+1,sf}},
+        layout{g, w, n, e, s, w, {e+1,n}, {e+1,s}, {w+1,n}, {w+1,s}},
         grid{g},
         window{win},
 
@@ -229,10 +229,10 @@ class Frame : public Drawable {
         south_bar{window, layout.South()},
         west_bar{window, layout.West()},
 
-        northeast_sweep{window, layout.NorthEast(), Vector2D{ ef+1, nf }, outer_radius, inner_radius },
-        southeast_sweep{window, layout.SouthEast(), Vector2D{ ef+1, sf }, outer_radius, inner_radius },
-        southwest_sweep{window, layout.SouthWest(), Vector2D{ wf+1, sf }, outer_radius, inner_radius },
-        northwest_sweep{window, layout.NorthWest(), Vector2D{ wf+1, nf }, outer_radius, inner_radius }
+        northeast_sweep{window, layout.NorthEast(), Vector2D{ e+1, n }, outer_radius, inner_radius },
+        southeast_sweep{window, layout.SouthEast(), Vector2D{ e+1, s }, outer_radius, inner_radius },
+        southwest_sweep{window, layout.SouthWest(), Vector2D{ w+1, s }, outer_radius, inner_radius },
+        northwest_sweep{window, layout.NorthWest(), Vector2D{ w+1, n }, outer_radius, inner_radius }
     {
       //
     }
