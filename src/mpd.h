@@ -16,11 +16,19 @@
 #include "header.h"
 #include "window.h"
 
-class MpdFrame : public Frame {
+class MpdFrame : public Drawable {
   protected:
     struct mpd_connection* conn;
     struct mpd_status* status;
     struct mpd_song* song;
+
+    CompassLayout layout;
+
+    Header hdrSong;
+    VerticalButtonBar barView;
+    HorizontalButtonBar barActions;
+    NorthWestSweep sweepNorthWest;
+    SouthWestSweep sweepSouthWest;
 
     Button& btnPlay;
     Button& btnPause;
@@ -34,6 +42,7 @@ class MpdFrame : public Frame {
     Button& btnSearch;
     Button& btnOutputs;
 
+
   public:
     ~MpdFrame()
     {
@@ -43,20 +52,36 @@ class MpdFrame : public Frame {
     }
 
     MpdFrame(Grid g, Window& w)
-        : Frame{ g, w, 2, 0, 2, 3 }
-        , btnPlay(SouthBar().AddButton("PLAY "))
-        , btnPause(SouthBar().AddButton("PAUS "))
-        , btnStop(SouthBar().AddButton("STOP "))
-        , btnPrevious(SouthBar().AddButton("PREV "))
-        , btnNext(SouthBar().AddButton("NEXT "))
-        , btnQueue(WestBar().AddButton("QUEUE "))
-        , btnBrowse(WestBar().AddButton("BROWSE "))
-        , btnArtists(WestBar().AddButton("ARTISTS "))
-        , btnSearch(WestBar().AddButton("SEARCH "))
-        , btnOutputs(WestBar().AddButton("OUTPUTS "))
+        : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
+        , hdrSong{layout.North(), w, " MPD CONTROL "}
+        , barView{w, layout.West()}
+        , barActions{w, layout.South()}
+        , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
+        , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
+        , btnPlay(barActions.AddButton("PLAY "))
+        , btnPause(barActions.AddButton("PAUS "))
+        , btnStop(barActions.AddButton("STOP "))
+        , btnPrevious(barActions.AddButton("PREV "))
+        , btnNext(barActions.AddButton("NEXT "))
+        , btnQueue(barView.AddButton("QUEUE "))
+        , btnBrowse(barView.AddButton("BROWSE "))
+        , btnArtists(barView.AddButton("ARTISTS "))
+        , btnSearch(barView.AddButton("SEARCH "))
+        , btnOutputs(barView.AddButton("OUTPUTS "))
     {
 
       conn = mpd_connection_new(NULL, 0, 30000);
+
+      btnQueue.Activate();
+
+      miso::connect(btnQueue.signal_press, [this]() {
+          if (btnQueue.Active()) {
+            btnQueue.Deactivate();
+          }
+          else {
+            btnQueue.Activate();
+          }
+      });
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
@@ -133,6 +158,29 @@ class MpdFrame : public Frame {
       }
     }
 
+
+    virtual void Draw(SDL_Renderer* renderer) const override {
+      hdrSong.Draw(renderer);
+      barView.Draw(renderer);
+      barActions.Draw(renderer);
+      sweepNorthWest.Draw(renderer);
+      sweepSouthWest.Draw(renderer);
+    }
+
+    virtual Region2D Bounds() const override {
+      return layout.grid.bounds;
+    }
+
+    virtual void Colours(ColourScheme cs) override {
+      Drawable::Colours(cs);
+      hdrSong.Colours(cs);
+      barView.Colours(cs);
+      barActions.Colours(cs);
+      sweepNorthWest.Colours(cs);
+      sweepSouthWest.Colours(cs);
+    }
+
+/*
     virtual void OnPointerEvent(PointerEvent event) override
     {
       if (NorthBar().Bounds().Encloses(event.Position())) {
@@ -143,20 +191,13 @@ class MpdFrame : public Frame {
         EastBar().OnPointerEvent(event);
       }
 
-      if (SouthBar().Bounds().Encloses(event.Position())) {
-        SouthBar().OnPointerEvent(event);
+      if (barActions.Bounds().Encloses(event.Position())) {
+        barActions.OnPointerEvent(event);
       }
 
       if (WestBar().Bounds().Encloses(event.Position())) {
         WestBar().OnPointerEvent(event);
       }
     };
-
-    virtual ColourScheme Colours() const override {
-      return Drawable::Colours();
-    }
-
-    virtual void Colours(ColourScheme cs) override {
-      Frame::Colours(cs);
-    }
+*/
 };

@@ -18,7 +18,6 @@ extern bool drawdebug;
 
 class CompassLayout : public Drawable {
   protected:
-    Grid grid;
     Window& window;
 
          int north;
@@ -31,6 +30,8 @@ class CompassLayout : public Drawable {
     Vector2D northwest;
 
   public:
+    Grid grid;
+
     CompassLayout(
         Grid g, Window& win,
         int n, int e, int s, int w,
@@ -196,113 +197,5 @@ class CompassLayout : public Drawable {
       }
 
       Centre().bounds.Draw(renderer);
-    }
-};
-
-class Frame : public Drawable {
-  protected:
-    CompassLayout layout;
-    Grid grid;
-    Window& window;
-
-    int outer_radius{90};
-    int inner_radius{50};
-
-    int n_size{0};
-    int e_size{0};
-    int s_size{0};
-    int w_size{0};
-
-    HorizontalButtonBar north_bar;
-         NorthEastSweep northeast_sweep;
-      VerticalButtonBar east_bar;
-         SouthEastSweep southeast_sweep;
-    HorizontalButtonBar south_bar;
-         SouthWestSweep southwest_sweep;
-      VerticalButtonBar west_bar;
-         NorthWestSweep northwest_sweep;
-
-  public:
-    Frame(Grid g, Window& win, int n, int e, int s, int w)
-      :
-        n_size{n}, e_size{e}, s_size{s}, w_size{w},
-        layout{ g, win,
-                n, e, s, w,
-                { e ? e+1 : e, n ? n+1 : n },
-                { e ? e+1 : e, s ? s+1 : s },
-                { w ? w+1 : w, n ? n+1 : n },
-                { w ? w+1 : w, s ? s+1 : s }
-              },
-        grid{g},
-        window{win},
-
-        north_bar( window, layout.North() ),
-        east_bar( window, layout.East() ),
-        south_bar( window, layout.South() ),
-        west_bar( window, layout.West() ),
-
-        northeast_sweep( window, layout.NorthEast(), Vector2D( e, n ), outer_radius, inner_radius ),
-        southeast_sweep( window, layout.SouthEast(), Vector2D( e, s ), outer_radius, inner_radius ),
-        southwest_sweep( window, layout.SouthWest(), Vector2D( w, s ), outer_radius, inner_radius ),
-        northwest_sweep( window, layout.NorthWest(), Vector2D( w, n ), outer_radius, inner_radius )
-    {
-      //
-    }
-
-    HorizontalButtonBar& NorthBar() { return north_bar; }
-    VerticalButtonBar&   EastBar()  { return  east_bar; }
-    HorizontalButtonBar& SouthBar() { return south_bar; }
-    VerticalButtonBar&   WestBar()  { return  west_bar; }
-
-    Region2D Bounds() const override {
-      return grid.bounds;
-    }
-
-    virtual ColourScheme Colours() const override {
-      return Drawable::Colours();
-    }
-
-    virtual void Colours(ColourScheme cs) override {
-      Drawable::Colours(cs);
-            north_bar.Colours(cs);
-      northeast_sweep.Colours(cs);
-             east_bar.Colours(cs);
-      southeast_sweep.Colours(cs);
-            south_bar.Colours(cs);
-      southwest_sweep.Colours(cs);
-             west_bar.Colours(cs);
-      northwest_sweep.Colours(cs);
-    }
-
-    virtual void Draw(SDL_Renderer* renderer) const override {
-      if (n_size > 0) {
-        north_bar.Draw(renderer);
-      }
-      if (e_size > 0) {
-        east_bar.Draw(renderer);
-      }
-      if (s_size > 0) {
-        south_bar.Draw(renderer);
-      }
-      if (w_size > 0) {
-        west_bar.Draw(renderer);
-      }
-
-      if (n_size > 0 && e_size > 0) {
-        northeast_sweep.Draw(renderer);
-      }
-      if (s_size > 0 && e_size > 0) {
-        southeast_sweep.Draw(renderer);
-      }
-      if (s_size > 0 && w_size > 0) {
-        southwest_sweep.Draw(renderer);
-      }
-      if (n_size > 0 && w_size > 0) {
-        northwest_sweep.Draw(renderer);
-      }
-
-      if (drawdebug) {
-        layout.Draw(renderer);
-      }
     }
 };
