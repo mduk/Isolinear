@@ -52,6 +52,9 @@ class MpdFrame : public Drawable {
     Button& btnSearch;
     Button& btnOutputs;
 
+    Button  btnArtist;
+    Button  btnAlbum;
+
 
   public:
     ~MpdFrame()
@@ -78,12 +81,16 @@ class MpdFrame : public Drawable {
         , btnArtists(barView.AddButton("ARTISTS "))
         , btnSearch(barView.AddButton("SEARCH "))
         , btnOutputs(barView.AddButton("OUTPUTS "))
+        , btnArtist(w, layout.Centre().Rows(1,2).bounds, Colours(), " ARTIST NAME ")
+        , btnAlbum(w, layout.Centre().Rows(3,4).bounds, Colours(), " ALBUM NAME ")
     {
       RegisterChild(&hdrSong);
       RegisterChild(&barView);
       RegisterChild(&barActions);
       RegisterChild(&sweepNorthWest);
       RegisterChild(&sweepSouthWest);
+      RegisterChild(&btnArtist);
+      RegisterChild(&btnAlbum);
 
       conn = mpd_connection_new(NULL, 0, 30000);
 
@@ -147,6 +154,9 @@ class MpdFrame : public Drawable {
       status = mpd_run_status(conn);
       song = mpd_run_current_song(conn);
 
+      btnArtist.Label(mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
+      btnAlbum.Label(mpd_song_get_tag(song, MPD_TAG_ALBUM, 0));
+
       switch (mpd_status_get_state(status)) {
 
       case MPD_STATE_PLAY:
@@ -168,6 +178,7 @@ class MpdFrame : public Drawable {
         btnStop.Activate();
         break;
       }
+
     }
 
 

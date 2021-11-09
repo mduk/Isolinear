@@ -48,6 +48,10 @@ class Button : public Drawable {
     void Deactivate() { active = false; }
     bool Active() { return active; }
 
+    void Label(std::string newlabel) {
+      label = newlabel + " ";
+    }
+
     Region2D LeftCapRegion() const {
       return Region2D{
           bounds.Origin(),
