@@ -16,8 +16,69 @@
 #include "header.h"
 #include "window.h"
 
+class Song {
+  public:
+    std::string title;
+    std::string artist;
+    std::string album;
+
+    Song(std::string title, std::string artist, std::string album)
+      : title{title}, artist{artist}, album{album}
+    {}
+};
+
+
+class NowPlayingView : public Drawable {
+  protected:
+    Grid grid;
+    struct mpd_connection* conn;
+
+  public:
+    NowPlayingView(Grid g, struct mpd_connection* c)
+      : grid{g}, conn{c}
+    {}
+
+    Region2D Bounds() const {
+      return grid.bounds;
+    }
+
+    void Draw(SDL_Renderer* renderer) const {
+      grid.Columns(3,4).bounds.Fill(renderer, 0xffffffff);
+    }
+};
+
+class QueueView : public Drawable {
+  protected:
+    Grid grid;
+    struct mpd_connection* conn;
+    std::list<Song> songs;
+
+  public:
+    QueueView(Grid g, struct mpd_connection* c)
+      : grid(g), conn(c)
+    {
+    };
+
+    void Draw(SDL_Renderer* renderer) const {
+      grid.Rows(1,2).bounds.Fill(renderer, 0xffffffff);
+    }
+
+    Region2D Bounds() const {
+      return grid.bounds;
+    }
+};
+
+
+
 class MpdFrame : public Drawable {
   protected:
+    const std::string V_NOWPLAYING = " NOW PLAYING ";
+    const std::string V_QUEUE = " QUEUE ";
+    const std::string V_BROWSE = " BROWSE ";
+    const std::string V_ARTISTS = " ARTISTS ";
+    const std::string V_SEARCH = " SEARCH ";
+    const std::string V_OUTPUTS = " OUTPUTS ";
+
     struct mpd_connection* conn;
     struct mpd_status* status;
     struct mpd_song* song;
@@ -30,7 +91,7 @@ class MpdFrame : public Drawable {
     NorthWestSweep sweepNorthWest;
     SouthWestSweep sweepSouthWest;
 
-    std::string activeView{"QUEUE "};
+    std::string activeView{V_NOWPLAYING};
 
     Button& btnPlay;
     Button& btnPause;
@@ -38,14 +99,16 @@ class MpdFrame : public Drawable {
     Button& btnPrevious;
     Button& btnNext;
 
+    Button& btnNowPlaying;
     Button& btnQueue;
     Button& btnBrowse;
     Button& btnArtists;
     Button& btnSearch;
     Button& btnOutputs;
 
-    Button  btnArtist;
-    Button  btnAlbum;
+
+    NowPlayingView viewNowPlaying;
+    QueueView viewQueue;
 
   public:
     ~MpdFrame()
@@ -67,27 +130,24 @@ class MpdFrame : public Drawable {
         , btnStop(barActions.AddButton("STOP "))
         , btnPrevious(barActions.AddButton("PREV "))
         , btnNext(barActions.AddButton("NEXT "))
-        , btnQueue(barView.AddButton("QUEUE "))
-        , btnBrowse(barView.AddButton("BROWSE "))
-        , btnArtists(barView.AddButton("ARTISTS "))
-        , btnSearch(barView.AddButton("SEARCH "))
-        , btnOutputs(barView.AddButton("OUTPUTS "))
-        , btnArtist(w, layout.Centre().Rows(1,2).bounds, Colours(), " ARTIST NAME ")
-        , btnAlbum(w, layout.Centre().Rows(3,4).bounds, Colours(), " ALBUM NAME ")
+        , btnNowPlaying(barView.AddButton(V_NOWPLAYING))
+        , btnQueue(barView.AddButton(V_QUEUE))
+        , btnBrowse(barView.AddButton(V_BROWSE))
+        , btnArtists(barView.AddButton(V_ARTISTS))
+        , btnSearch(barView.AddButton(V_SEARCH))
+        , btnOutputs(barView.AddButton(V_OUTPUTS))
+        , conn(mpd_connection_new(NULL, 0, 30000))
+        , viewNowPlaying(layout.Centre(), conn)
+        , viewQueue(layout.Centre(), conn)
     {
       RegisterChild(&hdrSong);
       RegisterChild(&barView);
       RegisterChild(&barActions);
       RegisterChild(&sweepNorthWest);
       RegisterChild(&sweepSouthWest);
-      RegisterChild(&btnArtist);
-      RegisterChild(&btnAlbum);
-
-      conn = mpd_connection_new(NULL, 0, 30000);
-
-      btnQueue.Activate();
 
       auto switch_view = [this]() {
+        btnNowPlaying.Deactivate();
         btnQueue.Deactivate();
         btnBrowse.Deactivate();
         btnArtists.Deactivate();
@@ -98,11 +158,13 @@ class MpdFrame : public Drawable {
         active->Activate();
         activeView = active->Label();
       };
+      miso::connect(btnNowPlaying.signal_press, switch_view);
       miso::connect(btnQueue.signal_press, switch_view);
       miso::connect(btnBrowse.signal_press, switch_view);
       miso::connect(btnArtists.signal_press, switch_view);
       miso::connect(btnSearch.signal_press, switch_view);
       miso::connect(btnOutputs.signal_press, switch_view);
+      btnNowPlaying.Activate();
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
@@ -156,9 +218,7 @@ class MpdFrame : public Drawable {
       status = mpd_run_status(conn);
       song = mpd_run_current_song(conn);
 
-      hdrSong.Label(activeView + " (MPD)");
-      btnArtist.Label(mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
-      btnAlbum.Label(mpd_song_get_tag(song, MPD_TAG_ALBUM, 0));
+      hdrSong.Label(activeView + " : MPD");
 
       switch (mpd_status_get_state(status)) {
 
@@ -182,11 +242,25 @@ class MpdFrame : public Drawable {
         break;
       }
 
+      viewQueue.Update();
     }
-
 
     virtual Region2D Bounds() const override {
       return layout.Bounds();
     }
 
+    virtual void Draw(SDL_Renderer* renderer) const {
+      if (activeView == V_NOWPLAYING) {
+        viewNowPlaying.Draw(renderer);
+      }
+
+      if (activeView == V_QUEUE) {
+        viewQueue.Draw(renderer);
+      }
+
+      Drawable::Draw(renderer);
+    }
+
+
 };
+
