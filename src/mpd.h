@@ -16,6 +16,16 @@
 #include "header.h"
 #include "window.h"
 
+void generichandler() {
+  Button* sender = miso::sender<Button>();
+  if (sender->Active()) {
+    sender->Deactivate();
+  }
+  else {
+    sender->Activate();
+  }
+}
+
 class MpdFrame : public Drawable {
   protected:
     struct mpd_connection* conn;
@@ -79,14 +89,11 @@ class MpdFrame : public Drawable {
 
       btnQueue.Activate();
 
-      miso::connect(btnQueue.signal_press, [this]() {
-          if (btnQueue.Active()) {
-            btnQueue.Deactivate();
-          }
-          else {
-            btnQueue.Activate();
-          }
-      });
+      miso::connect(btnQueue.signal_press, generichandler);
+      miso::connect(btnBrowse.signal_press, generichandler);
+      miso::connect(btnArtists.signal_press, generichandler);
+      miso::connect(btnSearch.signal_press, generichandler);
+      miso::connect(btnOutputs.signal_press, generichandler);
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
