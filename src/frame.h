@@ -18,6 +18,7 @@ extern bool drawdebug;
 
 class CompassLayout : public Drawable {
   protected:
+    Grid grid;
     Window& window;
 
          int north;
@@ -30,8 +31,6 @@ class CompassLayout : public Drawable {
     Vector2D northwest;
 
   public:
-    Grid grid;
-
     CompassLayout(
         Grid g, Window& win,
         int n, int e, int s, int w,

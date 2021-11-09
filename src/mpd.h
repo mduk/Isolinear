@@ -168,7 +168,7 @@ class MpdFrame : public Drawable {
     }
 
     virtual Region2D Bounds() const override {
-      return layout.grid.bounds;
+      return layout.Bounds();
     }
 
     virtual void Colours(ColourScheme cs) override {
