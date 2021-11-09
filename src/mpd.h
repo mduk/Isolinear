@@ -69,6 +69,11 @@ class MpdFrame : public Drawable {
         , btnSearch(barView.AddButton("SEARCH "))
         , btnOutputs(barView.AddButton("OUTPUTS "))
     {
+      RegisterChild(&hdrSong);
+      RegisterChild(&barView);
+      RegisterChild(&barActions);
+      RegisterChild(&sweepNorthWest);
+      RegisterChild(&sweepSouthWest);
 
       conn = mpd_connection_new(NULL, 0, 30000);
 
@@ -159,45 +164,8 @@ class MpdFrame : public Drawable {
     }
 
 
-    virtual void Draw(SDL_Renderer* renderer) const override {
-      hdrSong.Draw(renderer);
-      barView.Draw(renderer);
-      barActions.Draw(renderer);
-      sweepNorthWest.Draw(renderer);
-      sweepSouthWest.Draw(renderer);
-    }
-
     virtual Region2D Bounds() const override {
       return layout.Bounds();
     }
 
-    virtual void Colours(ColourScheme cs) override {
-      Drawable::Colours(cs);
-      hdrSong.Colours(cs);
-      barView.Colours(cs);
-      barActions.Colours(cs);
-      sweepNorthWest.Colours(cs);
-      sweepSouthWest.Colours(cs);
-    }
-
-/*
-    virtual void OnPointerEvent(PointerEvent event) override
-    {
-      if (NorthBar().Bounds().Encloses(event.Position())) {
-        NorthBar().OnPointerEvent(event);
-      }
-
-      if (EastBar().Bounds().Encloses(event.Position())) {
-        EastBar().OnPointerEvent(event);
-      }
-
-      if (barActions.Bounds().Encloses(event.Position())) {
-        barActions.OnPointerEvent(event);
-      }
-
-      if (WestBar().Bounds().Encloses(event.Position())) {
-        WestBar().OnPointerEvent(event);
-      }
-    };
-*/
 };

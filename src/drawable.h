@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -11,12 +13,26 @@ class Drawable {
   protected:
     Region2D bounds;
     ColourScheme colours;
+    std::list<Drawable*> children;
 
   public:
-    virtual void Draw(SDL_Renderer*) const = 0;
     virtual Region2D Bounds() const = 0;
 
-    virtual void Update() {}
+    virtual void Draw(SDL_Renderer* renderer) const {
+      for (auto child : children) {
+        child->Draw(renderer);
+      }
+    }
+
+    virtual void RegisterChild(Drawable* child) {
+      children.push_back(child);
+    }
+
+    virtual void Update() {
+      for (auto child : children) {
+        child->Update();
+      }
+    }
 
     virtual void OnPointerEvent(PointerEvent event) {
       Region2D   b = Bounds();
@@ -32,6 +48,12 @@ class Drawable {
           p.x - b.NearX(),
           p.y - b.NearY()
         );
+
+      for (auto child : children) {
+        if (child->Bounds().Encloses(p)) {
+          child->OnPointerEvent(event);
+        }
+      }
     }
 
     virtual ColourScheme Colours() const {
@@ -40,6 +62,9 @@ class Drawable {
 
     virtual void Colours(ColourScheme cs) {
       colours = cs;
+      for (auto child : children) {
+        child->Colours(cs);
+      }
     }
 };
 
