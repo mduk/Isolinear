@@ -16,16 +16,6 @@
 #include "header.h"
 #include "window.h"
 
-void generichandler() {
-  Button* sender = miso::sender<Button>();
-  if (sender->Active()) {
-    sender->Deactivate();
-  }
-  else {
-    sender->Activate();
-  }
-}
-
 class MpdFrame : public Drawable {
   protected:
     struct mpd_connection* conn;
@@ -39,6 +29,8 @@ class MpdFrame : public Drawable {
     HorizontalButtonBar barActions;
     NorthWestSweep sweepNorthWest;
     SouthWestSweep sweepSouthWest;
+
+    std::string activeView{"QUEUE "};
 
     Button& btnPlay;
     Button& btnPause;
@@ -54,7 +46,6 @@ class MpdFrame : public Drawable {
 
     Button  btnArtist;
     Button  btnAlbum;
-
 
   public:
     ~MpdFrame()
@@ -96,11 +87,22 @@ class MpdFrame : public Drawable {
 
       btnQueue.Activate();
 
-      miso::connect(btnQueue.signal_press, generichandler);
-      miso::connect(btnBrowse.signal_press, generichandler);
-      miso::connect(btnArtists.signal_press, generichandler);
-      miso::connect(btnSearch.signal_press, generichandler);
-      miso::connect(btnOutputs.signal_press, generichandler);
+      auto switch_view = [this]() {
+        btnQueue.Deactivate();
+        btnBrowse.Deactivate();
+        btnArtists.Deactivate();
+        btnSearch.Deactivate();
+        btnOutputs.Deactivate();
+
+        auto active = miso::sender<Button>();
+        active->Activate();
+        activeView = active->Label();
+      };
+      miso::connect(btnQueue.signal_press, switch_view);
+      miso::connect(btnBrowse.signal_press, switch_view);
+      miso::connect(btnArtists.signal_press, switch_view);
+      miso::connect(btnSearch.signal_press, switch_view);
+      miso::connect(btnOutputs.signal_press, switch_view);
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
@@ -154,6 +156,7 @@ class MpdFrame : public Drawable {
       status = mpd_run_status(conn);
       song = mpd_run_current_song(conn);
 
+      hdrSong.Label(activeView + " (MPD)");
       btnArtist.Label(mpd_song_get_tag(song, MPD_TAG_ARTIST, 0));
       btnAlbum.Label(mpd_song_get_tag(song, MPD_TAG_ALBUM, 0));
 

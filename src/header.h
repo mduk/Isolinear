@@ -26,6 +26,10 @@ class Header : public Drawable {
       : grid{g}, window{w}
     {};
 
+    void Label(std::string newlabel) {
+        text = newlabel;
+    }
+
     virtual ColourScheme Colours() const {
       return Drawable::Colours();
     }
