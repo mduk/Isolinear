@@ -106,7 +106,6 @@ class MpdFrame : public Drawable {
     Button& btnSearch;
     Button& btnOutputs;
 
-
     NowPlayingView viewNowPlaying;
     QueueView viewQueue;
 
