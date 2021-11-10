@@ -21,8 +21,6 @@ class Button : public Drawable {
     Window& window;
     bool enabled = true;
     bool active = false;
-    bool left_cap = true;
-    bool right_cap = true;
 
   public:
     miso::signal<> signal_press;
@@ -51,23 +49,6 @@ class Button : public Drawable {
     std::string Label() { return label; }
     void Label(std::string newlabel) { label = newlabel + " "; }
 
-    Region2D LeftCapRegion() const {
-      return Region2D{
-          bounds.Origin(),
-          Size2D{bounds.Size().y}
-        };
-    }
-
-    Region2D RightCapRegion() const {
-      return Region2D{
-          Position2D{
-              bounds.Origin().x + (bounds.Size().x - bounds.Size().y),
-              bounds.Origin().y
-            },
-          Size2D{bounds.Size().y}
-        };
-    }
-
     virtual Region2D Bounds() const override {
       return bounds;
     }
@@ -85,16 +66,6 @@ class Button : public Drawable {
           bounds.FarX(),  bounds.FarY(),
           drawcolour
         );
-
-      if (left_cap) {
-        Region2D left_cap = LeftCapRegion();
-        //left_cap.Draw(renderer);
-      }
-
-      if (right_cap) {
-        Region2D right_cap = RightCapRegion();
-        //right_cap.Draw(renderer);
-      }
 
       window.ButtonFont().RenderText(
           renderer,
