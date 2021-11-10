@@ -36,6 +36,18 @@ namespace MPD {
         return mpd_status_get_state(status);
       }
 
+      bool IsPaused() {
+        return Status() == MPD_STATE_PAUSE;
+      }
+
+      bool IsPlaying() {
+        return Status() == MPD_STATE_PLAY;
+      }
+
+      bool IsStopped() {
+        return Status() == MPD_STATE_STOP;
+      }
+
       void Stop() {
         mpd_run_stop(conn);
       }
@@ -201,9 +213,7 @@ class MpdFrame : public Drawable {
       });
 
       miso::connect(btnPause.signal_press, [this]() {
-        bool isPaused = btnPause.Active();
-
-        if (isPaused) {
+        if (mpd.IsPaused()) {
           mpd.Resume();
           btnPause.Deactivate();
         } else {
