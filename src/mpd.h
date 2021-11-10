@@ -38,14 +38,20 @@ class View : public Drawable {
 
 class NowPlayingView : public View {
   protected:
-    Button npbutton;
+    Header song;
+    Header album;
+    Header artist;
 
   public:
     NowPlayingView(Window& w, Grid g)
       : View(" NOW PLAYING ", g)
-      , npbutton(w, g.Rows(1,2).bounds, " NOW PLAYING ")
+      , song(g.Rows(1,2), w, " SONG ")
+      , album(g.Rows(3,4), w, " ALBUM ")
+      , artist(g.Rows(5,6), w, " ARTIST ")
     {
-      RegisterChild(&npbutton);
+      RegisterChild(&song);
+      RegisterChild(&album);
+      RegisterChild(&artist);
     }
 };
 
