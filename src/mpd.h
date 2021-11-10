@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <map>
 #include <string>
 
 #include <mpd/client.h>
@@ -16,58 +17,24 @@
 #include "header.h"
 #include "window.h"
 
-class Song {
-  public:
+
+class View : public Drawable {
+  protected:
     std::string title;
-    std::string artist;
-    std::string album;
-
-    Song(std::string title, std::string artist, std::string album)
-      : title{title}, artist{artist}, album{album}
-    {}
-};
-
-
-class NowPlayingView : public Drawable {
-  protected:
     Grid grid;
-    struct mpd_connection* conn;
 
   public:
-    NowPlayingView(Grid g, struct mpd_connection* c)
-      : grid{g}, conn{c}
-    {}
+    View(std::string t, Grid g) : title{t}, grid{g} {}
+
+    std::string Name() const {
+      return title;
+    }
 
     Region2D Bounds() const {
       return grid.bounds;
     }
 
-    void Draw(SDL_Renderer* renderer) const {
-      grid.Columns(3,4).bounds.Fill(renderer, 0xffffffff);
-    }
 };
-
-class QueueView : public Drawable {
-  protected:
-    Grid grid;
-    struct mpd_connection* conn;
-    std::list<Song> songs;
-
-  public:
-    QueueView(Grid g, struct mpd_connection* c)
-      : grid(g), conn(c)
-    {
-    };
-
-    void Draw(SDL_Renderer* renderer) const {
-      grid.Rows(1,2).bounds.Fill(renderer, 0xffffffff);
-    }
-
-    Region2D Bounds() const {
-      return grid.bounds;
-    }
-};
-
 
 
 class MpdFrame : public Drawable {
@@ -91,6 +58,7 @@ class MpdFrame : public Drawable {
     NorthWestSweep sweepNorthWest;
     SouthWestSweep sweepSouthWest;
 
+    std::map<const std::string, View*> views;
     std::string activeView{V_NOWPLAYING};
 
     Button& btnPlay;
@@ -106,8 +74,12 @@ class MpdFrame : public Drawable {
     Button& btnSearch;
     Button& btnOutputs;
 
-    NowPlayingView viewNowPlaying;
-    QueueView viewQueue;
+    View viewNowPlaying;
+    View viewQueue;
+    View viewBrowse;
+    View viewArtists;
+    View viewSearch;
+    View viewOutputs;
 
   public:
     ~MpdFrame()
@@ -115,6 +87,11 @@ class MpdFrame : public Drawable {
       mpd_connection_free(conn);
       mpd_status_free(status);
       mpd_song_free(song);
+    }
+
+    void RegisterView(View* view) {
+      const std::string view_name = view->Name();
+      views.insert(std::pair<const std::string, View*>(view_name, view));
     }
 
     MpdFrame(Grid g, Window& w)
@@ -136,14 +113,26 @@ class MpdFrame : public Drawable {
         , btnSearch(barView.AddButton(V_SEARCH))
         , btnOutputs(barView.AddButton(V_OUTPUTS))
         , conn(mpd_connection_new(NULL, 0, 30000))
-        , viewNowPlaying(layout.Centre(), conn)
-        , viewQueue(layout.Centre(), conn)
+
+        , viewNowPlaying(V_NOWPLAYING, layout.Centre())
+        , viewQueue(V_QUEUE, layout.Centre())
+        , viewBrowse(V_BROWSE, layout.Centre())
+        , viewArtists(V_ARTISTS, layout.Centre())
+        , viewSearch(V_SEARCH, layout.Centre())
+        , viewOutputs(V_OUTPUTS, layout.Centre())
     {
       RegisterChild(&hdrSong);
       RegisterChild(&barView);
       RegisterChild(&barActions);
       RegisterChild(&sweepNorthWest);
       RegisterChild(&sweepSouthWest);
+
+      RegisterView(&viewNowPlaying);
+      RegisterView(&viewQueue);
+      RegisterView(&viewBrowse);
+      RegisterView(&viewArtists);
+      RegisterView(&viewSearch);
+      RegisterView(&viewOutputs);
 
       auto switch_view = [this]() {
         btnNowPlaying.Deactivate();
@@ -241,7 +230,7 @@ class MpdFrame : public Drawable {
         break;
       }
 
-      viewQueue.Update();
+      views.at(activeView)->Update();
     }
 
     virtual Region2D Bounds() const override {
@@ -249,15 +238,8 @@ class MpdFrame : public Drawable {
     }
 
     virtual void Draw(SDL_Renderer* renderer) const {
-      if (activeView == V_NOWPLAYING) {
-        viewNowPlaying.Draw(renderer);
-      }
-
-      if (activeView == V_QUEUE) {
-        viewQueue.Draw(renderer);
-      }
-
       Drawable::Draw(renderer);
+      views.at(activeView)->Draw(renderer);
     }
 
 
