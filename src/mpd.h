@@ -67,13 +67,6 @@ class MpdFrame : public Drawable {
     Button& btnPrevious;
     Button& btnNext;
 
-    Button& btnNowPlaying;
-    Button& btnQueue;
-    Button& btnBrowse;
-    Button& btnArtists;
-    Button& btnSearch;
-    Button& btnOutputs;
-
     View viewNowPlaying;
     View viewQueue;
     View viewBrowse;
@@ -89,11 +82,6 @@ class MpdFrame : public Drawable {
       mpd_song_free(song);
     }
 
-    void RegisterView(View* view) {
-      const std::string view_name = view->Name();
-      views.insert(std::pair<const std::string, View*>(view_name, view));
-    }
-
     MpdFrame(Grid g, Window& w)
         : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
         , hdrSong{layout.North(), w, " MPD CONTROL "}
@@ -106,12 +94,6 @@ class MpdFrame : public Drawable {
         , btnStop(barActions.AddButton("STOP "))
         , btnPrevious(barActions.AddButton("PREV "))
         , btnNext(barActions.AddButton("NEXT "))
-        , btnNowPlaying(barView.AddButton(V_NOWPLAYING))
-        , btnQueue(barView.AddButton(V_QUEUE))
-        , btnBrowse(barView.AddButton(V_BROWSE))
-        , btnArtists(barView.AddButton(V_ARTISTS))
-        , btnSearch(barView.AddButton(V_SEARCH))
-        , btnOutputs(barView.AddButton(V_OUTPUTS))
         , conn(mpd_connection_new(NULL, 0, 30000))
 
         , viewNowPlaying(V_NOWPLAYING, layout.Centre())
@@ -135,24 +117,16 @@ class MpdFrame : public Drawable {
       RegisterView(&viewOutputs);
 
       auto switch_view = [this]() {
-        btnNowPlaying.Deactivate();
-        btnQueue.Deactivate();
-        btnBrowse.Deactivate();
-        btnArtists.Deactivate();
-        btnSearch.Deactivate();
-        btnOutputs.Deactivate();
-
+        barView.DeactivateAll();
         auto active = miso::sender<Button>();
         active->Activate();
         activeView = active->Label();
       };
-      miso::connect(btnNowPlaying.signal_press, switch_view);
-      miso::connect(btnQueue.signal_press, switch_view);
-      miso::connect(btnBrowse.signal_press, switch_view);
-      miso::connect(btnArtists.signal_press, switch_view);
-      miso::connect(btnSearch.signal_press, switch_view);
-      miso::connect(btnOutputs.signal_press, switch_view);
-      btnNowPlaying.Activate();
+
+      for (auto const& [view_name, view_ptr] : views) {
+        Button& view_btn = barView.AddButton(view_name);
+        miso::connect(view_btn.signal_press, switch_view);
+      }
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
@@ -242,6 +216,9 @@ class MpdFrame : public Drawable {
       views.at(activeView)->Draw(renderer);
     }
 
-
+    void RegisterView(View* view) {
+      const std::string view_name = view->Name();
+      views.insert(std::pair<const std::string, View*>(view_name, view));
+    }
 };
 

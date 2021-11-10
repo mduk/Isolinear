@@ -43,6 +43,12 @@ class ButtonBar : public Drawable {
       return buttons.back();
     }
 
+    virtual void DeactivateAll() {
+      for (auto& button : buttons) {
+        button.Deactivate();
+      }
+    }
+
     virtual void OnPointerEvent(PointerEvent event) override {
       for (auto& button : buttons) {
         if (button.Bounds().Encloses(event.Position())) {
