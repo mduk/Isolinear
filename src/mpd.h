@@ -18,6 +18,54 @@
 #include "window.h"
 
 
+namespace MPD {
+
+  class Client {
+    protected:
+      struct mpd_connection* conn;
+      struct mpd_status* status;
+      struct mpd_song* song;
+
+    public:
+      Client() {
+        conn = mpd_connection_new(NULL, 0, 30000);
+      }
+
+      int Status() {
+        status = mpd_run_status(conn);
+        return mpd_status_get_state(status);
+      }
+
+      void Stop() {
+        mpd_run_stop(conn);
+      }
+
+      void Play() {
+        mpd_run_play(conn);
+      }
+
+      void Pause() {
+        mpd_run_pause(conn, true);
+      }
+
+      void Resume() {
+        mpd_run_pause(conn, false);
+      }
+
+      void Next() {
+        mpd_run_next(conn);
+      }
+
+      void Previous() {
+        mpd_run_previous(conn);
+      }
+
+      ~Client() {
+        mpd_connection_free(conn);
+      }
+  };
+}
+
 class View : public Drawable {
   protected:
     std::string title;
@@ -65,9 +113,7 @@ class MpdFrame : public Drawable {
     const std::string V_SEARCH = " SEARCH ";
     const std::string V_OUTPUTS = " OUTPUTS ";
 
-    struct mpd_connection* conn;
-    struct mpd_status* status;
-    struct mpd_song* song;
+    MPD::Client mpd;
 
     CompassLayout layout;
 
@@ -95,13 +141,6 @@ class MpdFrame : public Drawable {
 
 
   public:
-    ~MpdFrame()
-    {
-      mpd_connection_free(conn);
-      mpd_status_free(status);
-      mpd_song_free(song);
-    }
-
     MpdFrame(Grid g, Window& w)
         : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
         , hdrSong{layout.North(), w, " MPD CONTROL "}
@@ -114,7 +153,6 @@ class MpdFrame : public Drawable {
         , btnStop(barActions.AddButton("STOP "))
         , btnPrevious(barActions.AddButton("PREV "))
         , btnNext(barActions.AddButton("NEXT "))
-        , conn(mpd_connection_new(NULL, 0, 30000))
 
         , viewNowPlaying(w, layout.Centre())
         , viewQueue(V_QUEUE, layout.Centre())
@@ -151,10 +189,10 @@ class MpdFrame : public Drawable {
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
-          mpd_run_stop(conn);
+          mpd.Stop();
         }
         else {
-          mpd_run_play(conn);
+          mpd.Play();
         }
 
         btnPlay.Activate();
@@ -165,20 +203,21 @@ class MpdFrame : public Drawable {
       miso::connect(btnPause.signal_press, [this]() {
         bool isPaused = btnPause.Active();
 
-        mpd_run_pause(conn, !isPaused);
         if (isPaused) {
+          mpd.Resume();
           btnPause.Deactivate();
         } else {
+          mpd.Pause();
           btnPause.Activate();
         }
       });
 
       miso::connect(btnStop.signal_press, [this]() {
         if (btnStop.Active()) {
-          mpd_run_play(conn);
+          mpd.Play();
         }
         else {
-          mpd_run_stop(conn);
+          mpd.Stop();
         }
         btnPlay.Deactivate();
         btnPause.Deactivate();
@@ -186,11 +225,11 @@ class MpdFrame : public Drawable {
       });
 
       miso::connect(btnPrevious.signal_press, [this]() {
-        mpd_run_previous(conn);
+        mpd.Previous();
       });
 
       miso::connect(btnNext.signal_press, [this]() {
-        mpd_run_next(conn);
+        mpd.Next();
       });
 
       Update();
@@ -198,12 +237,9 @@ class MpdFrame : public Drawable {
 
     void Update()
     {
-      status = mpd_run_status(conn);
-      song = mpd_run_current_song(conn);
-
       hdrSong.Label(activeView + " : MPD");
 
-      switch (mpd_status_get_state(status)) {
+      switch (mpd.Status()) {
 
       case MPD_STATE_PLAY:
         btnPlay.Activate();
