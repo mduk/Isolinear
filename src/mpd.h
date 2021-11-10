@@ -74,6 +74,8 @@ class MpdFrame : public Drawable {
     View viewSearch;
     View viewOutputs;
 
+    Button npbutton;
+
   public:
     ~MpdFrame()
     {
@@ -102,6 +104,7 @@ class MpdFrame : public Drawable {
         , viewArtists(V_ARTISTS, layout.Centre())
         , viewSearch(V_SEARCH, layout.Centre())
         , viewOutputs(V_OUTPUTS, layout.Centre())
+        , npbutton(w, layout.Centre().Rows(1,2).bounds, " NOW PLAYING ")
     {
       RegisterChild(&hdrSong);
       RegisterChild(&barView);
@@ -115,6 +118,8 @@ class MpdFrame : public Drawable {
       RegisterView(&viewArtists);
       RegisterView(&viewSearch);
       RegisterView(&viewOutputs);
+
+      viewNowPlaying.RegisterChild(&npbutton);
 
       auto switch_view = [this]() {
         barView.DeactivateAll();
@@ -214,6 +219,13 @@ class MpdFrame : public Drawable {
     virtual void Draw(SDL_Renderer* renderer) const {
       Drawable::Draw(renderer);
       views.at(activeView)->Draw(renderer);
+    }
+
+    virtual void Colours(ColourScheme cs) {
+      Drawable::Colours(cs);
+      for (auto const& [view_name, view_ptr] : views) {
+        view_ptr->Colours(cs);
+      }
     }
 
     void RegisterView(View* view) {

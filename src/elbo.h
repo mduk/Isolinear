@@ -129,7 +129,6 @@ class Elbo : public Drawable {
       buttons.emplace_back(
           window,
           ButtonRegion(buttons.size() + 1),
-          Colours(),
           label
         );
     }

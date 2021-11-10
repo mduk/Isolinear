@@ -29,7 +29,6 @@ class Header : public Drawable {
     void Label(std::string newlabel) {
         text = newlabel;
     }
-
     virtual ColourScheme Colours() const {
       return Drawable::Colours();
     }
@@ -45,7 +44,6 @@ class Header : public Drawable {
       buttons.emplace_back(
           window,
           ButtonRegion(buttons.size() + 1),
-          Colours(),
           label
         );
         return buttons.back();

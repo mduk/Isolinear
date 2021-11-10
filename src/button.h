@@ -30,7 +30,6 @@ class Button : public Drawable {
     Button(
         Window& w,
         Region2D b,
-        ColourScheme cs,
         std::string l
       ) :
         bounds{b},

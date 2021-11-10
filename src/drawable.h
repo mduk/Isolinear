@@ -19,7 +19,7 @@ class Drawable {
     virtual Region2D Bounds() const = 0;
 
     virtual void Draw(SDL_Renderer* renderer) const {
-      for (auto child : children) {
+      for (auto& child : children) {
         child->Draw(renderer);
       }
     }
@@ -29,7 +29,7 @@ class Drawable {
     }
 
     virtual void Update() {
-      for (auto child : children) {
+      for (auto& child : children) {
         child->Update();
       }
     }
@@ -49,7 +49,7 @@ class Drawable {
           p.y - b.NearY()
         );
 
-      for (auto child : children) {
+      for (auto& child : children) {
         if (child->Bounds().Encloses(p)) {
           child->OnPointerEvent(event);
         }
@@ -62,7 +62,7 @@ class Drawable {
 
     virtual void Colours(ColourScheme cs) {
       colours = cs;
-      for (auto child : children) {
+      for (auto& child : children) {
         child->Colours(cs);
       }
     }
