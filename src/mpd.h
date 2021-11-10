@@ -36,6 +36,19 @@ class View : public Drawable {
 
 };
 
+class NowPlayingView : public View {
+  protected:
+    Button npbutton;
+
+  public:
+    NowPlayingView(Window& w, Grid g)
+      : View(" NOW PLAYING ", g)
+      , npbutton(w, g.Rows(1,2).bounds, " NOW PLAYING ")
+    {
+      RegisterChild(&npbutton);
+    }
+};
+
 
 class MpdFrame : public Drawable {
   protected:
@@ -67,14 +80,13 @@ class MpdFrame : public Drawable {
     Button& btnPrevious;
     Button& btnNext;
 
-    View viewNowPlaying;
+    NowPlayingView viewNowPlaying;
     View viewQueue;
     View viewBrowse;
     View viewArtists;
     View viewSearch;
     View viewOutputs;
 
-    Button npbutton;
 
   public:
     ~MpdFrame()
@@ -98,13 +110,12 @@ class MpdFrame : public Drawable {
         , btnNext(barActions.AddButton("NEXT "))
         , conn(mpd_connection_new(NULL, 0, 30000))
 
-        , viewNowPlaying(V_NOWPLAYING, layout.Centre())
+        , viewNowPlaying(w, layout.Centre())
         , viewQueue(V_QUEUE, layout.Centre())
         , viewBrowse(V_BROWSE, layout.Centre())
         , viewArtists(V_ARTISTS, layout.Centre())
         , viewSearch(V_SEARCH, layout.Centre())
         , viewOutputs(V_OUTPUTS, layout.Centre())
-        , npbutton(w, layout.Centre().Rows(1,2).bounds, " NOW PLAYING ")
     {
       RegisterChild(&hdrSong);
       RegisterChild(&barView);
@@ -119,13 +130,12 @@ class MpdFrame : public Drawable {
       RegisterView(&viewSearch);
       RegisterView(&viewOutputs);
 
-      viewNowPlaying.RegisterChild(&npbutton);
-
       auto switch_view = [this]() {
         barView.DeactivateAll();
         auto active = miso::sender<Button>();
         active->Activate();
         activeView = active->Label();
+        Update();
       };
 
       for (auto const& [view_name, view_ptr] : views) {
