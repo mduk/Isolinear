@@ -201,7 +201,12 @@ class MpdFrame : public Drawable {
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
-          mpd.Stop();
+          if (btnPause.Active()) {
+            mpd.Play();
+          }
+          else {
+            mpd.Stop();
+          }
         }
         else {
           mpd.Play();
