@@ -72,6 +72,13 @@ namespace MPD {
         mpd_run_previous(conn);
       }
 
+      bool ConsumeToggle() {
+        status = mpd_run_status(conn);
+        bool newstate = !mpd_status_get_consume(status);
+        mpd_run_consume(conn, newstate);
+        return newstate;
+      }
+
       ~Client() {
         mpd_connection_free(conn);
       }
@@ -143,6 +150,7 @@ class MpdFrame : public Drawable {
     Button& btnStop;
     Button& btnPrevious;
     Button& btnNext;
+    Button& btnConsume;
 
     NowPlayingView viewNowPlaying;
     View viewQueue;
@@ -165,6 +173,7 @@ class MpdFrame : public Drawable {
         , btnStop(barActions.AddButton("STOP "))
         , btnPrevious(barActions.AddButton("PREV "))
         , btnNext(barActions.AddButton("NEXT "))
+        , btnConsume(barActions.AddButton("CONSUME "))
 
         , viewNowPlaying(w, layout.Centre())
         , viewQueue(V_QUEUE, layout.Centre())
@@ -245,6 +254,10 @@ class MpdFrame : public Drawable {
 
       miso::connect(btnNext.signal_press, [this]() {
         mpd.Next();
+      });
+
+      miso::connect(btnConsume.signal_press, [this]() {
+          miso::sender<Button>()->Active(mpd.ConsumeToggle());
       });
 
       Update();

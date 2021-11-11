@@ -43,6 +43,7 @@ class Button : public Drawable {
 
     void Activate() { active = true; }
     void Deactivate() { active = false; }
+    void Active(bool state) { active = state; }
     bool Active() { return active; }
 
     std::string Label() { return label; }
