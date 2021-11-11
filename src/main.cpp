@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
         }
         break;
       }
-        /*
+
         case SDL_MOUSEMOTION: {
           int x = e.motion.x,
               y = e.motion.y;
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
           window.Title(ss.str());
           break;
         }
-*/
+
       case SDL_FINGERDOWN:
         window.OnPointerEvent(PointerEvent{ e.tfinger, window.size });
         break;

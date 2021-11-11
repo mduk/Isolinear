@@ -9,6 +9,49 @@
 #include "window.h"
 #include "button.h"
 
+class BasicHeader : public Drawable {
+  protected:
+    Grid grid;
+    Window& window;
+    Compass alignment{CENTRE};
+    std::string text{""};
+
+  public:
+    BasicHeader(Grid g, Window& w, Compass a, std::string t)
+      : grid{g}, window{w}, alignment{a}, text{t}
+    {};
+
+    BasicHeader(Grid g, Window& w)
+      : grid{g}, window{w}
+    {};
+
+    void Label(std::string newlabel) {
+        text = newlabel;
+    }
+    virtual ColourScheme Colours() const {
+      return Drawable::Colours();
+    }
+
+    virtual void Colours(ColourScheme cs) {
+      Drawable::Colours(cs);
+    }
+
+    virtual Region2D Bounds() const override {
+      return grid.bounds;
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      if (text.length() > 0) {
+        RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
+        Region2D headerregion = grid.bounds.Align(alignment, headertext.Size());
+        headertext.Draw(renderer, Compass::EAST, grid.bounds);
+      }
+
+    }
+};
+
+
+
 class Header : public Drawable {
   protected:
     Grid grid;
@@ -87,16 +130,9 @@ class Header : public Drawable {
       Region2D  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
       Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
-        left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
+        left_cap.Fill    (renderer, Colours().light);
        right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
       centre_bar.Fill    (renderer, Colours().background);
-
-      if (buttons.size() > 0) {
-        for (auto const& button : buttons) {
-          button.Draw(renderer);
-          filler_start += button_width;
-        }
-      }
 
       if (text.length() > 0) {
         RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
@@ -105,17 +141,6 @@ class Header : public Drawable {
         int near = grid.PositionColumnIndex(headerregion.Near());
         int  far = grid.PositionColumnIndex(headerregion.Far());
         filler_end -= (far - near) + 1;
-
-        int col = grid.PositionColumnIndex(headerregion.Near());
-        Region2D cell = grid.CalculateGridRegion(col, y, col, y+1);
-        Region2D fillerregion{
-            cell.Origin(),
-            Position2D{
-                headerregion.SouthWestX(),
-                cell.FarY()
-              }
-          };
-        fillerregion.Fill(renderer, Colours().light);
 
         headertext.Draw(renderer, Compass::EAST, centre_bar);
       }

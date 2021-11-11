@@ -48,6 +48,27 @@ namespace MPD {
         return Status() == MPD_STATE_STOP;
       }
 
+      std::string CurrentlyPlayingAlbum() {
+        return CurrentlyPlayingTag(MPD_TAG_ALBUM);
+      }
+
+      std::string CurrentlyPlayingArtist() {
+        return CurrentlyPlayingTag(MPD_TAG_ARTIST);
+      }
+
+      std::string CurrentlyPlayingTitle() {
+        return CurrentlyPlayingTag(MPD_TAG_TITLE);
+      }
+
+      std::string CurrentlyPlayingTag(mpd_tag_type tag) {
+        song = mpd_run_current_song(conn);
+        auto value = mpd_song_get_tag(song, tag, 0);
+        if (!value) {
+          return " ";
+        }
+        return std::string(value);
+      }
+
       void Stop() {
         mpd_run_stop(conn);
       }
@@ -118,20 +139,26 @@ class View : public Drawable {
 
 class NowPlayingView : public View {
   protected:
-    Header song;
-    Header album;
-    Header artist;
+    BasicHeader album;
+    BasicHeader artist;
+    MPD::Client& mpd;
 
   public:
-    NowPlayingView(Window& w, Grid g)
+    NowPlayingView(Window& w, Grid g, MPD::Client& _mpd)
       : View(" NOW PLAYING ", g)
-      , song(g.Rows(1,2), w, " SONG ")
-      , album(g.Rows(3,4), w, " ALBUM ")
-      , artist(g.Rows(5,6), w, " ARTIST ")
+      , mpd{_mpd}
+      , album(g.Rows(1,2).Columns(7,12), w,
+              Compass::WEST, " ALBUM ")
+      , artist(g.Rows(1,2).Columns(1,6), w,
+               Compass::EAST, " ARTIST ")
     {
-      RegisterChild(&song);
       RegisterChild(&album);
       RegisterChild(&artist);
+    }
+
+    void Update() {
+      album.Label(mpd.CurrentlyPlayingAlbum());
+      artist.Label(mpd.CurrentlyPlayingArtist());
     }
 };
 
@@ -191,7 +218,7 @@ class MpdFrame : public Drawable {
         , btnConsume(barActions.AddButton("CONSUME "))
         , btnRandom(barActions.AddButton("SHUFFLE "))
 
-        , viewNowPlaying(w, layout.Centre())
+        , viewNowPlaying(w, layout.Centre(), mpd)
         , viewQueue(V_QUEUE, layout.Centre())
         , viewBrowse(V_BROWSE, layout.Centre())
         , viewArtists(V_ARTISTS, layout.Centre())
