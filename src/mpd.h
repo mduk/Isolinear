@@ -224,7 +224,7 @@ class MpdFrame : public Drawable {
         miso::connect(view_btn.signal_press, switch_view);
       }
 
-      barView.buttons.at(activeView).Activate();
+      barView.GetButton(activeView).Activate();
 
       miso::connect(btnPlay.signal_press, [this]() {
         if (btnPlay.Active()) {
