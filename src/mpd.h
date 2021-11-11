@@ -147,10 +147,10 @@ class NowPlayingView : public View {
     NowPlayingView(Window& w, Grid g, MPD::Client& _mpd)
       : View(" NOW PLAYING ", g)
       , mpd{_mpd}
-      , album(g.Rows(1,2).Columns(7,12), w,
-              Compass::WEST, " ALBUM ")
-      , artist(g.Rows(1,2).Columns(1,6), w,
-               Compass::EAST, " ARTIST ")
+      , album(g.Rows(1,2).Columns(9,17), w,
+              Compass::CENTRE)
+      , artist(g.Rows(1,2).Columns(1,8), w,
+               Compass::CENTRE)
     {
       RegisterChild(&album);
       RegisterChild(&artist);

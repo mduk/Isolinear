@@ -17,12 +17,8 @@ class BasicHeader : public Drawable {
     std::string text{""};
 
   public:
-    BasicHeader(Grid g, Window& w, Compass a, std::string t)
-      : grid{g}, window{w}, alignment{a}, text{t}
-    {};
-
-    BasicHeader(Grid g, Window& w)
-      : grid{g}, window{w}
+    BasicHeader(Grid g, Window& w, Compass a)
+      : grid{g}, window{w}, alignment{a}
     {};
 
     void Label(std::string newlabel) {
@@ -44,7 +40,7 @@ class BasicHeader : public Drawable {
       if (text.length() > 0) {
         RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
         Region2D headerregion = grid.bounds.Align(alignment, headertext.Size());
-        headertext.Draw(renderer, Compass::EAST, grid.bounds);
+        headertext.Draw(renderer, alignment, grid.bounds);
       }
 
     }
