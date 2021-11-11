@@ -176,6 +176,7 @@ class MpdFrame : public Drawable {
         , barActions{w, layout.South()}
         , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
         , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
+
         , btnPlay(barActions.AddButton("PLAY "))
         , btnPause(barActions.AddButton("PAUS "))
         , btnStop(barActions.AddButton("STOP "))
@@ -270,7 +271,7 @@ class MpdFrame : public Drawable {
       });
 
       miso::connect(btnRandom.signal_press, [this]() {
-          miso::sender<Button>()->Active(mpd.RandomToggle());
+        miso::sender<Button>()->Active(mpd.RandomToggle());
       });
 
       Update();
