@@ -79,6 +79,13 @@ namespace MPD {
         return newstate;
       }
 
+      bool RandomToggle() {
+        status = mpd_run_status(conn);
+        bool newstate = !mpd_status_get_random(status);
+        mpd_run_random(conn, newstate);
+        return newstate;
+      }
+
       ~Client() {
         mpd_connection_free(conn);
       }
@@ -151,6 +158,7 @@ class MpdFrame : public Drawable {
     Button& btnPrevious;
     Button& btnNext;
     Button& btnConsume;
+    Button& btnRandom;
 
     NowPlayingView viewNowPlaying;
     View viewQueue;
@@ -174,6 +182,7 @@ class MpdFrame : public Drawable {
         , btnPrevious(barActions.AddButton("PREV "))
         , btnNext(barActions.AddButton("NEXT "))
         , btnConsume(barActions.AddButton("CONSUME "))
+        , btnRandom(barActions.AddButton("SHUFFLE "))
 
         , viewNowPlaying(w, layout.Centre())
         , viewQueue(V_QUEUE, layout.Centre())
@@ -257,7 +266,11 @@ class MpdFrame : public Drawable {
       });
 
       miso::connect(btnConsume.signal_press, [this]() {
-          miso::sender<Button>()->Active(mpd.ConsumeToggle());
+        miso::sender<Button>()->Active(mpd.ConsumeToggle());
+      });
+
+      miso::connect(btnRandom.signal_press, [this]() {
+          miso::sender<Button>()->Active(mpd.RandomToggle());
       });
 
       Update();
