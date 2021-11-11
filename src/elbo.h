@@ -18,8 +18,6 @@
 #include "shapes.h"
 
 
-using namespace std;
-
 
 class Elbo : public Drawable {
 
@@ -60,7 +58,7 @@ class Elbo : public Drawable {
     virtual Region2D HeaderRegion() const = 0;
 
     virtual int SweepOuterRadius() const {
-      return min(
+      return std::min(
           SweepRegion().W() / 2,
           VerticalRegion().W()
         );

@@ -7,8 +7,6 @@
 #include "geometry.h"
 
 
-using namespace std;
-
 
 class RenderedText {
   protected:

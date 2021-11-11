@@ -13,8 +13,6 @@
 #include "pointerevent.h"
 
 
-using namespace std;
-
 
 class Button : public Drawable {
   protected:

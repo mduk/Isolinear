@@ -23,7 +23,6 @@
 #include "window.h"
 #include "mpd.h"
 
-using namespace std;
 
 bool drawdebug = false;
 
