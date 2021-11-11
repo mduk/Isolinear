@@ -242,10 +242,6 @@ class MpdFrame : public Drawable {
         btnStop.Deactivate();
       });
 
-      miso::connect(btnPause.signal_press, [this]() {
-        btnPause.Active(mpd.PauseToggle());
-      });
-
       miso::connect(btnStop.signal_press, [this]() {
         if (btnStop.Active()) {
           mpd.Play();
@@ -264,6 +260,10 @@ class MpdFrame : public Drawable {
 
       miso::connect(btnNext.signal_press, [this]() {
         mpd.Next();
+      });
+
+      miso::connect(btnPause.signal_press, [this]() {
+        miso::sender<Button>()->Active(mpd.PauseToggle());
       });
 
       miso::connect(btnConsume.signal_press, [this]() {
