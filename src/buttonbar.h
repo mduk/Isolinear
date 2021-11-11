@@ -2,6 +2,7 @@
 
 #include <string>
 #include <list>
+#include <map>
 
 #include "geometry.h"
 #include "window.h"
@@ -11,7 +12,7 @@ class ButtonBar : public Drawable {
   protected:
     Grid grid;
     Window& window;
-    std::list<Button> buttons;
+    std::map<std::string, Button> buttons;
     Vector2D button_size{2,2};
 
   public:
@@ -27,29 +28,30 @@ class ButtonBar : public Drawable {
     }
 
     virtual void Colours(ColourScheme cs) {
-      for (auto& button : buttons) {
+      for (auto& [label, button] : buttons) {
         button.Colours(cs);
       }
       Drawable::Colours(cs);
     }
 
     virtual Button& AddButton(std::string label) {
-      buttons.emplace_back(
-          window,
-          ButtonRegion(buttons.size() + 1),
-          label
+      buttons.try_emplace(
+          label,
+            window,
+            ButtonRegion(buttons.size() + 1),
+            label
         );
-      return buttons.back();
+      return buttons.at(label);
     }
 
     virtual void DeactivateAll() {
-      for (auto& button : buttons) {
+      for (auto& [label, button] : buttons) {
         button.Deactivate();
       }
     }
 
     virtual void OnPointerEvent(PointerEvent event) override {
-      for (auto& button : buttons) {
+      for (auto& [label, button] : buttons) {
         if (button.Bounds().Encloses(event.Position())) {
           button.OnPointerEvent(event);
           return;
@@ -70,7 +72,7 @@ class ButtonBar : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
-      for (auto const& button : buttons) {
+      for (auto const& [label, button] : buttons) {
         button.Draw(renderer);
       }
 
