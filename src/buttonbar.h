@@ -12,10 +12,11 @@ class ButtonBar : public Drawable {
   protected:
     Grid grid;
     Window& window;
-    std::map<std::string, Button> buttons;
     Vector2D button_size{2,2};
 
   public:
+    std::map<std::string, Button> buttons;
+
     ButtonBar(Window& w, Grid g)
       : window{w}, grid{g}
     {};
@@ -41,6 +42,10 @@ class ButtonBar : public Drawable {
             ButtonRegion(buttons.size() + 1),
             label
         );
+      return buttons.at(label);
+    }
+
+    virtual Button& Button(std::string label) {
       return buttons.at(label);
     }
 
