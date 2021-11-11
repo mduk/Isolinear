@@ -72,6 +72,12 @@ namespace MPD {
         mpd_run_previous(conn);
       }
 
+      bool PauseToggle() {
+        bool newstate = !IsPaused();
+        mpd_run_pause(conn, newstate);
+        return newstate;
+      }
+
       bool ConsumeToggle() {
         status = mpd_run_status(conn);
         bool newstate = !mpd_status_get_consume(status);
@@ -237,13 +243,7 @@ class MpdFrame : public Drawable {
       });
 
       miso::connect(btnPause.signal_press, [this]() {
-        if (mpd.IsPaused()) {
-          mpd.Resume();
-          btnPause.Deactivate();
-        } else {
-          mpd.Pause();
-          btnPause.Activate();
-        }
+        btnPause.Active(mpd.PauseToggle());
       });
 
       miso::connect(btnStop.signal_press, [this]() {
