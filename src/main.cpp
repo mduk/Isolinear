@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
     };
   window.Add(&mpdframe);
 
-  window.Colours(blue_alert_colours);
+  window.Colours(nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -112,6 +112,9 @@ int main(int argc, char* argv[])
           break;
         case 'b':
           window.Colours(blue_alert_colours);
+          break;
+        case 'n':
+          window.Colours(nightgazer_colours);
           break;
         case 'g':
           drawdebug = !drawdebug;

@@ -42,6 +42,12 @@ class ColourScheme {
 
 ColourScheme debug_colours{};
 
+ColourScheme nightgazer_colours{
+    0xff302829, 0xff41596f,
+    0xff4582c6, 0xff6b7dca,
+    0xff65b0c7, 0xff93e0e2
+  };
+
 ColourScheme blue_alert_colours{
     0xff4d4d4d, 0xffcc0000,
     0xffff3300, 0xffff6601,
