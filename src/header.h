@@ -54,7 +54,7 @@ class BasicHeader : public Drawable {
     }
 };
 
-class HeaderBar : public Drawable {
+class EastHeaderBar : public Drawable {
   protected:
     Grid grid;
     Window& window;
@@ -63,11 +63,11 @@ class HeaderBar : public Drawable {
     int button_width{2};
 
   public:
-    HeaderBar(Grid g, Window& w, Compass a, std::string t)
+    EastHeaderBar(Grid g, Window& w, Compass a, std::string t)
       : grid{g}, window{w}, text{t}
     {};
 
-    HeaderBar(Grid g, Window& w, Compass a)
+    EastHeaderBar(Grid g, Window& w, Compass a)
       : grid{g}, window{w}
     {};
 
@@ -132,7 +132,7 @@ class HeaderBar : public Drawable {
       Region2D  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
       Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
-        left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
+        left_cap.Fill    (renderer, Colours().light);
        right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
       centre_bar.Fill    (renderer, Colours().background);
 

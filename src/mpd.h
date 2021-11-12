@@ -32,8 +32,8 @@ class View : public Drawable {
 
 class NowPlayingView : public View {
   protected:
-    HeaderBar album;
-    HeaderBar artist;
+    EastHeaderBar album;
+    EastHeaderBar artist;
     MPD::Client& mpd;
 
   public:
@@ -69,7 +69,7 @@ class MpdFrame : public Drawable {
 
     CompassLayout layout;
 
-    HeaderBar hdrFrame;
+    EastHeaderBar hdrFrame;
     VerticalButtonBar barView;
     HorizontalButtonBar barActions;
     NorthWestSweep sweepNorthWest;
