@@ -69,7 +69,7 @@ class Button : public Drawable {
           renderer,
           Region2D{bounds.Origin(), bounds.Size()},
           Compass{SOUTHEAST},
-          label
+          std::string{" "} + label + " "
         );
     }
 

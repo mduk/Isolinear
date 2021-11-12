@@ -32,17 +32,17 @@ class View : public Drawable {
 
 class NowPlayingView : public View {
   protected:
-    BasicHeader album;
-    BasicHeader artist;
+    HeaderBar album;
+    HeaderBar artist;
     MPD::Client& mpd;
 
   public:
     NowPlayingView(Window& w, Grid g, MPD::Client& _mpd)
-      : View(" NOW PLAYING ", g)
+      : View("NOW PLAYING", g)
       , mpd{_mpd}
-      , album(g.Rows(1,2).Columns(9,17), w,
+      , album(g.Rows(1,2), w,
               Compass::CENTRE)
-      , artist(g.Rows(1,2).Columns(1,8), w,
+      , artist(g.Rows(3,4), w,
                Compass::CENTRE)
     {
       RegisterChild(&album);
@@ -58,12 +58,12 @@ class NowPlayingView : public View {
 
 class MpdFrame : public Drawable {
   protected:
-    const std::string V_NOWPLAYING = " NOW PLAYING ";
-    const std::string V_QUEUE = " QUEUE ";
-    const std::string V_BROWSE = " BROWSE ";
-    const std::string V_ARTISTS = " ARTISTS ";
-    const std::string V_SEARCH = " SEARCH ";
-    const std::string V_OUTPUTS = " OUTPUTS ";
+    const std::string V_NOWPLAYING = "NOW PLAYING";
+    const std::string V_QUEUE = "QUEUE";
+    const std::string V_BROWSE = "BROWSE";
+    const std::string V_ARTISTS = "ARTISTS";
+    const std::string V_SEARCH = "SEARCH";
+    const std::string V_OUTPUTS = "OUTPUTS";
 
     MPD::Client mpd;
 
@@ -103,13 +103,13 @@ class MpdFrame : public Drawable {
         , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
         , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
 
-        , btnPlay(barActions.AddButton("PLAY "))
-        , btnPause(barActions.AddButton("PAUS "))
-        , btnStop(barActions.AddButton("STOP "))
-        , btnPrevious(barActions.AddButton("PREV "))
-        , btnNext(barActions.AddButton("NEXT "))
-        , btnConsume(barActions.AddButton("CONSUME "))
-        , btnRandom(barActions.AddButton("SHUFFLE "))
+        , btnPlay(barActions.AddButton("PLAY"))
+        , btnPause(barActions.AddButton("PAUSE"))
+        , btnStop(barActions.AddButton("STOP"))
+        , btnPrevious(barActions.AddButton("PREVIOUS"))
+        , btnNext(barActions.AddButton("NEXT"))
+        , btnConsume(barActions.AddButton("CONSUME"))
+        , btnRandom(barActions.AddButton("SHUFFLE"))
 
         , viewNowPlaying(w, layout.Centre(), mpd)
         , viewQueue(V_QUEUE, layout.Centre())

@@ -47,7 +47,9 @@ class BasicHeader : public Drawable {
         return;
       }
 
-      RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
+      std::string padded = std::string(" ") + text + " ";
+
+      RenderedText headertext = window.HeaderFont().RenderText(Colours().active, padded);
       headertext.Draw(renderer, alignment, grid.bounds);
     }
 };
@@ -65,7 +67,7 @@ class HeaderBar : public Drawable {
       : grid{g}, window{w}, text{t}
     {};
 
-    HeaderBar(Grid g, Window& w)
+    HeaderBar(Grid g, Window& w, Compass a)
       : grid{g}, window{w}
     {};
 
@@ -142,7 +144,8 @@ class HeaderBar : public Drawable {
       }
 
       if (text.length() > 0) {
-        RenderedText headertext = window.HeaderFont().RenderText(Colours().active, text);
+        std::string padded = std::string(" ") + text + " ";
+        RenderedText headertext = window.HeaderFont().RenderText(Colours().active, padded);
         Region2D headerregion = centre_bar.Align(Compass::EAST, headertext.Size());
 
         int near = grid.PositionColumnIndex(headerregion.Near());
