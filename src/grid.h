@@ -121,11 +121,11 @@ class Grid {
 
     int PositionColumnIndex(Position2D p) const {
       Size2D s = CellSize();
-      return floor(p.x / s.x) + 1;
+      return floor((p.x - bounds.X()) / s.x) + 1;
     }
 
     int PositionRowIndex(Position2D p) const {
-      return floor(p.y / row_height) + 1;
+      return floor((p.y - bounds.Y()) / row_height) + 1;
     }
 
     int MaxColumns() const {
