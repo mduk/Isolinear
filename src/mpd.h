@@ -69,7 +69,7 @@ class MpdFrame : public Drawable {
 
     CompassLayout layout;
 
-    BasicHeader hdrSong;
+    Header hdrSong;
     VerticalButtonBar barView;
     HorizontalButtonBar barActions;
     NorthWestSweep sweepNorthWest;
