@@ -69,7 +69,7 @@ class MpdFrame : public Drawable {
 
     CompassLayout layout;
 
-    HeaderBar hdrSong;
+    HeaderBar hdrFrame;
     VerticalButtonBar barView;
     HorizontalButtonBar barActions;
     NorthWestSweep sweepNorthWest;
@@ -97,7 +97,7 @@ class MpdFrame : public Drawable {
   public:
     MpdFrame(Grid g, Window& w)
         : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-        , hdrSong{layout.North(), w, Compass::EAST, " MPD CONTROL "}
+        , hdrFrame{layout.North(), w, Compass::EAST, " MPD CONTROL "}
         , barView{w, layout.West()}
         , barActions{w, layout.South()}
         , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
@@ -118,7 +118,7 @@ class MpdFrame : public Drawable {
         , viewSearch(V_SEARCH, layout.Centre())
         , viewOutputs(V_OUTPUTS, layout.Centre())
     {
-      RegisterChild(&hdrSong);
+      RegisterChild(&hdrFrame);
       RegisterChild(&barView);
       RegisterChild(&barActions);
       RegisterChild(&sweepNorthWest);
@@ -201,7 +201,7 @@ class MpdFrame : public Drawable {
 
     void Update()
     {
-      hdrSong.Label(activeView + " : MPD");
+      hdrFrame.Label(activeView + " : MPD");
 
       switch (mpd.Status()) {
 
