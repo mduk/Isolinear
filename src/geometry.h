@@ -93,7 +93,7 @@ class Position2D : public Vector2D {
     Position2D(SDL_Rect r) : Vector2D(r.x, r.y) {};
 
     void Draw(SDL_Renderer* renderer) {
-      filledEllipseColor(renderer, x, y, 10, 10, 0xff00ffff);
+      filledEllipseColor(renderer, x, y,  5,  5, 0xff00ffff);
     }
 };
 

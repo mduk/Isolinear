@@ -173,3 +173,128 @@ class EastHeaderBar : public Drawable {
     }
 };
 
+class PairHeaderBar : public Drawable {
+  protected:
+    Grid grid;
+    Window& window;
+    std::string left{""};
+    std::string right{""};
+
+  public:
+    PairHeaderBar(Grid g, Window& w,
+        std::string l, std::string r)
+      : grid{g}, window{w}, left{l}, right{r}
+    {};
+
+    PairHeaderBar(Grid g, Window& w, Compass a)
+      : grid{g}, window{w}
+    {};
+
+    void Left(std::string newlabel) {
+        left = newlabel;
+    }
+
+    void Right(std::string newlabel) {
+        right = newlabel;
+    }
+
+    virtual ColourScheme Colours() const {
+      return Drawable::Colours();
+    }
+
+    virtual void Colours(ColourScheme cs) {
+      Drawable::Colours(cs);
+    }
+
+    virtual Region2D Bounds() const override {
+      return grid.bounds;
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      Region2D left_cap = grid.CalculateGridRegion(
+          1, 1,
+          1, grid.MaxRows()
+        );
+
+      Region2D centre_bar = grid.CalculateGridRegion(
+          2, 1,
+          grid.MaxColumns() - 1, grid.MaxRows()
+        );
+
+      Region2D right_cap = grid.CalculateGridRegion(
+          grid.MaxColumns(), 1,
+          grid.MaxColumns(), grid.MaxRows()
+        );
+
+      std::string paddedleft = " " + left + " ";
+      std::string paddedright = " " + right + " ";
+
+      auto const& headerfont = window.HeaderFont();
+      RenderedText  lefttext = headerfont.RenderText(
+          Colours().active, paddedleft
+        );
+      RenderedText righttext = headerfont.RenderText(
+          Colours().active, paddedright
+        );
+
+      Region2D lefttextregion = centre_bar.Align(
+          Compass::WEST, lefttext.Size()
+        );
+      Region2D righttextregion = centre_bar.Align(
+          Compass::EAST, righttext.Size()
+        );
+
+      Position2D leftlimit = lefttextregion.SouthEast();
+      Position2D rightlimit = righttextregion.NorthWest();
+
+      int left_text_end_col_index = grid.PositionColumnIndex(
+          lefttextregion.East()
+        );
+      int right_text_end_col_index = grid.PositionColumnIndex(
+          righttextregion.West()
+        );
+
+      Region2D drawcentrebar = grid.CalculateGridRegion(
+          left_text_end_col_index + 1, 1,
+          right_text_end_col_index - 1, grid.MaxRows()
+        );
+
+      Region2D left_text_end_cell =
+        grid.CalculateGridRegion(
+            left_text_end_col_index, 1,
+            left_text_end_col_index, grid.MaxRows()
+          );
+
+      Region2D right_text_end_cell =
+        grid.CalculateGridRegion(
+            right_text_end_col_index, 1,
+            right_text_end_col_index, grid.MaxRows()
+          );
+
+      Region2D left_text_filler{
+          Position2D(leftlimit.x, left_text_end_cell.NorthWestY()),
+          left_text_end_cell.SouthEast()
+        };
+
+      Region2D right_text_filler{
+          right_text_end_cell.NorthWest(),
+          Position2D(rightlimit.x, right_text_end_cell.SouthEastY())
+        };
+
+      if (right_text_filler.W() >= grid.Gutter().x) {
+        right_text_filler.Fill(renderer, Colours().light);
+      }
+
+      if (left_text_filler.W() >= grid.Gutter().x) {
+        left_text_filler.Fill(renderer, Colours().light);
+      }
+
+      drawcentrebar.Fill(renderer, Colours().frame);
+      left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
+      right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
+
+      lefttext.Draw(renderer, Compass::WEST, centre_bar);
+      righttext.Draw(renderer, Compass::EAST, centre_bar);
+    }
+};
+

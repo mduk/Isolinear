@@ -136,6 +136,10 @@ class Grid {
       return size.y;
     }
 
+    Vector2D Gutter() const {
+      return gutter;
+    }
+
     void Print() const {
       printf("Grid<0x%08X>%d,%d (%d,%d)\n",
           this,
