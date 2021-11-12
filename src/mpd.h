@@ -225,6 +225,9 @@ class MpdFrame : public Drawable {
         break;
       }
 
+      btnConsume.Active(mpd.Consume());
+      btnRandom.Active(mpd.Random());
+
       views.at(activeView)->Update();
     }
 

@@ -58,6 +58,16 @@ namespace MPD {
         return std::string(value);
       }
 
+      bool Consume() {
+        status = mpd_run_status(conn);
+        return mpd_status_get_consume(status);
+      }
+
+      bool Random() {
+        status = mpd_run_status(conn);
+        return mpd_status_get_random(status);
+      }
+
       void Stop() {
         mpd_run_stop(conn);
       }
