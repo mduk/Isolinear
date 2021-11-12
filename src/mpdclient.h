@@ -51,6 +51,10 @@ namespace MPD {
 
       std::string CurrentlyPlayingTag(mpd_tag_type tag) {
         song = mpd_run_current_song(conn);
+        if (!song) {
+          return " ";
+        }
+
         auto value = mpd_song_get_tag(song, tag, 0);
         if (!value) {
           return " ";
