@@ -4,120 +4,13 @@
 #include <map>
 #include <string>
 
-#include <mpd/client.h>
-#include <mpd/entity.h>
-#include <mpd/message.h>
-#include <mpd/search.h>
-#include <mpd/status.h>
-#include <mpd/tag.h>
-
 #include "miso.h"
 
 #include "geometry.h"
 #include "header.h"
 #include "window.h"
+#include "mpdclient.h"
 
-
-namespace MPD {
-
-  class Client {
-    protected:
-      struct mpd_connection* conn;
-      struct mpd_status* status;
-      struct mpd_song* song;
-
-    public:
-      Client() {
-        conn = mpd_connection_new(NULL, 0, 30000);
-      }
-
-      int Status() {
-        status = mpd_run_status(conn);
-        return mpd_status_get_state(status);
-      }
-
-      bool IsPaused() {
-        return Status() == MPD_STATE_PAUSE;
-      }
-
-      bool IsPlaying() {
-        return Status() == MPD_STATE_PLAY;
-      }
-
-      bool IsStopped() {
-        return Status() == MPD_STATE_STOP;
-      }
-
-      std::string CurrentlyPlayingAlbum() {
-        return CurrentlyPlayingTag(MPD_TAG_ALBUM);
-      }
-
-      std::string CurrentlyPlayingArtist() {
-        return CurrentlyPlayingTag(MPD_TAG_ARTIST);
-      }
-
-      std::string CurrentlyPlayingTitle() {
-        return CurrentlyPlayingTag(MPD_TAG_TITLE);
-      }
-
-      std::string CurrentlyPlayingTag(mpd_tag_type tag) {
-        song = mpd_run_current_song(conn);
-        auto value = mpd_song_get_tag(song, tag, 0);
-        if (!value) {
-          return " ";
-        }
-        return std::string(value);
-      }
-
-      void Stop() {
-        mpd_run_stop(conn);
-      }
-
-      void Play() {
-        mpd_run_play(conn);
-      }
-
-      void Pause() {
-        mpd_run_pause(conn, true);
-      }
-
-      void Resume() {
-        mpd_run_pause(conn, false);
-      }
-
-      void Next() {
-        mpd_run_next(conn);
-      }
-
-      void Previous() {
-        mpd_run_previous(conn);
-      }
-
-      bool PauseToggle() {
-        bool newstate = !IsPaused();
-        mpd_run_pause(conn, newstate);
-        return newstate;
-      }
-
-      bool ConsumeToggle() {
-        status = mpd_run_status(conn);
-        bool newstate = !mpd_status_get_consume(status);
-        mpd_run_consume(conn, newstate);
-        return newstate;
-      }
-
-      bool RandomToggle() {
-        status = mpd_run_status(conn);
-        bool newstate = !mpd_status_get_random(status);
-        mpd_run_random(conn, newstate);
-        return newstate;
-      }
-
-      ~Client() {
-        mpd_connection_free(conn);
-      }
-  };
-}
 
 class View : public Drawable {
   protected:
@@ -176,7 +69,7 @@ class MpdFrame : public Drawable {
 
     CompassLayout layout;
 
-    Header hdrSong;
+    BasicHeader hdrSong;
     VerticalButtonBar barView;
     HorizontalButtonBar barActions;
     NorthWestSweep sweepNorthWest;
@@ -204,7 +97,7 @@ class MpdFrame : public Drawable {
   public:
     MpdFrame(Grid g, Window& w)
         : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-        , hdrSong{layout.North(), w, " MPD CONTROL "}
+        , hdrSong{layout.North(), w, Compass::EAST, " MPD CONTROL "}
         , barView{w, layout.West()}
         , barActions{w, layout.South()}
         , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
