@@ -52,7 +52,7 @@ class BasicHeader : public Drawable {
     }
 };
 
-class Header : public Drawable {
+class HeaderBar : public Drawable {
   protected:
     Grid grid;
     Window& window;
@@ -61,11 +61,11 @@ class Header : public Drawable {
     int button_width{2};
 
   public:
-    Header(Grid g, Window& w, Compass a, std::string t)
+    HeaderBar(Grid g, Window& w, Compass a, std::string t)
       : grid{g}, window{w}, text{t}
     {};
 
-    Header(Grid g, Window& w)
+    HeaderBar(Grid g, Window& w)
       : grid{g}, window{w}
     {};
 
