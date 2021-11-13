@@ -32,6 +32,7 @@ class View : public Drawable {
 
 class NowPlayingView : public View {
   protected:
+    PairHeaderBar uri;
     PairHeaderBar title;
     PairHeaderBar album;
     PairHeaderBar artist;
@@ -41,16 +42,19 @@ class NowPlayingView : public View {
     NowPlayingView(Window& w, Grid g, MPD::Client& _mpd)
       : View("NOW PLAYING", g)
       , mpd{_mpd}
-      , title(g.Rows(1,2), w, "TITLE", "[title]")
-      , album(g.Rows(3,4), w, "ALBUM", "[album]")
-      , artist(g.Rows(5,6), w, "ARTIST", "[artist]")
+      , uri(g.Rows(1,2), w, "URI", "[uri]")
+      , title(g.Rows(3,4), w, "TITLE", "[title]")
+      , album(g.Rows(5,6), w, "ALBUM", "[album]")
+      , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
     {
+      RegisterChild(&uri);
       RegisterChild(&title);
       RegisterChild(&album);
       RegisterChild(&artist);
     }
 
     void Update() {
+      uri.Right(mpd.CurrentlyPlayingUri());
       title.Right(mpd.CurrentlyPlayingTitle());
       album.Right(mpd.CurrentlyPlayingAlbum());
       artist.Right(mpd.CurrentlyPlayingArtist());

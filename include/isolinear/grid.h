@@ -141,8 +141,7 @@ class Grid {
     }
 
     void Print() const {
-      printf("Grid<0x%08X>%d,%d (%d,%d)\n",
-          this,
+      printf("Grid %d,%d (%d,%d)\n",
           bounds.X(), bounds.Y(),
           bounds.W(), bounds.H()
         );

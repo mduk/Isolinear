@@ -37,6 +37,15 @@ namespace MPD {
         return Status() == MPD_STATE_STOP;
       }
 
+      std::string CurrentlyPlayingUri() {
+        song = mpd_run_current_song(conn);
+        if (!song) {
+          return "";
+        }
+
+        return mpd_song_get_uri(song);
+      }
+
       std::string CurrentlyPlayingAlbum() {
         return CurrentlyPlayingTag(MPD_TAG_ALBUM);
       }

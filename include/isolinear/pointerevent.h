@@ -14,7 +14,10 @@ class PointerEvent {
   public:
     PointerEvent(SDL_MouseButtonEvent e) : position{e.x, e.y}, type{MOUSE}  {};
     PointerEvent(SDL_TouchFingerEvent e, Size2D ws)
-      : position{ws.x * e.x, ws.y * e.y},
+      : position{
+            static_cast<int>(ws.x * e.x),
+            static_cast<int>(ws.y * e.y)
+          },
         type{FINGER} {};
 
     Position2D Position() {

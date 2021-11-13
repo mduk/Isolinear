@@ -157,8 +157,7 @@ class Region2D {
     }
 
     virtual void Print() const {
-      printf("Region<0x%08X> %d,%d (%d,%d) %d,%d\n",
-          this,
+      printf("Region %d,%d (%d,%d) %d,%d\n",
           _position.x, _position.y,
           _size.x, _size.y,
           _position.x+_size.x, _position.y+_size.y
@@ -230,6 +229,7 @@ class Region2D {
         case      Compass::WEST: return Origin().Add(Size().West());
         case Compass::NORTHWEST: return Origin().Add(Size().NorthWest());
       }
+      return Position2D();
     }
 
     // Compass Alignment
@@ -245,6 +245,7 @@ class Region2D {
         case      Compass::WEST: return Region2D{      West().Subtract(s.West()     ), s };
         case Compass::NORTHWEST: return Region2D{ NorthWest().Subtract(s.NorthWest()), s };
       }
+      return Region2D();
     }
 
     // Compass Quadrants
