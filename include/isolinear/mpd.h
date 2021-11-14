@@ -54,10 +54,11 @@ class NowPlayingView : public View {
     }
 
     void Update() {
-      uri.Right(mpd.CurrentlyPlayingUri());
-      title.Right(mpd.CurrentlyPlayingTitle());
-      album.Right(mpd.CurrentlyPlayingAlbum());
-      artist.Right(mpd.CurrentlyPlayingArtist());
+      MPD::Song now = mpd.CurrentlyPlaying();
+      uri.Right(now.Uri());
+      title.Right(now.Title());
+      album.Right(now.Album());
+      artist.Right(now.Artist());
     }
 };
 
@@ -153,21 +154,47 @@ class MpdFrame : public Drawable {
       barView.GetButton(activeView).Activate();
 
       miso::connect(btnPlay.signal_press, [this]() {
-        if (btnPlay.Active()) {
-          if (btnPause.Active()) {
-            mpd.Play();
-          }
-          else {
-            mpd.Stop();
-          }
-        }
-        else {
+        if (mpd.IsStopped()) {
           mpd.Play();
+
+          btnPlay.Enable();
+          btnPlay.Activate();
+
+          btnPause.Enable();
+          btnPause.Active();
+
+          btnStop.Enable();
+          btnStop.Deactivate();
+          return;
         }
 
-        btnPlay.Activate();
-        btnPause.Deactivate();
-        btnStop.Deactivate();
+        if (mpd.IsPaused()) {
+          mpd.Resume();
+
+          btnPlay.Enable();
+          btnPlay.Activate();
+
+          btnPause.Enable();
+          btnPause.Activate();
+
+          btnStop.Enable();
+          btnStop.Deactivate();
+          return;
+        }
+
+        if (mpd.IsPlaying()) {
+          mpd.Stop();
+
+          btnPlay.Enable();
+          btnPlay.Activate();
+
+          btnPause.Enable();
+          btnPause.Activate();
+
+          btnStop.Enable();
+          btnStop.Deactivate();
+          return;
+        }
       });
 
       miso::connect(btnStop.signal_press, [this]() {
@@ -207,7 +234,7 @@ class MpdFrame : public Drawable {
 
     void Update()
     {
-      hdrFrame.Label(activeView + " : MPD");
+      hdrFrame.Label(activeView + " : MPD " + mpd.StatusString());
 
       switch (mpd.Status()) {
 

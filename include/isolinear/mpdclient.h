@@ -9,6 +9,42 @@
 
 namespace MPD {
 
+  class Song {
+    protected:
+      mpd_song* song;
+
+    public:
+      Song(mpd_song* s) : song(s) {}
+      ~Song() {
+        mpd_song_free(song);
+      }
+
+      std::string Uri() {
+        return mpd_song_get_uri(song);
+      }
+
+      std::string Tag(mpd_tag_type tag) {
+        auto value = mpd_song_get_tag(song, tag, 0);
+        if (!value) {
+          return "";
+        }
+        return value;
+      }
+
+      std::string Title() {
+        return Tag(MPD_TAG_TITLE);
+      }
+
+      std::string Artist() {
+        return Tag(MPD_TAG_ARTIST);
+      }
+
+      std::string Album() {
+        return Tag(MPD_TAG_ALBUM);
+      }
+
+  };
+
   class Client {
     protected:
       struct mpd_connection* conn;
@@ -25,6 +61,17 @@ namespace MPD {
         return mpd_status_get_state(status);
       }
 
+      std::string StatusString() {
+        status = mpd_run_status(conn);
+        switch (mpd_status_get_state(status)) {
+          case MPD_STATE_PAUSE: return "PAUSED";
+          case MPD_STATE_PLAY: return "PLAYING";
+          case MPD_STATE_STOP: return "STOPPED";
+          case MPD_STATE_UNKNOWN: return "UNKNOWN";
+        }
+        return "";
+      }
+
       bool IsPaused() {
         return Status() == MPD_STATE_PAUSE;
       }
@@ -37,38 +84,8 @@ namespace MPD {
         return Status() == MPD_STATE_STOP;
       }
 
-      std::string CurrentlyPlayingUri() {
-        song = mpd_run_current_song(conn);
-        if (!song) {
-          return "";
-        }
-
-        return mpd_song_get_uri(song);
-      }
-
-      std::string CurrentlyPlayingAlbum() {
-        return CurrentlyPlayingTag(MPD_TAG_ALBUM);
-      }
-
-      std::string CurrentlyPlayingArtist() {
-        return CurrentlyPlayingTag(MPD_TAG_ARTIST);
-      }
-
-      std::string CurrentlyPlayingTitle() {
-        return CurrentlyPlayingTag(MPD_TAG_TITLE);
-      }
-
-      std::string CurrentlyPlayingTag(mpd_tag_type tag) {
-        song = mpd_run_current_song(conn);
-        if (!song) {
-          return " ";
-        }
-
-        auto value = mpd_song_get_tag(song, tag, 0);
-        if (!value) {
-          return " ";
-        }
-        return std::string(value);
+      Song CurrentlyPlaying() {
+        return Song(mpd_run_current_song(conn));
       }
 
       bool Consume() {

@@ -38,6 +38,7 @@ class Button : public Drawable {
     void Enable() { enabled = true; }
     void Disable() { enabled = false; }
     bool Enabled() { return enabled; }
+    bool Disabled() { return !enabled; }
 
     void Activate() { active = true; }
     void Deactivate() { active = false; }
