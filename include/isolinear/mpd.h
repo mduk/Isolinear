@@ -62,6 +62,34 @@ class NowPlayingView : public View {
     }
 };
 
+class QueueView : public View {
+  protected:
+    Window& window;
+    MPD::Client& mpd;
+
+  public:
+    QueueView(Window& w, Grid g, MPD::Client& _mpd)
+      : View("QUEUE", g)
+      , window{w}
+      , mpd{_mpd}
+    {}
+
+    void Draw(SDL_Renderer* renderer) const {
+      int i =  1;
+      for (auto const& song : mpd.Queue() ) {
+        PairHeaderBar row{
+            grid.Rows( i*2-1, i*2 ),
+            window,
+            song.Artist(),
+            song.Title()
+          };
+        row.Colours(Colours());
+        row.Draw(renderer);
+        i++;
+      }
+    }
+};
+
 
 class MpdFrame : public Drawable {
   protected:
@@ -94,7 +122,7 @@ class MpdFrame : public Drawable {
     Button& btnRandom;
 
     NowPlayingView viewNowPlaying;
-    View viewQueue;
+    QueueView viewQueue;
     View viewBrowse;
     View viewArtists;
     View viewSearch;
@@ -119,10 +147,10 @@ class MpdFrame : public Drawable {
         , btnRandom(barActions.AddButton("SHUFFLE"))
 
         , viewNowPlaying(w, layout.Centre(), mpd)
-        , viewQueue(V_QUEUE, layout.Centre())
-        , viewBrowse(V_BROWSE, layout.Centre())
+        , viewQueue     (w, layout.Centre(), mpd)
+        , viewBrowse (V_BROWSE, layout.Centre())
         , viewArtists(V_ARTISTS, layout.Centre())
-        , viewSearch(V_SEARCH, layout.Centre())
+        , viewSearch (V_SEARCH, layout.Centre())
         , viewOutputs(V_OUTPUTS, layout.Centre())
     {
       RegisterChild(&hdrFrame);

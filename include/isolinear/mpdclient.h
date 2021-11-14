@@ -19,11 +19,11 @@ namespace MPD {
         mpd_song_free(song);
       }
 
-      std::string Uri() {
+      std::string Uri() const {
         return mpd_song_get_uri(song);
       }
 
-      std::string Tag(mpd_tag_type tag) {
+      std::string Tag(mpd_tag_type tag) const {
         auto value = mpd_song_get_tag(song, tag, 0);
         if (!value) {
           return "";
@@ -31,19 +31,21 @@ namespace MPD {
         return value;
       }
 
-      std::string Title() {
+      std::string Title() const {
         return Tag(MPD_TAG_TITLE);
       }
 
-      std::string Artist() {
+      std::string Artist() const {
         return Tag(MPD_TAG_ARTIST);
       }
 
-      std::string Album() {
+      std::string Album() const {
         return Tag(MPD_TAG_ALBUM);
       }
 
   };
+
+  using Queue_t = std::list<Song>;
 
   class Client {
     protected:
@@ -140,6 +142,16 @@ namespace MPD {
         bool newstate = !mpd_status_get_random(status);
         mpd_run_random(conn, newstate);
         return newstate;
+      }
+
+      Queue_t Queue() {
+        std::list<Song> queue;
+        mpd_send_list_queue_meta(conn);
+        struct mpd_song *song;
+        while ((song = mpd_recv_song(conn)) != NULL) {
+          queue.emplace_back(song);
+        }
+        return queue;
       }
 
       ~Client() {
