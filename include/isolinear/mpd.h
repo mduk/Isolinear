@@ -91,27 +91,9 @@ class QueueView : public View {
 };
 
 
-class MpdFrame : public Drawable {
+class PlayerControlBar : public HorizontalButtonBar {
   protected:
-    const std::string V_NOWPLAYING = "NOW PLAYING";
-    const std::string V_QUEUE = "QUEUE";
-    const std::string V_BROWSE = "BROWSE";
-    const std::string V_ARTISTS = "ARTISTS";
-    const std::string V_SEARCH = "SEARCH";
-    const std::string V_OUTPUTS = "OUTPUTS";
-
-    MPDXX::Client mpd;
-
-    CompassLayout layout;
-
-    EastHeaderBar hdrFrame;
-    VerticalButtonBar barView;
-    HorizontalButtonBar barActions;
-    NorthWestSweep sweepNorthWest;
-    SouthWestSweep sweepSouthWest;
-
-    std::map<const std::string, View*> views;
-    std::string activeView{V_NOWPLAYING};
+    MPDXX::Client& mpd;
 
     Button& btnPlay;
     Button& btnPause;
@@ -121,66 +103,18 @@ class MpdFrame : public Drawable {
     Button& btnConsume;
     Button& btnRandom;
 
-    NowPlayingView viewNowPlaying;
-    QueueView viewQueue;
-    View viewBrowse;
-    View viewArtists;
-    View viewSearch;
-    View viewOutputs;
-
-
   public:
-    MpdFrame(Grid g, Window& w)
-        : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-        , hdrFrame{layout.North(), w, Compass::EAST, " MPD CONTROL "}
-        , barView{w, layout.West()}
-        , barActions{w, layout.South()}
-        , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
-        , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
-
-        , btnPlay(barActions.AddButton("PLAY"))
-        , btnPause(barActions.AddButton("PAUSE"))
-        , btnStop(barActions.AddButton("STOP"))
-        , btnPrevious(barActions.AddButton("PREVIOUS"))
-        , btnNext(barActions.AddButton("NEXT"))
-        , btnConsume(barActions.AddButton("CONSUME"))
-        , btnRandom(barActions.AddButton("SHUFFLE"))
-
-        , viewNowPlaying(w, layout.Centre(), mpd)
-        , viewQueue     (w, layout.Centre(), mpd)
-        , viewBrowse (V_BROWSE, layout.Centre())
-        , viewArtists(V_ARTISTS, layout.Centre())
-        , viewSearch (V_SEARCH, layout.Centre())
-        , viewOutputs(V_OUTPUTS, layout.Centre())
+    PlayerControlBar(Window& w, Grid g, MPDXX::Client& _mpd)
+      : HorizontalButtonBar(w, g)
+      , mpd{_mpd}
+      , btnPlay(AddButton("PLAY"))
+      , btnPause(AddButton("PAUSE"))
+      , btnStop(AddButton("STOP"))
+      , btnPrevious(AddButton("PREVIOUS"))
+      , btnNext(AddButton("NEXT"))
+      , btnConsume(AddButton("CONSUME"))
+      , btnRandom(AddButton("RANDOM"))
     {
-      RegisterChild(&hdrFrame);
-      RegisterChild(&barView);
-      RegisterChild(&barActions);
-      RegisterChild(&sweepNorthWest);
-      RegisterChild(&sweepSouthWest);
-
-      RegisterView(&viewNowPlaying);
-      RegisterView(&viewQueue);
-      RegisterView(&viewBrowse);
-      RegisterView(&viewArtists);
-      RegisterView(&viewSearch);
-      RegisterView(&viewOutputs);
-
-      auto switch_view = [this]() {
-        barView.DeactivateAll();
-        auto active = miso::sender<Button>();
-        active->Activate();
-        activeView = active->Label();
-        Update();
-      };
-
-      for (auto const& [view_name, view_ptr] : views) {
-        Button& view_btn = barView.AddButton(view_name);
-        miso::connect(view_btn.signal_press, switch_view);
-      }
-
-      barView.GetButton(activeView).Activate();
-
       miso::connect(btnPlay.signal_press, [this]() {
         if (mpd.IsStopped()) {
           mpd.Play();
@@ -256,14 +190,9 @@ class MpdFrame : public Drawable {
       miso::connect(btnRandom.signal_press, [this]() {
         miso::sender<Button>()->Active(mpd.RandomToggle());
       });
-
-      Update();
     }
 
-    void Update()
-    {
-      hdrFrame.Label(activeView + " : MPD " + mpd.StatusString());
-
+    void Update() {
       switch (mpd.Status()) {
 
       case MPD_STATE_PLAY:
@@ -288,7 +217,92 @@ class MpdFrame : public Drawable {
 
       btnConsume.Active(mpd.Consume());
       btnRandom.Active(mpd.Random());
+    }
+};
 
+
+class MpdFrame : public Drawable {
+  protected:
+    const std::string V_NOWPLAYING = "NOW PLAYING";
+    const std::string V_QUEUE = "QUEUE";
+    const std::string V_BROWSE = "BROWSE";
+    const std::string V_ARTISTS = "ARTISTS";
+    const std::string V_SEARCH = "SEARCH";
+    const std::string V_OUTPUTS = "OUTPUTS";
+
+    MPDXX::Client mpd;
+
+    CompassLayout layout;
+
+    EastHeaderBar hdrFrame;
+    VerticalButtonBar barView;
+    PlayerControlBar playerControlBar;
+    NorthWestSweep sweepNorthWest;
+    SouthWestSweep sweepSouthWest;
+
+    std::map<const std::string, View*> views;
+    std::string activeView{V_NOWPLAYING};
+
+    NowPlayingView viewNowPlaying;
+    QueueView viewQueue;
+    View viewBrowse;
+    View viewArtists;
+    View viewSearch;
+    View viewOutputs;
+
+
+  public:
+    MpdFrame(Grid g, Window& w)
+        : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
+        , hdrFrame{layout.North(), w, Compass::EAST, " MPD CONTROL "}
+        , barView{w, layout.West()}
+        , playerControlBar{w, layout.South(), mpd}
+        , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
+        , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
+
+        , viewNowPlaying(w, layout.Centre(), mpd)
+        , viewQueue     (w, layout.Centre(), mpd)
+        , viewBrowse (V_BROWSE, layout.Centre())
+        , viewArtists(V_ARTISTS, layout.Centre())
+        , viewSearch (V_SEARCH, layout.Centre())
+        , viewOutputs(V_OUTPUTS, layout.Centre())
+    {
+      RegisterChild(&hdrFrame);
+      RegisterChild(&barView);
+      RegisterChild(&playerControlBar);
+      RegisterChild(&sweepNorthWest);
+      RegisterChild(&sweepSouthWest);
+
+      RegisterView(&viewNowPlaying);
+      RegisterView(&viewQueue);
+      RegisterView(&viewBrowse);
+      RegisterView(&viewArtists);
+      RegisterView(&viewSearch);
+      RegisterView(&viewOutputs);
+
+      auto switch_view = [this]() {
+        barView.DeactivateAll();
+        auto active = miso::sender<Button>();
+        active->Activate();
+        activeView = active->Label();
+        Update();
+      };
+
+      for (auto const& [view_name, view_ptr] : views) {
+        Button& view_btn = barView.AddButton(view_name);
+        miso::connect(view_btn.signal_press, switch_view);
+      }
+
+      barView.GetButton(activeView).Activate();
+
+      playerControlBar.Update();
+      Update();
+    }
+
+    void Update()
+    {
+      hdrFrame.Label(activeView + " : MPD " + mpd.StatusString());
+      playerControlBar.Update();
       views.at(activeView)->Update();
     }
 
