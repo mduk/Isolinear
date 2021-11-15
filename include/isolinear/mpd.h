@@ -71,7 +71,7 @@ class QueueView : public View {
     {}
 
     void Draw(SDL_Renderer* renderer) const {
-      int i =  1;
+      int i = 1;
       for (auto const& song : mpd.Queue() ) {
         PairHeaderBar row{
             grid.Rows( i*2-1, i*2 ),
@@ -82,6 +82,10 @@ class QueueView : public View {
         row.Colours(Colours());
         row.Draw(renderer);
         i++;
+
+        if (i > 11) {
+          break;
+        }
       }
     }
 };
