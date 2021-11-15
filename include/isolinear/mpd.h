@@ -35,6 +35,7 @@ class NowPlayingView : public View {
     PairHeaderBar title;
     PairHeaderBar album;
     PairHeaderBar artist;
+    PairHeaderBar duration;
     MPDXX::Client& mpd;
 
   public:
@@ -44,10 +45,12 @@ class NowPlayingView : public View {
       , title(g.Rows(3,4), w, "TITLE", "[title]")
       , album(g.Rows(5,6), w, "ALBUM", "[album]")
       , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
+      , duration(g.Rows(9,10), w, "DURATION", "[duration]")
     {
       RegisterChild(&title);
       RegisterChild(&album);
       RegisterChild(&artist);
+      RegisterChild(&duration);
     }
 
     void Update() {
@@ -55,6 +58,7 @@ class NowPlayingView : public View {
       title.Right(now.Title());
       album.Right(now.Album());
       artist.Right(now.Artist());
+      duration.Right(mpd.ElapsedTime() + " / " + now.Duration());
     }
 };
 

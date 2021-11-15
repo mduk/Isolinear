@@ -43,6 +43,13 @@ namespace MPDXX {
         return Tag(MPD_TAG_ALBUM);
       }
 
+      std::string Duration() const {
+        auto const duration = mpd_song_get_duration(song);
+        auto const minutes = duration / 60;
+        auto const seconds = duration % 60;
+        return std::to_string(minutes) + ":" + std::to_string(seconds);
+      }
+
   };
 
   using Queue_t = std::list<Song>;
@@ -72,6 +79,13 @@ namespace MPDXX {
           case MPD_STATE_UNKNOWN: return "UNKNOWN";
         }
         return "";
+      }
+
+      std::string ElapsedTime() const {
+        auto const elapsed_seconds = mpd_status_get_elapsed_ms(status) / 1000;
+        auto const minutes = elapsed_seconds / 60;
+        auto const seconds = elapsed_seconds % 60;
+        return std::to_string(minutes) + ":" + std::to_string(seconds);
       }
 
       bool IsPaused() {
