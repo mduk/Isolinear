@@ -137,11 +137,14 @@ int main(int argc, char* argv[])
           window.Title(ss.str());
           break;
         }
-
+/*
       case SDL_FINGERDOWN:
+        printf("TAP\n");
         window.OnPointerEvent(PointerEvent{ e.tfinger, window.size });
         break;
+        */
       case SDL_MOUSEBUTTONDOWN:
+        printf("CLICK\n");
         window.OnPointerEvent(PointerEvent{ e.button });
         break;
 
