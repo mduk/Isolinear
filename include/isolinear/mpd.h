@@ -9,7 +9,7 @@
 #include "geometry.h"
 #include "header.h"
 #include "window.h"
-#include "mpdclient.h"
+#include "mpdxx.h"
 
 
 class View : public Drawable {
@@ -35,10 +35,10 @@ class NowPlayingView : public View {
     PairHeaderBar title;
     PairHeaderBar album;
     PairHeaderBar artist;
-    MPD::Client& mpd;
+    MPDXX::Client& mpd;
 
   public:
-    NowPlayingView(Window& w, Grid g, MPD::Client& _mpd)
+    NowPlayingView(Window& w, Grid g, MPDXX::Client& _mpd)
       : View("NOW PLAYING", g)
       , mpd{_mpd}
       , title(g.Rows(3,4), w, "TITLE", "[title]")
@@ -51,7 +51,7 @@ class NowPlayingView : public View {
     }
 
     void Update() {
-      MPD::Song now = mpd.CurrentlyPlaying();
+      MPDXX::Song now = mpd.CurrentlyPlaying();
       title.Right(now.Title());
       album.Right(now.Album());
       artist.Right(now.Artist());
@@ -61,10 +61,10 @@ class NowPlayingView : public View {
 class QueueView : public View {
   protected:
     Window& window;
-    MPD::Client& mpd;
+    MPDXX::Client& mpd;
 
   public:
-    QueueView(Window& w, Grid g, MPD::Client& _mpd)
+    QueueView(Window& w, Grid g, MPDXX::Client& _mpd)
       : View("QUEUE", g)
       , window{w}
       , mpd{_mpd}
@@ -100,7 +100,7 @@ class MpdFrame : public Drawable {
     const std::string V_SEARCH = "SEARCH";
     const std::string V_OUTPUTS = "OUTPUTS";
 
-    MPD::Client mpd;
+    MPDXX::Client mpd;
 
     CompassLayout layout;
 

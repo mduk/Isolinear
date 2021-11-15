@@ -7,7 +7,7 @@
 #include <mpd/status.h>
 #include <mpd/tag.h>
 
-namespace MPD {
+namespace MPDXX {
 
   class Song {
     protected:

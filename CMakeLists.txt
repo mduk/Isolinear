@@ -23,11 +23,17 @@ target_include_directories(LibMiso INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/include/miso
 )
 
+add_library(LibMPDXX INTERFACE)
+target_include_directories(LibMPDXX INTERFACE
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/mpdxx
+)
+
 add_executable(Isolinear src/main.cpp)
 target_link_libraries(Isolinear
   ${CONAN_LIBS}
   ${LIBMPDCLIENT_LIBRARY}
   LibMiso
+  LibMPDXX
   -lSDL2_gfx
   )
 
