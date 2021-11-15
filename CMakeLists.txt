@@ -28,8 +28,8 @@ target_include_directories(LibMPDXX INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/include/mpdxx
 )
 
-add_executable(Isolinear src/main.cpp)
-target_link_libraries(Isolinear
+add_executable(IsoMPD src/isompd.cpp)
+target_link_libraries(IsoMPD
   ${CONAN_LIBS}
   ${LIBMPDCLIENT_LIBRARY}
   LibMiso
@@ -37,7 +37,7 @@ target_link_libraries(Isolinear
   -lSDL2_gfx
   )
 
-target_include_directories(Isolinear PUBLIC
+target_include_directories(IsoMPD PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear
 )
 

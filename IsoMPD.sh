@@ -4,6 +4,6 @@ set -eu
 
 i3-msg focus output eDP-1
 touchscreen on
-./Isolinear
+./.build/bin/IsoMPD
 touchscreen off
 i3-msg focus output DP-3

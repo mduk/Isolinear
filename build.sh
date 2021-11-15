@@ -12,7 +12,7 @@ make
 touchscreen on
 i3-msg focus output eDP-1 >/dev/null
 
-./bin/Isolinear
+./bin/IsoMPD
 
 touchscreen off
 i3-msg focus output DP-3 >/dev/null || true

@@ -13,7 +13,7 @@
 
 #include "buttonbar.h"
 #include "elbo.h"
-#include "frame.h"
+#include "compasslayout.h"
 #include "geometry.h"
 #include "grid.h"
 #include "header.h"
