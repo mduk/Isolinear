@@ -11,6 +11,8 @@
 #include "window.h"
 #include "mpdxx.h"
 
+#include "mpd/playercontrolbar.h"
+
 
 class View : public Drawable {
   protected:
@@ -30,18 +32,31 @@ class View : public Drawable {
 
 };
 
-class NowPlayingView : public View {
+
+class MPDView : public View {
+  protected:
+    MPDXX::Client& mpd;
+    Window& window;
+
+  public:
+    MPDView(std::string t, Grid g, Window& w, MPDXX::Client& _mpd)
+      : View(t, g)
+      , window{w}
+      , mpd{_mpd}
+    {};
+};
+
+
+class NowPlayingView : public MPDView {
   protected:
     PairHeaderBar title;
     PairHeaderBar album;
     PairHeaderBar artist;
     PairHeaderBar duration;
-    MPDXX::Client& mpd;
 
   public:
-    NowPlayingView(Window& w, Grid g, MPDXX::Client& _mpd)
-      : View("NOW PLAYING", g)
-      , mpd{_mpd}
+    NowPlayingView(Grid g, Window& w, MPDXX::Client& _mpd)
+      : MPDView("NOW PLAYING", g, w, _mpd)
       , title(g.Rows(3,4), w, "TITLE", "[title]")
       , album(g.Rows(5,6), w, "ALBUM", "[album]")
       , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
@@ -62,16 +77,10 @@ class NowPlayingView : public View {
     }
 };
 
-class QueueView : public View {
-  protected:
-    Window& window;
-    MPDXX::Client& mpd;
-
+class QueueView : public MPDView {
   public:
-    QueueView(Window& w, Grid g, MPDXX::Client& _mpd)
-      : View("QUEUE", g)
-      , window{w}
-      , mpd{_mpd}
+    QueueView(Grid g, Window& w, MPDXX::Client& _mpd)
+      : MPDView("QUEUE", g, w, _mpd)
     {}
 
     void Draw(SDL_Renderer* renderer) const {
@@ -95,135 +104,42 @@ class QueueView : public View {
 };
 
 
-class PlayerControlBar : public HorizontalButtonBar {
+class OutputsView : public MPDView {
   protected:
-    MPDXX::Client& mpd;
-
-    Button& btnPlay;
-    Button& btnPause;
-    Button& btnStop;
-    Button& btnPrevious;
-    Button& btnNext;
-    Button& btnConsume;
-    Button& btnRandom;
+    std::list<EastHeaderBar> bars;
+    EastHeaderBar pulseaudio;
 
   public:
-    PlayerControlBar(Window& w, Grid g, MPDXX::Client& _mpd)
-      : HorizontalButtonBar(w, g)
-      , mpd{_mpd}
-      , btnPlay(AddButton("PLAY"))
-      , btnPause(AddButton("PAUSE"))
-      , btnStop(AddButton("STOP"))
-      , btnPrevious(AddButton("PREVIOUS"))
-      , btnNext(AddButton("NEXT"))
-      , btnConsume(AddButton("CONSUME"))
-      , btnRandom(AddButton("RANDOM"))
+    OutputsView(Grid g, Window& w, MPDXX::Client& _mpd)
+      : MPDView("OUTPUTS", g, w, _mpd)
+      , pulseaudio(grid.Rows(1,2), w, Compass::EAST, "Spoon")
     {
-      miso::connect(btnPlay.signal_press, [this]() {
-        if (mpd.IsStopped()) {
-          mpd.Play();
+      RegisterChild(&pulseaudio);
 
-          btnPlay.Enable();
-          btnPlay.Activate();
+      /*
+      int i = 1;
+      for (auto const& output : mpd.Outputs()) {
+        bars.emplace_back(
+            grid.Rows( i*2-1, i*2 ),
+            window,
+            Compass::EAST,
+            output.Name()
+          );
 
-          btnPause.Enable();
-          btnPause.Active();
+        auto& bar = bars.back();
+        RegisterChild(&bar);
 
-          btnStop.Enable();
-          btnStop.Deactivate();
-          return;
-        }
+        bar.AddButton("ON/OFF");
 
-        if (mpd.IsPaused()) {
-          mpd.Resume();
-
-          btnPlay.Enable();
-          btnPlay.Activate();
-
-          btnPause.Enable();
-          btnPause.Activate();
-
-          btnStop.Enable();
-          btnStop.Deactivate();
-          return;
-        }
-
-        if (mpd.IsPlaying()) {
-          mpd.Stop();
-
-          btnPlay.Enable();
-          btnPlay.Activate();
-
-          btnPause.Enable();
-          btnPause.Activate();
-
-          btnStop.Enable();
-          btnStop.Deactivate();
-          return;
-        }
-      });
-
-      miso::connect(btnStop.signal_press, [this]() {
-        if (btnStop.Active()) {
-          mpd.Play();
-        }
-        else {
-          mpd.Stop();
-        }
-        btnPlay.Deactivate();
-        btnPause.Deactivate();
-        btnStop.Activate();
-      });
-
-      miso::connect(btnPrevious.signal_press, [this]() {
-        mpd.Previous();
-      });
-
-      miso::connect(btnNext.signal_press, [this]() {
-        mpd.Next();
-      });
-
-      miso::connect(btnPause.signal_press, [this]() {
-        miso::sender<Button>()->Active(mpd.PauseToggle());
-      });
-
-      miso::connect(btnConsume.signal_press, [this]() {
-        miso::sender<Button>()->Active(mpd.ConsumeToggle());
-      });
-
-      miso::connect(btnRandom.signal_press, [this]() {
-        miso::sender<Button>()->Active(mpd.RandomToggle());
-      });
+        i++;
+      }
+      */
     }
 
-    void Update() {
-      switch (mpd.Status()) {
-
-      case MPD_STATE_PLAY:
-        btnPlay.Activate();
-        btnPause.Enable();
-        btnPause.Deactivate();
-        btnStop.Deactivate();
-        break;
-
-      case MPD_STATE_PAUSE:
-        btnPlay.Activate();
-        btnPause.Activate();
-        btnStop.Deactivate();
-        break;
-
-      case MPD_STATE_STOP:
-        btnPlay.Deactivate();
-        btnPause.Disable();
-        btnStop.Activate();
-        break;
-      }
-
-      btnConsume.Active(mpd.Consume());
-      btnRandom.Active(mpd.Random());
+    virtual void OnPointerEvent(PointerEvent event) override {
+      printf("Pointer event?\n");
     }
 };
-
 
 class MpdFrame : public Drawable {
   protected:
@@ -252,7 +168,7 @@ class MpdFrame : public Drawable {
     View viewBrowse;
     View viewArtists;
     View viewSearch;
-    View viewOutputs;
+    OutputsView viewOutputs;
 
 
   public:
@@ -264,12 +180,12 @@ class MpdFrame : public Drawable {
         , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
         , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
 
-        , viewNowPlaying(w, layout.Centre(), mpd)
-        , viewQueue     (w, layout.Centre(), mpd)
+        , viewNowPlaying(layout.Centre(), w, mpd)
+        , viewQueue     (layout.Centre(), w, mpd)
+        , viewOutputs   (layout.Centre(), w, mpd)
         , viewBrowse (V_BROWSE, layout.Centre())
         , viewArtists(V_ARTISTS, layout.Centre())
         , viewSearch (V_SEARCH, layout.Centre())
-        , viewOutputs(V_OUTPUTS, layout.Centre())
     {
       RegisterChild(&hdrFrame);
       RegisterChild(&barView);

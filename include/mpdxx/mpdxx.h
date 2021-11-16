@@ -9,6 +9,33 @@
 
 namespace MPDXX {
 
+  class Output {
+    protected:
+      mpd_output* output;
+
+    public:
+      Output(mpd_output* o) : output(o) {}
+      ~Output() {
+        mpd_output_free(output);
+      }
+
+      uint32_t ID() const {
+        return mpd_output_get_id(output);
+      }
+
+      std::string Name() const {
+        return mpd_output_get_name(output);
+      }
+
+      std::string Plugin() const {
+        return mpd_output_get_plugin(output);
+      }
+
+      bool Enabled() const {
+        return mpd_output_get_enabled(output);
+      }
+  };
+
   class Song {
     protected:
       mpd_song* song;
@@ -52,7 +79,8 @@ namespace MPDXX {
 
   };
 
-  using Queue_t = std::list<Song>;
+  using SongList = std::list<Song>;
+  using OutputList = std::list<Output>;
 
   class Client {
     protected:
@@ -103,6 +131,8 @@ namespace MPDXX {
       Song CurrentlyPlaying() {
         return Song(mpd_run_current_song(conn));
       }
+
+
 
       bool Consume() {
         status = mpd_run_status(conn);
@@ -158,7 +188,7 @@ namespace MPDXX {
         return newstate;
       }
 
-      Queue_t Queue() {
+      SongList Queue() {
         std::list<Song> queue;
         mpd_send_list_queue_meta(conn);
         struct mpd_song *song;
@@ -166,6 +196,17 @@ namespace MPDXX {
           queue.emplace_back(song);
         }
         return queue;
+      }
+
+      OutputList Outputs() {
+        OutputList outputs;
+        mpd_send_outputs(conn);
+        struct mpd_output *output;
+        while ((output = mpd_recv_output(conn)) != NULL) {
+          printf("got output\n");
+          outputs.emplace_back(output);
+        }
+        return outputs;
       }
 
       ~Client() {
