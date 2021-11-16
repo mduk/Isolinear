@@ -49,11 +49,6 @@ class CompassLayout : public Drawable {
       int  far_col = grid.MaxColumns() - northeast.x;
       int  far_row = north;
 
-      printf("North : %d,%d %d,%d\n",
-          near_col, near_row,
-           far_col, far_row
-        );
-
       return grid.SubGrid(
           near_col, near_row,
            far_col, far_row

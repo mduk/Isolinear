@@ -107,16 +107,11 @@ class QueueView : public MPDView {
 class OutputsView : public MPDView {
   protected:
     std::list<EastHeaderBar> bars;
-    EastHeaderBar pulseaudio;
 
   public:
     OutputsView(Grid g, Window& w, MPDXX::Client& _mpd)
       : MPDView("OUTPUTS", g, w, _mpd)
-      , pulseaudio(grid.Rows(1,2), w, Compass::EAST, "Spoon")
     {
-      RegisterChild(&pulseaudio);
-
-      /*
       int i = 1;
       for (auto const& output : mpd.Outputs()) {
         bars.emplace_back(
@@ -129,15 +124,14 @@ class OutputsView : public MPDView {
         auto& bar = bars.back();
         RegisterChild(&bar);
 
-        bar.AddButton("ON/OFF");
+        auto& button = bar.AddButton("ON/OFF");
+        miso::connect(button.signal_press, [this]() {
+          auto* sender = miso::sender<Button>();
+          sender->Active(!sender->Active());
+        });
 
         i++;
       }
-      */
-    }
-
-    virtual void OnPointerEvent(PointerEvent event) override {
-      printf("Pointer event?\n");
     }
 };
 
@@ -228,6 +222,11 @@ class MpdFrame : public Drawable {
 
     virtual Region2D Bounds() const override {
       return layout.Bounds();
+    }
+
+    virtual void OnPointerEvent(PointerEvent event) {
+      Drawable::OnPointerEvent(event);
+      views.at(activeView)->OnPointerEvent(event);
     }
 
     virtual void Draw(SDL_Renderer* renderer) const {

@@ -9,6 +9,8 @@
 
 namespace MPDXX {
 
+  using OutputID = uint32_t;
+
   class Output {
     protected:
       mpd_output* output;
@@ -19,7 +21,7 @@ namespace MPDXX {
         mpd_output_free(output);
       }
 
-      uint32_t ID() const {
+      OutputID ID() const {
         return mpd_output_get_id(output);
       }
 
@@ -207,6 +209,10 @@ namespace MPDXX {
           outputs.emplace_back(output);
         }
         return outputs;
+      }
+
+      void OutputEnable(OutputID id) {
+
       }
 
       ~Client() {
