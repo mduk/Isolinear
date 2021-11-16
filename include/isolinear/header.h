@@ -59,7 +59,7 @@ class EastHeaderBar : public Drawable {
     Grid grid;
     Window& window;
     std::string text{""};
-    std::list<Button> buttons;
+    std::map<std::string, Button> buttons;
     int button_width{2};
 
   public:
@@ -79,19 +79,20 @@ class EastHeaderBar : public Drawable {
     }
 
     virtual void Colours(ColourScheme cs) {
-      for (auto& button : buttons) {
+      for (auto& [label, button] : buttons) {
         button.Colours(cs);
       }
       Drawable::Colours(cs);
     }
 
     Button& AddButton(std::string label) {
-      buttons.emplace_back(
+      buttons.try_emplace(
+          label,
           window,
           ButtonRegion(buttons.size() + 1),
           label
         );
-        return buttons.back();
+      return buttons.at(label);
     }
 
     Region2D ButtonRegion(int i) const  {
@@ -103,7 +104,7 @@ class EastHeaderBar : public Drawable {
     }
 
     virtual void OnPointerEvent(PointerEvent event) override {
-      for (auto& button : buttons) {
+      for (auto& [label, button] : buttons) {
         if (button.Bounds().Encloses(event.Position())) {
           button.OnPointerEvent(event);
           return;
@@ -137,7 +138,7 @@ class EastHeaderBar : public Drawable {
       centre_bar.Fill    (renderer, Colours().background);
 
       if (buttons.size() > 0) {
-        for (auto const& button : buttons) {
+        for (auto const& [label, button] : buttons) {
           button.Draw(renderer);
           filler_start += button_width;
         }
