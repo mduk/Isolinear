@@ -13,10 +13,18 @@ namespace MPDXX {
 
   class Output {
     protected:
+      mpd_connection* conn;
       mpd_output* output;
 
     public:
-      Output(mpd_output* o) : output(o) {}
+      Output(
+          mpd_connection* c,
+          mpd_output* o
+        ) :
+          conn(c),
+          output(o)
+      {}
+
       ~Output() {
         mpd_output_free(output);
       }
@@ -35,6 +43,19 @@ namespace MPDXX {
 
       bool Enabled() const {
         return mpd_output_get_enabled(output);
+      }
+
+      bool EnabledToggle() const {
+        printf("Toggling output #%d\n", mpd_output_get_id(output));
+        return mpd_run_toggle_output(conn, mpd_output_get_id(output));
+      }
+
+      bool Disable() const {
+        return mpd_run_disable_output(conn, mpd_output_get_id(output));
+      }
+
+      bool Enable() const {
+        return mpd_run_enable_output(conn, mpd_output_get_id(output));
       }
   };
 
@@ -205,14 +226,11 @@ namespace MPDXX {
         mpd_send_outputs(conn);
         struct mpd_output *output;
         while ((output = mpd_recv_output(conn)) != NULL) {
-          printf("got output\n");
-          outputs.emplace_back(output);
+          outputs.emplace_back(conn, output);
+          printf("mpd_output.id: %d\n", mpd_output_get_id(output));
+          printf("outputs.back().ID(): %d\n", outputs.back().ID());
         }
         return outputs;
-      }
-
-      void OutputEnable(OutputID id) {
-
       }
 
       ~Client() {

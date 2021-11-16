@@ -124,10 +124,12 @@ class OutputsView : public MPDView {
         auto& bar = bars.back();
         RegisterChild(&bar);
 
-        auto& button = bar.AddButton("ON/OFF");
-        miso::connect(button.signal_press, [this]() {
-          auto* sender = miso::sender<Button>();
-          sender->Active(!sender->Active());
+        auto& button = bar.AddButton("ENABLED");
+        button.Active(output.Enabled());
+        miso::connect(button.signal_press, [&output]() {
+          miso::sender<Button>()->Active(
+              output.EnabledToggle()
+            );
         });
 
         i++;
