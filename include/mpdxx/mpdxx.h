@@ -48,7 +48,6 @@ namespace MPDXX {
       }
 
       bool EnabledToggle() const {
-        printf("Toggling output #%d\n", mpd_output_get_id(output));
         return mpd_run_toggle_output(conn, mpd_output_get_id(output));
       }
 
@@ -229,8 +228,6 @@ namespace MPDXX {
         struct mpd_output *output;
         while ((output = mpd_recv_output(conn)) != NULL) {
           outputs.emplace_back(conn, output);
-          printf("mpd_output.id: %d\n", mpd_output_get_id(output));
-          printf("outputs.back().ID(): %d\n", outputs.back().ID());
         }
         return outputs;
       }
