@@ -64,40 +64,48 @@ namespace MPDXX {
     protected:
       mpd_song* song;
 
+      unsigned int id;
+      unsigned int duration_seconds;
+      std::string uri;
+      std::string title;
+      std::string artist;
+      std::string album;
+
     public:
-      Song(mpd_song* s) : song(s) {}
-      ~Song() {
-        mpd_song_free(song);
+      Song(mpd_song* s)
+        : id(mpd_song_get_id(s))
+        , duration_seconds(mpd_song_get_duration(s))
+        , uri(mpd_song_get_uri(s))
+        , title(mpd_song_get_tag(s, MPD_TAG_TITLE, 0))
+        , artist(mpd_song_get_tag(s, MPD_TAG_ARTIST, 0))
+        , album(mpd_song_get_tag(s, MPD_TAG_ALBUM, 0))
+      {
+        mpd_song_free(s);
+      }
+
+      uint32_t ID() const {
+        return id;
       }
 
       std::string Uri() const {
-        return mpd_song_get_uri(song);
-      }
-
-      std::string Tag(mpd_tag_type tag) const {
-        auto value = mpd_song_get_tag(song, tag, 0);
-        if (!value) {
-          return "";
-        }
-        return value;
+        return uri;
       }
 
       std::string Title() const {
-        return Tag(MPD_TAG_TITLE);
+        return title;
       }
 
       std::string Artist() const {
-        return Tag(MPD_TAG_ARTIST);
+        return artist;
       }
 
       std::string Album() const {
-        return Tag(MPD_TAG_ALBUM);
+        return album;
       }
 
       std::string Duration() const {
-        auto const duration = mpd_song_get_duration(song);
-        auto const minutes = duration / 60;
-        auto const seconds = duration % 60;
+        auto const minutes = duration_seconds / 60;
+        auto const seconds = duration_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
       }
 
