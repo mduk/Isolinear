@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fmt/core.h>
+
 #include <mpd/client.h>
 #include <mpd/entity.h>
 #include <mpd/message.h>
@@ -97,7 +99,7 @@ namespace MPDXX {
         auto const duration = mpd_song_get_duration(song);
         auto const minutes = duration / 60;
         auto const seconds = duration % 60;
-        return std::to_string(minutes) + ":" + std::to_string(seconds);
+        return fmt::format("{:02d}:{:02d}", minutes, seconds);
       }
 
   };
@@ -136,7 +138,7 @@ namespace MPDXX {
         auto const elapsed_seconds = mpd_status_get_elapsed_ms(status) / 1000;
         auto const minutes = elapsed_seconds / 60;
         auto const seconds = elapsed_seconds % 60;
-        return std::to_string(minutes) + ":" + std::to_string(seconds);
+        return fmt::format("{:02d}:{:02d}", minutes, seconds);
       }
 
       bool IsPaused() {
