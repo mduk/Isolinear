@@ -49,6 +49,7 @@ class MPDView : public View {
 
 class NowPlayingView : public MPDView {
   protected:
+    bool hide = false;
     PairHeaderBar title;
     PairHeaderBar album;
     PairHeaderBar artist;
@@ -68,13 +69,27 @@ class NowPlayingView : public MPDView {
       RegisterChild(&duration);
     }
 
-    void Update() {
-      MPDXX::Song now = mpd.CurrentlyPlaying();
-      title.Right(now.Title());
-      album.Right(now.Album());
-      artist.Right(now.Artist());
-      duration.Right(mpd.ElapsedTime() + " / " + now.Duration());
+    void Update() override {
+      if (mpd.IsPlaying() || mpd.IsPaused()) {
+        MPDXX::Song now = mpd.CurrentlyPlaying();
+        title.Right(now.Title());
+        album.Right(now.Album());
+        artist.Right(now.Artist());
+        duration.Right(mpd.ElapsedTime() + " / " + now.Duration());
+        hide = false;
+      }
+      else {
+        hide = true;
+      }
     }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      if (hide) {
+        return;
+      }
+      MPDView::Draw(renderer);
+    }
+
 };
 
 class QueueView : public MPDView {
