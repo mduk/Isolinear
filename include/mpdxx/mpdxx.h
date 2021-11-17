@@ -108,7 +108,11 @@ namespace MPDXX {
         return album;
       }
 
-      std::string const Duration() const {
+      unsigned const DurationSeconds() const {
+        return duration_seconds;
+      }
+
+      std::string const DurationString() const {
         auto const minutes = duration_seconds / 60;
         auto const seconds = duration_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
@@ -146,8 +150,12 @@ namespace MPDXX {
         return "";
       }
 
-      std::string ElapsedTime() const {
-        auto const elapsed_seconds = mpd_status_get_elapsed_ms(status) / 1000;
+      unsigned const ElapsedTimeSeconds() const {
+        return mpd_status_get_elapsed_ms(status) / 1000;
+      }
+
+      std::string ElapsedTimeString() const {
+        auto const elapsed_seconds = ElapsedTimeSeconds();
         auto const minutes = elapsed_seconds / 60;
         auto const seconds = elapsed_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);

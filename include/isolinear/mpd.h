@@ -75,7 +75,7 @@ class NowPlayingView : public MPDView {
         title.Right(now.Title());
         album.Right(now.Album());
         artist.Right(now.Artist());
-        duration.Right(mpd.ElapsedTime() + " / " + now.Duration());
+        duration.Right(mpd.ElapsedTimeString() + " / " + now.DurationString());
         hide = false;
       }
       else {
