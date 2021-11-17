@@ -60,6 +60,8 @@ namespace MPDXX {
       }
   };
 
+  using SongID = uint32_t;
+
   class Song {
     protected:
       mpd_song* song;
@@ -83,27 +85,27 @@ namespace MPDXX {
         mpd_song_free(s);
       }
 
-      uint32_t ID() const {
+      SongID const ID() const {
         return id;
       }
 
-      std::string Uri() const {
+      std::string const Uri() const {
         return uri;
       }
 
-      std::string Title() const {
+      std::string const Title() const {
         return title;
       }
 
-      std::string Artist() const {
+      std::string const Artist() const {
         return artist;
       }
 
-      std::string Album() const {
+      std::string const Album() const {
         return album;
       }
 
-      std::string Duration() const {
+      std::string const Duration() const {
         auto const minutes = duration_seconds / 60;
         auto const seconds = duration_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
