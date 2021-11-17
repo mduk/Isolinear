@@ -23,8 +23,8 @@ class Button : public Drawable {
 
   public:
     miso::signal<> signal_press;
-
     Region2D bounds;
+
     Button(
         Window& w,
         Region2D b,
