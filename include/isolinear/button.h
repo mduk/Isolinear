@@ -19,12 +19,12 @@ class Button : public Drawable {
     Window& window;
     bool enabled = true;
     bool active = false;
+    std::string label;
 
   public:
     miso::signal<> signal_press;
 
     Region2D bounds;
-    std::string label;
     Button(
         Window& w,
         Region2D b,
