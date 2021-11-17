@@ -68,8 +68,8 @@ class Button : public Drawable {
 
       window.ButtonFont().RenderText(
           renderer,
-          Region2D{bounds.Origin(), bounds.Size()},
-          Compass{SOUTHEAST},
+          bounds,
+          Compass::SOUTHEAST,
           std::string{" "} + label + " "
         );
     }
