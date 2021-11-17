@@ -121,14 +121,16 @@ class QueueView : public MPDView {
 
 class OutputsView : public MPDView {
   protected:
+    MPDXX::OutputList outputs;
     std::list<EastHeaderBar> bars;
 
   public:
     OutputsView(Grid g, Window& w, MPDXX::Client& _mpd)
       : MPDView("OUTPUTS", g, w, _mpd)
     {
+      outputs = mpd.Outputs();
       int i = 1;
-      for (auto const& output : mpd.Outputs()) {
+      for (auto& output : outputs) {
         bars.emplace_back(
             grid.Rows( i*2-1, i*2 ),
             window,
@@ -142,9 +144,16 @@ class OutputsView : public MPDView {
         auto& button = bar.AddButton("ENABLED");
         button.Active(output.Enabled());
         miso::connect(button.signal_press, [&output]() {
-          miso::sender<Button>()->Active(
-              output.EnabledToggle()
-            );
+          Button* btnptr = miso::sender<Button>();
+
+          if (output.Enabled()) {
+            output.Disable();
+            btnptr->Deactivate();
+          }
+          else {
+            output.Enable();
+            btnptr->Activate();
+          }
         });
 
         i++;

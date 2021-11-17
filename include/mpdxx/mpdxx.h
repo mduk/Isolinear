@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <fmt/core.h>
 
 #include <mpd/client.h>
@@ -16,47 +18,48 @@ namespace MPDXX {
   class Output {
     protected:
       mpd_connection* conn;
-      mpd_output* output;
+      unsigned id;
+      bool enabled;
+      std::string name;
+      std::string plugin;
 
     public:
-      Output(
-          mpd_connection* c,
-          mpd_output* o
-        ) :
-          conn(c),
-          output(o)
-      {}
-
-      ~Output() {
-        mpd_output_free(output);
+      Output( mpd_connection* c, mpd_output* o)
+        : conn(c)
+        , id(mpd_output_get_id(o))
+        , name(mpd_output_get_name(o))
+        , plugin(mpd_output_get_plugin(o))
+        , enabled{mpd_output_get_enabled(o)}
+      {
+        mpd_output_free(o);
       }
 
       OutputID ID() const {
-        return mpd_output_get_id(output);
+        return id;
       }
 
       std::string Name() const {
-        return mpd_output_get_name(output);
+        return name;
       }
 
       std::string Plugin() const {
-        return mpd_output_get_plugin(output);
+        return plugin;
       }
 
       bool Enabled() const {
-        return mpd_output_get_enabled(output);
+        return enabled;
       }
 
-      bool EnabledToggle() const {
-        return mpd_run_toggle_output(conn, mpd_output_get_id(output));
+      bool Disable() {
+        mpd_run_disable_output(conn, id);
+        enabled = false;
+        return enabled;
       }
 
-      bool Disable() const {
-        return mpd_run_disable_output(conn, mpd_output_get_id(output));
-      }
-
-      bool Enable() const {
-        return mpd_run_enable_output(conn, mpd_output_get_id(output));
+      bool Enable() {
+        mpd_run_enable_output(conn, id);
+        enabled = true;
+        return enabled;
       }
   };
 
