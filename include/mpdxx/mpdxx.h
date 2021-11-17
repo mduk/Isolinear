@@ -76,9 +76,9 @@ namespace MPDXX {
         : id(mpd_song_get_id(s))
         , duration_seconds(mpd_song_get_duration(s))
         , uri(mpd_song_get_uri(s))
-        , title(mpd_song_get_tag(s, MPD_TAG_TITLE, 0))
-        , artist(mpd_song_get_tag(s, MPD_TAG_ARTIST, 0))
-        , album(mpd_song_get_tag(s, MPD_TAG_ALBUM, 0))
+        , title(mpd_song_get_tag(s, MPD_TAG_TITLE, 0) ?: "")
+        , artist(mpd_song_get_tag(s, MPD_TAG_ARTIST, 0) ?: "")
+        , album(mpd_song_get_tag(s, MPD_TAG_ALBUM, 0) ?: "")
       {
         mpd_song_free(s);
       }
