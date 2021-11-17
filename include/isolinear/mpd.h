@@ -10,6 +10,7 @@
 #include "header.h"
 #include "window.h"
 #include "mpdxx.h"
+#include "progressbar.h"
 
 #include "mpd/playercontrolbar.h"
 
@@ -54,6 +55,7 @@ class NowPlayingView : public MPDView {
     PairHeaderBar album;
     PairHeaderBar artist;
     PairHeaderBar duration;
+    HorizontalProgressBar progress;
 
   public:
     NowPlayingView(Grid g, Window& w, MPDXX::Client& _mpd)
@@ -62,11 +64,13 @@ class NowPlayingView : public MPDView {
       , album(g.Rows(5,6), w, "ALBUM", "[album]")
       , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
       , duration(g.Rows(9,10), w, "DURATION", "[duration]")
+      , progress(g.Rows(13,14), 100, 50)
     {
       RegisterChild(&title);
       RegisterChild(&album);
       RegisterChild(&artist);
       RegisterChild(&duration);
+      RegisterChild(&progress);
     }
 
     void Update() override {
@@ -76,6 +80,8 @@ class NowPlayingView : public MPDView {
         album.Right(now.Album());
         artist.Right(now.Artist());
         duration.Right(mpd.ElapsedTimeString() + " / " + now.DurationString());
+        progress.Max(now.DurationSeconds());
+        progress.Val(mpd.ElapsedTimeSeconds());
         hide = false;
       }
       else {
