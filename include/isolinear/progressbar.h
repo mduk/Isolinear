@@ -13,7 +13,6 @@
 #include "pointerevent.h"
 
 
-
 class HorizontalProgressBar : public Drawable {
   protected:
     Grid grid;
@@ -67,7 +66,16 @@ class HorizontalProgressBar : public Drawable {
           bar_far.y - bar_near.y
         };
 
-      bar_size.x = (bar_size.x / max) * val;
+      unsigned bar_length = bar_size.x;
+      unsigned bar_segments = 256;
+
+      unsigned segment_width = bar_length / bar_segments;
+      unsigned segment_range =        max / bar_segments;
+
+      unsigned segments   = val / segment_range;
+      unsigned subsegment = val % segment_range;
+
+      bar_size.x = segment_width * segments;
 
       Region2D bar_region{bar_near, bar_size};
 
