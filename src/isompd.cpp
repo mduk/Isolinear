@@ -22,6 +22,7 @@
 #include "sweep.h"
 #include "window.h"
 #include "mpd.h"
+#include "progressbar.h"
 
 
 bool drawdebug = false;

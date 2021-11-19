@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+#include <fmt/core.h>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -13,6 +16,9 @@
 #include "pointerevent.h"
 
 
+using std::cout;
+
+
 class HorizontalProgressBar : public Drawable {
   protected:
     Grid grid;
@@ -20,8 +26,8 @@ class HorizontalProgressBar : public Drawable {
     unsigned val;
 
   public:
-    HorizontalProgressBar(Grid _g, unsigned _m, unsigned _v)
-      : grid{_g}, max{_m}, val{_v} {}
+    HorizontalProgressBar(Grid _g)
+      : grid{_g} {};
 
     void Max(unsigned m) {
       max = m;
@@ -36,7 +42,7 @@ class HorizontalProgressBar : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
-      int g = 5;
+      int g = 6;
 
       boxColor(renderer,
           grid.bounds.NearX(), grid.bounds.NearY(),
@@ -66,16 +72,20 @@ class HorizontalProgressBar : public Drawable {
           bar_far.y - bar_near.y
         };
 
-      unsigned bar_length = bar_size.x;
-      unsigned bar_segments = 256;
+      unsigned   bar_length_px = bar_size.x;
 
-      unsigned segment_width = bar_length / bar_segments;
-      unsigned segment_range =        max / bar_segments;
+      unsigned      segment_px = g;
+      unsigned    remainder_px = bar_length_px % segment_px;
+      unsigned      n_segments = bar_length_px / segment_px;
 
-      unsigned segments   = val / segment_range;
-      unsigned subsegment = val % segment_range;
+      unsigned   segment_range = max / n_segments;
 
-      bar_size.x = segment_width * segments;
+      unsigned filled_segments = val / segment_range;
+      unsigned      subsegment = val % segment_range;
+
+      bar_size.x = segment_px * filled_segments;
+
+      bar_near.x = bar_near.x + (remainder_px / 2);
 
       Region2D bar_region{bar_near, bar_size};
 
@@ -84,8 +94,5 @@ class HorizontalProgressBar : public Drawable {
           bar_region.FarX(), bar_region.FarY(),
           Colours().light_alternate
         );
-
     }
 };
-
-

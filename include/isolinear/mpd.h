@@ -64,7 +64,7 @@ class NowPlayingView : public MPDView {
       , album(g.Rows(5,6), w, "ALBUM", "[album]")
       , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
       , duration(g.Rows(9,10), w, "DURATION", "[duration]")
-      , progress(g.Rows(13,14), 100, 50)
+      , progress(g.Rows(11,12))
     {
       RegisterChild(&title);
       RegisterChild(&album);
@@ -97,6 +97,7 @@ class NowPlayingView : public MPDView {
     }
 
 };
+
 
 class QueueView : public MPDView {
   public:
@@ -166,6 +167,7 @@ class OutputsView : public MPDView {
       }
     }
 };
+
 
 class MpdFrame : public Drawable {
   protected:
