@@ -67,12 +67,53 @@ int main(int argc, char* argv[])
       Position2D{ display },
       Size2D{ display }
     );
-
+/*
   MpdFrame mpdframe{
       window.grid,
       window
     };
   window.Add(&mpdframe);
+*/
+
+  HorizontalProgressBar bar1(window.grid.Rows(1,2));
+  bar1.Max(10000);
+  bar1.Val(0);
+  window.Add(&bar1);
+
+  Grid button_grid = window.grid.Rows(3,4);
+
+  Region2D btnr1 = button_grid.Columns(1,2).bounds;
+  Region2D btnr2 = button_grid.Columns(3,4).bounds;
+  Region2D btnr3 = button_grid.Columns(5,6).bounds;
+  Region2D btnr4 = button_grid.Columns(23,25).bounds;
+
+  Button valbtn(window, btnr1, std::to_string(bar1.Val()));
+  miso::connect(valbtn.signal_press, [&bar1, &valbtn]() {
+    bar1.Val(0);
+    valbtn.Label(std::to_string(0));
+  });
+  window.Add(&valbtn);
+
+  Button stripesbtn(window, btnr2, "STRIPES");
+  window.Add(&stripesbtn);
+  miso::connect(stripesbtn.signal_press, [&bar1, &stripesbtn]() {
+    bar1.DrawStripes(!stripesbtn.Active());
+    stripesbtn.Active(!stripesbtn.Active());
+  });
+
+  Button tailbtn(window, btnr3, "TAIL");
+  window.Add(&tailbtn);
+  miso::connect(tailbtn.signal_press, [&bar1, &tailbtn]() {
+    bar1.DrawTail(!tailbtn.Active());
+    tailbtn.Active(!tailbtn.Active());
+  });
+
+  Button maxbtn(window, btnr4, "MAX");
+  window.Add(&maxbtn);
+  miso::connect(maxbtn.signal_press, [&bar1, &valbtn]() {
+    bar1.Val(bar1.Max());
+    valbtn.Label(std::to_string(bar1.Val()));
+  });
 
   window.Colours(nightgazer_colours);
 
@@ -80,7 +121,6 @@ int main(int argc, char* argv[])
 
   bool running = true;
 
-  printf("LOOP\n");
   while (running) {
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
     SDL_RenderClear(window.sdl_renderer);
@@ -120,6 +160,17 @@ int main(int argc, char* argv[])
         case 'g':
           drawdebug = !drawdebug;
           break;
+
+        case 'h':
+          bar1.Dec(10);
+          valbtn.Label(std::to_string(bar1.Val()));
+          break;
+
+        case 'l':
+          bar1.Inc(10);
+          valbtn.Label(std::to_string(bar1.Val()));
+          break;
+
         }
         break;
       }

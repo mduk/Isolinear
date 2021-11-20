@@ -24,20 +24,60 @@ class HorizontalProgressBar : public Drawable {
     Grid grid;
     unsigned max;
     unsigned val;
+    bool draw_stripes = false;
+    bool draw_tail = false;
 
   public:
     HorizontalProgressBar(Grid _g)
       : grid{_g} {};
 
+    unsigned Max() {
+      return max;
+    }
+
     void Max(unsigned m) {
+      if (m > val) {
+        val = m;
+      }
+
       max = m;
+    }
+
+    unsigned Val() {
+      return val;
     }
 
     void Val(unsigned v) {
       val = v;
     }
 
-    virtual Region2D Bounds() const override {
+    void Inc(unsigned v) {
+      if (val + v > max) {
+        val = max;
+      }
+      else {
+        val = val + v;
+      }
+    }
+
+    void Dec(unsigned v) {
+      if (v > val) {
+        val = 0;
+      }
+      else {
+        val = val - v;
+      }
+    }
+
+    void DrawTail(bool v) {
+      draw_tail = v;
+    }
+
+    void DrawStripes(bool v) {
+      draw_stripes = v;
+    }
+
+    Region2D Bounds() const override {
       return grid.bounds;
     }
 
@@ -55,44 +95,67 @@ class HorizontalProgressBar : public Drawable {
           Colours().background
         );
 
+
       int g2 = g * 2;
 
-      Position2D bar_near{
-          grid.bounds.NearX() + g2,
-          grid.bounds.NearY() + g2,
+
+      Region2D bar_region{
+        Position2D{
+            grid.bounds.NearX() + g2,
+            grid.bounds.NearY() + g2,
+          },
+        Position2D{
+            grid.bounds.FarX() - g2,
+            grid.bounds.FarY() - g2,
+          }
         };
 
-      Position2D bar_far{
-          grid.bounds.FarX() - g2,
-          grid.bounds.FarY() - g2,
-        };
+      Size2D segment_size{ g, bar_region.H() };
 
-      Size2D bar_size{
-          bar_far.x - bar_near.x,
-          bar_far.y - bar_near.y
-        };
+      unsigned   n_segments = bar_region.W() / segment_size.x;
+      unsigned remainder_px = bar_region.W() % segment_size.x;
 
-      unsigned   bar_length_px = bar_size.x;
+      if (draw_stripes) for (int i=0; i<n_segments; i++) {
+        Region2D region{
+            Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
+            segment_size
+          };
 
-      unsigned      segment_px = g;
-      unsigned    remainder_px = bar_length_px % segment_px;
-      unsigned      n_segments = bar_length_px / segment_px;
+        if (i % 2 == 0) {
+          region.Fill(renderer, 0xff666666);
+        }
+        else {
+          region.Fill(renderer, 0xff333333);
+        }
+      }
 
       unsigned   segment_range = max / n_segments;
 
       unsigned filled_segments = val / segment_range;
       unsigned      subsegment = val % segment_range;
 
-      bar_size.x = segment_px * filled_segments;
+      if (filled_segments == n_segments) {
+        Region2D region(
+            Position2D( bar_region.Near().x + (segment_size.x * filled_segments), bar_region.Near().y ),
+            Size2D( segment_size.x + remainder_px, segment_size.y )
+          );
+        region.Fill(renderer, Colours().light);
+      }
+      else {
+        Region2D region{
+            Position2D{ bar_region.Near().x + (segment_size.x * filled_segments), bar_region.Near().y },
+            segment_size
+          };
+        region.Fill(renderer, Colours().frame);
+      }
 
-      bar_near.x = bar_near.x + (remainder_px / 2);
+      if (draw_tail) for (int i=0; i<filled_segments; i++) {
+        Region2D region{
+            Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
+            segment_size
+          };
+        region.Fill(renderer, Colours().frame);
+      }
 
-      Region2D bar_region{bar_near, bar_size};
-
-      boxColor(renderer,
-          bar_region.NearX(), bar_region.NearY(),
-          bar_region.FarX(), bar_region.FarY(),
-          Colours().light_alternate
-        );
     }
 };
