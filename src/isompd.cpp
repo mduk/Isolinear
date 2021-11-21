@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <vector>
 
+#include <fmt/core.h>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_ttf.h>
@@ -82,15 +84,15 @@ int main(int argc, char* argv[])
 
   Grid button_grid = window.grid.Rows(3,4);
 
-  Region2D btnr1 = button_grid.Columns(1,2).bounds;
-  Region2D btnr2 = button_grid.Columns(3,4).bounds;
-  Region2D btnr3 = button_grid.Columns(5,6).bounds;
+  Region2D btnr1 = button_grid.Columns(1,4).bounds;
+  Region2D btnr2 = button_grid.Columns(5,6).bounds;
+  Region2D btnr3 = button_grid.Columns(20,22).bounds;
   Region2D btnr4 = button_grid.Columns(23,25).bounds;
 
-  Button valbtn(window, btnr1, std::to_string(bar1.Val()));
+  Button valbtn(window, btnr1, fmt::format("0 [{}]", bar1.n_segments));
   miso::connect(valbtn.signal_press, [&bar1, &valbtn]() {
     bar1.Val(0);
-    valbtn.Label(std::to_string(0));
+    valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
   });
   window.Add(&valbtn);
 
@@ -112,7 +114,7 @@ int main(int argc, char* argv[])
   window.Add(&maxbtn);
   miso::connect(maxbtn.signal_press, [&bar1, &valbtn]() {
     bar1.Val(bar1.Max());
-    valbtn.Label(std::to_string(bar1.Val()));
+    valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
   });
 
   window.Colours(nightgazer_colours);
@@ -164,11 +166,12 @@ int main(int argc, char* argv[])
         case 'h':
           bar1.Dec(10);
           valbtn.Label(std::to_string(bar1.Val()));
+          valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
           break;
 
         case 'l':
           bar1.Inc(10);
-          valbtn.Label(std::to_string(bar1.Val()));
+          valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
           break;
 
         }

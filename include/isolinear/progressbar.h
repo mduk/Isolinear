@@ -24,12 +24,35 @@ class HorizontalProgressBar : public Drawable {
     Grid grid;
     unsigned max;
     unsigned val;
+    unsigned gutter = 6;
+
     bool draw_stripes = false;
     bool draw_tail = false;
 
+    Region2D bar_region;
+    Size2D segment_size;
+    unsigned remainder_px;
+
   public:
+    unsigned filled_segments = 0;
+    unsigned n_segments = 0;
+
     HorizontalProgressBar(Grid _g)
-      : grid{_g} {};
+      : grid{_g}
+      , bar_region(
+          Position2D(
+            grid.bounds.NearX() + (gutter * 2),
+            grid.bounds.NearY() + (gutter * 2)
+          ),
+          Position2D(
+            grid.bounds.FarX() - (gutter * 2),
+            grid.bounds.FarY() - (gutter * 2)
+          )
+        )
+      , segment_size{ (int) gutter, bar_region.H() }
+      , n_segments{ (unsigned) (bar_region.W() / segment_size.x) }
+      , remainder_px{ bar_region.W() % segment_size.x }
+    { };
 
     unsigned Max() {
       return max;
@@ -48,7 +71,12 @@ class HorizontalProgressBar : public Drawable {
     }
 
     void Val(unsigned v) {
-      val = v;
+      if (v > max) {
+        val = max;
+      }
+      else {
+        val = v;
+      }
     }
 
     void Inc(unsigned v) {
@@ -82,38 +110,18 @@ class HorizontalProgressBar : public Drawable {
     }
 
     void Draw(SDL_Renderer* renderer) const override {
-      int g = 6;
-
       boxColor(renderer,
           grid.bounds.NearX(), grid.bounds.NearY(),
           grid.bounds.FarX(),  grid.bounds.FarY(),
           Colours().frame
         );
       boxColor(renderer,
-          grid.bounds.NearX() + g, grid.bounds.NearY() + g,
-          grid.bounds.FarX() - g,  grid.bounds.FarY() - g,
+          grid.bounds.NearX() + gutter, grid.bounds.NearY() + gutter,
+          grid.bounds.FarX() - gutter,  grid.bounds.FarY() - gutter,
           Colours().background
         );
 
 
-      int g2 = g * 2;
-
-
-      Region2D bar_region{
-        Position2D{
-            grid.bounds.NearX() + g2,
-            grid.bounds.NearY() + g2,
-          },
-        Position2D{
-            grid.bounds.FarX() - g2,
-            grid.bounds.FarY() - g2,
-          }
-        };
-
-      Size2D segment_size{ g, bar_region.H() };
-
-      unsigned   n_segments = bar_region.W() / segment_size.x;
-      unsigned remainder_px = bar_region.W() % segment_size.x;
 
       if (draw_stripes) for (int i=0; i<n_segments; i++) {
         Region2D region{
@@ -139,7 +147,7 @@ class HorizontalProgressBar : public Drawable {
             Position2D( bar_region.Near().x + (segment_size.x * filled_segments), bar_region.Near().y ),
             Size2D( segment_size.x + remainder_px, segment_size.y )
           );
-        region.Fill(renderer, Colours().light);
+        region.Fill(renderer, Colours().white);
       }
       else {
         Region2D region{

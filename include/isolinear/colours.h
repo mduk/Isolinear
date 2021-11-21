@@ -12,6 +12,8 @@ class ColourScheme {
     Colour light_alternate;
     Colour active;
 
+    Colour white{0xffffffff};
+
     ColourScheme()
       : ColourScheme{
           0x33ffffff, 0x33ffffff,
