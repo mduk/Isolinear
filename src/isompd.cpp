@@ -82,11 +82,11 @@ int main(int argc, char* argv[])
   bar1.Val(0);
   window.Add(&bar1);
 
-  EastHeaderBar ehb(window.grid.Rows(3,4), window, Compass::EAST, "PROGRESS");
+  EastHeaderBar ehb(window.grid.Rows(3,4), window, Compass::EAST, "DEBUGGERER");
   window.Add(&ehb);
 
   miso::connect(bar1.signal_valuechanged, [&bar1, &ehb](){
-    ehb.Label(fmt::format("{}/{} [{}/{}]", bar1.Val(), bar1.Max(), bar1.n_segments, bar1.filled_segments));
+    ehb.Label(fmt::format("{}/{} [{}/{}]", bar1.Val(), bar1.Max(), bar1.FilledSegments(), bar1.Segments()));
   });
 
   Button& minbtn = ehb.AddButton("MIN");

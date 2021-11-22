@@ -22,8 +22,8 @@ using std::cout;
 class HorizontalProgressBar : public Drawable {
   protected:
     Grid grid;
-    unsigned max;
-    unsigned val;
+    unsigned max = 100;
+    unsigned val = 50;
     unsigned gutter = 6;
 
     bool draw_stripes = false;
@@ -31,13 +31,13 @@ class HorizontalProgressBar : public Drawable {
 
     Region2D bar_region;
     Size2D segment_size;
-    unsigned remainder_px;
+    unsigned remainder_px = 0;
+    unsigned filled_segments = 0;
+    unsigned n_segments = 0;
+
 
   public:
     miso::signal<> signal_valuechanged;
-
-    unsigned filled_segments = 0;
-    unsigned n_segments = 0;
 
     HorizontalProgressBar(Grid _g)
       : grid{_g}
@@ -103,6 +103,14 @@ class HorizontalProgressBar : public Drawable {
       else {
         Val(val - v);
       }
+    }
+
+    unsigned Segments() {
+      return n_segments;
+    }
+
+    unsigned FilledSegments() {
+      return filled_segments;
     }
 
     bool DrawTail() {
