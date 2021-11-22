@@ -27,7 +27,7 @@ class HorizontalProgressBar : public Drawable {
     unsigned gutter = 6;
 
     bool draw_stripes = false;
-    bool draw_tail = false;
+    bool draw_tail = true;
 
     Region2D bar_region;
     Size2D segment_size;
@@ -157,10 +157,6 @@ class HorizontalProgressBar : public Drawable {
           region.Fill(renderer, 0xff333333);
         }
       }
-
-      unsigned   segment_range = max / n_segments;
-
-      unsigned      subsegment = val % segment_range;
 
       if (FilledSegments() == n_segments) {
         Region2D region(
