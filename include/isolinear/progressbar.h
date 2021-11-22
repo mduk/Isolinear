@@ -158,20 +158,11 @@ class HorizontalProgressBar : public Drawable {
         }
       }
 
-      if (FilledSegments() == n_segments) {
-        Region2D region(
-            Position2D( bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y ),
-            Size2D( segment_size.x + remainder_px, segment_size.y )
-          );
-        region.Fill(renderer, Colours().white);
-      }
-      else {
-        Region2D region{
-            Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
-            segment_size
-          };
-        region.Fill(renderer, Colours().frame);
-      }
+      Region2D region{
+          Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
+          segment_size
+        };
+      region.Fill(renderer, Colours().frame);
 
       if (draw_tail) for (int i=0; i<FilledSegments(); i++) {
         Region2D region{
