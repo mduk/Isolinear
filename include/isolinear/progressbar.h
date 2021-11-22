@@ -32,7 +32,6 @@ class HorizontalProgressBar : public Drawable {
     Region2D bar_region;
     Size2D segment_size;
     unsigned remainder_px = 0;
-    unsigned filled_segments = 0;
     unsigned n_segments = 0;
 
 
@@ -105,22 +104,22 @@ class HorizontalProgressBar : public Drawable {
       }
     }
 
-    unsigned Segments() {
+    unsigned Segments() const {
       return n_segments;
     }
 
-    unsigned FilledSegments() {
-      return filled_segments;
+    unsigned FilledSegments() const {
+      return (val * n_segments) / max;
     }
 
-    bool DrawTail() {
+    bool DrawTail() const {
       return draw_tail;
     }
     void DrawTail(bool v) {
       draw_tail = v;
     }
 
-    bool DrawStripes() {
+    bool DrawStripes() const {
       return draw_stripes;
     }
     void DrawStripes(bool v) {
@@ -161,25 +160,24 @@ class HorizontalProgressBar : public Drawable {
 
       unsigned   segment_range = max / n_segments;
 
-      unsigned filled_segments = val / segment_range;
       unsigned      subsegment = val % segment_range;
 
-      if (filled_segments == n_segments) {
+      if (FilledSegments() == n_segments) {
         Region2D region(
-            Position2D( bar_region.Near().x + (segment_size.x * filled_segments), bar_region.Near().y ),
+            Position2D( bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y ),
             Size2D( segment_size.x + remainder_px, segment_size.y )
           );
         region.Fill(renderer, Colours().white);
       }
       else {
         Region2D region{
-            Position2D{ bar_region.Near().x + (segment_size.x * filled_segments), bar_region.Near().y },
+            Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
             segment_size
           };
         region.Fill(renderer, Colours().frame);
       }
 
-      if (draw_tail) for (int i=0; i<filled_segments; i++) {
+      if (draw_tail) for (int i=0; i<FilledSegments(); i++) {
         Region2D region{
             Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
             segment_size
