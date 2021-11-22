@@ -26,9 +26,10 @@ class HorizontalProgressBar : public Drawable {
     unsigned val = 50;
     unsigned gutter = 6;
 
-    bool draw_stripes = false;
+    bool draw_stripes = true;
     bool draw_tail = true;
 
+    Colour bar_colour;
     Region2D bar_region;
     Size2D segment_size;
     unsigned remainder_px = 0;
@@ -142,35 +143,38 @@ class HorizontalProgressBar : public Drawable {
           Colours().background
         );
 
+      if (draw_stripes) {
+        for (int i=0; i<n_segments; i++) {
+          Region2D region{
+              Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
+              segment_size
+            };
 
-
-      if (draw_stripes) for (int i=0; i<n_segments; i++) {
-        Region2D region{
-            Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
-            segment_size
-          };
-
-        if (i % 2 == 0) {
-          region.Fill(renderer, 0xff666666);
-        }
-        else {
-          region.Fill(renderer, 0xff333333);
+          if (i % 2 == 0) {
+            region.Fill(renderer, Colours().background);
+          }
+          else {
+            region.Fill(renderer, Colours().light_alternate);
+          }
         }
       }
 
-      Region2D region{
+      Colour bar_colour = Colours().active;
+
+      Region2D filled_region{
           Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
           segment_size
         };
-      region.Fill(renderer, Colours().frame);
+      filled_region.Fill(renderer, bar_colour);
 
-      if (draw_tail) for (int i=0; i<FilledSegments(); i++) {
-        Region2D region{
-            Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
-            segment_size
-          };
-        region.Fill(renderer, Colours().frame);
+      if (draw_tail) {
+        for (int i=0; i<FilledSegments(); i++) {
+          Region2D region{
+              Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
+              segment_size
+            };
+          region.Fill(renderer, bar_colour);
+        }
       }
-
     }
 };
