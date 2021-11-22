@@ -69,14 +69,13 @@ int main(int argc, char* argv[])
       Position2D{ display },
       Size2D{ display }
     );
-/*
+
   MpdFrame mpdframe{
       window.grid,
       window
     };
   window.Add(&mpdframe);
-*/
-
+/*
   HorizontalProgressBar bar1(window.grid.Rows(1,2));
   bar1.Max(10000);
   bar1.Val(0);
@@ -109,7 +108,7 @@ int main(int argc, char* argv[])
     bar1.DrawTail(!bar1.DrawTail());
     miso::sender<Button>()->Active(bar1.DrawTail());
   });
-
+*/
   window.Colours(nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
@@ -155,7 +154,7 @@ int main(int argc, char* argv[])
         case 'g':
           drawdebug = !drawdebug;
           break;
-
+/*
         case 'h':
           bar1.Dec(10);
           break;
@@ -163,7 +162,7 @@ int main(int argc, char* argv[])
         case 'l':
           bar1.Inc(10);
           break;
-
+*/
         }
         break;
       }
