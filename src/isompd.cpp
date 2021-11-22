@@ -75,40 +75,7 @@ int main(int argc, char* argv[])
       window
     };
   window.Add(&mpdframe);
-/*
-  HorizontalProgressBar bar1(window.grid.Rows(1,2));
-  bar1.Max(10000);
-  bar1.Val(0);
-  window.Add(&bar1);
 
-  EastHeaderBar ehb(window.grid.Rows(3,4), window, Compass::EAST, "DEBUGGERER");
-  window.Add(&ehb);
-
-  miso::connect(bar1.signal_valuechanged, [&bar1, &ehb](){
-    ehb.Label(fmt::format("{}/{} [{}/{}]", bar1.Val(), bar1.Max(), bar1.FilledSegments(), bar1.Segments()));
-  });
-
-  Button& minbtn = ehb.AddButton("MIN");
-  miso::connect(minbtn.signal_press, [&bar1](){ bar1.Val(0); });
-
-  Button& midbtn = ehb.AddButton("MID");
-  miso::connect(midbtn.signal_press, [&bar1](){ bar1.Val((unsigned) bar1.Max() / 2); });
-
-  Button& maxbtn = ehb.AddButton("MAX");
-  miso::connect(maxbtn.signal_press, [&bar1](){ bar1.Val(bar1.Max()); });
-
-  Button& stripesbtn = ehb.AddButton("STRIPES");
-  miso::connect(stripesbtn.signal_press, [&bar1]() {
-    bar1.DrawStripes(!bar1.DrawStripes());
-    miso::sender<Button>()->Active(bar1.DrawStripes());
-  });
-
-  Button& tailbtn = ehb.AddButton("TAIL");
-  miso::connect(tailbtn.signal_press, [&bar1]() {
-    bar1.DrawTail(!bar1.DrawTail());
-    miso::sender<Button>()->Active(bar1.DrawTail());
-  });
-*/
   window.Colours(nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
