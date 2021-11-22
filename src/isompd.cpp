@@ -95,44 +95,18 @@ int main(int argc, char* argv[])
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
 
-      case SDL_KEYDOWN: {
-        switch (e.key.keysym.sym) {
-        case SDLK_ESCAPE:
-          running = false;
+        case SDL_KEYDOWN
+          switch (e.key.keysym.sym) {
+            case SDLK_ESCAPE: running = false; break;
+            case 'c': SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY)); break;
+            case 'd': window.Colours(debug_colours); break;
+            case 'r': window.Colours(red_alert_colours); break;
+            case 'y': window.Colours(yellow_alert_colours); break;
+            case 'b': window.Colours(blue_alert_colours); break;
+            case 'n': window.Colours(nightgazer_colours); break;
+            case 'g': drawdebug = !drawdebug; break;
+          }
           break;
-        case 'c':
-          SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
-          break;
-        case 'd':
-          window.Colours(debug_colours);
-          break;
-        case 'r':
-          window.Colours(red_alert_colours);
-          break;
-        case 'y':
-          window.Colours(yellow_alert_colours);
-          break;
-        case 'b':
-          window.Colours(blue_alert_colours);
-          break;
-        case 'n':
-          window.Colours(nightgazer_colours);
-          break;
-        case 'g':
-          drawdebug = !drawdebug;
-          break;
-/*
-        case 'h':
-          bar1.Dec(10);
-          break;
-
-        case 'l':
-          bar1.Inc(10);
-          break;
-*/
-        }
-        break;
-      }
 
         case SDL_MOUSEMOTION: {
           int x = e.motion.x,
@@ -148,31 +122,28 @@ int main(int argc, char* argv[])
           window.Title(ss.str());
           break;
         }
+
 /*
       case SDL_FINGERDOWN:
         printf("TAP\n");
         window.OnPointerEvent(PointerEvent{ e.tfinger, window.size });
         break;
-        */
+*/
+
       case SDL_MOUSEBUTTONDOWN:
         printf("CLICK\n");
         window.OnPointerEvent(PointerEvent{ e.button });
         break;
 
-      case SDL_WINDOWEVENT: {
+      case SDL_WINDOWEVENT:
         switch (e.window.event) {
-        case SDL_WINDOWEVENT_RESIZED: {
-          window.OnWindowResize(e.window);
-          break;
-        };
+          case SDL_WINDOWEVENT_RESIZED: window.OnWindowResize(e.window); break;
         }
         break;
-      }
 
-      case SDL_QUIT: {
+      case SDL_QUIT:
         running = false;
         break;
-      }
       }
     }
 
