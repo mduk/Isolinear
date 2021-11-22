@@ -82,39 +82,32 @@ int main(int argc, char* argv[])
   bar1.Val(0);
   window.Add(&bar1);
 
-  Grid button_grid = window.grid.Rows(3,4);
+  EastHeaderBar ehb(window.grid.Rows(3,4), window, Compass::EAST, "PROGRESS");
+  window.Add(&ehb);
 
-  Region2D btnr1 = button_grid.Columns(1,4).bounds;
-  Region2D btnr2 = button_grid.Columns(5,6).bounds;
-  Region2D btnr3 = button_grid.Columns(20,22).bounds;
-  Region2D btnr4 = button_grid.Columns(23,25).bounds;
-
-  Button valbtn(window, btnr1, fmt::format("0 [{}]", bar1.n_segments));
-  miso::connect(valbtn.signal_press, [&bar1, &valbtn]() {
-    bar1.Val(0);
-    valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
-  });
-  window.Add(&valbtn);
-
-  Button stripesbtn(window, btnr2, "STRIPES");
-  window.Add(&stripesbtn);
-  miso::connect(stripesbtn.signal_press, [&bar1, &stripesbtn]() {
-    bar1.DrawStripes(!stripesbtn.Active());
-    stripesbtn.Active(!stripesbtn.Active());
+  miso::connect(bar1.signal_valuechanged, [&bar1, &ehb](){
+    ehb.Label(fmt::format("{}/{} [{}/{}]", bar1.Val(), bar1.Max(), bar1.n_segments, bar1.filled_segments));
   });
 
-  Button tailbtn(window, btnr3, "TAIL");
-  window.Add(&tailbtn);
-  miso::connect(tailbtn.signal_press, [&bar1, &tailbtn]() {
-    bar1.DrawTail(!tailbtn.Active());
-    tailbtn.Active(!tailbtn.Active());
+  Button& minbtn = ehb.AddButton("MIN");
+  miso::connect(minbtn.signal_press, [&bar1](){ bar1.Val(0); });
+
+  Button& midbtn = ehb.AddButton("MID");
+  miso::connect(midbtn.signal_press, [&bar1](){ bar1.Val((unsigned) bar1.Max() / 2); });
+
+  Button& maxbtn = ehb.AddButton("MAX");
+  miso::connect(maxbtn.signal_press, [&bar1](){ bar1.Val(bar1.Max()); });
+
+  Button& stripesbtn = ehb.AddButton("STRIPES");
+  miso::connect(stripesbtn.signal_press, [&bar1]() {
+    bar1.DrawStripes(!bar1.DrawStripes());
+    miso::sender<Button>()->Active(bar1.DrawStripes());
   });
 
-  Button maxbtn(window, btnr4, "MAX");
-  window.Add(&maxbtn);
-  miso::connect(maxbtn.signal_press, [&bar1, &valbtn]() {
-    bar1.Val(bar1.Max());
-    valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
+  Button& tailbtn = ehb.AddButton("TAIL");
+  miso::connect(tailbtn.signal_press, [&bar1]() {
+    bar1.DrawTail(!bar1.DrawTail());
+    miso::sender<Button>()->Active(bar1.DrawTail());
   });
 
   window.Colours(nightgazer_colours);
@@ -165,13 +158,10 @@ int main(int argc, char* argv[])
 
         case 'h':
           bar1.Dec(10);
-          valbtn.Label(std::to_string(bar1.Val()));
-          valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
           break;
 
         case 'l':
           bar1.Inc(10);
-          valbtn.Label(fmt::format("{} [{}/{}]", bar1.Val(), bar1.filled_segments, bar1.n_segments));
           break;
 
         }

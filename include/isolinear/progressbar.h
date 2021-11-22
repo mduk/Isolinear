@@ -34,6 +34,8 @@ class HorizontalProgressBar : public Drawable {
     unsigned remainder_px;
 
   public:
+    miso::signal<> signal_valuechanged;
+
     unsigned filled_segments = 0;
     unsigned n_segments = 0;
 
@@ -60,7 +62,7 @@ class HorizontalProgressBar : public Drawable {
 
     void Max(unsigned m) {
       if (m > val) {
-        val = m;
+        Val(m);
       }
 
       max = m;
@@ -71,36 +73,48 @@ class HorizontalProgressBar : public Drawable {
     }
 
     void Val(unsigned v) {
+      if (v == val) {
+        return;
+      }
+
       if (v > max) {
         val = max;
       }
       else {
         val = v;
       }
+
+      emit signal_valuechanged();
     }
 
     void Inc(unsigned v) {
       if (val + v > max) {
-        val = max;
+        Val(max);
       }
       else {
-        val = val + v;
+        Val(val + v);
       }
     }
 
     void Dec(unsigned v) {
       if (v > val) {
-        val = 0;
+        Val(0);
       }
       else {
-        val = val - v;
+        Val(val - v);
       }
     }
 
+    bool DrawTail() {
+      return draw_tail;
+    }
     void DrawTail(bool v) {
       draw_tail = v;
     }
 
+    bool DrawStripes() {
+      return draw_stripes;
+    }
     void DrawStripes(bool v) {
       draw_stripes = v;
     }
