@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
 
-        case SDL_KEYDOWN
+        case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE: running = false; break;
             case 'c': SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY)); break;
