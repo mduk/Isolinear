@@ -67,6 +67,7 @@ namespace MPDXX {
 
   class Song {
     protected:
+      mpd_connection* conn;
       mpd_song* song;
 
       unsigned int id;
@@ -77,8 +78,10 @@ namespace MPDXX {
       std::string album;
 
     public:
-      Song(mpd_song* s)
-        : id(mpd_song_get_id(s))
+      Song(mpd_connection* c, mpd_song* s)
+        : conn(c)
+        , song(s)
+        , id(mpd_song_get_id(s))
         , duration_seconds(mpd_song_get_duration(s))
         , uri(mpd_song_get_uri(s))
         , title(mpd_song_get_tag(s, MPD_TAG_TITLE, 0) ?: "")
@@ -116,6 +119,10 @@ namespace MPDXX {
         auto const minutes = duration_seconds / 60;
         auto const seconds = duration_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
+      }
+
+      void Play() const {
+        mpd_run_play_id(conn, ID());
       }
 
   };
@@ -174,7 +181,7 @@ namespace MPDXX {
       }
 
       Song CurrentlyPlaying() {
-        return Song(mpd_run_current_song(conn));
+        return Song(conn, mpd_run_current_song(conn));
       }
 
 
@@ -238,7 +245,7 @@ namespace MPDXX {
         mpd_send_list_queue_meta(conn);
         struct mpd_song *song;
         while ((song = mpd_recv_song(conn)) != NULL) {
-          queue.emplace_back(song);
+          queue.emplace_back(conn, song);
         }
         return queue;
       }

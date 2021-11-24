@@ -104,16 +104,25 @@ class NowPlayingView : public MPDView {
 
 class QueueSongBar : public EastHeaderBar {
   protected:
+    MPDXX::Song song;
     Button& playbtn;
     Button& deletebtn;
 
   public:
     QueueSongBar(Grid g, Window& w, MPDXX::Song s)
       : EastHeaderBar(g, w, Compass::EAST, s.Title())
+      , song(s)
       , playbtn(AddButton("PLAY"))
       , deletebtn(AddButton("DELETE"))
     {
-      miso::connect(playbtn.signal_press, [](){});
+      deletebtn.Disable();
+
+      RegisterChild(&playbtn);
+      RegisterChild(&deletebtn);
+
+      miso::connect(playbtn.signal_press, [this](){
+        song.Play();
+      });
       miso::connect(deletebtn.signal_press, [](){});
     }
 };
@@ -122,6 +131,7 @@ class QueueSongBar : public EastHeaderBar {
 class QueueView : public MPDView {
   protected:
     MPDXX::SongList queue;
+    std::list<QueueSongBar> songbars;
 
   public:
     QueueView(Grid g, Window& w, MPDXX::Client& _mpd)
@@ -130,18 +140,17 @@ class QueueView : public MPDView {
 
     void Update() {
       queue = mpd.Queue();
-    }
+      songbars.clear();
 
-    void Draw(SDL_Renderer* renderer) const {
       int i = 1;
-      for (auto const& song : queue) {
-        QueueSongBar row{
+      for (auto& song : queue) {
+        auto& row = songbars.emplace_back(
             grid.Rows( i*2-1, i*2 ),
             window,
             song
-          };
+          );
         row.Colours(Colours());
-        row.Draw(renderer);
+        RegisterChild(&row);
         i++;
 
         if (i > 11) {
