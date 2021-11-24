@@ -30,7 +30,11 @@ class Grid {
         row_height{rh},
         gutter{g},
         size{s}
-    {};
+    {
+      if (row_height % 2 == 1) {
+        row_height++;
+      }
+    };
 
     Grid SubGrid(
       int near_col, int near_row,
