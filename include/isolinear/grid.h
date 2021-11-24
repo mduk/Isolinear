@@ -92,16 +92,28 @@ class Grid {
       return SubGrid(from, 1, to, rows);
     }
 
-    Grid Left(int n) const {
+    Grid LeftColumns(int n) const {
       return Columns(1, n);
     }
 
-    Grid Right(int n) const {
-      return Columns(MaxColumns() - n, MaxColumns());
+    Grid RightColumns(int n) const {
+      return Columns(MaxColumns() - n + 1, MaxColumns());
     }
 
-    Grid HorizontalCentre(int l, int r) const {
-      return Columns(l+1, MaxColumns() - r - 1);
+    Grid CentreColumns(int l, int r) const {
+      return Columns(l + 1, MaxColumns() - r);
+    }
+
+    Grid TopRows(int n) const {
+      return Rows(1, n);
+    }
+
+    Grid BottomRows(int n) const {
+      return Rows(MaxRows() - n, MaxRows());
+    }
+
+    Grid MiddleRows(int t, int b) const {
+      return Rows(t + 1, MaxRows() - b);
     }
 
     Region2D Cell(int col, int row) const {
