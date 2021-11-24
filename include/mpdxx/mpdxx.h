@@ -24,7 +24,7 @@ namespace MPDXX {
       std::string plugin;
 
     public:
-      Output( mpd_connection* c, mpd_output* o)
+      Output(mpd_connection* c, mpd_output* o)
         : conn(c)
         , id(mpd_output_get_id(o))
         , name(mpd_output_get_name(o))
