@@ -92,6 +92,18 @@ class Grid {
       return SubGrid(from, 1, to, rows);
     }
 
+    Grid Left(int n) const {
+      return Columns(1, n);
+    }
+
+    Grid Right(int n) const {
+      return Columns(MaxColumns() - n, MaxColumns());
+    }
+
+    Grid HorizontalCentre(int l, int r) const {
+      return Columns(l+1, MaxColumns() - r - 1);
+    }
+
     Region2D Cell(int col, int row) const {
       return CalculateGridRegion(col, row, col, row);
     }
