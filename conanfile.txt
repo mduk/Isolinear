@@ -4,6 +4,7 @@ sdl_image/2.0.5
 sdl_ttf/2.0.15
 sdl_net/2.0.1
 fmt/8.0.1
+asio/1.21.0
 
 [generators]
 cmake
