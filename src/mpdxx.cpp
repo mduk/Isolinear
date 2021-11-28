@@ -30,6 +30,22 @@ std::vector<std::string> line_to_words(const std::string &line) {
     return words;
 }
 
+static inline void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+}
+
+static inline void rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}
+
+static inline void trim(std::string &s) {
+    ltrim(s);
+    rtrim(s);
+}
 
 class Client {
   protected:
@@ -38,6 +54,8 @@ class Client {
 
     asio::io_context& io_context;
     asio::ip::tcp::socket io_socket;
+
+    std::list<std::string> acc;
 
   public:
     Client(asio::io_context& ioc)
@@ -74,37 +92,41 @@ class Client {
             std::string version = words[2];
             cout << fmt::format("version: {}", version);
 
-            RequestStatus();
+            SendCommandRequest("status");
           });
     }
 
-    void ReadLine(std::list<std::string>& acc) {
+    void SendCommandRequest(std::string command) {
+      asio::async_write(io_socket, asio::buffer(command + "\n"),
+          [&] (std::error_code ec, std::size_t length) {
+            ReadCommandResponse(command);
+          });
+    }
+
+    void ReadCommandResponse(std::string command) {
       asio::async_read_until(io_socket, read_buffer, '\n',
-          [this, &acc] (std::error_code ec, std::size_t bytes_transferred) {
+          [&] (std::error_code ec, std::size_t bytes_transferred) {
             std::string line(
                 asio::buffers_begin(read_buffer.data()),
                 asio::buffers_begin(read_buffer.data())
                   + bytes_transferred
               );
 
-            if (line == "OK\n") {
-              cout << "All done\n";
+            trim(line);
+
+            if (line == "OK") {
+              cout << fmt::format("{}\n", command);
+              for (auto line : acc) {
+                cout << fmt::format("[{}]\n", line);
+              }
+
               return;
             }
 
             acc.push_back(line);
-            cout << fmt::format("recv: {}", line);
             read_buffer.consume(bytes_transferred);
-            ReadLine(acc);
-          });
-    }
 
-    void RequestStatus() {
-      asio::async_write(io_socket, asio::buffer("status\n"),
-          [this] (std::error_code ec, std::size_t length) {
-            cout << fmt::format("sent: status\n");
-            std::list<std::string> acc{};
-            ReadLine(acc);
+            ReadCommandResponse(command);
           });
     }
 
