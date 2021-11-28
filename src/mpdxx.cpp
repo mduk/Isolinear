@@ -1,8 +1,12 @@
 #include <iostream>
 #include <thread>
+#include <list>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iterator>
 
 #include <asio.hpp>
-
 #include <fmt/core.h>
 
 
@@ -11,6 +15,20 @@ using asio::ip::tcp;
 
 
 asio::streambuf read_buffer;
+
+
+std::vector<std::string> line_to_words(const std::string &line) {
+    std::vector<std::string> words;
+
+    std::istringstream iss(line);
+
+    std::string word;
+    while (std::getline(iss, word, ' ')) {
+        words.emplace_back(word);
+    }
+
+    return words;
+}
 
 
 class Client {
@@ -38,11 +56,11 @@ class Client {
               return;
             }
 
-            RequestStatus();
+            ReadVersion();
           });
     }
 
-    void ReadLine() {
+    void ReadVersion() {
       asio::async_read_until(io_socket, read_buffer, '\n',
           [this] (std::error_code ec, std::size_t bytes_transferred) {
             std::string line(
@@ -50,9 +68,34 @@ class Client {
                 asio::buffers_begin(read_buffer.data())
                   + bytes_transferred
               );
+
+            read_buffer.consume(bytes_transferred);
+            auto words = line_to_words(line);
+            std::string version = words[2];
+            cout << fmt::format("version: {}", version);
+
+            RequestStatus();
+          });
+    }
+
+    void ReadLine(std::list<std::string>& acc) {
+      asio::async_read_until(io_socket, read_buffer, '\n',
+          [this, &acc] (std::error_code ec, std::size_t bytes_transferred) {
+            std::string line(
+                asio::buffers_begin(read_buffer.data()),
+                asio::buffers_begin(read_buffer.data())
+                  + bytes_transferred
+              );
+
+            if (line == "OK\n") {
+              cout << "All done\n";
+              return;
+            }
+
+            acc.push_back(line);
             cout << fmt::format("recv: {}", line);
             read_buffer.consume(bytes_transferred);
-            ReadLine();
+            ReadLine(acc);
           });
     }
 
@@ -60,7 +103,8 @@ class Client {
       asio::async_write(io_socket, asio::buffer("status\n"),
           [this] (std::error_code ec, std::size_t length) {
             cout << fmt::format("sent: status\n");
-            ReadLine();
+            std::list<std::string> acc{};
+            ReadLine(acc);
           });
     }
 
@@ -80,6 +124,8 @@ int main(int argc, char* argv[]) {
 
     Client mpd(io_context);
     mpd.Connect();
+
+    while(true);
 
     work_guard.reset();
     io_thread.join();
