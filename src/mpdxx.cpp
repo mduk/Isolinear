@@ -99,11 +99,11 @@ class Client {
     void SendCommandRequest(std::string command) {
       asio::async_write(io_socket, asio::buffer(command + "\n"),
           [&] (std::error_code ec, std::size_t length) {
-            ReadCommandResponse(command);
+            ReadCommandResponse();
           });
     }
 
-    void ReadCommandResponse(std::string command) {
+    void ReadCommandResponse() {
       asio::async_read_until(io_socket, read_buffer, '\n',
           [&] (std::error_code ec, std::size_t bytes_transferred) {
             std::string line(
@@ -115,7 +115,6 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              cout << fmt::format("{}\n", command);
               for (auto line : acc) {
                 cout << fmt::format("[{}]\n", line);
               }
@@ -126,7 +125,7 @@ class Client {
             acc.push_back(line);
             read_buffer.consume(bytes_transferred);
 
-            ReadCommandResponse(command);
+            ReadCommandResponse();
           });
     }
 
