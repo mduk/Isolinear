@@ -8,6 +8,7 @@
 
 #include <asio.hpp>
 #include <fmt/core.h>
+#include <miso.h>
 
 
 using std::cout;

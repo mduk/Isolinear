@@ -41,6 +41,7 @@ target_link_libraries(IsoMPD
 add_executable(MPDXX src/mpdxx.cpp)
 target_link_libraries(MPDXX
   ${CONAN_LIBS}
+  LibMiso
   LibMPDXX
 )
 
