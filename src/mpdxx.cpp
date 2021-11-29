@@ -105,11 +105,11 @@ class Client {
     void SendCommandRequest(std::string command) {
       asio::async_write(io_socket, asio::buffer(command + "\n"),
           [&] (std::error_code ec, std::size_t length) {
-            ReadCommandResponse();
+            ReadCommandResponse(command);
           });
     }
 
-    void ReadCommandResponse() {
+    void ReadCommandResponse(std::string command) {
       asio::async_read_until(io_socket, read_buffer, '\n',
           [&] (std::error_code ec, std::size_t bytes_transferred) {
             std::string line(
@@ -125,14 +125,14 @@ class Client {
                 cout << fmt::format("[{}]\n", line);
               }
 
-              emit signal_command_completed("commandstring", acc);
+              emit signal_command_completed(command, acc);
               return;
             }
 
             acc.push_back(line);
             read_buffer.consume(bytes_transferred);
 
-            ReadCommandResponse();
+            ReadCommandResponse(command);
           });
     }
 
