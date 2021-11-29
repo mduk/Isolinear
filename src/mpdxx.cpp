@@ -57,12 +57,17 @@ class Client {
     asio::ip::tcp::socket io_socket;
 
     std::list<std::string> acc;
+    miso::signal<std::string, std::list<std::string>> signal_command_completed;
 
   public:
     Client(asio::io_context& ioc)
       : io_context(ioc)
       , io_socket(io_context)
-    {}
+    {
+      miso::connect(signal_command_completed, [&](std::string command, std::list<std::string> lines){
+        cout << fmt::format("Command completed! {}\n", command);
+      });
+    }
 
     void Connect() {
       tcp::resolver resolver(io_context);
@@ -120,6 +125,7 @@ class Client {
                 cout << fmt::format("[{}]\n", line);
               }
 
+              emit signal_command_completed("commandstring", acc);
               return;
             }
 
