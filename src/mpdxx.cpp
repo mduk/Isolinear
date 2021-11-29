@@ -1,6 +1,6 @@
 #include <iostream>
 #include <thread>
-#include <list>
+#include <map>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -56,19 +56,17 @@ class Client {
     asio::io_context& io_context;
     asio::ip::tcp::socket io_socket;
 
-    std::list<std::string> acc;
-    miso::signal<std::string, std::list<std::string>> signal_command_completed;
+    std::map<std::string, std::string> status;
+    miso::signal<> signal_command_completed;
 
   public:
     Client(asio::io_context& ioc)
       : io_context(ioc)
       , io_socket(io_context)
     {
-      miso::connect(signal_command_completed, [&](std::string command, std::list<std::string> lines){
-        cout << fmt::format("Command completed! {}\n", command);
-        cout << fmt::format("lines: {}\n", lines.size());
-        for (auto const& line : lines) {
-          cout << fmt::format("  - {}\n", line);
+      miso::connect(signal_command_completed, [&](){
+        for (auto const& [ key, val ] : status) {
+          cout << fmt::format("  - {} = {}\n", key, val);
         }
       });
     }
@@ -102,20 +100,20 @@ class Client {
             std::string version = words[2];
             cout << fmt::format("server version: {}", version);
 
-            SendCommandRequest("status");
+            SendStatusRequest();
           });
     }
 
-    void SendCommandRequest(std::string command) {
-      asio::async_write(io_socket, asio::buffer(command + "\n"),
-          [this, command] (std::error_code ec, std::size_t length) {
-            ReadCommandResponse(command);
+    void SendStatusRequest() {
+      asio::async_write(io_socket, asio::buffer("status\n"),
+          [this] (std::error_code ec, std::size_t length) {
+            ReadStatusResponse();
           });
     }
 
-    void ReadCommandResponse(std::string command) {
+    void ReadStatusResponse() {
       asio::async_read_until(io_socket, read_buffer, '\n',
-          [this, command] (std::error_code ec, std::size_t bytes_transferred) {
+          [this] (std::error_code ec, std::size_t bytes_transferred) {
             std::string line(
                 asio::buffers_begin(read_buffer.data()),
                 asio::buffers_begin(read_buffer.data())
@@ -125,14 +123,18 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              emit signal_command_completed(command, acc);
+              emit signal_command_completed();
               return;
             }
 
-            acc.push_back(line);
+            auto key = line.substr(0, line.find(": "));
+            auto val = line.substr(line.find(": ") + 2);
+
+            status[key] = val;
+
             read_buffer.consume(bytes_transferred);
 
-            ReadCommandResponse(command);
+            ReadStatusResponse();
           });
     }
 
