@@ -1,6 +1,4 @@
 *.swp
 .session.vim
 
-build/
-
-Isolinear
+.build/
