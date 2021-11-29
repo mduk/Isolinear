@@ -66,6 +66,10 @@ class Client {
     {
       miso::connect(signal_command_completed, [&](std::string command, std::list<std::string> lines){
         cout << fmt::format("Command completed! {}\n", command);
+        cout << fmt::format("lines: {}\n", lines.size());
+        for (auto const& line : lines) {
+          cout << fmt::format("  - {}\n", line);
+        }
       });
     }
 
@@ -96,7 +100,7 @@ class Client {
             read_buffer.consume(bytes_transferred);
             auto words = line_to_words(line);
             std::string version = words[2];
-            cout << fmt::format("version: {}", version);
+            cout << fmt::format("server version: {}", version);
 
             SendCommandRequest("status");
           });
@@ -121,10 +125,6 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              for (auto line : acc) {
-                cout << fmt::format("[{}]\n", line);
-              }
-
               emit signal_command_completed(command, acc);
               return;
             }
