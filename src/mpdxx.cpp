@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <list>
 #include <iterator>
 
 #include <asio.hpp>
@@ -63,6 +64,8 @@ class Client {
     asio::ip::tcp::socket io_socket;
 
     std::map<std::string, std::string> status;
+    std::list<std::map<std::string, std::string>> queue;
+
     miso::signal<> signal_command_completed;
 
     asio::streambuf read_buffer;
@@ -74,8 +77,14 @@ class Client {
       , io_socket(io_context)
     {
       miso::connect(signal_command_completed, [&](){
+        cout << "Status:\n";
         for (auto const& [ key, val ] : status) {
           cout << fmt::format("  - {} = {}\n", key, val);
+        }
+
+        cout << "Queue:\n";
+        for (auto const& song : queue) {
+          cout << fmt::format("  - {}\n", song.at("file"));
         }
       });
     }
@@ -190,8 +199,18 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              cout << "All done\n";
+              emit signal_command_completed();
               return;
+            }
+
+            auto [key, val] = line_to_pair(line);
+
+            if (key == "file") {
+              queue.emplace_back();
+              queue.back()[key] = val;
+            }
+            else {
+              queue.back()[key] = val;
             }
 
             ReadQueueResponse();
