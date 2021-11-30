@@ -105,25 +105,38 @@ class Client {
     }
 
     void SendStatusRequest() {
-      asio::async_write(io_socket, asio::buffer("status\n"),
-          [this] (std::error_code ec, std::size_t length) {
+      std::string command = "status\n";
+      asio::async_write(io_socket, asio::buffer(command, command.size()),
+          [this, command] (std::error_code ec, std::size_t length) {
             ReadStatusResponse();
+            if (ec) {
+              cout << fmt::format("SendStatusRequest: Error: {}\n", ec.message());
+              return;
+            }
+
+            cout << fmt::format("SendStatusRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
           });
     }
 
     void ReadStatusResponse() {
       asio::async_read_until(io_socket, read_buffer, '\n',
           [this] (std::error_code ec, std::size_t bytes_transferred) {
+            if (ec) {
+              cout << fmt::format("ReadStatusResponse: Error: {}\n", ec.message());
+              return;
+            }
+
             std::string line(
                 asio::buffers_begin(read_buffer.data()),
                 asio::buffers_begin(read_buffer.data())
                   + bytes_transferred
               );
+            read_buffer.consume(bytes_transferred);
 
             trim(line);
 
             if (line == "OK") {
-              emit signal_command_completed();
+              SendQueueRequest();
               return;
             }
 
@@ -132,9 +145,50 @@ class Client {
 
             status[key] = val;
 
-            read_buffer.consume(bytes_transferred);
 
             ReadStatusResponse();
+          });
+    }
+
+    void SendQueueRequest() {
+      std::string command = "playlistinfo\n";
+      asio::async_write(io_socket, asio::buffer(command, command.size()),
+          [this, command] (std::error_code ec, std::size_t length) {
+            ReadQueueResponse();
+            if (ec) {
+              cout << fmt::format("SendQueueRequest: Error: {}\n", ec.message());
+              return;
+            }
+
+            cout << fmt::format("SendQueueRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
+            ReadQueueResponse();
+          });
+    }
+
+    void ReadQueueResponse() {
+      asio::async_read_until(io_socket, read_buffer, '\n',
+          [this] (std::error_code ec, std::size_t bytes_transferred) {
+            if (ec) {
+              cout << fmt::format("ReadQueueResponse: Error: {}\n", ec.message());
+              return;
+            }
+
+            std::string line(
+                asio::buffers_begin(read_buffer.data()),
+                asio::buffers_begin(read_buffer.data())
+                  + bytes_transferred
+              );
+            read_buffer.consume(bytes_transferred);
+
+            cout << "recv: " << line;
+            trim(line);
+
+            if (line == "OK") {
+              cout << "All done\n";
+              return;
+            }
+
+            ReadQueueResponse();
           });
     }
 
