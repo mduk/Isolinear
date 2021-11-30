@@ -127,22 +127,23 @@ class Client {
             std::string version = words[2];
             cout << fmt::format("server version: {}\n", version);
 
-            SendStatusRequest();
+            SendCommandRequest("status", [this](){ ReadStatusResponse(); });
           });
     }
 
-    void SendStatusRequest() {
-      std::string command = "status\n";
-      asio::async_write(io_socket, asio::buffer(command, command.size()),
-          [this, command] (std::error_code ec, std::size_t length) {
+    void SendCommandRequest(std::string const command, std::function<void()> response_handler) {
+      std::string send_command = command + '\n';
+
+      asio::async_write(io_socket, asio::buffer(send_command, send_command.size()),
+          [this, command, send_command, response_handler] (std::error_code ec, std::size_t length) {
             if (ec) {
-              cout << fmt::format("SendStatusRequest: Error: {}\n", ec.message());
+              cout << fmt::format("SendCommandRequest<{}>: Error: {}\n", command, ec.message());
               return;
             }
 
-            cout << fmt::format("SendStatusRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
+            cout << fmt::format("SendCommandRequest<{}>: Sent {} bytes, string is {} bytes.\n", command, length, send_command.size());
 
-            ReadStatusResponse();
+            response_handler();
           });
     }
 
@@ -163,7 +164,7 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              SendCurrentSongRequest();
+              SendCommandRequest("currentsong", [this](){ ReadCurrentSongResponse(); });
               return;
             }
 
@@ -171,21 +172,6 @@ class Client {
             status[key] = val;
 
             ReadStatusResponse();
-          });
-    }
-
-    void SendCurrentSongRequest() {
-      std::string command = "currentsong\n";
-      asio::async_write(io_socket, asio::buffer(command, command.size()),
-          [this, command] (std::error_code ec, std::size_t length) {
-            if (ec) {
-              cout << fmt::format("SendCurrentSongRequest: Error: {}\n", ec.message());
-              return;
-            }
-
-            cout << fmt::format("SendCurrentSongRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
-
-            ReadCurrentSongResponse();
           });
     }
 
@@ -206,7 +192,7 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              SendQueueRequest();
+              SendCommandRequest("playlistinfo", [this](){ ReadQueueResponse(); });
               return;
             }
 
@@ -214,21 +200,6 @@ class Client {
             current_song[key] = val;
 
             ReadCurrentSongResponse();
-          });
-    }
-
-    void SendQueueRequest() {
-      std::string command = "playlistinfo\n";
-      asio::async_write(io_socket, asio::buffer(command, command.size()),
-          [this, command] (std::error_code ec, std::size_t length) {
-            if (ec) {
-              cout << fmt::format("SendQueueRequest: Error: {}\n", ec.message());
-              return;
-            }
-
-            cout << fmt::format("SendQueueRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
-
-            ReadQueueResponse();
           });
     }
 
