@@ -16,6 +16,13 @@ using asio::ip::tcp;
 
 
 
+std::pair<std::string, std::string> line_to_pair(std::string &line) {
+    return std::pair<std::string, std::string>{
+      line.substr(0, line.find(": ")),
+      line.substr(line.find(": ") + 2)
+    };
+}
+
 
 std::vector<std::string> line_to_words(const std::string &line) {
     std::vector<std::string> words;
@@ -143,11 +150,8 @@ class Client {
               return;
             }
 
-            auto key = line.substr(0, line.find(": "));
-            auto val = line.substr(line.find(": ") + 2);
-
+            auto [key, val] = line_to_pair(line);
             status[key] = val;
-
 
             ReadStatusResponse();
           });
