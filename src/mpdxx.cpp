@@ -91,16 +91,18 @@ class Client {
     void ReadVersion() {
       asio::async_read_until(io_socket, read_buffer, '\n',
           [this] (std::error_code ec, std::size_t bytes_transferred) {
-            std::string line(
-                asio::buffers_begin(read_buffer.data()),
-                asio::buffers_begin(read_buffer.data())
-                  + bytes_transferred
-              );
+            if (ec) {
+              cout << fmt::format("ReadVersion: Error: {}\n", ec.message());
+              return;
+            }
 
-            read_buffer.consume(bytes_transferred);
+            std::istream is(&read_buffer);
+            std::string line;
+            std::getline(is, line);
+
             auto words = line_to_words(line);
             std::string version = words[2];
-            cout << fmt::format("server version: {}", version);
+            cout << fmt::format("server version: {}\n", version);
 
             SendStatusRequest();
           });
@@ -128,12 +130,11 @@ class Client {
               return;
             }
 
-            std::string line(
-                asio::buffers_begin(read_buffer.data()),
-                asio::buffers_begin(read_buffer.data())
-                  + bytes_transferred
-              );
-            read_buffer.consume(bytes_transferred);
+            std::istream is(&read_buffer);
+            std::string line;
+            std::getline(is, line);
+
+            cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
             trim(line);
 
@@ -175,14 +176,12 @@ class Client {
               return;
             }
 
-            std::string line(
-                asio::buffers_begin(read_buffer.data()),
-                asio::buffers_begin(read_buffer.data())
-                  + bytes_transferred
-              );
-            read_buffer.consume(bytes_transferred);
+            std::istream is(&read_buffer);
+            std::string line;
+            std::getline(is, line);
 
-            cout << "recv: " << line;
+            cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
             trim(line);
 
             if (line == "OK") {
