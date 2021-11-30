@@ -65,6 +65,7 @@ class Client {
     StringMap status;
     StringMap current_song;
     std::list<StringMap> queue;
+    std::list<StringMap> outputs;
 
     miso::signal<> signal_command_completed;
 
@@ -80,6 +81,11 @@ class Client {
         cout << "Status:\n";
         for (auto const& [ key, val ] : status) {
           cout << fmt::format("  - {} = {}\n", key, val);
+        }
+
+        cout << "Outputs:\n";
+        for (auto const& output : outputs) {
+          cout << fmt::format("  - {}\n", output.at("outputname"));
         }
 
         cout << "Current Song:\n";
@@ -220,7 +226,7 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              emit signal_command_completed();
+              SendCommandRequest("outputs", [this](){ ReadOutputsResponse(); });
               return;
             }
 
@@ -235,6 +241,41 @@ class Client {
             }
 
             ReadQueueResponse();
+          });
+    }
+
+    void ReadOutputsResponse() {
+      asio::async_read_until(io_socket, read_buffer, '\n',
+          [this] (std::error_code ec, std::size_t bytes_transferred) {
+            if (ec) {
+              cout << fmt::format("ReadOutputsResponse: Error: {}\n", ec.message());
+              return;
+            }
+
+            std::istream is(&read_buffer);
+            std::string line;
+            std::getline(is, line);
+
+            cout << fmt::format("ReadOutputsResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+            trim(line);
+
+            if (line == "OK") {
+              emit signal_command_completed();
+              return;
+            }
+
+            auto [key, val] = line_to_pair(line);
+
+            if (key == "outputid") {
+              outputs.emplace_back();
+              outputs.back()[key] = val;
+            }
+            else {
+              outputs.back()[key] = val;
+            }
+
+            ReadOutputsResponse();
           });
     }
 
