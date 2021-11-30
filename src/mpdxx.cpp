@@ -16,271 +16,273 @@ using std::cout;
 using asio::ip::tcp;
 
 
+namespace mpdxx {
 
-std::pair<std::string, std::string> line_to_pair(std::string &line) {
-    return std::pair<std::string, std::string>{
-      line.substr(0, line.find(": ")),
-      line.substr(line.find(": ") + 2)
-    };
-}
-
-
-std::vector<std::string> line_to_words(const std::string &line) {
-    std::vector<std::string> words;
-
-    std::istringstream iss(line);
-
-    std::string word;
-    while (std::getline(iss, word, ' ')) {
-        words.emplace_back(word);
-    }
-
-    return words;
-}
-
-static inline void ltrim(std::string &s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-        return !std::isspace(ch);
-    }));
-}
-
-static inline void rtrim(std::string &s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-        return !std::isspace(ch);
-    }).base(), s.end());
-}
-
-static inline void trim(std::string &s) {
-    ltrim(s);
-    rtrim(s);
-}
-
-using StringMap = std::map<std::string, std::string>;
-
-class Client {
-  protected:
-    asio::io_context& io_context;
-    asio::ip::tcp::socket io_socket;
-
-    StringMap status;
-    StringMap current_song;
-    std::list<StringMap> queue;
-    std::list<StringMap> outputs;
-
-    miso::signal<> signal_command_completed;
-
-    asio::streambuf read_buffer;
+  std::pair<std::string, std::string> line_to_pair(std::string &line) {
+      return std::pair<std::string, std::string>{
+        line.substr(0, line.find(": ")),
+        line.substr(line.find(": ") + 2)
+      };
+  }
 
 
-  public:
-    Client(asio::io_context& ioc)
-      : io_context(ioc)
-      , io_socket(io_context)
-    {
-      miso::connect(signal_command_completed, [&](){
-        cout << "Status:\n";
-        for (auto const& [ key, val ] : status) {
-          cout << fmt::format("  - {} = {}\n", key, val);
-        }
+  std::vector<std::string> line_to_words(const std::string &line) {
+      std::vector<std::string> words;
 
-        cout << "Outputs:\n";
-        for (auto const& output : outputs) {
-          cout << fmt::format("  - {}\n", output.at("outputname"));
-        }
+      std::istringstream iss(line);
 
-        cout << "Current Song:\n";
-        for (auto const& [ key, val ] : current_song) {
-          cout << fmt::format("  - {} = {}\n", key, val);
-        }
+      std::string word;
+      while (std::getline(iss, word, ' ')) {
+          words.emplace_back(word);
+      }
 
-        cout << "Queue:\n";
-        for (auto const& song : queue) {
-          cout << fmt::format("  - {}\n", song.at("file"));
-        }
-      });
-    }
+      return words;
+  }
 
-    void Connect(std::string host, std::string port) {
-      tcp::resolver resolver(io_context);
-      auto io_endpoints = resolver.resolve(host, port);
+  static inline void ltrim(std::string &s) {
+      s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+          return !std::isspace(ch);
+      }));
+  }
 
-      asio::async_connect(io_socket, io_endpoints,
-          [this](std::error_code ec, tcp::endpoint) {
-            if (ec) {
-              cout << "connect error: " << ec.message() << "\n";
-              return;
-            }
+  static inline void rtrim(std::string &s) {
+      s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+          return !std::isspace(ch);
+      }).base(), s.end());
+  }
 
-            ReadVersion();
-          });
-    }
+  static inline void trim(std::string &s) {
+      ltrim(s);
+      rtrim(s);
+  }
 
-  protected:
+  using StringMap = std::map<std::string, std::string>;
 
-    void ReadVersion() {
-      asio::async_read_until(io_socket, read_buffer, '\n',
-          [this] (std::error_code ec, std::size_t bytes_transferred) {
-            if (ec) {
-              cout << fmt::format("ReadVersion: Error: {}\n", ec.message());
-              return;
-            }
+  class Client {
+    protected:
+      asio::io_context& io_context;
+      asio::ip::tcp::socket io_socket;
 
-            std::istream is(&read_buffer);
-            std::string line;
-            std::getline(is, line);
+      StringMap status;
+      StringMap current_song;
+      std::list<StringMap> queue;
+      std::list<StringMap> outputs;
 
-            auto words = line_to_words(line);
-            std::string version = words[2];
-            cout << fmt::format("server version: {}\n", version);
+      miso::signal<> signal_command_completed;
 
-            SendCommandRequest("status", [this](){ ReadStatusResponse(); });
-          });
-    }
+      asio::streambuf read_buffer;
 
-    void SendCommandRequest(std::string const command, std::function<void()> response_handler) {
-      std::string send_command = command + '\n';
 
-      asio::async_write(io_socket, asio::buffer(send_command, send_command.size()),
-          [this, command, send_command, response_handler] (std::error_code ec, std::size_t length) {
-            if (ec) {
-              cout << fmt::format("SendCommandRequest<{}>: Error: {}\n", command, ec.message());
-              return;
-            }
+    public:
+      Client(asio::io_context& ioc)
+        : io_context(ioc)
+        , io_socket(io_context)
+      {
+        miso::connect(signal_command_completed, [&](){
+          cout << "Status:\n";
+          for (auto const& [ key, val ] : status) {
+            cout << fmt::format("  - {} = {}\n", key, val);
+          }
 
-            cout << fmt::format("SendCommandRequest<{}>: Sent {} bytes, string is {} bytes.\n", command, length, send_command.size());
+          cout << "Outputs:\n";
+          for (auto const& output : outputs) {
+            cout << fmt::format("  - {}\n", output.at("outputname"));
+          }
 
-            response_handler();
-          });
-    }
+          cout << "Current Song:\n";
+          for (auto const& [ key, val ] : current_song) {
+            cout << fmt::format("  - {} = {}\n", key, val);
+          }
 
-    void ReadStatusResponse() {
-      asio::async_read_until(io_socket, read_buffer, '\n',
-          [this] (std::error_code ec, std::size_t bytes_transferred) {
-            if (ec) {
-              cout << fmt::format("ReadStatusResponse: Error: {}\n", ec.message());
-              return;
-            }
+          cout << "Queue:\n";
+          for (auto const& song : queue) {
+            cout << fmt::format("  - {}\n", song.at("file"));
+          }
+        });
+      }
 
-            std::istream is(&read_buffer);
-            std::string line;
-            std::getline(is, line);
+      void Connect(std::string host, std::string port) {
+        tcp::resolver resolver(io_context);
+        auto io_endpoints = resolver.resolve(host, port);
 
-            cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+        asio::async_connect(io_socket, io_endpoints,
+            [this](std::error_code ec, tcp::endpoint) {
+              if (ec) {
+                cout << "connect error: " << ec.message() << "\n";
+                return;
+              }
 
-            trim(line);
+              ReadVersion();
+            });
+      }
 
-            if (line == "OK") {
-              SendCommandRequest("currentsong", [this](){ ReadCurrentSongResponse(); });
-              return;
-            }
+    protected:
 
-            auto [key, val] = line_to_pair(line);
-            status[key] = val;
+      void ReadVersion() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadVersion: Error: {}\n", ec.message());
+                return;
+              }
 
-            ReadStatusResponse();
-          });
-    }
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
 
-    void ReadCurrentSongResponse() {
-      asio::async_read_until(io_socket, read_buffer, '\n',
-          [this] (std::error_code ec, std::size_t bytes_transferred) {
-            if (ec) {
-              cout << fmt::format("ReadCurrentSongResponse: Error: {}\n", ec.message());
-              return;
-            }
+              auto words = line_to_words(line);
+              std::string version = words[2];
+              cout << fmt::format("server version: {}\n", version);
 
-            std::istream is(&read_buffer);
-            std::string line;
-            std::getline(is, line);
+              SendCommandRequest("status", [this](){ ReadStatusResponse(); });
+            });
+      }
 
-            cout << fmt::format("ReadCurrentSongResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+      void SendCommandRequest(std::string const command, std::function<void()> response_handler) {
+        std::string send_command = command + '\n';
 
-            trim(line);
+        asio::async_write(io_socket, asio::buffer(send_command, send_command.size()),
+            [this, command, send_command, response_handler] (std::error_code ec, std::size_t length) {
+              if (ec) {
+                cout << fmt::format("SendCommandRequest<{}>: Error: {}\n", command, ec.message());
+                return;
+              }
 
-            if (line == "OK") {
-              SendCommandRequest("playlistinfo", [this](){ ReadQueueResponse(); });
-              return;
-            }
+              cout << fmt::format("SendCommandRequest<{}>: Sent {} bytes, string is {} bytes.\n", command, length, send_command.size());
 
-            auto [key, val] = line_to_pair(line);
-            current_song[key] = val;
+              response_handler();
+            });
+      }
 
-            ReadCurrentSongResponse();
-          });
-    }
+      void ReadStatusResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadStatusResponse: Error: {}\n", ec.message());
+                return;
+              }
 
-    void ReadQueueResponse() {
-      asio::async_read_until(io_socket, read_buffer, '\n',
-          [this] (std::error_code ec, std::size_t bytes_transferred) {
-            if (ec) {
-              cout << fmt::format("ReadQueueResponse: Error: {}\n", ec.message());
-              return;
-            }
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
 
-            std::istream is(&read_buffer);
-            std::string line;
-            std::getline(is, line);
+              cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
-            cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+              trim(line);
 
-            trim(line);
+              if (line == "OK") {
+                SendCommandRequest("currentsong", [this](){ ReadCurrentSongResponse(); });
+                return;
+              }
 
-            if (line == "OK") {
-              SendCommandRequest("outputs", [this](){ ReadOutputsResponse(); });
-              return;
-            }
+              auto [key, val] = line_to_pair(line);
+              status[key] = val;
 
-            auto [key, val] = line_to_pair(line);
+              ReadStatusResponse();
+            });
+      }
 
-            if (key == "file") {
-              queue.emplace_back();
-              queue.back()[key] = val;
-            }
-            else {
-              queue.back()[key] = val;
-            }
+      void ReadCurrentSongResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadCurrentSongResponse: Error: {}\n", ec.message());
+                return;
+              }
 
-            ReadQueueResponse();
-          });
-    }
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
 
-    void ReadOutputsResponse() {
-      asio::async_read_until(io_socket, read_buffer, '\n',
-          [this] (std::error_code ec, std::size_t bytes_transferred) {
-            if (ec) {
-              cout << fmt::format("ReadOutputsResponse: Error: {}\n", ec.message());
-              return;
-            }
+              cout << fmt::format("ReadCurrentSongResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
-            std::istream is(&read_buffer);
-            std::string line;
-            std::getline(is, line);
+              trim(line);
 
-            cout << fmt::format("ReadOutputsResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+              if (line == "OK") {
+                SendCommandRequest("playlistinfo", [this](){ ReadQueueResponse(); });
+                return;
+              }
 
-            trim(line);
+              auto [key, val] = line_to_pair(line);
+              current_song[key] = val;
 
-            if (line == "OK") {
-              emit signal_command_completed();
-              return;
-            }
+              ReadCurrentSongResponse();
+            });
+      }
 
-            auto [key, val] = line_to_pair(line);
+      void ReadQueueResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadQueueResponse: Error: {}\n", ec.message());
+                return;
+              }
 
-            if (key == "outputid") {
-              outputs.emplace_back();
-              outputs.back()[key] = val;
-            }
-            else {
-              outputs.back()[key] = val;
-            }
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
 
-            ReadOutputsResponse();
-          });
-    }
+              cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
-};
+              trim(line);
 
+              if (line == "OK") {
+                SendCommandRequest("outputs", [this](){ ReadOutputsResponse(); });
+                return;
+              }
+
+              auto [key, val] = line_to_pair(line);
+
+              if (key == "file") {
+                queue.emplace_back();
+                queue.back()[key] = val;
+              }
+              else {
+                queue.back()[key] = val;
+              }
+
+              ReadQueueResponse();
+            });
+      }
+
+      void ReadOutputsResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadOutputsResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              cout << fmt::format("ReadOutputsResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                emit signal_command_completed();
+                return;
+              }
+
+              auto [key, val] = line_to_pair(line);
+
+              if (key == "outputid") {
+                outputs.emplace_back();
+                outputs.back()[key] = val;
+              }
+              else {
+                outputs.back()[key] = val;
+              }
+
+              ReadOutputsResponse();
+            });
+      }
+
+  };
+
+} // namespace mpdxx
 
 int main(int argc, char* argv[]) {
   cout << "MPDXX main()\n";
@@ -293,7 +295,7 @@ int main(int argc, char* argv[]) {
       io_context.run();
     });
 
-    Client mpd(io_context);
+    mpdxx::Client mpd(io_context);
     mpd.Connect("localhost", "6600");
 
     while(true);
