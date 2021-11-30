@@ -15,7 +15,6 @@ using std::cout;
 using asio::ip::tcp;
 
 
-asio::streambuf read_buffer;
 
 
 std::vector<std::string> line_to_words(const std::string &line) {
@@ -58,6 +57,9 @@ class Client {
 
     std::map<std::string, std::string> status;
     miso::signal<> signal_command_completed;
+
+    asio::streambuf read_buffer;
+
 
   public:
     Client(asio::io_context& ioc)
