@@ -119,13 +119,14 @@ class Client {
       std::string command = "status\n";
       asio::async_write(io_socket, asio::buffer(command, command.size()),
           [this, command] (std::error_code ec, std::size_t length) {
-            ReadStatusResponse();
             if (ec) {
               cout << fmt::format("SendStatusRequest: Error: {}\n", ec.message());
               return;
             }
 
             cout << fmt::format("SendStatusRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
+
+            ReadStatusResponse();
           });
     }
 
@@ -167,6 +168,7 @@ class Client {
             }
 
             cout << fmt::format("SendQueueRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
+
             ReadQueueResponse();
           });
     }
