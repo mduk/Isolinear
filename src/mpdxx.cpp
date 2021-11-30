@@ -55,13 +55,16 @@ static inline void trim(std::string &s) {
     rtrim(s);
 }
 
+using StringMap = std::map<std::string, std::string>;
+
 class Client {
   protected:
     asio::io_context& io_context;
     asio::ip::tcp::socket io_socket;
 
-    std::map<std::string, std::string> status;
-    std::list<std::map<std::string, std::string>> queue;
+    StringMap status;
+    StringMap current_song;
+    std::list<StringMap> queue;
 
     miso::signal<> signal_command_completed;
 
@@ -76,6 +79,11 @@ class Client {
       miso::connect(signal_command_completed, [&](){
         cout << "Status:\n";
         for (auto const& [ key, val ] : status) {
+          cout << fmt::format("  - {} = {}\n", key, val);
+        }
+
+        cout << "Current Song:\n";
+        for (auto const& [ key, val ] : current_song) {
           cout << fmt::format("  - {} = {}\n", key, val);
         }
 
@@ -155,7 +163,7 @@ class Client {
             trim(line);
 
             if (line == "OK") {
-              SendQueueRequest();
+              SendCurrentSongRequest();
               return;
             }
 
@@ -163,6 +171,49 @@ class Client {
             status[key] = val;
 
             ReadStatusResponse();
+          });
+    }
+
+    void SendCurrentSongRequest() {
+      std::string command = "currentsong\n";
+      asio::async_write(io_socket, asio::buffer(command, command.size()),
+          [this, command] (std::error_code ec, std::size_t length) {
+            if (ec) {
+              cout << fmt::format("SendCurrentSongRequest: Error: {}\n", ec.message());
+              return;
+            }
+
+            cout << fmt::format("SendCurrentSongRequest: Sent {} bytes, string is {} bytes.\n", length, command.size());
+
+            ReadCurrentSongResponse();
+          });
+    }
+
+    void ReadCurrentSongResponse() {
+      asio::async_read_until(io_socket, read_buffer, '\n',
+          [this] (std::error_code ec, std::size_t bytes_transferred) {
+            if (ec) {
+              cout << fmt::format("ReadCurrentSongResponse: Error: {}\n", ec.message());
+              return;
+            }
+
+            std::istream is(&read_buffer);
+            std::string line;
+            std::getline(is, line);
+
+            cout << fmt::format("ReadCurrentSongResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+            trim(line);
+
+            if (line == "OK") {
+              SendQueueRequest();
+              return;
+            }
+
+            auto [key, val] = line_to_pair(line);
+            current_song[key] = val;
+
+            ReadCurrentSongResponse();
           });
     }
 
