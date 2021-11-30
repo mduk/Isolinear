@@ -157,7 +157,6 @@ class Client {
       std::string command = "playlistinfo\n";
       asio::async_write(io_socket, asio::buffer(command, command.size()),
           [this, command] (std::error_code ec, std::size_t length) {
-            ReadQueueResponse();
             if (ec) {
               cout << fmt::format("SendQueueRequest: Error: {}\n", ec.message());
               return;
