@@ -101,7 +101,7 @@ class Client {
           });
     }
 
-  private:
+  protected:
 
     void ReadVersion() {
       asio::async_read_until(io_socket, read_buffer, '\n',
