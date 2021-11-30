@@ -57,9 +57,6 @@ static inline void trim(std::string &s) {
 
 class Client {
   protected:
-    std::string host = "127.0.0.1";
-    std::string port = "6600";
-
     asio::io_context& io_context;
     asio::ip::tcp::socket io_socket;
 
@@ -89,7 +86,7 @@ class Client {
       });
     }
 
-    void Connect() {
+    void Connect(std::string host, std::string port) {
       tcp::resolver resolver(io_context);
       auto io_endpoints = resolver.resolve(host, port);
 
@@ -103,6 +100,8 @@ class Client {
             ReadVersion();
           });
     }
+
+  private:
 
     void ReadVersion() {
       asio::async_read_until(io_socket, read_buffer, '\n',
@@ -232,7 +231,7 @@ int main(int argc, char* argv[]) {
     });
 
     Client mpd(io_context);
-    mpd.Connect();
+    mpd.Connect("localhost", "6600");
 
     while(true);
 
