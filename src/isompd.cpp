@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 
   mpdxx::Client mpdc(io_context);
 
-  miso::connect(mpdc.signal_command_completed, [&mpdc](){
+  miso::connect(mpdc.signal_ready, [&mpdc](){
     cout << "Status:\n";
     auto status = mpdc.Status();
     for (auto const& [ key, val ] : status) {

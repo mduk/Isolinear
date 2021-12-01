@@ -146,7 +146,7 @@ namespace mpdxx {
       asio::streambuf read_buffer;
 
     public:
-      miso::signal<> signal_command_completed;
+      miso::signal<> signal_ready;
 
     public:
       Client(asio::io_context& ioc)
@@ -461,7 +461,7 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                emit signal_command_completed();
+                emit signal_ready();
                 ConsumeToggle();
                 return;
               }
