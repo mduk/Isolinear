@@ -29,13 +29,6 @@
 
 bool drawdebug = false;
 
-static int handle_error(struct mpd_connection* c) {
-    assert(mpd_connection_get_error(c) != MPD_ERROR_SUCCESS);
-    fprintf(stderr, "%s\n", mpd_connection_get_error_message(c));
-    mpd_connection_free(c);
-    return EXIT_FAILURE;
-}
-
 int main(int argc, char* argv[])
 {
   printf("INIT\n");
