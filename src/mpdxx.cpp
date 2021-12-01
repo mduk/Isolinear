@@ -48,7 +48,60 @@ namespace mpdxx {
       }).base(), s.end());
   }
 
+  using SongID = uint32_t;
   using StringMap = std::map<std::string, std::string>;
+
+
+
+  class Song {
+    protected:
+      StringMap const songdata;
+
+    public:
+      Song(StringMap const sd)
+        : songdata(sd)
+      { }
+
+      SongID const ID() const {
+        return 0;
+      }
+
+      std::string const Uri() const {
+        return songdata.at("file");
+      }
+
+      std::string const Title() const {
+        return songdata.at("Title");
+      }
+
+      std::string const Artist() const {
+        return songdata.at("Artist");
+      }
+
+      std::string const Album() const {
+        return songdata.at("Album");
+      }
+
+      unsigned const DurationSeconds() const {
+        return 100;
+      }
+
+      std::string const DurationString() const {
+        auto duration_seconds = DurationSeconds();
+        auto const minutes = duration_seconds / 60;
+        auto const seconds = duration_seconds % 60;
+        return fmt::format("{:02d}:{:02d}", minutes, seconds);
+      }
+/*
+      void Play() const {
+        mpd_run_play_id(conn, ID());
+      }
+*/
+  };
+
+
+  using SongList = std::list<Song>;
+
 
   class Client {
     protected:
@@ -107,6 +160,55 @@ namespace mpdxx {
               ReadVersion();
             });
       }
+
+      std::string const StatusString() const {
+        return status.at("state");
+      }
+/*
+      unsigned const ElapsedTimeSeconds() const {
+        return mpd_status_get_elapsed_ms(status) / 1000;
+      }
+
+      std::string ElapsedTimeString() const {
+        auto const elapsed_seconds = ElapsedTimeSeconds();
+        auto const minutes = elapsed_seconds / 60;
+        auto const seconds = elapsed_seconds % 60;
+        return fmt::format("{:02d}:{:02d}", minutes, seconds);
+      }
+*/
+
+      bool const IsPaused() const {
+        return StatusString() == "pause";
+      }
+
+      bool const IsPlaying() const {
+        return StatusString() == "play";
+      }
+
+      bool const IsStopped() const {
+        return StatusString() == "stop";
+      }
+
+      Song const CurrentlyPlaying() const {
+        return Song(current_song);
+      }
+
+      bool Consume() {}
+      bool Random() {}
+
+      void Stop() {}
+      void Play() {}
+      void Pause() {}
+      void Resume() {}
+      void Next() {}
+      void Previous() {}
+
+      bool PauseToggle() {}
+      bool ConsumeToggle() {}
+      bool RandomToggle() {}
+
+      SongList Queue() {}
+
 
     protected:
 
