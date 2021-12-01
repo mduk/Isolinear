@@ -143,47 +143,16 @@ namespace mpdxx {
       std::list<StringMap> queue;
       std::list<StringMap> outputdata;
 
-      miso::signal<> signal_command_completed;
-
       asio::streambuf read_buffer;
 
+    public:
+      miso::signal<> signal_command_completed;
 
     public:
       Client(asio::io_context& ioc)
         : io_context(ioc)
         , io_socket(io_context)
       {
-        miso::connect(signal_command_completed, [&](){
-          cout << "Status:\n";
-          for (auto const& [ key, val ] : status) {
-            cout << fmt::format("  - {} = {}\n", key, val);
-          }
-
-          cout << "Outputs:\n";
-          OutputList outputs = Outputs();
-          for (auto const& output : outputs) {
-            cout << fmt::format("  - ({}) {}\n", output.ID(), output.Name());
-          }
-
-          cout << "Current Song:\n";
-          for (auto const& [ key, val ] : current_song) {
-            cout << fmt::format("  - {} = {}\n", key, val);
-          }
-
-          auto current_file = current_song.at("file");
-
-          cout << "Queue:\n";
-          SongList queue = Queue();
-          for (auto const& song : queue) {
-            auto file = song.Uri();
-            if (file == current_file) {
-              cout << fmt::format(" => ({}) {}\n", song.ID(), file);
-            }
-            else {
-              cout << fmt::format("  - ({}) {}\n", song.ID(), file);
-            }
-          }
-        });
       }
 
       void Connect(std::string host, std::string port) {
@@ -289,6 +258,14 @@ namespace mpdxx {
 
       void Previous() {
         SimpleCommand("previous");
+      }
+
+      StringMap Status() {
+        return status;
+      }
+
+      StringMap CurrentSong() {
+        return current_song;
       }
 
       SongList Queue() {

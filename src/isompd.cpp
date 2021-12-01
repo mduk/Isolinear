@@ -50,6 +50,41 @@ int main(int argc, char* argv[])
   });
 
   mpdxx::Client mpdc(io_context);
+
+  miso::connect(mpdc.signal_command_completed, [&mpdc](){
+    cout << "Status:\n";
+    auto status = mpdc.Status();
+    for (auto const& [ key, val ] : status) {
+      cout << fmt::format("  - {} = {}\n", key, val);
+    }
+
+    cout << "Outputs:\n";
+    auto outputs = mpdc.Outputs();
+    for (auto const& output : outputs) {
+      cout << fmt::format("  - ({}) {}\n", output.ID(), output.Name());
+    }
+
+    cout << "Current Song:\n";
+    auto current_song = mpdc.CurrentSong();
+    for (auto const& [ key, val ] : current_song) {
+      cout << fmt::format("  - {} = {}\n", key, val);
+    }
+
+    auto current_file = current_song.at("file");
+
+    cout << "Queue:\n";
+    auto queue = mpdc.Queue();
+    for (auto const& song : queue) {
+      auto file = song.Uri();
+      if (file == current_file) {
+        cout << fmt::format(" => ({}) {}\n", song.ID(), file);
+      }
+      else {
+        cout << fmt::format("  - ({}) {}\n", song.ID(), file);
+      }
+    }
+  });
+
   mpdc.Connect("localhost", "6600");
 
   SDL_Init(SDL_INIT_VIDEO);
