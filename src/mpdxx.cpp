@@ -235,14 +235,29 @@ namespace mpdxx {
       }
 
 
-      void Stop() {}
-      void Play() {}
-      void Pause() {}
-      void Resume() {}
-      void Next() {}
-      void Previous() {}
+      void Stop() {
+        SimpleCommand("stop");
+      }
 
-      bool PauseToggle() {}
+      void Play() {
+        SimpleCommand("play");
+      }
+
+      void Pause() {
+        SimpleCommand("pause 1");
+      }
+
+      void Resume() {
+        SimpleCommand("pause 0");
+      }
+
+      void Next() {
+        SimpleCommand("next");
+      }
+
+      void Previous() {
+        SimpleCommand("previous");
+      }
 
       SongList Queue() {
         SongList songs;
