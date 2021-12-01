@@ -139,9 +139,17 @@ namespace mpdxx {
             cout << fmt::format("  - {} = {}\n", key, val);
           }
 
+          auto current_file = current_song.at("file");
+
           cout << "Queue:\n";
           for (auto const& song : queue) {
-            cout << fmt::format("  - {}\n", song.at("file"));
+            auto file = song.at("file");
+            if (file == current_file) {
+              cout << fmt::format(" => {}\n", song.at("file"));
+            }
+            else {
+              cout << fmt::format("  - {}\n", song.at("file"));
+            }
           }
         });
       }
