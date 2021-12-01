@@ -201,8 +201,17 @@ namespace mpdxx {
         return Song(current_song);
       }
 
-      bool Consume() {}
-      bool Random() {}
+      bool const Consume() const {
+        return status.at("consume") == "1";
+      }
+
+      bool const Random() const {
+        return status.at("random") == "1";
+      }
+
+      bool const Single() const {
+        return status.at("single") == "1";
+      }
 
       void Stop() {}
       void Play() {}
