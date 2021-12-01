@@ -18,13 +18,18 @@ using asio::ip::tcp;
 
 namespace mpdxx {
 
+
+  using StringMap = std::map<std::string, std::string>;
+  using OutputID = int;
+  using SongID = int;
+
+
   std::pair<std::string, std::string> line_to_pair(std::string &line) {
       return std::pair<std::string, std::string>{
         line.substr(0, line.find(": ")),
         line.substr(line.find(": ") + 2)
       };
   }
-
 
   std::vector<std::string> line_to_words(const std::string &line) {
       std::vector<std::string> words;
@@ -48,9 +53,33 @@ namespace mpdxx {
       }).base(), s.end());
   }
 
-  using SongID = uint32_t;
-  using StringMap = std::map<std::string, std::string>;
 
+  class Output {
+    protected:
+      StringMap const outputdata;
+
+    public:
+      Output(StringMap const od)
+        : outputdata(od)
+      {}
+
+      OutputID const ID() const {
+        return std::stoi(outputdata.at("outputid"));
+      }
+
+      std::string const Name() const {
+        return outputdata.at("outputname");
+      }
+
+      std::string const Plugin() const {
+        return outputdata.at("plugin");
+      }
+
+      bool const Enabled() const {
+        return outputdata.at("outputenabled") == "1";
+      }
+
+  };
 
 
   class Song {
@@ -63,7 +92,7 @@ namespace mpdxx {
       { }
 
       SongID const ID() const {
-        return 0;
+        return std::stoi(songdata.at("Id"));
       }
 
       std::string const Uri() const {
@@ -92,15 +121,11 @@ namespace mpdxx {
         auto const seconds = duration_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
       }
-/*
-      void Play() const {
-        mpd_run_play_id(conn, ID());
-      }
-*/
   };
 
 
   using SongList = std::list<Song>;
+  using OutputList = std::list<Output>;
 
 
   class Client {
@@ -111,7 +136,7 @@ namespace mpdxx {
       StringMap status;
       StringMap current_song;
       std::list<StringMap> queue;
-      std::list<StringMap> outputs;
+      std::list<StringMap> outputdata;
 
       miso::signal<> signal_command_completed;
 
@@ -130,8 +155,9 @@ namespace mpdxx {
           }
 
           cout << "Outputs:\n";
+          OutputList outputs = Outputs();
           for (auto const& output : outputs) {
-            cout << fmt::format("  - {}\n", output.at("outputname"));
+            cout << fmt::format("  - ({}) {}\n", output.ID(), output.Name());
           }
 
           cout << "Current Song:\n";
@@ -142,13 +168,14 @@ namespace mpdxx {
           auto current_file = current_song.at("file");
 
           cout << "Queue:\n";
+          SongList queue = Queue();
           for (auto const& song : queue) {
-            auto file = song.at("file");
+            auto file = song.Uri();
             if (file == current_file) {
-              cout << fmt::format(" => {}\n", song.at("file"));
+              cout << fmt::format(" => ({}) {}\n", song.ID(), file);
             }
             else {
-              cout << fmt::format("  - {}\n", song.at("file"));
+              cout << fmt::format("  - ({}) {}\n", song.ID(), file);
             }
           }
         });
@@ -265,6 +292,14 @@ namespace mpdxx {
           songs.emplace_back(song);
         }
         return songs;
+      }
+
+      OutputList Outputs() {
+        OutputList outputs;
+        for (auto const& output : outputdata) {
+          outputs.emplace_back(output);
+        }
+        return outputs;
       }
 
 
@@ -452,11 +487,11 @@ namespace mpdxx {
               auto [key, val] = line_to_pair(line);
 
               if (key == "outputid") {
-                outputs.emplace_back();
-                outputs.back()[key] = val;
+                outputdata.emplace_back();
+                outputdata.back()[key] = val;
               }
               else {
-                outputs.back()[key] = val;
+                outputdata.back()[key] = val;
               }
 
               ReadOutputsResponse();
