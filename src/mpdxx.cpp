@@ -215,7 +215,13 @@ namespace mpdxx {
       bool ConsumeToggle() {}
       bool RandomToggle() {}
 
-      SongList Queue() {}
+      SongList Queue() {
+        SongList songs;
+        for (auto const& song : queue) {
+          songs.emplace_back(song);
+        }
+        return songs;
+      }
 
 
     protected:
