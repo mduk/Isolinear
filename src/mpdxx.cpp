@@ -213,6 +213,28 @@ namespace mpdxx {
         return status.at("single") == "1";
       }
 
+      bool ConsumeToggle() {
+        SimpleCommand(fmt::format(
+            "consume {}",
+            Consume() ? "0" : "1"
+          ));
+      }
+
+      bool RandomToggle() {
+        SimpleCommand(fmt::format(
+            "random {}",
+            Random() ? "0" : "1"
+          ));
+      }
+
+      bool SingleToggle() {
+        SimpleCommand(fmt::format(
+            "single {}",
+            Single() ? "0" : "1"
+          ));
+      }
+
+
       void Stop() {}
       void Play() {}
       void Pause() {}
@@ -221,8 +243,6 @@ namespace mpdxx {
       void Previous() {}
 
       bool PauseToggle() {}
-      bool ConsumeToggle() {}
-      bool RandomToggle() {}
 
       SongList Queue() {
         SongList songs;
@@ -234,6 +254,36 @@ namespace mpdxx {
 
 
     protected:
+
+      void SimpleCommand(std::string command) {
+        SendCommandRequest(
+            command,
+            [this](){ ReadEmptyResponse(); }
+          );
+      }
+
+      void ReadEmptyResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadEmptyResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                cout << fmt::format("ReadEmptyResponse: OK\n");
+              }
+              else {
+                cout << fmt::format("ReadEmptyResponse: Error: {}\n", line);
+              }
+            });
+      }
 
       void ReadVersion() {
         asio::async_read_until(io_socket, read_buffer, '\n',
@@ -380,6 +430,7 @@ namespace mpdxx {
 
               if (line == "OK") {
                 emit signal_command_completed();
+                ConsumeToggle();
                 return;
               }
 
