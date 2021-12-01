@@ -15,7 +15,7 @@
 
 class PlayerControlBar : public HorizontalButtonBar {
   protected:
-    MPDXX::Client& mpd;
+    mpdxx::Client& mpd;
 
     Button& btnPlay;
     Button& btnPause;
@@ -26,7 +26,7 @@ class PlayerControlBar : public HorizontalButtonBar {
     Button& btnRandom;
 
   public:
-    PlayerControlBar(Window& w, Grid g, MPDXX::Client& _mpd)
+    PlayerControlBar(Window& w, Grid g, mpdxx::Client& _mpd)
       : HorizontalButtonBar(w, g)
       , mpd{_mpd}
       , btnPlay(AddButton("PLAY"))
@@ -102,7 +102,7 @@ class PlayerControlBar : public HorizontalButtonBar {
       });
 
       miso::connect(btnPause.signal_press, [this]() {
-        miso::sender<Button>()->Active(mpd.PauseToggle());
+//        miso::sender<Button>()->Active(mpd.PauseToggle());
       });
 
       miso::connect(btnConsume.signal_press, [this]() {
@@ -115,26 +115,23 @@ class PlayerControlBar : public HorizontalButtonBar {
     }
 
     void Update() {
-      switch (mpd.Status()) {
-
-      case MPD_STATE_PLAY:
+      if (mpd.IsPlaying()) {
         btnPlay.Activate();
         btnPause.Enable();
         btnPause.Deactivate();
         btnStop.Deactivate();
-        break;
+      }
 
-      case MPD_STATE_PAUSE:
+      if (mpd.IsPaused()) {
         btnPlay.Activate();
         btnPause.Activate();
         btnStop.Deactivate();
-        break;
+      }
 
-      case MPD_STATE_STOP:
+      if (mpd.IsStopped()) {
         btnPlay.Deactivate();
         btnPause.Disable();
         btnStop.Activate();
-        break;
       }
 
       btnConsume.Active(mpd.Consume());

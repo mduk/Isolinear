@@ -4,161 +4,210 @@
 
 #include <fmt/core.h>
 
-#include <mpd/client.h>
-#include <mpd/entity.h>
-#include <mpd/message.h>
-#include <mpd/search.h>
-#include <mpd/status.h>
-#include <mpd/tag.h>
+#include <iostream>
+#include <thread>
+#include <map>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <list>
+#include <iterator>
 
-namespace MPDXX {
+#include <asio.hpp>
+#include <fmt/core.h>
+#include <miso.h>
 
-  using OutputID = uint32_t;
+
+using std::cout;
+using asio::ip::tcp;
+
+namespace mpdxx {
+
+
+  using StringMap = std::map<std::string, std::string>;
+  using OutputID = int;
+  using SongID = int;
+
+
+  std::pair<std::string, std::string> line_to_pair(std::string &line) {
+      return std::pair<std::string, std::string>{
+        line.substr(0, line.find(": ")),
+        line.substr(line.find(": ") + 2)
+      };
+  }
+
+  std::vector<std::string> line_to_words(const std::string &line) {
+      std::vector<std::string> words;
+
+      std::istringstream iss(line);
+
+      std::string word;
+      while (std::getline(iss, word, ' ')) {
+          words.emplace_back(word);
+      }
+
+      return words;
+  }
+
+  static inline void trim(std::string &s) {
+      s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+          return !std::isspace(ch);
+      }));
+      s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+          return !std::isspace(ch);
+      }).base(), s.end());
+  }
+
 
   class Output {
     protected:
-      mpd_connection* conn;
-      unsigned id;
-      bool enabled;
-      std::string name;
-      std::string plugin;
+      StringMap const outputdata;
 
     public:
-      Output(mpd_connection* c, mpd_output* o)
-        : conn(c)
-        , id(mpd_output_get_id(o))
-        , name(mpd_output_get_name(o))
-        , plugin(mpd_output_get_plugin(o))
-        , enabled{mpd_output_get_enabled(o)}
-      {
-        mpd_output_free(o);
+      Output(StringMap const od)
+        : outputdata(od)
+      {}
+
+      OutputID const ID() const {
+        return std::stoi(outputdata.at("outputid"));
       }
 
-      OutputID ID() const {
-        return id;
+      std::string const Name() const {
+        return outputdata.at("outputname");
       }
 
-      std::string Name() const {
-        return name;
+      std::string const Plugin() const {
+        return outputdata.at("plugin");
       }
 
-      std::string Plugin() const {
-        return plugin;
+      bool const Enabled() const {
+        return outputdata.at("outputenabled") == "1";
       }
 
-      bool Enabled() const {
-        return enabled;
-      }
-
-      bool Disable() {
-        mpd_run_disable_output(conn, id);
-        enabled = false;
-        return enabled;
-      }
-
-      bool Enable() {
-        mpd_run_enable_output(conn, id);
-        enabled = true;
-        return enabled;
-      }
   };
 
-  using SongID = uint32_t;
 
   class Song {
     protected:
-      mpd_connection* conn;
-      mpd_song* song;
-
-      unsigned int id;
-      unsigned int duration_seconds;
-      std::string uri;
-      std::string title;
-      std::string artist;
-      std::string album;
+      StringMap const songdata;
 
     public:
-      Song(mpd_connection* c, mpd_song* s)
-        : conn(c)
-        , song(s)
-        , id(mpd_song_get_id(s))
-        , duration_seconds(mpd_song_get_duration(s))
-        , uri(mpd_song_get_uri(s))
-        , title(mpd_song_get_tag(s, MPD_TAG_TITLE, 0) ?: "")
-        , artist(mpd_song_get_tag(s, MPD_TAG_ARTIST, 0) ?: "")
-        , album(mpd_song_get_tag(s, MPD_TAG_ALBUM, 0) ?: "")
-      {
-        mpd_song_free(s);
-      }
+      Song(StringMap const sd)
+        : songdata(sd)
+      { }
 
       SongID const ID() const {
-        return id;
+        return std::stoi(songdata.at("Id"));
       }
 
       std::string const Uri() const {
-        return uri;
+        return songdata.at("file");
       }
 
       std::string const Title() const {
-        return title;
+        return songdata.at("Title");
       }
 
       std::string const Artist() const {
-        return artist;
+        return songdata.at("Artist");
       }
 
       std::string const Album() const {
-        return album;
+        return songdata.at("Album");
       }
 
       unsigned const DurationSeconds() const {
-        return duration_seconds;
+        return 100;
       }
 
       std::string const DurationString() const {
+        auto duration_seconds = DurationSeconds();
         auto const minutes = duration_seconds / 60;
         auto const seconds = duration_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
       }
-
-      void Play() const {
-        mpd_run_play_id(conn, ID());
-      }
-
   };
+
 
   using SongList = std::list<Song>;
   using OutputList = std::list<Output>;
 
+
   class Client {
     protected:
-      struct mpd_connection* conn;
-      struct mpd_status* status;
-      struct mpd_song* song;
+      asio::io_context& io_context;
+      asio::ip::tcp::socket io_socket;
+
+      StringMap status;
+      StringMap current_song;
+      std::list<StringMap> queue;
+      std::list<StringMap> outputdata;
+
+      miso::signal<> signal_command_completed;
+
+      asio::streambuf read_buffer;
+
 
     public:
-      Client() {
-        conn = mpd_connection_new(NULL, 0, 30000);
+      Client(asio::io_context& ioc)
+        : io_context(ioc)
+        , io_socket(io_context)
+      {
+        miso::connect(signal_command_completed, [&](){
+          cout << "Status:\n";
+          for (auto const& [ key, val ] : status) {
+            cout << fmt::format("  - {} = {}\n", key, val);
+          }
+
+          cout << "Outputs:\n";
+          OutputList outputs = Outputs();
+          for (auto const& output : outputs) {
+            cout << fmt::format("  - ({}) {}\n", output.ID(), output.Name());
+          }
+
+          cout << "Current Song:\n";
+          for (auto const& [ key, val ] : current_song) {
+            cout << fmt::format("  - {} = {}\n", key, val);
+          }
+
+          auto current_file = current_song.at("file");
+
+          cout << "Queue:\n";
+          SongList queue = Queue();
+          for (auto const& song : queue) {
+            auto file = song.Uri();
+            if (file == current_file) {
+              cout << fmt::format(" => ({}) {}\n", song.ID(), file);
+            }
+            else {
+              cout << fmt::format("  - ({}) {}\n", song.ID(), file);
+            }
+          }
+        });
       }
 
-      int Status() {
-        status = mpd_run_status(conn);
-        return mpd_status_get_state(status);
+      void Connect(std::string host, std::string port) {
+        tcp::resolver resolver(io_context);
+        auto io_endpoints = resolver.resolve(host, port);
+
+        asio::async_connect(io_socket, io_endpoints,
+            [this](std::error_code ec, tcp::endpoint) {
+              if (ec) {
+                cout << "connect error: " << ec.message() << "\n";
+                return;
+              }
+
+              ReadVersion();
+            });
       }
 
-      std::string StatusString() {
-        status = mpd_run_status(conn);
-        switch (mpd_status_get_state(status)) {
-          case MPD_STATE_PAUSE: return "PAUSED";
-          case MPD_STATE_PLAY: return "PLAYING";
-          case MPD_STATE_STOP: return "STOPPED";
-          case MPD_STATE_UNKNOWN: return "UNKNOWN";
-        }
-        return "";
+      std::string const StatusString() const {
+        return status.at("state");
       }
 
       unsigned const ElapsedTimeSeconds() const {
-        return mpd_status_get_elapsed_ms(status) / 1000;
+        auto elapsed = status.at("elapsed");
+        return std::stoi(elapsed.substr(0, elapsed.find('.')));
       }
 
       std::string ElapsedTimeString() const {
@@ -168,100 +217,292 @@ namespace MPDXX {
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
       }
 
-      bool IsPaused() {
-        return Status() == MPD_STATE_PAUSE;
+      bool const IsPaused() const {
+        return StatusString() == "pause";
       }
 
-      bool IsPlaying() {
-        return Status() == MPD_STATE_PLAY;
+      bool const IsPlaying() const {
+        return StatusString() == "play";
       }
 
-      bool IsStopped() {
-        return Status() == MPD_STATE_STOP;
+      bool const IsStopped() const {
+        return StatusString() == "stop";
       }
 
-      Song CurrentlyPlaying() {
-        return Song(conn, mpd_run_current_song(conn));
+      Song const CurrentlyPlaying() const {
+        return Song(current_song);
       }
 
-
-
-      bool Consume() {
-        status = mpd_run_status(conn);
-        return mpd_status_get_consume(status);
+      bool const Consume() const {
+        return status.at("consume") == "1";
       }
 
-      bool Random() {
-        status = mpd_run_status(conn);
-        return mpd_status_get_random(status);
+      bool const Random() const {
+        return status.at("random") == "1";
       }
 
-      void Stop() {
-        mpd_run_stop(conn);
-      }
-
-      void Play() {
-        mpd_run_play(conn);
-      }
-
-      void Pause() {
-        mpd_run_pause(conn, true);
-      }
-
-      void Resume() {
-        mpd_run_pause(conn, false);
-      }
-
-      void Next() {
-        mpd_run_next(conn);
-      }
-
-      void Previous() {
-        mpd_run_previous(conn);
-      }
-
-      bool PauseToggle() {
-        bool newstate = !IsPaused();
-        mpd_run_pause(conn, newstate);
-        return newstate;
+      bool const Single() const {
+        return status.at("single") == "1";
       }
 
       bool ConsumeToggle() {
-        status = mpd_run_status(conn);
-        bool newstate = !mpd_status_get_consume(status);
-        mpd_run_consume(conn, newstate);
-        return newstate;
+        SimpleCommand(fmt::format(
+            "consume {}",
+            Consume() ? "0" : "1"
+          ));
       }
 
       bool RandomToggle() {
-        status = mpd_run_status(conn);
-        bool newstate = !mpd_status_get_random(status);
-        mpd_run_random(conn, newstate);
-        return newstate;
+        SimpleCommand(fmt::format(
+            "random {}",
+            Random() ? "0" : "1"
+          ));
+      }
+
+      bool SingleToggle() {
+        SimpleCommand(fmt::format(
+            "single {}",
+            Single() ? "0" : "1"
+          ));
+      }
+
+
+      void Stop() {
+        SimpleCommand("stop");
+      }
+
+      void Play() {
+        SimpleCommand("play");
+      }
+
+      void Pause() {
+        SimpleCommand("pause 1");
+      }
+
+      void Resume() {
+        SimpleCommand("pause 0");
+      }
+
+      void Next() {
+        SimpleCommand("next");
+      }
+
+      void Previous() {
+        SimpleCommand("previous");
       }
 
       SongList Queue() {
-        std::list<Song> queue;
-        mpd_send_list_queue_meta(conn);
-        struct mpd_song *song;
-        while ((song = mpd_recv_song(conn)) != NULL) {
-          queue.emplace_back(conn, song);
+        SongList songs;
+        for (auto const& song : queue) {
+          songs.emplace_back(song);
         }
-        return queue;
+        return songs;
       }
 
       OutputList Outputs() {
         OutputList outputs;
-        mpd_send_outputs(conn);
-        struct mpd_output *output;
-        while ((output = mpd_recv_output(conn)) != NULL) {
-          outputs.emplace_back(conn, output);
+        for (auto const& output : outputdata) {
+          outputs.emplace_back(output);
         }
         return outputs;
       }
 
-      ~Client() {
-        mpd_connection_free(conn);
+
+    protected:
+
+      void SimpleCommand(std::string command) {
+        SendCommandRequest(
+            command,
+            [this](){ ReadEmptyResponse(); }
+          );
       }
+
+      void ReadEmptyResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadEmptyResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                cout << fmt::format("ReadEmptyResponse: OK\n");
+              }
+              else {
+                cout << fmt::format("ReadEmptyResponse: Error: {}\n", line);
+              }
+            });
+      }
+
+      void ReadVersion() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadVersion: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              auto words = line_to_words(line);
+              std::string version = words[2];
+              cout << fmt::format("server version: {}\n", version);
+
+              SendCommandRequest("status", [this](){ ReadStatusResponse(); });
+            });
+      }
+
+      void SendCommandRequest(std::string const command, std::function<void()> response_handler) {
+        std::string send_command = command + '\n';
+
+        asio::async_write(io_socket, asio::buffer(send_command, send_command.size()),
+            [this, command, send_command, response_handler] (std::error_code ec, std::size_t length) {
+              if (ec) {
+                cout << fmt::format("SendCommandRequest<{}>: Error: {}\n", command, ec.message());
+                return;
+              }
+
+              cout << fmt::format("SendCommandRequest<{}>: Sent {} bytes, string is {} bytes.\n", command, length, send_command.size());
+
+              response_handler();
+            });
+      }
+
+      void ReadStatusResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadStatusResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                SendCommandRequest("currentsong", [this](){ ReadCurrentSongResponse(); });
+                return;
+              }
+
+              auto [key, val] = line_to_pair(line);
+              status[key] = val;
+
+              ReadStatusResponse();
+            });
+      }
+
+      void ReadCurrentSongResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadCurrentSongResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              cout << fmt::format("ReadCurrentSongResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                SendCommandRequest("playlistinfo", [this](){ ReadQueueResponse(); });
+                return;
+              }
+
+              auto [key, val] = line_to_pair(line);
+              current_song[key] = val;
+
+              ReadCurrentSongResponse();
+            });
+      }
+
+      void ReadQueueResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadQueueResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                SendCommandRequest("outputs", [this](){ ReadOutputsResponse(); });
+                return;
+              }
+
+              auto [key, val] = line_to_pair(line);
+
+              if (key == "file") {
+                queue.emplace_back();
+                queue.back()[key] = val;
+              }
+              else {
+                queue.back()[key] = val;
+              }
+
+              ReadQueueResponse();
+            });
+      }
+
+      void ReadOutputsResponse() {
+        asio::async_read_until(io_socket, read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadOutputsResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              cout << fmt::format("ReadOutputsResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                emit signal_command_completed();
+                ConsumeToggle();
+                return;
+              }
+
+              auto [key, val] = line_to_pair(line);
+
+              if (key == "outputid") {
+                outputdata.emplace_back();
+                outputdata.back()[key] = val;
+              }
+              else {
+                outputdata.back()[key] = val;
+              }
+
+              ReadOutputsResponse();
+            });
+      }
+
   };
-}
+
+} // namespace mpdxx

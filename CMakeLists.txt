@@ -17,8 +17,6 @@ set(CMAKE_MODULE_PATH
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-find_package(LibMPDClient REQUIRED)
-
 add_library(LibMiso INTERFACE)
 target_include_directories(LibMiso INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/include/miso
@@ -32,7 +30,6 @@ target_include_directories(LibMPDXX INTERFACE
 add_executable(IsoMPD src/isompd.cpp)
 target_link_libraries(IsoMPD
   ${CONAN_LIBS}
-  ${LIBMPDCLIENT_LIBRARY}
   LibMiso
   LibMPDXX
   -lSDL2_gfx

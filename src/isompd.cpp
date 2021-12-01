@@ -5,6 +5,9 @@
 #include <assert.h>
 #include <vector>
 
+#include <asio.hpp>
+#include <thread>
+
 #include <fmt/core.h>
 
 #include <SDL2/SDL.h>
@@ -27,13 +30,27 @@
 #include "progressbar.h"
 
 
+using asio::ip::tcp;
+
+
 bool drawdebug = false;
+
 
 int main(int argc, char* argv[])
 {
   printf("INIT\n");
 
   srand(time(NULL));
+
+  asio::io_context io_context;
+  auto work_guard = asio::make_work_guard(io_context);
+
+  std::thread io_thread([&io_context](){
+    io_context.run();
+  });
+
+  mpdxx::Client mpdc(io_context);
+  mpdc.Connect("localhost", "6600");
 
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
@@ -65,7 +82,8 @@ int main(int argc, char* argv[])
 
   MpdFrame mpdframe{
       window.grid,
-      window
+      window,
+      mpdc
     };
   window.Add(&mpdframe);
 
@@ -145,6 +163,9 @@ int main(int argc, char* argv[])
 
     SDL_RenderPresent(window.sdl_renderer);
   }
+
+  work_guard.reset();
+  io_thread.join();
 
   return 0;
 }

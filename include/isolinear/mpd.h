@@ -39,14 +39,14 @@ class View : public Drawable {
 
 class MPDView : public View {
   protected:
-    MPDXX::Client& mpd;
+    mpdxx::Client& mpdc;
     Window& window;
 
   public:
-    MPDView(std::string t, Grid g, Window& w, MPDXX::Client& _mpd)
+    MPDView(std::string t, Grid g, Window& w, mpdxx::Client& _mpdc)
       : View(t, g)
       , window{w}
-      , mpd{_mpd}
+      , mpdc{_mpdc}
     {};
 };
 
@@ -61,8 +61,8 @@ class NowPlayingView : public MPDView {
     HorizontalProgressBar progress;
 
   public:
-    NowPlayingView(Grid g, Window& w, MPDXX::Client& _mpd)
-      : MPDView("NOW PLAYING", g, w, _mpd)
+    NowPlayingView(Grid g, Window& w, mpdxx::Client& _mpdc)
+      : MPDView("NOW PLAYING", g, w, _mpdc)
       , title(g.Rows(3,4), w, "TITLE", "[title]")
       , album(g.Rows(5,6), w, "ALBUM", "[album]")
       , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
@@ -77,14 +77,14 @@ class NowPlayingView : public MPDView {
     }
 
     void Update() override {
-      if (mpd.IsPlaying() || mpd.IsPaused()) {
-        MPDXX::Song now = mpd.CurrentlyPlaying();
+      if (mpdc.IsPlaying() || mpdc.IsPaused()) {
+        mpdxx::Song now = mpdc.CurrentlyPlaying();
         title.Right(now.Title());
         album.Right(now.Album());
         artist.Right(now.Artist());
-        duration.Right(mpd.ElapsedTimeString() + " / " + now.DurationString());
+        duration.Right(mpdc.ElapsedTimeString() + " / " + now.DurationString());
         progress.Max(now.DurationSeconds());
-        progress.Val(mpd.ElapsedTimeSeconds());
+        progress.Val(mpdc.ElapsedTimeSeconds());
         hide = false;
       }
       else {
@@ -104,12 +104,12 @@ class NowPlayingView : public MPDView {
 
 class QueueSongBar : public EastHeaderBar {
   protected:
-    MPDXX::Song song;
+    mpdxx::Song song;
     Button& playbtn;
     Button& deletebtn;
 
   public:
-    QueueSongBar(Grid g, Window& w, MPDXX::Song s)
+    QueueSongBar(Grid g, Window& w, mpdxx::Song s)
       : EastHeaderBar(g, w, Compass::EAST, s.Title())
       , song(s)
       , playbtn(AddButton("PLAY"))
@@ -119,27 +119,22 @@ class QueueSongBar : public EastHeaderBar {
 
       RegisterChild(&playbtn);
       RegisterChild(&deletebtn);
-
-      miso::connect(playbtn.signal_press, [this](){
-        song.Play();
-      });
-      miso::connect(deletebtn.signal_press, [](){});
     }
 };
 
 
 class QueueView : public MPDView {
   protected:
-    MPDXX::SongList queue;
+    mpdxx::SongList queue;
     std::list<QueueSongBar> songbars;
 
   public:
-    QueueView(Grid g, Window& w, MPDXX::Client& _mpd)
-      : MPDView("QUEUE", g, w, _mpd)
+    QueueView(Grid g, Window& w, mpdxx::Client& _mpdc)
+      : MPDView("QUEUE", g, w,  _mpdc)
     {}
 
     void Update() {
-      queue = mpd.Queue();
+      queue = mpdc.Queue();
       songbars.clear();
 
       int i = 1;
@@ -163,14 +158,14 @@ class QueueView : public MPDView {
 
 class OutputsView : public MPDView {
   protected:
-    MPDXX::OutputList outputs;
+    mpdxx::OutputList outputs;
     std::list<EastHeaderBar> bars;
 
   public:
-    OutputsView(Grid g, Window& w, MPDXX::Client& _mpd)
-      : MPDView("OUTPUTS", g, w, _mpd)
+    OutputsView(Grid g, Window& w, mpdxx::Client& _mpdc)
+      : MPDView("OUTPUTS", g, w, _mpdc)
     {
-      outputs = mpd.Outputs();
+      outputs = mpdc.Outputs();
       int i = 1;
       for (auto& output : outputs) {
         bars.emplace_back(
@@ -189,11 +184,11 @@ class OutputsView : public MPDView {
           Button* btnptr = miso::sender<Button>();
 
           if (output.Enabled()) {
-            output.Disable();
+            //output.Disable();
             btnptr->Deactivate();
           }
           else {
-            output.Enable();
+            //output.Enable();
             btnptr->Activate();
           }
         });
@@ -213,7 +208,7 @@ class MpdFrame : public Drawable {
     const std::string V_SEARCH = "SEARCH";
     const std::string V_OUTPUTS = "OUTPUTS";
 
-    MPDXX::Client mpd;
+    mpdxx::Client& mpdc;
 
     CompassLayout layout;
 
@@ -228,27 +223,23 @@ class MpdFrame : public Drawable {
 
     NowPlayingView viewNowPlaying;
     QueueView viewQueue;
-    View viewBrowse;
-    View viewArtists;
-    View viewSearch;
     OutputsView viewOutputs;
 
 
   public:
-    MpdFrame(Grid g, Window& w)
+    MpdFrame(Grid g, Window& w, mpdxx::Client& _mpdc)
         : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
         , hdrFrame{layout.North(), w, Compass::EAST, " MPD CONTROL "}
         , barView{w, layout.West()}
-        , playerControlBar{w, layout.South(), mpd}
+        , playerControlBar{w, layout.South(), mpdc}
         , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
         , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
 
-        , viewNowPlaying(layout.Centre(), w, mpd)
-        , viewQueue     (layout.Centre(), w, mpd)
-        , viewOutputs   (layout.Centre(), w, mpd)
-        , viewBrowse (V_BROWSE, layout.Centre())
-        , viewArtists(V_ARTISTS, layout.Centre())
-        , viewSearch (V_SEARCH, layout.Centre())
+        , mpdc(_mpdc)
+
+        , viewNowPlaying(layout.Centre(), w, mpdc)
+        , viewQueue     (layout.Centre(), w, mpdc)
+        , viewOutputs   (layout.Centre(), w, mpdc)
     {
       RegisterChild(&hdrFrame);
       RegisterChild(&barView);
@@ -258,9 +249,6 @@ class MpdFrame : public Drawable {
 
       RegisterView(&viewNowPlaying);
       RegisterView(&viewQueue);
-      RegisterView(&viewBrowse);
-      RegisterView(&viewArtists);
-      RegisterView(&viewSearch);
       RegisterView(&viewOutputs);
 
       auto switch_view = [this]() {
