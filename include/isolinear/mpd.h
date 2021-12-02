@@ -18,6 +18,9 @@
 #include "mpd/playercontrolbar.h"
 
 
+using std::cerr;
+
+
 class View : public Drawable {
   protected:
     std::string title;
@@ -139,7 +142,8 @@ class QueueView : public MPDView {
 
       int i = 1;
       for (auto& song : queue) {
-        auto& row = songbars.emplace_back(
+        cerr << fmt::format("Creating bar for: {}\n", song.Title());
+        /*auto& row = songbars.emplace_back(
             grid.Rows( i*2-1, i*2 ),
             window,
             song
@@ -150,7 +154,7 @@ class QueueView : public MPDView {
 
         if (i > 11) {
           break;
-        }
+        }*/
       }
     }
 };

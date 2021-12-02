@@ -24,6 +24,8 @@ class PlayerControlBar : public HorizontalButtonBar {
     Button& btnNext;
     Button& btnConsume;
     Button& btnRandom;
+    Button& btnSingle;
+    Button& btnRepeat;
 
   public:
     PlayerControlBar(Window& w, Grid g, mpdxx::Client& _mpd)
@@ -36,103 +38,54 @@ class PlayerControlBar : public HorizontalButtonBar {
       , btnNext(AddButton("NEXT"))
       , btnConsume(AddButton("CONSUME"))
       , btnRandom(AddButton("RANDOM"))
+      , btnSingle(AddButton("SINGLE"))
+      , btnRepeat(AddButton("REPEAT"))
     {
+      miso::connect(mpd.signal_status, [this](mpdxx::StringMap status){
+        btnConsume.Active(status.at("consume") == "1");
+        btnRandom.Active(status.at("random") == "1");
+        btnSingle.Active(status.at("single") == "1");
+        btnRepeat.Active(status.at("repeat") == "1");
+
+        if (status.at("state") == "play") {
+          btnPlay.Activate();
+
+          btnPause.Enable();
+          btnStop.Enable();
+
+          btnPause.Deactivate();
+          btnStop.Deactivate();
+        }
+
+        if (status.at("state") == "pause") {
+          btnPlay.Activate();
+          btnPause.Activate();
+
+          btnStop.Deactivate();
+        }
+
+        if (status.at("state") == "stop") {
+          btnStop.Activate();
+
+          btnPause.Disable();
+
+          btnPlay.Deactivate();
+        }
+
+      });
+
       miso::connect(btnPlay.signal_press, [this]() {
-        if (mpd.IsStopped()) {
-          mpd.Play();
-
-          btnPlay.Enable();
-          btnPlay.Activate();
-
-          btnPause.Enable();
-          btnPause.Active();
-
-          btnStop.Enable();
-          btnStop.Deactivate();
-          return;
-        }
-
-        if (mpd.IsPaused()) {
-          mpd.Resume();
-
-          btnPlay.Enable();
-          btnPlay.Activate();
-
-          btnPause.Enable();
-          btnPause.Activate();
-
-          btnStop.Enable();
-          btnStop.Deactivate();
-          return;
-        }
-
-        if (mpd.IsPlaying()) {
-          mpd.Stop();
-
-          btnPlay.Enable();
-          btnPlay.Activate();
-
-          btnPause.Enable();
-          btnPause.Activate();
-
-          btnStop.Enable();
-          btnStop.Deactivate();
-          return;
-        }
+        mpd.RequestStatus();
       });
-
-      miso::connect(btnStop.signal_press, [this]() {
-        if (btnStop.Active()) {
-          mpd.Play();
-        }
-        else {
-          mpd.Stop();
-        }
-        btnPlay.Deactivate();
-        btnPause.Deactivate();
-        btnStop.Activate();
-      });
-
-      miso::connect(btnPrevious.signal_press, [this]() {
-        mpd.Previous();
-      });
-
-      miso::connect(btnNext.signal_press, [this]() {
-        mpd.Next();
-      });
-
-      miso::connect(btnPause.signal_press, [this]() {
-//        miso::sender<Button>()->Active(mpd.PauseToggle());
-      });
-
-      miso::connect(btnConsume.signal_press, [this]() {
-        miso::sender<Button>()->Active(mpd.ConsumeToggle());
-      });
-
-      miso::connect(btnRandom.signal_press, [this]() {
-        miso::sender<Button>()->Active(mpd.RandomToggle());
-      });
+      miso::connect(btnStop.signal_press, [this]() { });
+      miso::connect(btnPrevious.signal_press, [this]() { });
+      miso::connect(btnNext.signal_press, [this]() { });
+      miso::connect(btnPause.signal_press, [this]() { });
+      miso::connect(btnConsume.signal_press, [this]() { });
+      miso::connect(btnRandom.signal_press, [this]() { });
     }
 
     void Update() {
-      if (mpd.IsPlaying()) {
-        btnPlay.Activate();
-        btnPause.Enable();
-        btnPause.Deactivate();
-        btnStop.Deactivate();
-      }
-
-      if (mpd.IsPaused()) {
-        btnPlay.Activate();
-        btnPause.Activate();
-        btnStop.Deactivate();
-      }
-
-      if (mpd.IsStopped()) {
-        btnPlay.Deactivate();
-        btnPause.Disable();
-        btnStop.Activate();
-      }
 
       btnConsume.Active(mpd.Consume());
       btnRandom.Active(mpd.Random());

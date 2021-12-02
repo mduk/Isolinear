@@ -133,6 +133,13 @@ namespace mpdxx {
   using OutputList = std::list<Output>;
 
 
+  class Queue {
+    protected:
+      SongList songs;
+      std::string version;
+  };
+
+
   class Client {
     protected:
       asio::io_context& io_context;
@@ -147,12 +154,16 @@ namespace mpdxx {
 
     public:
       miso::signal<> signal_ready;
+      miso::signal<StringMap> signal_status;
 
     public:
       Client(asio::io_context& ioc)
         : io_context(ioc)
         , io_socket(io_context)
       {
+        miso::connect(signal_status, [this](StringMap _status){
+          SendCommandRequest("currentsong", [this](){ ReadCurrentSongResponse(); });
+        });
       }
 
       void Connect(std::string host, std::string port) {
@@ -168,6 +179,12 @@ namespace mpdxx {
 
               ReadVersion();
             });
+      }
+
+      void RequestStatus() {
+        SendCommandRequest("status", [this](){
+            ReadStatusResponse();
+        });
       }
 
       std::string const StatusString() const {
@@ -333,7 +350,7 @@ namespace mpdxx {
               std::string version = words[2];
               cout << fmt::format("server version: {}\n", version);
 
-              SendCommandRequest("status", [this](){ ReadStatusResponse(); });
+              RequestStatus();
             });
       }
 
@@ -370,7 +387,7 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                SendCommandRequest("currentsong", [this](){ ReadCurrentSongResponse(); });
+                emit signal_status(status);
                 return;
               }
 
@@ -462,7 +479,6 @@ namespace mpdxx {
 
               if (line == "OK") {
                 emit signal_ready();
-                ConsumeToggle();
                 return;
               }
 
