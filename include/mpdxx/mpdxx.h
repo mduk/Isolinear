@@ -227,28 +227,50 @@ namespace mpdxx {
         return status.at("random") == "1";
       }
 
+      bool const Repeat() const {
+        return status.at("repeat") == "1";
+      }
+
       bool const Single() const {
         return status.at("single") == "1";
       }
 
-      bool ConsumeToggle() {
+      bool TogglePause() {
+        if (IsPaused()) {
+          Resume();
+        }
+        else {
+          Pause();
+        }
+
+        return !IsPaused();
+      }
+
+      bool ToggleConsume() {
         SimpleCommand(fmt::format(
             "consume {}",
             Consume() ? "0" : "1"
           ));
       }
 
-      bool RandomToggle() {
+      bool ToggleRandom() {
         SimpleCommand(fmt::format(
             "random {}",
             Random() ? "0" : "1"
           ));
       }
 
-      bool SingleToggle() {
+      bool ToggleSingle() {
         SimpleCommand(fmt::format(
             "single {}",
             Single() ? "0" : "1"
+          ));
+      }
+
+      bool ToggleRepeat() {
+        SimpleCommand(fmt::format(
+            "repeat {}",
+            Repeat() ? "0" : "1"
           ));
       }
 
@@ -327,6 +349,7 @@ namespace mpdxx {
 
               if (line == "OK") {
                 cout << fmt::format("ReadEmptyResponse: OK\n");
+                RequestStatus();
               }
               else {
                 cout << fmt::format("ReadEmptyResponse: Error: {}\n", line);

@@ -74,20 +74,16 @@ class PlayerControlBar : public HorizontalButtonBar {
 
       });
 
-      miso::connect(btnPlay.signal_press, [this]() {
-        mpd.RequestStatus();
-      });
-      miso::connect(btnStop.signal_press, [this]() { });
-      miso::connect(btnPrevious.signal_press, [this]() { });
-      miso::connect(btnNext.signal_press, [this]() { });
-      miso::connect(btnPause.signal_press, [this]() { });
-      miso::connect(btnConsume.signal_press, [this]() { });
-      miso::connect(btnRandom.signal_press, [this]() { });
+      miso::connect(    btnPlay.signal_press, [this]() { mpd.Play();          });
+      miso::connect(    btnStop.signal_press, [this]() { mpd.Stop();          });
+      miso::connect(btnPrevious.signal_press, [this]() { mpd.Previous();      });
+      miso::connect(    btnNext.signal_press, [this]() { mpd.Next();          });
+      miso::connect(   btnPause.signal_press, [this]() { mpd.TogglePause();   });
+      miso::connect( btnConsume.signal_press, [this]() { mpd.ToggleConsume(); });
+      miso::connect(  btnRandom.signal_press, [this]() { mpd.ToggleRandom();  });
+      miso::connect(  btnRandom.signal_press, [this]() { mpd.ToggleSingle();  });
+      miso::connect(  btnRandom.signal_press, [this]() { mpd.ToggleRepeat();  });
     }
 
-    void Update() {
-
-      btnConsume.Active(mpd.Consume());
-      btnRandom.Active(mpd.Random());
-    }
+    void Update() { }
 };
