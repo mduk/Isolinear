@@ -143,14 +143,18 @@ namespace mpdxx {
   class Client {
     protected:
       asio::io_context& io_context;
-      asio::ip::tcp::socket io_socket;
+
+      asio::ip::tcp::socket command_socket;
+      asio::ip::tcp::socket idle_socket;
+
+      asio::streambuf command_read_buffer;
+      asio::streambuf idle_read_buffer;
 
       StringMap status;
       StringMap current_song;
       std::list<StringMap> queue;
       std::list<StringMap> outputdata;
 
-      asio::streambuf read_buffer;
 
     public:
       miso::signal<>          signal_connected;
@@ -162,7 +166,8 @@ namespace mpdxx {
     public:
       Client(asio::io_context& ioc)
         : io_context(ioc)
-        , io_socket(io_context)
+        , command_socket(io_context)
+        , idle_socket(io_context)
       {
         miso::connect(signal_connected, [this](){
           RequestStatus();
@@ -180,9 +185,24 @@ namespace mpdxx {
 
       void Connect(std::string host, std::string port) {
         tcp::resolver resolver(io_context);
-        auto io_endpoints = resolver.resolve(host, port);
 
-        asio::async_connect(io_socket, io_endpoints,
+        asio::async_connect(idle_socket, resolver.resolve(host, port),
+            [this](std::error_code ec, tcp::endpoint) {
+              if (ec) {
+                cout << "connect error: " << ec.message() << "\n";
+                return;
+              }
+
+              cout << "Idle socket connected\n";
+              asio::read_until(idle_socket, idle_read_buffer, '\n');
+              std::istream is(&idle_read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              cout << "[[[" << line << "]]]\n";
+            });
+
+        asio::async_connect(command_socket, resolver.resolve(host, port),
             [this](std::error_code ec, tcp::endpoint) {
               if (ec) {
                 cout << "connect error: " << ec.message() << "\n";
@@ -345,14 +365,14 @@ namespace mpdxx {
       }
 
       void ReadEmptyResponse() {
-        asio::async_read_until(io_socket, read_buffer, '\n',
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadEmptyResponse: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&read_buffer);
+              std::istream is(&command_read_buffer);
               std::string line;
               std::getline(is, line);
 
@@ -369,14 +389,14 @@ namespace mpdxx {
       }
 
       void ReadVersion() {
-        asio::async_read_until(io_socket, read_buffer, '\n',
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadVersion: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&read_buffer);
+              std::istream is(&command_read_buffer);
               std::string line;
               std::getline(is, line);
 
@@ -391,7 +411,7 @@ namespace mpdxx {
       void SendCommandRequest(std::string const command, std::function<void()> response_handler) {
         std::string send_command = command + '\n';
 
-        asio::async_write(io_socket, asio::buffer(send_command, send_command.size()),
+        asio::async_write(command_socket, asio::buffer(send_command, send_command.size()),
             [this, command, send_command, response_handler] (std::error_code ec, std::size_t length) {
               if (ec) {
                 cout << fmt::format("SendCommandRequest<{}>: Error: {}\n", command, ec.message());
@@ -405,14 +425,14 @@ namespace mpdxx {
       }
 
       void ReadStatusResponse() {
-        asio::async_read_until(io_socket, read_buffer, '\n',
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadStatusResponse: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&read_buffer);
+              std::istream is(&command_read_buffer);
               std::string line;
               std::getline(is, line);
 
@@ -433,14 +453,14 @@ namespace mpdxx {
       }
 
       void ReadCurrentSongResponse() {
-        asio::async_read_until(io_socket, read_buffer, '\n',
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadCurrentSongResponse: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&read_buffer);
+              std::istream is(&command_read_buffer);
               std::string line;
               std::getline(is, line);
 
@@ -461,14 +481,14 @@ namespace mpdxx {
       }
 
       void ReadQueueResponse() {
-        asio::async_read_until(io_socket, read_buffer, '\n',
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadQueueResponse: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&read_buffer);
+              std::istream is(&command_read_buffer);
               std::string line;
               std::getline(is, line);
 
@@ -496,14 +516,14 @@ namespace mpdxx {
       }
 
       void ReadOutputsResponse() {
-        asio::async_read_until(io_socket, read_buffer, '\n',
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadOutputsResponse: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&read_buffer);
+              std::istream is(&command_read_buffer);
               std::string line;
               std::getline(is, line);
 
