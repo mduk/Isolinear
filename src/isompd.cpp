@@ -51,19 +51,22 @@ int main(int argc, char* argv[])
 
   mpdxx::Client mpdc(io_context);
 
-  miso::connect(mpdc.signal_ready, [&mpdc](){
+  miso::connect(mpdc.signal_status, [&mpdc](mpdxx::StringMap status){
     cout << "Status:\n";
-    auto status = mpdc.Status();
     for (auto const& [ key, val ] : status) {
       cout << fmt::format("  - {} = {}\n", key, val);
     }
+  });
 
+  miso::connect(mpdc.signal_outputs, [&mpdc](){
     cout << "Outputs:\n";
     auto outputs = mpdc.Outputs();
     for (auto const& output : outputs) {
-      cout << fmt::format("  - ({}) {}\n", output.ID(), output.Name());
+      cout << fmt::format(" - ({}) {}", output.ID(), output.Name());
     }
+  });
 
+  miso::connect(mpdc.signal_queue, [&mpdc](){
     cout << "Current Song:\n";
     auto current_song = mpdc.CurrentSong();
     for (auto const& [ key, val ] : current_song) {

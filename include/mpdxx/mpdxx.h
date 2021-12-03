@@ -153,16 +153,28 @@ namespace mpdxx {
       asio::streambuf read_buffer;
 
     public:
-      miso::signal<> signal_ready;
+      miso::signal<>          signal_connected;
       miso::signal<StringMap> signal_status;
+      miso::signal<StringMap> signal_current_song;
+      miso::signal<>          signal_queue;
+      miso::signal<>          signal_outputs;
 
     public:
       Client(asio::io_context& ioc)
         : io_context(ioc)
         , io_socket(io_context)
       {
-        miso::connect(signal_status, [this](StringMap _status){
-          SendCommandRequest("currentsong", [this](){ ReadCurrentSongResponse(); });
+        miso::connect(signal_connected, [this](){
+          RequestStatus();
+        });
+        miso::connect(signal_status, [this](StringMap){
+          RequestCurrentSong();
+        });
+        miso::connect(signal_current_song, [this](StringMap){
+          RequestQueue();
+        });
+        miso::connect(signal_queue, [this](){
+          RequestOutputs();
         });
       }
 
@@ -181,11 +193,10 @@ namespace mpdxx {
             });
       }
 
-      void RequestStatus() {
-        SendCommandRequest("status", [this](){
-            ReadStatusResponse();
-        });
-      }
+      void RequestStatus()      { SendCommandRequest("status",       [this](){ ReadStatusResponse();      }); }
+      void RequestCurrentSong() { SendCommandRequest("currentsong",  [this](){ ReadCurrentSongResponse(); }); }
+      void RequestQueue()       { SendCommandRequest("playlistinfo", [this](){ ReadQueueResponse();       }); }
+      void RequestOutputs()     { SendCommandRequest("outputs",      [this](){ ReadOutputsResponse();     }); }
 
       std::string const StatusString() const {
         return status.at("state");
@@ -373,7 +384,7 @@ namespace mpdxx {
               std::string version = words[2];
               cout << fmt::format("server version: {}\n", version);
 
-              RequestStatus();
+              emit signal_connected();
             });
       }
 
@@ -438,7 +449,7 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                SendCommandRequest("playlistinfo", [this](){ ReadQueueResponse(); });
+                emit signal_current_song(current_song);
                 return;
               }
 
@@ -466,7 +477,7 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                SendCommandRequest("outputs", [this](){ ReadOutputsResponse(); });
+                emit signal_queue();
                 return;
               }
 
@@ -501,7 +512,7 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                emit signal_ready();
+                emit signal_outputs();
                 return;
               }
 
