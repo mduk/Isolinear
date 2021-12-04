@@ -77,22 +77,17 @@ class NowPlayingView : public MPDView {
       RegisterChild(&artist);
       RegisterChild(&duration);
       RegisterChild(&progress);
-    }
 
-    void Update() override {
-      if (mpdc.IsPlaying() || mpdc.IsPaused()) {
-        mpdxx::Song now = mpdc.CurrentlyPlaying();
-        title.Right(now.Title());
-        album.Right(now.Album());
-        artist.Right(now.Artist());
-        duration.Right(mpdc.ElapsedTimeString() + " / " + now.DurationString());
-        progress.Max(now.DurationSeconds());
-        progress.Val(mpdc.ElapsedTimeSeconds());
-        hide = false;
-      }
-      else {
-        hide = true;
-      }
+      miso::connect(mpdc.signal_status, [this](mpdxx::StringMap status){
+        hide = (status.at("state") == "stop");
+      });
+
+      miso::connect(mpdc.signal_current_song, [this](mpdxx::StringMap current_song){
+        title.Right(current_song.at("Title"));
+        album.Right(current_song.at("Album"));
+        artist.Right(current_song.at("Artist"));
+        duration.Right(current_song.at("duration"));
+      });
     }
 
     void Draw(SDL_Renderer* renderer) const override {

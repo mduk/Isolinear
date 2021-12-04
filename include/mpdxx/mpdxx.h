@@ -198,6 +198,8 @@ namespace mpdxx {
               std::istream is(&idle_read_buffer);
               std::string line;
               std::getline(is, line);
+
+              SendIdleRequest();
             });
 
         asio::async_connect(command_socket, resolver.resolve(host, port),
@@ -315,18 +317,30 @@ namespace mpdxx {
     protected:
 
       void SendIdleRequest() {
-        SendCommandRequest("idle player playlist", [this](){ ReadIdleResponse(); });
-      }
+        std::string send_command = "idle player playlist\n";
 
-      void ReadIdleResponse() {
-        asio::async_read_until(command_socket, command_read_buffer, '\n',
-            [this] (std::error_code ec, std::size_t bytes_transferred) {
+        asio::async_write(idle_socket, asio::buffer(send_command, send_command.size()),
+            [this, send_command] (std::error_code ec, std::size_t length) {
               if (ec) {
-                cout << fmt::format("ReadEmptyResponse: Error: {}\n", ec.message());
+                cout << fmt::format("SendIdleRequest: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&command_read_buffer);
+              cout << fmt::format("SendIdleRequest: Sent {} bytes, string is {} bytes.\n", length, send_command.size());
+
+              ReadIdleResponse();
+            });
+      }
+
+      void ReadIdleResponse() {
+        asio::async_read_until(idle_socket, idle_read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadIdleResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&idle_read_buffer);
               std::string line;
               std::getline(is, line);
 
@@ -336,10 +350,12 @@ namespace mpdxx {
               if (val == "player") {
                 cout << "Player changed, refreshing status\n";
                 RequestStatus();
+                SendIdleRequest();
               }
               if (val == "playlist") {
                 cout << "Playlist changed, refreshing queue\n";
                 RequestQueue();
+                SendIdleRequest();
               }
             });
       }
@@ -423,11 +439,12 @@ namespace mpdxx {
               std::string line;
               std::getline(is, line);
 
-              cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+              //cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
               trim(line);
 
               if (line == "OK") {
+                cout << fmt::format("ReadStatusResponse: OK\n");
                 emit signal_status(status);
                 return;
               }
@@ -451,11 +468,12 @@ namespace mpdxx {
               std::string line;
               std::getline(is, line);
 
-              cout << fmt::format("ReadCurrentSongResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+              //cout << fmt::format("ReadCurrentSongResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
               trim(line);
 
               if (line == "OK") {
+                cout << fmt::format("ReadCurrentSongResponse: OK\n");
                 emit signal_current_song(current_song);
                 return;
               }
@@ -479,11 +497,12 @@ namespace mpdxx {
               std::string line;
               std::getline(is, line);
 
-              cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+              //cout << fmt::format("ReadQueueResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
               trim(line);
 
               if (line == "OK") {
+                cout << fmt::format("ReadQueueResponse: OK\n");
                 emit signal_queue();
                 return;
               }
@@ -514,11 +533,12 @@ namespace mpdxx {
               std::string line;
               std::getline(is, line);
 
-              cout << fmt::format("ReadOutputsResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+              //cout << fmt::format("ReadOutputsResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
               trim(line);
 
               if (line == "OK") {
+                cout << fmt::format("ReadOutputsResponse: OK\n");
                 emit signal_outputs();
                 return;
               }
