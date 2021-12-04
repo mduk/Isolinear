@@ -198,8 +198,6 @@ namespace mpdxx {
               std::istream is(&idle_read_buffer);
               std::string line;
               std::getline(is, line);
-
-              cout << "[[[" << line << "]]]\n";
             });
 
         asio::async_connect(command_socket, resolver.resolve(host, port),
@@ -277,58 +275,17 @@ namespace mpdxx {
         return !IsPaused();
       }
 
-      bool ToggleConsume() {
-        SimpleCommand(fmt::format(
-            "consume {}",
-            Consume() ? "0" : "1"
-          ));
-      }
+      bool ToggleConsume() { SimpleCommand(fmt::format( "consume {}", Consume() ? "0" : "1")); }
+      bool ToggleRandom()  { SimpleCommand(fmt::format( "random {}",  Random()  ? "0" : "1")); }
+      bool ToggleSingle()  { SimpleCommand(fmt::format( "single {}",  Single()  ? "0" : "1")); }
+      bool ToggleRepeat()  { SimpleCommand(fmt::format( "repeat {}",  Repeat()  ? "0" : "1")); }
 
-      bool ToggleRandom() {
-        SimpleCommand(fmt::format(
-            "random {}",
-            Random() ? "0" : "1"
-          ));
-      }
-
-      bool ToggleSingle() {
-        SimpleCommand(fmt::format(
-            "single {}",
-            Single() ? "0" : "1"
-          ));
-      }
-
-      bool ToggleRepeat() {
-        SimpleCommand(fmt::format(
-            "repeat {}",
-            Repeat() ? "0" : "1"
-          ));
-      }
-
-
-      void Stop() {
-        SimpleCommand("stop");
-      }
-
-      void Play() {
-        SimpleCommand("play");
-      }
-
-      void Pause() {
-        SimpleCommand("pause 1");
-      }
-
-      void Resume() {
-        SimpleCommand("pause 0");
-      }
-
-      void Next() {
-        SimpleCommand("next");
-      }
-
-      void Previous() {
-        SimpleCommand("previous");
-      }
+      void Stop()     { SimpleCommand("stop");     }
+      void Play()     { SimpleCommand("play");     }
+      void Pause()    { SimpleCommand("pause 1");  }
+      void Resume()   { SimpleCommand("pause 0");  }
+      void Next()     { SimpleCommand("next");     }
+      void Previous() { SimpleCommand("previous"); }
 
       StringMap Status() {
         return status;
@@ -356,6 +313,36 @@ namespace mpdxx {
 
 
     protected:
+
+      void SendIdleRequest() {
+        SendCommandRequest("idle player playlist", [this](){ ReadIdleResponse(); });
+      }
+
+      void ReadIdleResponse() {
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadEmptyResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&command_read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              trim(line);
+
+              auto [key, val] = line_to_pair(line);
+              if (val == "player") {
+                cout << "Player changed, refreshing status\n";
+                RequestStatus();
+              }
+              if (val == "playlist") {
+                cout << "Playlist changed, refreshing queue\n";
+                RequestQueue();
+              }
+            });
+      }
 
       void SimpleCommand(std::string command) {
         SendCommandRequest(
