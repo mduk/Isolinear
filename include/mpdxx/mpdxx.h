@@ -161,7 +161,7 @@ namespace mpdxx {
       miso::signal<StringMap>            signal_status;
       miso::signal<StringMap>            signal_current_song;
       miso::signal<std::list<StringMap>> signal_queue;
-      miso::signal<>                     signal_outputs;
+      miso::signal<std::list<StringMap>> signal_outputs;
 
     public:
       Client(asio::io_context& ioc)
@@ -523,7 +523,7 @@ namespace mpdxx {
 
               if (line == "OK") {
                 cout << fmt::format("ReadOutputsResponse: OK\n");
-                emit signal_outputs();
+                emit signal_outputs(outputdata);
                 return;
               }
 
