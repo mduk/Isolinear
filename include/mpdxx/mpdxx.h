@@ -157,11 +157,11 @@ namespace mpdxx {
 
 
     public:
-      miso::signal<>          signal_connected;
-      miso::signal<StringMap> signal_status;
-      miso::signal<StringMap> signal_current_song;
-      miso::signal<>          signal_queue;
-      miso::signal<>          signal_outputs;
+      miso::signal<>                     signal_connected;
+      miso::signal<StringMap>            signal_status;
+      miso::signal<StringMap>            signal_current_song;
+      miso::signal<std::list<StringMap>> signal_queue;
+      miso::signal<>                     signal_outputs;
 
     public:
       Client(asio::io_context& ioc)
@@ -178,7 +178,7 @@ namespace mpdxx {
         miso::connect(signal_current_song, [this](StringMap){
           RequestQueue();
         });
-        miso::connect(signal_queue, [this](){
+        miso::connect(signal_queue, [this](std::list<StringMap>){
           RequestOutputs();
         });
       }
@@ -487,7 +487,7 @@ namespace mpdxx {
 
               if (line == "OK") {
                 cout << fmt::format("ReadQueueResponse: OK\n");
-                emit signal_queue();
+                emit signal_queue(queue);
                 return;
               }
 

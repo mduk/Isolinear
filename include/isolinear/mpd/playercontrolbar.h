@@ -27,6 +27,8 @@ class PlayerControlBar : public HorizontalButtonBar {
     Button& btnSingle;
     Button& btnRepeat;
 
+    int queue_length = 0;
+
   public:
     PlayerControlBar(Window& w, Grid g, mpdxx::Client& _mpd)
       : HorizontalButtonBar(w, g)
@@ -41,6 +43,8 @@ class PlayerControlBar : public HorizontalButtonBar {
       , btnSingle(AddButton("SINGLE"))
       , btnRepeat(AddButton("REPEAT"))
     {
+      miso::connect(mpd.signal_queue, [this](std::list<mpdxx::StringMap>){});
+
       miso::connect(mpd.signal_status, [this](mpdxx::StringMap status){
         btnConsume.Active(status.at("consume") == "1");
         btnRandom.Active(status.at("random") == "1");
@@ -48,28 +52,39 @@ class PlayerControlBar : public HorizontalButtonBar {
         btnRepeat.Active(status.at("repeat") == "1");
 
         if (status.at("state") == "play") {
+          btnPlay.Enable();
           btnPlay.Activate();
 
           btnPause.Enable();
-          btnStop.Enable();
-
           btnPause.Deactivate();
+
+          btnStop.Enable();
           btnStop.Deactivate();
         }
 
         if (status.at("state") == "pause") {
+          btnPlay.Enable();
           btnPlay.Activate();
+
+          btnPause.Enable();
           btnPause.Activate();
 
+          btnStop.Enable();
           btnStop.Deactivate();
         }
 
         if (status.at("state") == "stop") {
+          btnStop.Enable();
           btnStop.Activate();
 
           btnPause.Disable();
 
           btnPlay.Deactivate();
+          if (queue_length > 0) {
+            btnPlay.Disable();
+          } else {
+            btnPlay.Enable();
+          }
         }
 
       });
