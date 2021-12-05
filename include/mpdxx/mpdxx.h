@@ -277,10 +277,10 @@ namespace mpdxx {
         return !IsPaused();
       }
 
-      bool ToggleConsume() { SimpleCommand(fmt::format( "consume {}", Consume() ? "0" : "1")); }
-      bool ToggleRandom()  { SimpleCommand(fmt::format( "random {}",  Random()  ? "0" : "1")); }
-      bool ToggleSingle()  { SimpleCommand(fmt::format( "single {}",  Single()  ? "0" : "1")); }
-      bool ToggleRepeat()  { SimpleCommand(fmt::format( "repeat {}",  Repeat()  ? "0" : "1")); }
+      void ToggleConsume() { SimpleCommand(fmt::format( "consume {}", Consume() ? "0" : "1")); }
+      void ToggleRandom()  { SimpleCommand(fmt::format( "random {}",  Random()  ? "0" : "1")); }
+      void ToggleSingle()  { SimpleCommand(fmt::format( "single {}",  Single()  ? "0" : "1")); }
+      void ToggleRepeat()  { SimpleCommand(fmt::format( "repeat {}",  Repeat()  ? "0" : "1")); }
 
       void Stop()     { SimpleCommand("stop");     }
       void Play()     { SimpleCommand("play");     }
