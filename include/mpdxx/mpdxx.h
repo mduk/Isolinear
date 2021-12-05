@@ -297,22 +297,6 @@ namespace mpdxx {
         return current_song;
       }
 
-      SongList Queue() {
-        SongList songs;
-        for (auto const& song : queue) {
-          songs.emplace_back(song);
-        }
-        return songs;
-      }
-
-      OutputList Outputs() {
-        OutputList outputs;
-        for (auto const& output : outputdata) {
-          outputs.emplace_back(output);
-        }
-        return outputs;
-      }
-
 
     protected:
 
