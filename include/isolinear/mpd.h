@@ -130,28 +130,6 @@ class QueueView : public MPDView {
     QueueView(Grid g, Window& w, mpdxx::Client& _mpdc)
       : MPDView("QUEUE", g, w,  _mpdc)
     {}
-
-    void Update() {
-      queue = mpdc.Queue();
-      songbars.clear();
-
-      int i = 1;
-      for (auto& song : queue) {
-        cerr << fmt::format("Creating bar for: {}\n", song.Title());
-        /*auto& row = songbars.emplace_back(
-            grid.Rows( i*2-1, i*2 ),
-            window,
-            song
-          );
-        row.Colours(Colours());
-        RegisterChild(&row);
-        i++;
-
-        if (i > 11) {
-          break;
-        }*/
-      }
-    }
 };
 
 
@@ -163,38 +141,7 @@ class OutputsView : public MPDView {
   public:
     OutputsView(Grid g, Window& w, mpdxx::Client& _mpdc)
       : MPDView("OUTPUTS", g, w, _mpdc)
-    {
-      outputs = mpdc.Outputs();
-      int i = 1;
-      for (auto& output : outputs) {
-        bars.emplace_back(
-            grid.Rows( i*2-1, i*2 ),
-            window,
-            Compass::EAST,
-            output.Name()
-          );
-
-        auto& bar = bars.back();
-        RegisterChild(&bar);
-
-        auto& button = bar.AddButton("ENABLED");
-        button.Active(output.Enabled());
-        miso::connect(button.signal_press, [&output]() {
-          Button* btnptr = miso::sender<Button>();
-
-          if (output.Enabled()) {
-            //output.Disable();
-            btnptr->Deactivate();
-          }
-          else {
-            //output.Enable();
-            btnptr->Activate();
-          }
-        });
-
-        i++;
-      }
-    }
+    {}
 };
 
 
