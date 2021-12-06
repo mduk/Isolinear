@@ -102,7 +102,8 @@ int main(int argc, char* argv[])
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
+  SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
+  mpdc.RequestStatus();
 
   while (running) {
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
