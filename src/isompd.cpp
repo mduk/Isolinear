@@ -46,9 +46,10 @@ int main(int argc, char* argv[])
   asio::io_context io_context;
   auto work_guard = asio::make_work_guard(io_context);
 
-  std::thread io_thread([&io_context](){
-    io_context.run();
-  });
+  std::vector<std::thread> thread_pool;
+  for (size_t i = 0; i < std::thread::hardware_concurrency(); i++){
+    thread_pool.emplace_back([&io_context](){ io_context.run(); });
+  }
 
   mpdxx::Client mpdc(io_context);
 
@@ -119,7 +120,6 @@ SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
         case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE:
-              io_context.stop();
               running = false;
               break;
             case 'd': window.Colours(debug_colours); break;
@@ -179,8 +179,11 @@ SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
     SDL_RenderPresent(window.sdl_renderer);
   }
 
+  io_context.stop();
   work_guard.reset();
-  io_thread.join();
+  for(auto& thread : thread_pool) {
+    thread.join();
+  }
 
   return 0;
 }
