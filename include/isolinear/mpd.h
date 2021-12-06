@@ -123,13 +123,30 @@ class QueueSongBar : public EastHeaderBar {
 
 class QueueView : public MPDView {
   protected:
-    mpdxx::SongList queue;
     std::list<QueueSongBar> songbars;
 
   public:
     QueueView(Grid g, Window& w, mpdxx::Client& _mpdc)
       : MPDView("QUEUE", g, w,  _mpdc)
-    {}
+    {
+      miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::StringMap> queue){
+        songbars.clear();
+        children.clear();
+
+        int i = 1;
+        for (auto& song : queue) {
+          mpdxx::Song sng(song);
+          cout << fmt::format("QueueView<signal_queue> {}\n", sng.Title());
+          songbars.emplace_back(grid.Rows(2*i, (2*i)-1), window, sng);
+          auto& bar = songbars.back();
+          RegisterChild(&bar);
+          i++;
+          if (i == 11) {
+            break;
+          }
+        }
+      });
+    }
 };
 
 
