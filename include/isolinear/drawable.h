@@ -26,6 +26,7 @@ class Drawable {
 
     virtual void RegisterChild(Drawable* child) {
       children.push_back(child);
+      child->Colours(Colours());
     }
 
     virtual void Update() {
