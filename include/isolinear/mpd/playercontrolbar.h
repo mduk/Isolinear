@@ -6,11 +6,17 @@
 
 #include "miso.h"
 
+#include <iostream>
+#include <fmt/core.h>
+
 #include "geometry.h"
 #include "header.h"
 #include "window.h"
 #include "mpdxx.h"
 #include "buttonbar.h"
+
+
+using std::cout;
 
 
 class PlayerControlBar : public HorizontalButtonBar {
@@ -43,9 +49,16 @@ class PlayerControlBar : public HorizontalButtonBar {
       , btnSingle(AddButton("SINGLE"))
       , btnRepeat(AddButton("REPEAT"))
     {
-      miso::connect(mpd.signal_queue, [this](std::list<mpdxx::StringMap>){});
+      miso::connect(mpd.signal_queue, [this](std::list<mpdxx::StringMap> queue){
+        queue_length = queue.size();
+        cout << fmt::format("received new queue {}\n", queue_length);
+        for (auto& song : queue) {
+          cout << song.at("Title") << "\n";
+        }
+      });
 
       miso::connect(mpd.signal_status, [this](mpdxx::StringMap status){
+        cout << fmt::format("PlayerControlBar signal_status begin\n");
         btnConsume.Active(status.at("consume") == "1");
         btnRandom.Active(status.at("random") == "1");
         btnSingle.Active(status.at("single") == "1");
@@ -87,6 +100,7 @@ class PlayerControlBar : public HorizontalButtonBar {
           }
         }
 
+        cout << fmt::format("PlayerControlBar signal_status end\n");
       });
 
       miso::connect(    btnPlay.signal_press, [this]() { mpd.Play();          });

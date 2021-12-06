@@ -61,27 +61,27 @@ namespace mpdxx {
 
   class Output {
     protected:
-      StringMap const outputdata;
+      StringMap const outputs;
 
     public:
       Output(StringMap const od)
-        : outputdata(od)
+        : outputs(od)
       {}
 
       OutputID const ID() const {
-        return std::stoi(outputdata.at("outputid"));
+        return std::stoi(outputs.at("outputid"));
       }
 
       std::string const Name() const {
-        return outputdata.at("outputname");
+        return outputs.at("outputname");
       }
 
       std::string const Plugin() const {
-        return outputdata.at("plugin");
+        return outputs.at("plugin");
       }
 
       bool const Enabled() const {
-        return outputdata.at("outputenabled") == "1";
+        return outputs.at("outputenabled") == "1";
       }
 
   };
@@ -153,7 +153,7 @@ namespace mpdxx {
       StringMap status;
       StringMap current_song;
       std::list<StringMap> queue;
-      std::list<StringMap> outputdata;
+      std::list<StringMap> outputs;
 
 
     public:
@@ -168,20 +168,7 @@ namespace mpdxx {
         : io_context(ioc)
         , command_socket(io_context)
         , idle_socket(io_context)
-      {
-        miso::connect(signal_connected, [this](){
-          RequestStatus();
-        });
-        miso::connect(signal_status, [this](StringMap){
-          RequestCurrentSong();
-        });
-        miso::connect(signal_current_song, [this](StringMap){
-          RequestQueue();
-        });
-        miso::connect(signal_queue, [this](std::list<StringMap>){
-          RequestOutputs();
-        });
-      }
+      { }
 
       void Connect(std::string host, std::string port) {
         tcp::resolver resolver(io_context);
@@ -213,10 +200,33 @@ namespace mpdxx {
             });
       }
 
-      void RequestStatus()      { SendCommandRequest("status",       [this](){ ReadStatusResponse();      }); }
-      void RequestCurrentSong() { SendCommandRequest("currentsong",  [this](){ ReadCurrentSongResponse(); }); }
-      void RequestQueue()       { SendCommandRequest("playlistinfo", [this](){ ReadQueueResponse();       }); }
-      void RequestOutputs()     { SendCommandRequest("outputs",      [this](){ ReadOutputsResponse();     }); }
+      void RequestStatus() {
+        SendCommandRequest("status", [this](){
+          status.clear();
+          ReadStatusResponse();
+        });
+      }
+
+      void RequestOutputs() {
+        SendCommandRequest("outputs", [this](){
+          outputs.clear();
+          ReadOutputsResponse();
+        });
+      }
+
+      void RequestQueue() {
+        SendCommandRequest("playlistinfo", [this](){
+          queue.clear();
+          ReadQueueResponse();
+        });
+      }
+
+      void RequestCurrentSong() {
+        SendCommandRequest("currentsong",  [this](){
+          current_song.clear();
+          ReadCurrentSongResponse();
+        });
+      }
 
       std::string const StatusString() const {
         return status.at("state");
@@ -457,8 +467,16 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                cout << fmt::format("ReadCurrentSongResponse: OK\n");
-                emit signal_current_song(current_song);
+                cout << "ReadCurrentSongResponse: OK\n";
+
+                if (current_song.size() == 0) {
+                  cout << "ReadCurrentSongResponse: No current song.\n";
+                }
+                else {
+                  cout << "ReadCurrentSongResponse: Emit signal_current_song.\n";
+                  emit signal_current_song(current_song);
+                }
+
                 return;
               }
 
@@ -495,11 +513,9 @@ namespace mpdxx {
 
               if (key == "file") {
                 queue.emplace_back();
-                queue.back()[key] = val;
               }
-              else {
-                queue.back()[key] = val;
-              }
+
+              queue.back()[key] = val;
 
               ReadQueueResponse();
             });
@@ -523,19 +539,17 @@ namespace mpdxx {
 
               if (line == "OK") {
                 cout << fmt::format("ReadOutputsResponse: OK\n");
-                emit signal_outputs(outputdata);
+                emit signal_outputs(outputs);
                 return;
               }
 
               auto [key, val] = line_to_pair(line);
 
               if (key == "outputid") {
-                outputdata.emplace_back();
-                outputdata.back()[key] = val;
+                outputs.emplace_back();
               }
-              else {
-                outputdata.back()[key] = val;
-              }
+
+              outputs.back()[key] = val;
 
               ReadOutputsResponse();
             });

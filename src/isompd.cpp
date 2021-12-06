@@ -8,6 +8,7 @@
 #include <asio.hpp>
 #include <thread>
 
+#include <iostream>
 #include <fmt/core.h>
 
 #include <SDL2/SDL.h>
@@ -100,6 +101,7 @@ int main(int argc, char* argv[])
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
+SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
 
   while (running) {
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
@@ -120,13 +122,15 @@ int main(int argc, char* argv[])
               io_context.stop();
               running = false;
               break;
-            case 'c': SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY)); break;
             case 'd': window.Colours(debug_colours); break;
             case 'r': window.Colours(red_alert_colours); break;
             case 'y': window.Colours(yellow_alert_colours); break;
             case 'b': window.Colours(blue_alert_colours); break;
             case 'n': window.Colours(nightgazer_colours); break;
             case 'g': drawdebug = !drawdebug; break;
+            case 's': mpdc.RequestStatus(); break;
+            case 'c': mpdc.RequestCurrentSong(); break;
+            case 'q': mpdc.RequestQueue(); break;
           }
           break;
 
