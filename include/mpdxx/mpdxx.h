@@ -301,14 +301,6 @@ namespace mpdxx {
       void Next()     { SimpleCommand("next");     }
       void Previous() { SimpleCommand("previous"); }
 
-      StringMap Status() {
-        return status;
-      }
-
-      StringMap CurrentSong() {
-        return current_song;
-      }
-
 
     protected:
 
