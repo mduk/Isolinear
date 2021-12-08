@@ -100,60 +100,16 @@ class NowPlayingView : public MPDView {
 };
 
 
-class QueueSongBar : public EastHeaderBar {
-  protected:
-    mpdxx::Song song;
-    Button& playbtn;
-    Button& deletebtn;
-
-  public:
-    QueueSongBar(Grid g, Window& w, mpdxx::Song s)
-      : EastHeaderBar(g, w, Compass::EAST, s.Title())
-      , song(s)
-      , playbtn(AddButton("PLAY"))
-      , deletebtn(AddButton("DELETE"))
-    {
-      deletebtn.Disable();
-
-      RegisterChild(&playbtn);
-      RegisterChild(&deletebtn);
-    }
-};
-
 
 class QueueView : public MPDView {
-  protected:
-    std::list<QueueSongBar> songbars;
-
   public:
     QueueView(Grid g, Window& w, mpdxx::Client& _mpdc)
       : MPDView("QUEUE", g, w,  _mpdc)
-    {
-      miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::StringMap> queue){
-        songbars.clear();
-        children.clear();
-
-        int i = 1;
-        for (auto& song : queue) {
-          mpdxx::Song sng(song);
-          cout << fmt::format("QueueView<signal_queue> {}\n", sng.Title());
-          songbars.emplace_back(grid.Rows(2*i, (2*i)-1), window, sng);
-          auto& bar = songbars.back();
-          RegisterChild(&bar);
-          i++;
-          if (i == 11) {
-            break;
-          }
-        }
-      });
-    }
+    {}
 };
 
 
 class OutputsView : public MPDView {
-  protected:
-    std::list<EastHeaderBar> bars;
-
   public:
     OutputsView(Grid g, Window& w, mpdxx::Client& _mpdc)
       : MPDView("OUTPUTS", g, w, _mpdc)

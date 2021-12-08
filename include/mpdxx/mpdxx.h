@@ -59,58 +59,6 @@ namespace mpdxx {
   }
 
 
-  class Song {
-    protected:
-      StringMap const songdata;
-
-    public:
-      Song(StringMap const sd)
-        : songdata(sd)
-      { }
-
-      SongID const ID() const {
-        return std::stoi(songdata.at("Id"));
-      }
-
-      std::string const Uri() const {
-        return songdata.at("file");
-      }
-
-      std::string const Title() const {
-        return songdata.at("Title");
-      }
-
-      std::string const Artist() const {
-        return songdata.at("Artist");
-      }
-
-      std::string const Album() const {
-        return songdata.at("Album");
-      }
-
-      unsigned const DurationSeconds() const {
-        return 100;
-      }
-
-      std::string const DurationString() const {
-        auto duration_seconds = DurationSeconds();
-        auto const minutes = duration_seconds / 60;
-        auto const seconds = duration_seconds % 60;
-        return fmt::format("{:02d}:{:02d}", minutes, seconds);
-      }
-  };
-
-
-  using SongList = std::list<Song>;
-
-
-  class Queue {
-    protected:
-      SongList songs;
-      std::string version;
-  };
-
-
   class Client {
     protected:
       asio::io_context& io_context;
@@ -227,10 +175,6 @@ namespace mpdxx {
 
       bool const IsStopped() const {
         return StatusString() == "stop";
-      }
-
-      Song const CurrentlyPlaying() const {
-        return Song(current_song);
       }
 
       bool const Consume() const {
