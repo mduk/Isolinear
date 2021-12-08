@@ -46,8 +46,10 @@ int main(int argc, char* argv[])
   asio::io_context io_context;
   auto work_guard = asio::make_work_guard(io_context);
 
+  //size_t n_threads = std::thread::hardware_concurrency();
+  size_t n_threads = 1;
   std::vector<std::thread> thread_pool;
-  for (size_t i = 0; i < std::thread::hardware_concurrency(); i++){
+  for (size_t i = 0; i < n_threads; i++){
     thread_pool.emplace_back([&io_context](){ io_context.run(); });
   }
 
