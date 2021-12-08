@@ -59,34 +59,6 @@ namespace mpdxx {
   }
 
 
-  class Output {
-    protected:
-      StringMap const outputs;
-
-    public:
-      Output(StringMap const od)
-        : outputs(od)
-      {}
-
-      OutputID const ID() const {
-        return std::stoi(outputs.at("outputid"));
-      }
-
-      std::string const Name() const {
-        return outputs.at("outputname");
-      }
-
-      std::string const Plugin() const {
-        return outputs.at("plugin");
-      }
-
-      bool const Enabled() const {
-        return outputs.at("outputenabled") == "1";
-      }
-
-  };
-
-
   class Song {
     protected:
       StringMap const songdata;
@@ -130,7 +102,6 @@ namespace mpdxx {
 
 
   using SongList = std::list<Song>;
-  using OutputList = std::list<Output>;
 
 
   class Queue {

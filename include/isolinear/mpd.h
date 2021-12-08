@@ -152,7 +152,6 @@ class QueueView : public MPDView {
 
 class OutputsView : public MPDView {
   protected:
-    mpdxx::OutputList outputs;
     std::list<EastHeaderBar> bars;
 
   public:
