@@ -153,7 +153,6 @@ namespace mpdxx {
       std::mutex command_mutex;
 
       std::list<mpdxx::stringmap> queue;
-      std::list<mpdxx::stringmap> outputs;
 
       mpdxx::status status;
       mpdxx::song current_song;
@@ -163,7 +162,6 @@ namespace mpdxx {
       miso::signal<mpdxx::status>        signal_status;
       miso::signal<mpdxx::song>          signal_current_song;
       miso::signal<std::list<mpdxx::stringmap>> signal_queue;
-      miso::signal<std::list<mpdxx::stringmap>> signal_outputs;
 
     public:
       client(asio::io_context& ioc)
@@ -427,6 +425,42 @@ namespace mpdxx {
             });
       }
 
+      template <class T>
+      void ReadEntityResponse(std::list<T>& into_list, std::string delimiter_key, std::function<void()> complete_handler) {
+        asio::async_read_until(command_socket, command_read_buffer, '\n',
+            [&] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadEntityResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&command_read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              cout << fmt::format("ReadEntityResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                command_mutex.unlock();
+                cout << fmt::format("ReadEntityResponse: OK\n");
+                complete_handler();
+                return;
+              }
+
+              auto pair = line_to_pair(line);
+
+              if (pair.first == delimiter_key) {
+                into_list.emplace_back();
+              }
+
+              into_list.back().consume_pair(pair);
+
+              ReadEntityResponse<T>(into_list, delimiter_key, complete_handler);
+            });
+      }
+
       void ReadQueueResponse() {
         asio::async_read_until(command_socket, command_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
@@ -459,41 +493,6 @@ namespace mpdxx {
               queue.back()[key] = val;
 
               ReadQueueResponse();
-            });
-      }
-
-      void ReadOutputsResponse() {
-        asio::async_read_until(command_socket, command_read_buffer, '\n',
-            [this] (std::error_code ec, std::size_t bytes_transferred) {
-              if (ec) {
-                cout << fmt::format("ReadOutputsResponse: Error: {}\n", ec.message());
-                return;
-              }
-
-              std::istream is(&command_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
-              //cout << fmt::format("ReadOutputsResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
-
-              trim(line);
-
-              if (line == "OK") {
-                command_mutex.unlock();
-                cout << fmt::format("ReadOutputsResponse: OK\n");
-                emit signal_outputs(outputs);
-                return;
-              }
-
-              auto [key, val] = line_to_pair(line);
-
-              if (key == "outputid") {
-                outputs.emplace_back();
-              }
-
-              outputs.back()[key] = val;
-
-              ReadOutputsResponse();
             });
       }
 
