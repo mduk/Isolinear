@@ -188,8 +188,7 @@ class MpdFrame : public Drawable {
       Update();
     }
 
-    void Update()
-    {
+    void Update() {
       hdrFrame.Label(activeView + " : MPD");
       playerControlBar.Update();
       views.at(activeView)->Update();
