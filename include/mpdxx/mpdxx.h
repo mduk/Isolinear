@@ -208,13 +208,6 @@ namespace mpdxx {
         });
       }
 
-      void RequestOutputs() {
-        SendCommandRequest("outputs", [this](){
-          outputs.clear();
-          ReadOutputsResponse();
-        });
-      }
-
       void RequestQueue() {
         SendCommandRequest("playlistinfo", [this](){
           queue.clear();
