@@ -25,8 +25,6 @@ namespace mpdxx {
 
 
   using stringmap = std::map<std::string, std::string>;
-  using OutputID = int;
-  using SongID = int;
 
 
   std::pair<std::string, std::string> line_to_pair(std::string &line) {
