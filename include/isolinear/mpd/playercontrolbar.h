@@ -57,14 +57,14 @@ class PlayerControlBar : public HorizontalButtonBar {
         }
       });
 
-      miso::connect(mpd.signal_status, [this](mpdxx::StringMap status){
+      miso::connect(mpd.signal_status, [this](mpdxx::status status){
         cout << fmt::format("PlayerControlBar signal_status begin\n");
-        btnConsume.Active(status.at("consume") == "1");
-        btnRandom.Active(status.at("random") == "1");
-        btnSingle.Active(status.at("single") == "1");
-        btnRepeat.Active(status.at("repeat") == "1");
+        btnConsume.Active(status.Consume());
+        btnRandom.Active(status.Random());
+        btnSingle.Active(status.Single());
+        btnRepeat.Active(status.Repeat());
 
-        if (status.at("state") == "play") {
+        if (status.IsPlaying()) {
           btnPlay.Enable();
           btnPlay.Activate();
 
@@ -75,7 +75,7 @@ class PlayerControlBar : public HorizontalButtonBar {
           btnStop.Deactivate();
         }
 
-        if (status.at("state") == "pause") {
+        if (status.IsPaused()) {
           btnPlay.Enable();
           btnPlay.Activate();
 
@@ -86,7 +86,7 @@ class PlayerControlBar : public HorizontalButtonBar {
           btnStop.Deactivate();
         }
 
-        if (status.at("state") == "stop") {
+        if (status.IsStopped()) {
           btnStop.Enable();
           btnStop.Activate();
 

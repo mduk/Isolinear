@@ -78,8 +78,8 @@ class NowPlayingView : public MPDView {
       RegisterChild(&duration);
       RegisterChild(&progress);
 
-      miso::connect(mpdc.signal_status, [this](mpdxx::StringMap status){
-        hide = (status.at("state") == "stop");
+      miso::connect(mpdc.signal_status, [this](mpdxx::status status){
+        hide = status.IsStopped();
       });
 
       miso::connect(mpdc.signal_current_song, [this](mpdxx::StringMap current_song){

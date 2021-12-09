@@ -55,11 +55,8 @@ int main(int argc, char* argv[])
 
   mpdxx::Client mpdc(io_context);
 
-  miso::connect(mpdc.signal_status, [&mpdc](mpdxx::StringMap status){
+  miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
     cout << "Status:\n";
-    for (auto const& [ key, val ] : status) {
-      cout << fmt::format("  - {} = {}\n", key, val);
-    }
   });
 
   mpdc.Connect("localhost", "6600");

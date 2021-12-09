@@ -59,6 +59,67 @@ namespace mpdxx {
   }
 
 
+  class entity {
+    protected:
+      std::map<std::string, std::string> entitydata;
+    public:
+      void consume_line(std::string line) {
+        cout << "consuming line: " << line << "\n";
+        auto [key, val] = line_to_pair(line);
+        entitydata[key] = val;
+      }
+  };
+
+
+  class status : public entity {
+    public:
+      std::string StateString() const {
+        return entitydata.at("state");
+      }
+
+      bool const IsPaused() const {
+        return StateString() == "pause";
+      }
+
+      bool const IsPlaying() const {
+        return StateString() == "play";
+      }
+
+      bool const IsStopped() const {
+        return StateString() == "stop";
+      }
+
+      bool const Consume() const {
+        return entitydata.at("consume") == "1";
+      }
+
+      bool const Random() const {
+        return entitydata.at("random") == "1";
+      }
+
+      bool const Repeat() const {
+        return entitydata.at("repeat") == "1";
+      }
+
+      bool const Single() const {
+        return entitydata.at("single") == "1";
+      }
+
+      unsigned const ElapsedTimeSeconds() const {
+        auto elapsed = entitydata.at("elapsed");
+        return std::stoi(elapsed.substr(0, elapsed.find('.')));
+      }
+
+      std::string ElapsedTimeString() const {
+        auto const elapsed_seconds = ElapsedTimeSeconds();
+        auto const minutes = elapsed_seconds / 60;
+        auto const seconds = elapsed_seconds % 60;
+        return fmt::format("{:02d}:{:02d}", minutes, seconds);
+      }
+
+  };
+
+
   class Client {
     protected:
       asio::io_context& io_context;
@@ -71,15 +132,17 @@ namespace mpdxx {
 
       std::mutex command_mutex;
 
-      StringMap status;
       StringMap current_song;
       std::list<StringMap> queue;
       std::list<StringMap> outputs;
 
+    public:
+      mpdxx::status statusdata;
+
 
     public:
       miso::signal<>                     signal_connected;
-      miso::signal<StringMap>            signal_status;
+      miso::signal<status>            signal_status;
       miso::signal<StringMap>            signal_current_song;
       miso::signal<std::list<StringMap>> signal_queue;
       miso::signal<std::list<StringMap>> signal_outputs;
@@ -123,7 +186,6 @@ namespace mpdxx {
 
       void RequestStatus() {
         SendCommandRequest("status", [this](){
-          status.clear();
           ReadStatusResponse();
         });
       }
@@ -149,65 +211,21 @@ namespace mpdxx {
         });
       }
 
-      std::string const StatusString() const {
-        return status.at("state");
-      }
-
-      unsigned const ElapsedTimeSeconds() const {
-        auto elapsed = status.at("elapsed");
-        return std::stoi(elapsed.substr(0, elapsed.find('.')));
-      }
-
-      std::string ElapsedTimeString() const {
-        auto const elapsed_seconds = ElapsedTimeSeconds();
-        auto const minutes = elapsed_seconds / 60;
-        auto const seconds = elapsed_seconds % 60;
-        return fmt::format("{:02d}:{:02d}", minutes, seconds);
-      }
-
-      bool const IsPaused() const {
-        return StatusString() == "pause";
-      }
-
-      bool const IsPlaying() const {
-        return StatusString() == "play";
-      }
-
-      bool const IsStopped() const {
-        return StatusString() == "stop";
-      }
-
-      bool const Consume() const {
-        return status.at("consume") == "1";
-      }
-
-      bool const Random() const {
-        return status.at("random") == "1";
-      }
-
-      bool const Repeat() const {
-        return status.at("repeat") == "1";
-      }
-
-      bool const Single() const {
-        return status.at("single") == "1";
-      }
-
       bool TogglePause() {
-        if (IsPaused()) {
+        if (statusdata.IsPaused()) {
           Resume();
         }
         else {
           Pause();
         }
 
-        return !IsPaused();
+        return !statusdata.IsPaused();
       }
 
-      void ToggleConsume() { SimpleCommand(fmt::format( "consume {}", Consume() ? "0" : "1")); }
-      void ToggleRandom()  { SimpleCommand(fmt::format( "random {}",  Random()  ? "0" : "1")); }
-      void ToggleSingle()  { SimpleCommand(fmt::format( "single {}",  Single()  ? "0" : "1")); }
-      void ToggleRepeat()  { SimpleCommand(fmt::format( "repeat {}",  Repeat()  ? "0" : "1")); }
+      void ToggleConsume() { SimpleCommand(fmt::format( "consume {}", statusdata.Consume() ? "0" : "1")); }
+      void ToggleRandom()  { SimpleCommand(fmt::format( "random {}",  statusdata.Random()  ? "0" : "1")); }
+      void ToggleSingle()  { SimpleCommand(fmt::format( "single {}",  statusdata.Single()  ? "0" : "1")); }
+      void ToggleRepeat()  { SimpleCommand(fmt::format( "repeat {}",  statusdata.Repeat()  ? "0" : "1")); }
 
       void Stop()     { SimpleCommand("stop");     }
       void Play()     { SimpleCommand("play");     }
@@ -351,12 +369,11 @@ namespace mpdxx {
               if (line == "OK") {
                 command_mutex.unlock();
                 cout << fmt::format("ReadStatusResponse: OK\n");
-                emit signal_status(status);
+                emit signal_status(statusdata);
                 return;
               }
 
-              auto [key, val] = line_to_pair(line);
-              status[key] = val;
+              statusdata.consume_line(line);
 
               ReadStatusResponse();
             });
