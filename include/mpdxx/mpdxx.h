@@ -115,7 +115,30 @@ namespace mpdxx {
         auto const seconds = elapsed_seconds % 60;
         return fmt::format("{:02d}:{:02d}", minutes, seconds);
       }
+  };
 
+
+  class song : public entity {
+    public:
+      size_t size() const {
+        return entitydata.size();
+      }
+
+      std::string const Title() const {
+        return entitydata.at("Title");
+      }
+
+      std::string const Album() const {
+        return entitydata.at("Album");
+      }
+
+      std::string const Artist() const {
+        return entitydata.at("Artist");
+      }
+
+      std::string const DurationString() const {
+        return entitydata.at("duration");
+      }
   };
 
 
@@ -131,16 +154,16 @@ namespace mpdxx {
 
       std::mutex command_mutex;
 
-      mpdxx::stringmap current_song;
       std::list<mpdxx::stringmap> queue;
       std::list<mpdxx::stringmap> outputs;
 
       mpdxx::status status;
+      mpdxx::song current_song;
 
     public:
       miso::signal<>                     signal_connected;
       miso::signal<mpdxx::status>        signal_status;
-      miso::signal<mpdxx::stringmap>            signal_current_song;
+      miso::signal<mpdxx::song>          signal_current_song;
       miso::signal<std::list<mpdxx::stringmap>> signal_queue;
       miso::signal<std::list<mpdxx::stringmap>> signal_outputs;
 
@@ -203,7 +226,7 @@ namespace mpdxx {
 
       void RequestCurrentSong() {
         SendCommandRequest("currentsong",  [this](){
-          current_song.clear();
+          current_song = mpdxx::song();
           ReadCurrentSongResponse();
         });
       }
@@ -407,8 +430,7 @@ namespace mpdxx {
                 return;
               }
 
-              auto [key, val] = line_to_pair(line);
-              current_song[key] = val;
+              current_song.consume_line(line);
 
               ReadCurrentSongResponse();
             });
