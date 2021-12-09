@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
     thread_pool.emplace_back([&io_context](){ io_context.run(); });
   }
 
-  mpdxx::Client mpdc(io_context);
+  mpdxx::client mpdc(io_context);
 
   miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
     cout << "Status:\n";

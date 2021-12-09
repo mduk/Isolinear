@@ -119,7 +119,7 @@ namespace mpdxx {
   };
 
 
-  class Client {
+  class client {
     protected:
       asio::io_context& io_context;
 
@@ -145,7 +145,7 @@ namespace mpdxx {
       miso::signal<std::list<StringMap>> signal_outputs;
 
     public:
-      Client(asio::io_context& ioc)
+      client(asio::io_context& ioc)
         : io_context(ioc)
         , command_socket(io_context)
         , idle_socket(io_context)

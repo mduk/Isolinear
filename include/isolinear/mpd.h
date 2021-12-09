@@ -42,11 +42,11 @@ class View : public Drawable {
 
 class MPDView : public View {
   protected:
-    mpdxx::Client& mpdc;
+    mpdxx::client& mpdc;
     Window& window;
 
   public:
-    MPDView(std::string t, Grid g, Window& w, mpdxx::Client& _mpdc)
+    MPDView(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
       : View(t, g)
       , window{w}
       , mpdc{_mpdc}
@@ -64,7 +64,7 @@ class NowPlayingView : public MPDView {
     HorizontalProgressBar progress;
 
   public:
-    NowPlayingView(Grid g, Window& w, mpdxx::Client& _mpdc)
+    NowPlayingView(Grid g, Window& w, mpdxx::client& _mpdc)
       : MPDView("NOW PLAYING", g, w, _mpdc)
       , title(g.Rows(3,4), w, "TITLE", "[title]")
       , album(g.Rows(5,6), w, "ALBUM", "[album]")
@@ -103,7 +103,7 @@ class NowPlayingView : public MPDView {
 
 class QueueView : public MPDView {
   public:
-    QueueView(Grid g, Window& w, mpdxx::Client& _mpdc)
+    QueueView(Grid g, Window& w, mpdxx::client& _mpdc)
       : MPDView("QUEUE", g, w,  _mpdc)
     {}
 };
@@ -111,7 +111,7 @@ class QueueView : public MPDView {
 
 class OutputsView : public MPDView {
   public:
-    OutputsView(Grid g, Window& w, mpdxx::Client& _mpdc)
+    OutputsView(Grid g, Window& w, mpdxx::client& _mpdc)
       : MPDView("OUTPUTS", g, w, _mpdc)
     {}
 };
@@ -126,7 +126,7 @@ class MpdFrame : public Drawable {
     const std::string V_SEARCH = "SEARCH";
     const std::string V_OUTPUTS = "OUTPUTS";
 
-    mpdxx::Client& mpdc;
+    mpdxx::client& mpdc;
 
     CompassLayout layout;
 
@@ -145,7 +145,7 @@ class MpdFrame : public Drawable {
 
 
   public:
-    MpdFrame(Grid g, Window& w, mpdxx::Client& _mpdc)
+    MpdFrame(Grid g, Window& w, mpdxx::client& _mpdc)
         : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
         , hdrFrame{layout.North(), w, Compass::EAST, " MPD CONTROL "}
         , barView{w, layout.West()}

@@ -21,7 +21,7 @@ using std::cout;
 
 class PlayerControlBar : public HorizontalButtonBar {
   protected:
-    mpdxx::Client& mpd;
+    mpdxx::client& mpd;
 
     Button& btnPlay;
     Button& btnPause;
@@ -36,7 +36,7 @@ class PlayerControlBar : public HorizontalButtonBar {
     int queue_length = 0;
 
   public:
-    PlayerControlBar(Window& w, Grid g, mpdxx::Client& _mpd)
+    PlayerControlBar(Window& w, Grid g, mpdxx::client& _mpd)
       : HorizontalButtonBar(w, g)
       , mpd{_mpd}
       , btnPlay(AddButton("PLAY"))
