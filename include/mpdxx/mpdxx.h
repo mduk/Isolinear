@@ -64,7 +64,6 @@ namespace mpdxx {
       std::map<std::string, std::string> entitydata;
     public:
       void consume_line(std::string line) {
-        cout << "consuming line: " << line << "\n";
         auto [key, val] = line_to_pair(line);
         entitydata[key] = val;
       }
@@ -136,13 +135,11 @@ namespace mpdxx {
       std::list<StringMap> queue;
       std::list<StringMap> outputs;
 
-    public:
-      mpdxx::status statusdata;
-
+      mpdxx::status status;
 
     public:
       miso::signal<>                     signal_connected;
-      miso::signal<status>            signal_status;
+      miso::signal<mpdxx::status>        signal_status;
       miso::signal<StringMap>            signal_current_song;
       miso::signal<std::list<StringMap>> signal_queue;
       miso::signal<std::list<StringMap>> signal_outputs;
@@ -212,20 +209,20 @@ namespace mpdxx {
       }
 
       bool TogglePause() {
-        if (statusdata.IsPaused()) {
+        if (status.IsPaused()) {
           Resume();
         }
         else {
           Pause();
         }
 
-        return !statusdata.IsPaused();
+        return !status.IsPaused();
       }
 
-      void ToggleConsume() { SimpleCommand(fmt::format( "consume {}", statusdata.Consume() ? "0" : "1")); }
-      void ToggleRandom()  { SimpleCommand(fmt::format( "random {}",  statusdata.Random()  ? "0" : "1")); }
-      void ToggleSingle()  { SimpleCommand(fmt::format( "single {}",  statusdata.Single()  ? "0" : "1")); }
-      void ToggleRepeat()  { SimpleCommand(fmt::format( "repeat {}",  statusdata.Repeat()  ? "0" : "1")); }
+      void ToggleConsume() { SimpleCommand(fmt::format( "consume {}", status.Consume() ? "0" : "1")); }
+      void ToggleRandom()  { SimpleCommand(fmt::format( "random {}",  status.Random()  ? "0" : "1")); }
+      void ToggleSingle()  { SimpleCommand(fmt::format( "single {}",  status.Single()  ? "0" : "1")); }
+      void ToggleRepeat()  { SimpleCommand(fmt::format( "repeat {}",  status.Repeat()  ? "0" : "1")); }
 
       void Stop()     { SimpleCommand("stop");     }
       void Play()     { SimpleCommand("play");     }
@@ -369,11 +366,11 @@ namespace mpdxx {
               if (line == "OK") {
                 command_mutex.unlock();
                 cout << fmt::format("ReadStatusResponse: OK\n");
-                emit signal_status(statusdata);
+                emit signal_status(status);
                 return;
               }
 
-              statusdata.consume_line(line);
+              status.consume_line(line);
 
               ReadStatusResponse();
             });
