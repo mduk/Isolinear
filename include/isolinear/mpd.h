@@ -82,7 +82,7 @@ class NowPlayingView : public MPDView {
         hide = status.IsStopped();
       });
 
-      miso::connect(mpdc.signal_current_song, [this](mpdxx::StringMap current_song){
+      miso::connect(mpdc.signal_current_song, [this](mpdxx::stringmap current_song){
         title.Right(current_song.at("Title"));
         album.Right(current_song.at("Album"));
         artist.Right(current_song.at("Artist"));

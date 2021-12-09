@@ -24,7 +24,7 @@ using asio::ip::tcp;
 namespace mpdxx {
 
 
-  using StringMap = std::map<std::string, std::string>;
+  using stringmap = std::map<std::string, std::string>;
   using OutputID = int;
   using SongID = int;
 
@@ -131,18 +131,18 @@ namespace mpdxx {
 
       std::mutex command_mutex;
 
-      StringMap current_song;
-      std::list<StringMap> queue;
-      std::list<StringMap> outputs;
+      mpdxx::stringmap current_song;
+      std::list<mpdxx::stringmap> queue;
+      std::list<mpdxx::stringmap> outputs;
 
       mpdxx::status status;
 
     public:
       miso::signal<>                     signal_connected;
       miso::signal<mpdxx::status>        signal_status;
-      miso::signal<StringMap>            signal_current_song;
-      miso::signal<std::list<StringMap>> signal_queue;
-      miso::signal<std::list<StringMap>> signal_outputs;
+      miso::signal<mpdxx::stringmap>            signal_current_song;
+      miso::signal<std::list<mpdxx::stringmap>> signal_queue;
+      miso::signal<std::list<mpdxx::stringmap>> signal_outputs;
 
     public:
       client(asio::io_context& ioc)
