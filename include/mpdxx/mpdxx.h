@@ -158,10 +158,11 @@ namespace mpdxx {
       mpdxx::song current_song;
 
     public:
-      miso::signal<>                     signal_connected;
-      miso::signal<mpdxx::status>        signal_status;
-      miso::signal<mpdxx::song>          signal_current_song;
+      miso::signal<>                            signal_connected;
+      miso::signal<mpdxx::status>               signal_status;
+      miso::signal<mpdxx::song>                 signal_current_song;
       miso::signal<std::list<mpdxx::stringmap>> signal_queue;
+      miso::signal<std::list<mpdxx::song>>      signal_songqueue;
 
     public:
       client(asio::io_context& ioc)
