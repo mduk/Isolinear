@@ -49,14 +49,6 @@ class PlayerControlBar : public HorizontalButtonBar {
       , btnSingle(AddButton("SINGLE"))
       , btnRepeat(AddButton("REPEAT"))
     {
-      miso::connect(mpd.signal_queue, [this](std::list<mpdxx::stringmap> queue){
-        queue_length = queue.size();
-        cout << fmt::format("received new queue {}\n", queue_length);
-        for (auto& song : queue) {
-          cout << song.at("Title") << "\n";
-        }
-      });
-
       miso::connect(mpd.signal_status, [this](mpdxx::status status){
         cout << fmt::format("PlayerControlBar signal_status begin\n");
         btnConsume.Active(status.Consume());

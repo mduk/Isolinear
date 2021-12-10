@@ -58,11 +58,11 @@ namespace mpdxx {
 
 
   class entity {
-    protected:
-      std::map<std::string, std::string> entitydata;
     public:
-      void consume_line(std::string line) {
-        auto [key, val] = line_to_pair(line);
+      std::map<std::string, std::string> entitydata;
+
+      void consume_pair(std::pair<std::string, std::string> pair) {
+        auto [key, val] = pair;
         entitydata[key] = val;
       }
   };
@@ -150,17 +150,16 @@ namespace mpdxx {
       asio::streambuf command_read_buffer;
       asio::streambuf idle_read_buffer;
 
-      std::list<mpdxx::stringmap> queue;
+      std::list<mpdxx::song> queue;
+      std::list<mpdxx::song> current_song;
 
       mpdxx::status status;
-      mpdxx::song current_song;
 
     public:
-      miso::signal<>                            signal_connected;
-      miso::signal<mpdxx::status>               signal_status;
-      miso::signal<mpdxx::song>                 signal_current_song;
-      miso::signal<std::list<mpdxx::stringmap>> signal_queue;
-      miso::signal<std::list<mpdxx::song>>      signal_songqueue;
+      miso::signal<>                       signal_connected;
+      miso::signal<mpdxx::status>          signal_status;
+      miso::signal<mpdxx::song>            signal_current_song;
+      miso::signal<std::list<mpdxx::song>> signal_queue;
 
     public:
       client(asio::io_context& ioc)
@@ -208,14 +207,14 @@ namespace mpdxx {
       void RequestQueue() {
         SendCommandRequest("playlistinfo", [this](){
           queue.clear();
-          ReadQueueResponse();
+          ReadEntityResponse("queue", queue, "file");
         });
       }
 
       void RequestCurrentSong() {
         SendCommandRequest("currentsong",  [this](){
-          current_song = mpdxx::song();
-          ReadCurrentSongResponse();
+          current_song.clear();
+          ReadEntityResponse("current_song", current_song, "file");
         });
       }
 
@@ -378,52 +377,16 @@ namespace mpdxx {
                 return;
               }
 
-              status.consume_line(line);
+              status.consume_pair(line_to_pair(line));
 
               ReadStatusResponse();
             });
       }
 
-      void ReadCurrentSongResponse() {
-        asio::async_read_until(command_socket, command_read_buffer, '\n',
-            [this] (std::error_code ec, std::size_t bytes_transferred) {
-              if (ec) {
-                cout << fmt::format("ReadCurrentSongResponse: Error: {}\n", ec.message());
-                return;
-              }
-
-              std::istream is(&command_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
-              //cout << fmt::format("ReadCurrentSongResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
-
-              trim(line);
-
-              if (line == "OK") {
-                cout << "ReadCurrentSongResponse: OK\n";
-
-                if (current_song.size() == 0) {
-                  cout << "ReadCurrentSongResponse: No current song.\n";
-                }
-                else {
-                  cout << "ReadCurrentSongResponse: Emit signal_current_song.\n";
-                  emit signal_current_song(current_song);
-                }
-
-                return;
-              }
-
-              current_song.consume_line(line);
-
-              ReadCurrentSongResponse();
-            });
-      }
-
       template <class T>
-      void ReadEntityResponse(std::list<T>& into_list, std::string delimiter_key) {
+      void ReadEntityResponse(std::string type, std::list<T>& into_list, std::string delimiter_key) {
         asio::async_read_until(command_socket, command_read_buffer, '\n',
-            [&] (std::error_code ec, std::size_t bytes_transferred) {
+            [type, delimiter_key, &into_list, this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadEntityResponse: Error: {}\n", ec.message());
                 return;
@@ -439,52 +402,28 @@ namespace mpdxx {
 
               if (line == "OK") {
                 cout << fmt::format("ReadEntityResponse: OK\n");
+
+                if (type == "queue") {
+                  emit signal_queue(queue);
+                }
+
+                if (type == "current_song") {
+                  emit signal_current_song(current_song.back());
+                }
+
                 return;
               }
 
               auto pair = line_to_pair(line);
 
               if (pair.first == delimiter_key) {
+                cout << fmt::format("ReadEntityResponse: Creating new object\n");
                 into_list.emplace_back();
               }
 
               into_list.back().consume_pair(pair);
 
-              ReadEntityResponse<T>(into_list, delimiter_key);
-            });
-      }
-
-      void ReadQueueResponse() {
-        asio::async_read_until(command_socket, command_read_buffer, '\n',
-            [this] (std::error_code ec, std::size_t bytes_transferred) {
-              if (ec) {
-                cout << fmt::format("ReadQueueResponse: Error: {}\n", ec.message());
-                return;
-              }
-
-              std::istream is(&command_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
-              //cout << fmt::format("ReadQueueResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
-
-              trim(line);
-
-              if (line == "OK") {
-                cout << fmt::format("ReadQueueResponse: OK\n");
-                emit signal_queue(queue);
-                return;
-              }
-
-              auto [key, val] = line_to_pair(line);
-
-              if (key == "file") {
-                queue.emplace_back();
-              }
-
-              queue.back()[key] = val;
-
-              ReadQueueResponse();
+              ReadEntityResponse<T>(type, into_list, delimiter_key);
             });
       }
 
