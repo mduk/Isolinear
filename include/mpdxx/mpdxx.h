@@ -150,8 +150,6 @@ namespace mpdxx {
       asio::streambuf command_read_buffer;
       asio::streambuf idle_read_buffer;
 
-      std::mutex command_mutex;
-
       std::list<mpdxx::stringmap> queue;
 
       mpdxx::status status;
@@ -313,7 +311,6 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                command_mutex.unlock();
                 cout << fmt::format("ReadEmptyResponse: OK\n");
                 RequestStatus();
               }
@@ -344,7 +341,6 @@ namespace mpdxx {
       }
 
       void SendCommandRequest(std::string const command, std::function<void()> response_handler) {
-        command_mutex.lock();
         std::string send_command = command + '\n';
 
         asio::async_write(command_socket, asio::buffer(send_command, send_command.size()),
@@ -377,7 +373,6 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                command_mutex.unlock();
                 cout << fmt::format("ReadStatusResponse: OK\n");
                 emit signal_status(status);
                 return;
@@ -406,7 +401,6 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                command_mutex.unlock();
                 cout << "ReadCurrentSongResponse: OK\n";
 
                 if (current_song.size() == 0) {
@@ -444,7 +438,6 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                command_mutex.unlock();
                 cout << fmt::format("ReadEntityResponse: OK\n");
                 complete_handler();
                 return;
@@ -479,7 +472,6 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
-                command_mutex.unlock();
                 cout << fmt::format("ReadQueueResponse: OK\n");
                 emit signal_queue(queue);
                 return;
