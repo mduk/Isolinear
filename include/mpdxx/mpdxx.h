@@ -421,7 +421,7 @@ namespace mpdxx {
       }
 
       template <class T>
-      void ReadEntityResponse(std::list<T>& into_list, std::string delimiter_key, std::function<void()> complete_handler) {
+      void ReadEntityResponse(std::list<T>& into_list, std::string delimiter_key) {
         asio::async_read_until(command_socket, command_read_buffer, '\n',
             [&] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
@@ -439,7 +439,6 @@ namespace mpdxx {
 
               if (line == "OK") {
                 cout << fmt::format("ReadEntityResponse: OK\n");
-                complete_handler();
                 return;
               }
 
@@ -451,7 +450,7 @@ namespace mpdxx {
 
               into_list.back().consume_pair(pair);
 
-              ReadEntityResponse<T>(into_list, delimiter_key, complete_handler);
+              ReadEntityResponse<T>(into_list, delimiter_key);
             });
       }
 
