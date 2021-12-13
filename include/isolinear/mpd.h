@@ -176,13 +176,18 @@ class MpdFrame : public Drawable {
       RegisterView(&viewOutputs);
 
       auto switch_view = [this]() {
+        auto button = miso::sender<Button>();
+        if (button->Label() == activeView) {
+          return;
+        }
+
         auto previousView = activeView;
         barView.DeactivateAll();
-        auto active = miso::sender<Button>();
-        active->Activate();
-        activeView = active->Label();
+
+        button->Activate();
+        activeView = button->Label();
+
         emit signal_view_change(previousView, activeView);
-        Update();
       };
 
       for (auto const& [view_name, view_ptr] : views) {
