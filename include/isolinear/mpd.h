@@ -14,30 +14,12 @@
 #include "window.h"
 #include "mpdxx.h"
 #include "progressbar.h"
+#include "view.h"
 
 #include "mpd/playercontrolbar.h"
 
 
 using std::cerr;
-
-
-class View : public Drawable {
-  protected:
-    std::string title;
-    Grid grid;
-
-  public:
-    View(std::string t, Grid g) : title{t}, grid{g} {}
-
-    std::string Name() const {
-      return title;
-    }
-
-    Region2D Bounds() const {
-      return grid.bounds;
-    }
-
-};
 
 
 class MPDView : public View {
