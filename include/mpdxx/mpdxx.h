@@ -62,8 +62,7 @@ namespace mpdxx {
       std::map<std::string, std::string> entitydata;
 
       void consume_pair(std::pair<std::string, std::string> pair) {
-        auto [key, val] = pair;
-        entitydata[key] = val;
+        entitydata.insert(pair);
       }
   };
 
