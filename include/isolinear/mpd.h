@@ -84,10 +84,31 @@ class NowPlayingView : public MPDView {
 
 
 class QueueView : public MPDView {
+  protected:
+    std::list<mpdxx::song> queue;
+
   public:
-    QueueView(Grid g, Window& w, mpdxx::client& _mpdc)
-      : MPDView("QUEUE", g, w,  _mpdc)
-    {}
+    QueueView(Grid g, Window& w, mpdxx::client& mpdc)
+      : MPDView("QUEUE", g, w,  mpdc)
+    {
+      miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> newqueue){
+        queue = newqueue;
+      });
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      int i = 1;
+      for (auto const& song : queue) {
+        EastHeaderBar songbar(
+            grid.Rows((i*2)-1, i*2),
+            window,
+            song.Title()
+          );
+        songbar.Colours(Colours());
+        songbar.Draw(renderer);
+        i++;
+      }
+    }
 };
 
 
@@ -100,7 +121,7 @@ class OutputsView : public MPDView {
 
 
 class MpdFrame : public Drawable {
-  protected:
+  public:
     const std::string V_NOWPLAYING = "NOW PLAYING";
     const std::string V_QUEUE = "QUEUE";
     const std::string V_BROWSE = "BROWSE";
@@ -108,6 +129,10 @@ class MpdFrame : public Drawable {
     const std::string V_SEARCH = "SEARCH";
     const std::string V_OUTPUTS = "OUTPUTS";
 
+  public:
+    miso::signal<std::string, std::string> signal_view_change;
+
+  protected:
     mpdxx::client& mpdc;
 
     CompassLayout layout;
@@ -119,12 +144,11 @@ class MpdFrame : public Drawable {
     SouthWestSweep sweepSouthWest;
 
     std::map<const std::string, View*> views;
-    std::string activeView{V_NOWPLAYING};
+    std::string activeView = V_QUEUE;
 
     NowPlayingView viewNowPlaying;
     QueueView viewQueue;
     OutputsView viewOutputs;
-
 
   public:
     MpdFrame(Grid g, Window& w, mpdxx::client& _mpdc)
@@ -152,10 +176,12 @@ class MpdFrame : public Drawable {
       RegisterView(&viewOutputs);
 
       auto switch_view = [this]() {
+        auto previousView = activeView;
         barView.DeactivateAll();
         auto active = miso::sender<Button>();
         active->Activate();
         activeView = active->Label();
+        emit signal_view_change(previousView, activeView);
         Update();
       };
 
@@ -165,6 +191,7 @@ class MpdFrame : public Drawable {
       }
 
       barView.GetButton(activeView).Activate();
+      emit signal_view_change("", activeView);
 
       playerControlBar.Update();
       Update();

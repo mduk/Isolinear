@@ -99,6 +99,16 @@ int main(int argc, char* argv[])
     };
   window.Add(&mpdframe);
 
+  miso::connect(mpdframe.signal_view_change, [&](std::string from_view, std::string to_view){
+    cout << fmt::format("View changed from {} to {}\n", from_view, to_view);
+    if (to_view == mpdframe.V_QUEUE) {
+      mpdc.RequestQueue();
+    }
+    if (to_view == mpdframe.V_NOWPLAYING) {
+     mpdc.RequestCurrentSong();
+    }
+  });
+
   window.Colours(nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
