@@ -396,7 +396,7 @@ namespace mpdxx {
               std::string line;
               std::getline(is, line);
 
-              cout << fmt::format("ReadEntityResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
+              //cout << fmt::format("ReadEntityResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
 
               trim(line);
 
@@ -417,7 +417,7 @@ namespace mpdxx {
               auto pair = line_to_pair(line);
 
               if (pair.first == delimiter_key) {
-                cout << fmt::format("ReadEntityResponse: Creating new object\n");
+                cout << fmt::format("ReadEntityResponse: Creating new {} instance\n", type);
                 into_list.emplace_back();
               }
 
