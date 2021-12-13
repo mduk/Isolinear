@@ -63,6 +63,10 @@ class EastHeaderBar : public Drawable {
     int button_width{2};
 
   public:
+    EastHeaderBar(Grid g, Window& w, std::string t)
+      : grid{g}, window{w}, text{t}
+    {};
+
     EastHeaderBar(Grid g, Window& w, Compass a, std::string t)
       : grid{g}, window{w}, text{t}
     {};
