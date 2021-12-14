@@ -61,6 +61,14 @@ namespace mpdxx {
     public:
       std::map<std::string, std::string> entitydata;
 
+      template <class T>
+      T value_or_default(std::string key, T default_value) const {
+        if (entitydata.count(key)) {
+          return entitydata.at(key);
+        }
+        return default_value;
+      }
+
       void consume_pair(std::pair<std::string, std::string> pair) {
         entitydata.insert(pair);
       }
@@ -122,15 +130,15 @@ namespace mpdxx {
       }
 
       std::string const Title() const {
-        return entitydata.at("Title");
+        return value_or_default<std::string>("Title", "");
       }
 
       std::string const Album() const {
-        return entitydata.at("Album");
+        return value_or_default<std::string>("Album", "");
       }
 
       std::string const Artist() const {
-        return entitydata.at("Artist");
+        return value_or_default<std::string>("Artist", "");
       }
 
       std::string const DurationString() const {
