@@ -140,8 +140,9 @@ int main(int argc, char* argv[])
             case 'n': window.Colours(nightgazer_colours); break;
             case 'g': drawdebug = !drawdebug; break;
             case 's': mpdc.RequestStatus(); break;
-            case 'c': mpdc.RequestCurrentSong(); break;
-            case 'q': mpdc.RequestQueue(); break;
+            case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;
+            case 'q': mpdframe.SwitchView(mpdframe.V_QUEUE); break;
+            case 'o': mpdframe.SwitchView(mpdframe.V_OUTPUTS); break;
           }
           break;
 

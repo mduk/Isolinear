@@ -54,6 +54,10 @@ class ButtonBar : public Drawable {
       }
     }
 
+    virtual void ActivateOne(std::string label) {
+      buttons.at(label).Activate();
+    }
+
     virtual void OnPointerEvent(PointerEvent event) override {
       for (auto& [label, button] : buttons) {
         if (button.Bounds().Encloses(event.Position())) {

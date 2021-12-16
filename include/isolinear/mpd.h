@@ -177,18 +177,7 @@ class MpdFrame : public Drawable {
 
       auto switch_view = [this]() {
         auto button = miso::sender<Button>();
-        if (button->Label() == activeView) {
-          return;
-        }
-
-        auto previousView = activeView;
-        barView.DeactivateAll();
-
-        button->Activate();
-        activeView = button->Label();
-        hdrFrame.Label(fmt::format("MPD : {}", activeView));
-
-        emit signal_view_change(previousView, activeView);
+        SwitchView(button->Label());
       };
 
       for (auto const& [view_name, view_ptr] : views) {
@@ -201,6 +190,22 @@ class MpdFrame : public Drawable {
 
       playerControlBar.Update();
       Update();
+    }
+
+    virtual void SwitchView(std::string view) {
+      if (view == activeView) {
+        return;
+      }
+
+      auto previousView = activeView;
+      activeView = view;
+
+      barView.DeactivateAll();
+      barView.ActivateOne(activeView);
+
+      hdrFrame.Label(fmt::format("MPD : {}", activeView));
+
+      emit signal_view_change(previousView, activeView);
     }
 
     virtual Region2D Bounds() const override {
