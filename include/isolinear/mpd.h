@@ -153,7 +153,7 @@ class MpdFrame : public Drawable {
   public:
     MpdFrame(Grid g, Window& w, mpdxx::client& _mpdc)
         : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-        , hdrFrame{layout.North(), w, Compass::EAST, " MPD CONTROL "}
+        , hdrFrame{layout.North(), w, Compass::EAST, "MPD CONTROL"}
         , barView{w, layout.West()}
         , playerControlBar{w, layout.South(), mpdc}
         , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
@@ -186,6 +186,7 @@ class MpdFrame : public Drawable {
 
         button->Activate();
         activeView = button->Label();
+        hdrFrame.Label(fmt::format("MPD : {}", activeView));
 
         emit signal_view_change(previousView, activeView);
       };
@@ -200,12 +201,6 @@ class MpdFrame : public Drawable {
 
       playerControlBar.Update();
       Update();
-    }
-
-    void Update() {
-      hdrFrame.Label(activeView + " : MPD");
-      playerControlBar.Update();
-      views.at(activeView)->Update();
     }
 
     virtual Region2D Bounds() const override {
