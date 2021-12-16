@@ -57,6 +57,8 @@ class PlayerControlBar : public HorizontalButtonBar {
         btnRepeat.Active(status.Repeat());
 
         if (status.IsPlaying()) {
+          cout << " => Playing\n";
+
           btnPlay.Enable();
           btnPlay.Activate();
 
@@ -68,6 +70,9 @@ class PlayerControlBar : public HorizontalButtonBar {
         }
 
         if (status.IsPaused()) {
+          cout << " => Paused\n";
+
+          btnPlay.Enable();
           btnPlay.Enable();
           btnPlay.Activate();
 
@@ -79,6 +84,9 @@ class PlayerControlBar : public HorizontalButtonBar {
         }
 
         if (status.IsStopped()) {
+          cout << " => Stopped\n";
+
+          btnPlay.Enable();
           btnStop.Enable();
           btnStop.Activate();
 

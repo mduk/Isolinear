@@ -71,6 +71,15 @@ namespace mpdxx {
         entitydata.insert(pair);
       }
 
+      void clear() {
+        entitydata.clear();
+      }
+
+      size_t size() const {
+        return entitydata.size();
+      }
+
+
       friend std::ostream& operator<<(std::ostream& os, const entity& e);
   };
 
@@ -132,10 +141,6 @@ namespace mpdxx {
 
   class song : public entity {
     public:
-      size_t size() const {
-        return entitydata.size();
-      }
-
       std::string const Title() const {
         return value_or_default<std::string>("Title", "");
       }
@@ -214,6 +219,7 @@ namespace mpdxx {
 
       void RequestStatus() {
         SendCommandRequest("status", [this](){
+          status.clear();
           ReadStatusResponse();
         });
       }
