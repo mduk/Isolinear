@@ -57,9 +57,7 @@ int main(int argc, char* argv[])
 
   miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
     cout << "Status:\n";
-    for (auto& [key, value] : status.entitydata) {
-      cout << fmt::format(" - {}: {}\n", key, value);
-    }
+    cout << status << "\n";
   });
 
   mpdc.Connect("localhost", "6600");

@@ -55,9 +55,10 @@ namespace mpdxx {
 
 
   class entity {
-    public:
+    protected:
       std::map<std::string, std::string> entitydata;
 
+    public:
       template <class T>
       T value_or_default(std::string key, T default_value) const {
         if (entitydata.count(key)) {
@@ -69,7 +70,16 @@ namespace mpdxx {
       void consume_pair(std::pair<std::string, std::string> pair) {
         entitydata.insert(pair);
       }
+
+      friend std::ostream& operator<<(std::ostream& os, const entity& e);
   };
+
+  std::ostream& operator<<(std::ostream& os, const entity& e) {
+    for (auto& [key, value] : e.entitydata) {
+      cout << fmt::format(" - {}: {}\n", key, value);
+    }
+    return os;
+  }
 
 
   class status : public entity {
