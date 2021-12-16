@@ -19,7 +19,6 @@
 
 
 using std::cout;
-using asio::ip::tcp;
 
 
 namespace mpdxx {
@@ -184,10 +183,10 @@ namespace mpdxx {
       { }
 
       void Connect(std::string host, std::string port) {
-        tcp::resolver resolver(io_context);
+        asio::ip::tcp::resolver resolver(io_context);
 
         asio::async_connect(idle_socket, resolver.resolve(host, port),
-            [this](std::error_code ec, tcp::endpoint) {
+            [this](std::error_code ec, asio::ip::tcp::endpoint) {
               if (ec) {
                 cout << "connect error: " << ec.message() << "\n";
                 return;
@@ -203,7 +202,7 @@ namespace mpdxx {
             });
 
         asio::async_connect(command_socket, resolver.resolve(host, port),
-            [this](std::error_code ec, tcp::endpoint) {
+            [this](std::error_code ec, asio::ip::tcp::endpoint) {
               if (ec) {
                 cout << "connect error: " << ec.message() << "\n";
                 return;
