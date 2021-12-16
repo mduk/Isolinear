@@ -24,9 +24,6 @@ using asio::ip::tcp;
 namespace mpdxx {
 
 
-  using stringmap = std::map<std::string, std::string>;
-
-
   std::pair<std::string, std::string> line_to_pair(std::string &line) {
       return std::pair<std::string, std::string>{
         line.substr(0, line.find(": ")),
