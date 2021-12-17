@@ -24,12 +24,33 @@ using std::cout;
 namespace mpdxx {
 
 
-  std::pair<std::string, std::string> line_to_pair(std::string &line) {
-      return std::pair<std::string, std::string>{
-        line.substr(0, line.find(": ")),
-        line.substr(line.find(": ") + 2)
-      };
+  static inline void trim(std::string &s) {
+      s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+          return !std::isspace(ch);
+      }));
+      s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+          return !std::isspace(ch);
+      }).base(), s.end());
   }
+
+
+  std::pair<std::string, std::string> line_to_pair(std::string &line) {
+      std::string delimiter = ":";
+
+      auto delimiter_length = delimiter.length();
+      int delimiter_start_index = line.find(delimiter);
+      int delimiter_end_index = delimiter_start_index + delimiter_length;
+
+      cout << fmt::format("Line length: {} Delimiter: {}:{}\n",
+          line.length(), delimiter_start_index, delimiter_end_index);
+
+      std::string key = line.substr(0, delimiter_start_index);
+      std::string val = line.substr(delimiter_end_index);
+      trim(val);
+
+      return std::pair<std::string, std::string>{ key, val };
+  }
+
 
   std::vector<std::string> line_to_words(const std::string &line) {
       std::vector<std::string> words;
@@ -42,15 +63,6 @@ namespace mpdxx {
       }
 
       return words;
-  }
-
-  static inline void trim(std::string &s) {
-      s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
-          return !std::isspace(ch);
-      }));
-      s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
-          return !std::isspace(ch);
-      }).base(), s.end());
   }
 
 
