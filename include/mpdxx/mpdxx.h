@@ -170,6 +170,13 @@ namespace mpdxx {
       }
   };
 
+  class artist : public entity {
+    public:
+      std::string const Name() const {
+        return value_or_default<std::string>("Artist", "");
+      }
+  };
+
 
   class client {
     protected:
@@ -183,6 +190,7 @@ namespace mpdxx {
 
       std::list<mpdxx::song> queue;
       std::list<mpdxx::song> current_song;
+      std::list<mpdxx::artist> artist_list;
 
       mpdxx::status status;
 
@@ -191,6 +199,7 @@ namespace mpdxx {
       miso::signal<mpdxx::status>          signal_status;
       miso::signal<mpdxx::song>            signal_current_song;
       miso::signal<std::list<mpdxx::song>> signal_queue;
+      miso::signal<std::list<mpdxx::artist>> signal_artist_list;
 
     public:
       client(asio::io_context& ioc)
@@ -239,14 +248,21 @@ namespace mpdxx {
       void RequestQueue() {
         SendCommandRequest("playlistinfo", [this](){
           queue.clear();
-          ReadEntityResponse("queue", queue, "file");
+          ReadEntityResponse<mpdxx::song>("queue", queue, "file");
         });
       }
 
       void RequestCurrentSong() {
         SendCommandRequest("currentsong",  [this](){
           current_song.clear();
-          ReadEntityResponse("current_song", current_song, "file");
+          ReadEntityResponse<mpdxx::song>("current_song", current_song, "file");
+        });
+      }
+
+      void RequestArtistList() {
+        SendCommandRequest("list artist", [this](){
+            artist_list.clear();
+            ReadEntityResponse<mpdxx::artist>("artists", artist_list, "Artist");
         });
       }
 
