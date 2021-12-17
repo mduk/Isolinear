@@ -457,6 +457,9 @@ namespace mpdxx {
                   emit signal_current_song(current_song.back());
                 }
 
+                if (type == "artist_list") {
+                  emit signal_artist_list(artist_list);
+                }
                 return;
               }
 
