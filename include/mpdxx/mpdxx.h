@@ -181,15 +181,90 @@ namespace mpdxx {
   using event = std::string;
 
 
+  class poller {
+    protected:
+      asio::io_context& io_context;
+      asio::ip::tcp::socket idle_socket;
+      asio::streambuf idle_read_buffer;
+
+    public:
+      miso::signal<mpdxx::event> signal_idle_event;
+
+    public:
+      poller(asio::io_context& ioc, std::string host, std::string port)
+        : io_context(ioc)
+        , idle_socket(io_context)
+      {
+        asio::ip::tcp::resolver resolver(io_context);
+
+        asio::async_connect(idle_socket, resolver.resolve(host, port),
+            [this](std::error_code ec, asio::ip::tcp::endpoint) {
+              if (ec) {
+                cout << "connect error: " << ec.message() << "\n";
+                return;
+              }
+
+              asio::read_until(idle_socket, idle_read_buffer, '\n');
+              std::istream is(&idle_read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              SendIdleRequest();
+            });
+      }
+
+    protected:
+      void SendIdleRequest() {
+        std::string send_command = "idle player playlist\n";
+
+        asio::async_write(idle_socket, asio::buffer(send_command, send_command.size()),
+            [this, send_command] (std::error_code ec, std::size_t length) {
+              if (ec) {
+                cout << fmt::format("SendIdleRequest: Error: {}\n", ec.message());
+                return;
+              }
+
+              cout << fmt::format("SendIdleRequest: Sent {} bytes, string is {} bytes.\n", length, send_command.size());
+
+              ReadIdleResponse();
+            });
+      }
+
+      void ReadIdleResponse() {
+        asio::async_read_until(idle_socket, idle_read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("ReadIdleResponse: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&idle_read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                SendIdleRequest();
+                return;
+              }
+
+              auto [key, val] = line_to_pair(line);
+              emit signal_idle_event(val);
+
+              ReadIdleResponse();
+            });
+      }
+  };
+
+
   class client {
     protected:
       asio::io_context& io_context;
 
       asio::ip::tcp::socket command_socket;
-      asio::ip::tcp::socket idle_socket;
 
       asio::streambuf command_read_buffer;
-      asio::streambuf idle_read_buffer;
 
       std::list<mpdxx::song> queue;
       std::list<mpdxx::song> current_song;
@@ -203,33 +278,13 @@ namespace mpdxx {
       miso::signal<mpdxx::song>            signal_current_song;
       miso::signal<std::list<mpdxx::song>> signal_queue;
       miso::signal<std::list<mpdxx::artist>> signal_artist_list;
-      miso::signal<mpdxx::event>             signal_idle_event;
 
     public:
-      client(asio::io_context& ioc)
+      client(asio::io_context& ioc, std::string host, std::string port)
         : io_context(ioc)
         , command_socket(io_context)
-        , idle_socket(io_context)
-      { }
-
-      void Connect(std::string host, std::string port) {
+      {
         asio::ip::tcp::resolver resolver(io_context);
-
-        asio::async_connect(idle_socket, resolver.resolve(host, port),
-            [this](std::error_code ec, asio::ip::tcp::endpoint) {
-              if (ec) {
-                cout << "connect error: " << ec.message() << "\n";
-                return;
-              }
-
-              cout << "Idle socket connected\n";
-              asio::read_until(idle_socket, idle_read_buffer, '\n');
-              std::istream is(&idle_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
-              SendIdleRequest();
-            });
 
         asio::async_connect(command_socket, resolver.resolve(host, port),
             [this](std::error_code ec, asio::ip::tcp::endpoint) {
@@ -296,47 +351,6 @@ namespace mpdxx {
 
     protected:
 
-      void SendIdleRequest() {
-        std::string send_command = "idle player playlist\n";
-
-        asio::async_write(idle_socket, asio::buffer(send_command, send_command.size()),
-            [this, send_command] (std::error_code ec, std::size_t length) {
-              if (ec) {
-                cout << fmt::format("SendIdleRequest: Error: {}\n", ec.message());
-                return;
-              }
-
-              cout << fmt::format("SendIdleRequest: Sent {} bytes, string is {} bytes.\n", length, send_command.size());
-
-              ReadIdleResponse();
-            });
-      }
-
-      void ReadIdleResponse() {
-        asio::async_read_until(idle_socket, idle_read_buffer, '\n',
-            [this] (std::error_code ec, std::size_t bytes_transferred) {
-              if (ec) {
-                cout << fmt::format("ReadIdleResponse: Error: {}\n", ec.message());
-                return;
-              }
-
-              std::istream is(&idle_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
-              trim(line);
-
-              if (line == "OK") {
-                SendIdleRequest();
-                return;
-              }
-
-              auto [key, val] = line_to_pair(line);
-              emit signal_idle_event(val);
-
-              ReadIdleResponse();
-            });
-      }
 
       void SimpleCommand(std::string command) {
         SendCommandRequest(

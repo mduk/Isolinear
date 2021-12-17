@@ -53,14 +53,13 @@ int main(int argc, char* argv[])
     thread_pool.emplace_back([&io_context](){ io_context.run(); });
   }
 
-  mpdxx::client mpdc(io_context);
+  mpdxx::client mpdc(io_context, "localhost", "6600");
+  mpdxx::poller mpdp(io_context, "localhost", "6600");
 
   miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
     cout << "Status:\n";
     cout << status << "\n";
   });
-
-  mpdc.Connect("localhost", "6600");
 
   SDL_Init(SDL_INIT_VIDEO);
   TTF_Init();
@@ -97,7 +96,7 @@ int main(int argc, char* argv[])
     };
   window.Add(&mpdframe);
 
-  miso::connect(mpdc.signal_idle_event, [&](mpdxx::event e){
+  miso::connect(mpdp.signal_idle_event, [&](mpdxx::event e){
     cout << fmt::format("Idle event: {}\n", e);
     if (e == "player") {
       mpdc.RequestCurrentSong();
