@@ -325,12 +325,10 @@ namespace mpdxx {
               auto [key, val] = line_to_pair(line);
               if (val == "player") {
                 cout << "Player changed, refreshing status\n";
-                RequestStatus();
                 SendIdleRequest();
               }
               if (val == "playlist") {
                 cout << "Playlist changed, refreshing queue\n";
-                RequestQueue();
                 SendIdleRequest();
               }
             });
