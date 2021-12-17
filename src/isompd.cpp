@@ -97,6 +97,10 @@ int main(int argc, char* argv[])
     };
   window.Add(&mpdframe);
 
+  miso::connect(mpdc.signal_idle_event, [&](mpdxx::event e){
+    cout << fmt::format("Idle event: {}\n", e);
+  });
+
   miso::connect(mpdframe.signal_view_change, [&](std::string from_view, std::string to_view){
     cout << fmt::format("View changed from {} to {}\n", from_view, to_view);
     if (to_view == mpdframe.V_QUEUE) {

@@ -177,6 +177,8 @@ namespace mpdxx {
       }
   };
 
+  using event = std::string;
+
 
   class client {
     protected:
@@ -200,6 +202,7 @@ namespace mpdxx {
       miso::signal<mpdxx::song>            signal_current_song;
       miso::signal<std::list<mpdxx::song>> signal_queue;
       miso::signal<std::list<mpdxx::artist>> signal_artist_list;
+      miso::signal<mpdxx::event>             signal_idle_event;
 
     public:
       client(asio::io_context& ioc)
@@ -322,15 +325,14 @@ namespace mpdxx {
 
               trim(line);
 
+              if (line == "OK") {
+                return;
+              }
+
               auto [key, val] = line_to_pair(line);
-              if (val == "player") {
-                cout << "Player changed, refreshing status\n";
-                SendIdleRequest();
-              }
-              if (val == "playlist") {
-                cout << "Playlist changed, refreshing queue\n";
-                SendIdleRequest();
-              }
+              emit signal_idle_event(val);
+
+              SendIdleRequest();
             });
       }
 
