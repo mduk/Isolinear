@@ -106,7 +106,12 @@ class QueueView : public MPDView {
           );
         songbar.Colours(Colours());
         songbar.Draw(renderer);
+
         i++;
+
+        if (i == 12) {
+          return;
+        }
       }
     }
 };
