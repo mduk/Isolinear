@@ -184,8 +184,8 @@ namespace mpdxx {
   class poller {
     protected:
       asio::io_context& io_context;
-      asio::ip::tcp::socket idle_socket;
-      asio::streambuf idle_read_buffer;
+      asio::ip::tcp::socket socket;
+      asio::streambuf socket_read_buffer;
 
     public:
       miso::signal<mpdxx::event> signal_idle_event;
@@ -193,19 +193,19 @@ namespace mpdxx {
     public:
       poller(asio::io_context& ioc, std::string host, std::string port)
         : io_context(ioc)
-        , idle_socket(io_context)
+        , socket(io_context)
       {
         asio::ip::tcp::resolver resolver(io_context);
 
-        asio::async_connect(idle_socket, resolver.resolve(host, port),
+        asio::async_connect(socket, resolver.resolve(host, port),
             [this](std::error_code ec, asio::ip::tcp::endpoint) {
               if (ec) {
                 cout << "connect error: " << ec.message() << "\n";
                 return;
               }
 
-              asio::read_until(idle_socket, idle_read_buffer, '\n');
-              std::istream is(&idle_read_buffer);
+              asio::read_until(socket, socket_read_buffer, '\n');
+              std::istream is(&socket_read_buffer);
               std::string line;
               std::getline(is, line);
 
@@ -217,7 +217,7 @@ namespace mpdxx {
       void SendIdleRequest() {
         std::string send_command = "idle player playlist\n";
 
-        asio::async_write(idle_socket, asio::buffer(send_command, send_command.size()),
+        asio::async_write(socket, asio::buffer(send_command, send_command.size()),
             [this, send_command] (std::error_code ec, std::size_t length) {
               if (ec) {
                 cout << fmt::format("SendIdleRequest: Error: {}\n", ec.message());
@@ -231,14 +231,14 @@ namespace mpdxx {
       }
 
       void ReadIdleResponse() {
-        asio::async_read_until(idle_socket, idle_read_buffer, '\n',
+        asio::async_read_until(socket, socket_read_buffer, '\n',
             [this] (std::error_code ec, std::size_t bytes_transferred) {
               if (ec) {
                 cout << fmt::format("ReadIdleResponse: Error: {}\n", ec.message());
                 return;
               }
 
-              std::istream is(&idle_read_buffer);
+              std::istream is(&socket_read_buffer);
               std::string line;
               std::getline(is, line);
 
