@@ -133,6 +133,7 @@ int main(int argc, char* argv[])
             case SDLK_ESCAPE:
               running = false;
               break;
+            case 'a': mpdc.RequestArtistList(); break;
             case 'd': window.Colours(debug_colours); break;
             case 'r': window.Colours(red_alert_colours); break;
             case 'y': window.Colours(yellow_alert_colours); break;
