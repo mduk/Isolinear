@@ -99,6 +99,9 @@ int main(int argc, char* argv[])
 
   miso::connect(mpdc.signal_idle_event, [&](mpdxx::event e){
     cout << fmt::format("Idle event: {}\n", e);
+    if (e == "player") {
+      mpdc.RequestCurrentSong();
+    }
   });
 
   miso::connect(mpdframe.signal_view_change, [&](std::string from_view, std::string to_view){

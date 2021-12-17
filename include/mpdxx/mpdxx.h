@@ -177,6 +177,7 @@ namespace mpdxx {
       }
   };
 
+
   using event = std::string;
 
 
@@ -326,13 +327,14 @@ namespace mpdxx {
               trim(line);
 
               if (line == "OK") {
+                SendIdleRequest();
                 return;
               }
 
               auto [key, val] = line_to_pair(line);
               emit signal_idle_event(val);
 
-              SendIdleRequest();
+              ReadIdleResponse();
             });
       }
 
