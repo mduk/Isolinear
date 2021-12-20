@@ -298,10 +298,10 @@ namespace mpdxx {
       mpdxx::status status;
 
     public:
-      miso::signal<>                       signal_connected;
-      miso::signal<mpdxx::status>          signal_status;
-      miso::signal<mpdxx::song>            signal_current_song;
-      miso::signal<std::list<mpdxx::song>> signal_queue;
+      miso::signal<>                         signal_connected;
+      miso::signal<mpdxx::status>            signal_status;
+      miso::signal<mpdxx::song>              signal_current_song;
+      miso::signal<std::list<mpdxx::song>>   signal_queue;
       miso::signal<std::list<mpdxx::artist>> signal_artist_list;
 
     public:
