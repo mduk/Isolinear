@@ -185,19 +185,20 @@ namespace mpdxx {
 
 
   using event = std::string;
+  using command = std::string;
 
-  class baseclient {
+  class base_client {
     protected:
       std::string host;
       std::string port;
 
       asio::io_context& io_context;
       asio::ip::tcp::socket socket;
-      asio::streambuf socket_read_buffer;
       asio::ip::tcp::resolver socket_resolver;
+      asio::streambuf socket_read_buffer;
 
     public:
-      baseclient(asio::io_context& ioc, std::string h, std::string p)
+      base_client(asio::io_context& ioc, std::string h, std::string p)
         : io_context(ioc)
         , host(h)
         , port(p)
@@ -212,17 +213,97 @@ namespace mpdxx {
   };
 
 
-  class poller : public baseclient {
+  class command_client : public base_client {
+
+    protected:
+      mpdxx::command command;
+      std::list<std::string> lines;
+
+    public:
+      command_client(asio::io_context& ioc, std::string h, std::string p, mpdxx::command c)
+        : base_client(ioc, h, p)
+        , command(c)
+      {
+        connect();
+      }
+
+    protected:
+      virtual void connect() override {
+        asio::async_connect(socket, socket_resolver.resolve(host, port),
+            [this](std::error_code ec, asio::ip::tcp::endpoint) {
+              if (ec) {
+                cout << "connect error: " << ec.message() << "\n";
+                return;
+              }
+
+              asio::read_until(socket, socket_read_buffer, '\n');
+              std::istream is(&socket_read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              send_command();
+            });
+      }
+
+      virtual void send_command() {
+        std::string send_str = command + "\n";
+        asio::async_write(socket, asio::buffer(send_str, send_str.size()),
+            [this](std::error_code ec, std::size_t length) {
+              if (ec) {
+                cout << fmt::format("command_client: send_command: Error: {}\n", ec.message());
+                return;
+              }
+
+              read_response();
+            });
+      }
+
+      void read_response() {
+        asio::async_read_until(socket, socket_read_buffer, '\n',
+            [this] (std::error_code ec, std::size_t bytes_transferred) {
+              if (ec) {
+                cout << fmt::format("command_client: read_response: Error: {}\n", ec.message());
+                return;
+              }
+
+              std::istream is(&socket_read_buffer);
+              std::string line;
+              std::getline(is, line);
+
+              trim(line);
+
+              if (line == "OK") {
+                disconnect();
+                complete();
+                return;
+              }
+
+              read_response();
+            });
+      }
+
+      virtual void disconnect() {
+        socket.close();
+      }
+
+      virtual void complete() {
+        cout << "All done\n";
+      }
+
+  };
+
+
+  class poller : public base_client {
     public:
       miso::signal<mpdxx::event> signal_idle_event;
 
     public:
       poller(asio::io_context& ioc, std::string h, std::string p)
-        : baseclient(ioc, h, p)
+        : base_client(ioc, h, p)
       { }
 
     protected:
-      void connect() {
+      virtual void connect() override {
         asio::async_connect(socket, socket_resolver.resolve(host, port),
             [this](std::error_code ec, asio::ip::tcp::endpoint) {
               if (ec) {
