@@ -95,17 +95,6 @@ class Window {
       }
     }
 
-    void OnWindowResize(SDL_WindowEvent& event) {
-
-      SDL_GetWindowSize(
-          sdl_window,
-          &size.x,
-          &size.y
-        );
-
-      grid.ResizeBounds(size);
-    }
-
   protected:
     SDL_Window* sdl_window;
 

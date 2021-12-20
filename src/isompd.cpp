@@ -176,12 +176,6 @@ int main(int argc, char* argv[])
         window.OnPointerEvent(PointerEvent{ e.button });
         break;
 
-      case SDL_WINDOWEVENT:
-        switch (e.window.event) {
-          case SDL_WINDOWEVENT_RESIZED: window.OnWindowResize(e.window); break;
-        }
-        break;
-
       case SDL_QUIT:
         running = false;
         break;
