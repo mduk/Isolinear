@@ -274,10 +274,6 @@ class MpdFrame : public Drawable {
     }
 
     virtual void SwitchView(std::string view) {
-      if (view == activeView) {
-        return;
-      }
-
       auto previousView = activeView;
       activeView = view;
 
