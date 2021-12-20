@@ -148,58 +148,58 @@ class paginated_rows {
 
 class QueueView : public MPDView {
   protected:
-    paginated_rows<mpdxx::song> pager;
+    paginated_rows<mpdxx::song> queue_pager;
     HorizontalButtonBar pagerbuttons;
 
   public:
     QueueView(Grid g, Window& w, mpdxx::client& mpdc)
       : MPDView("QUEUE", g, w,  mpdc)
-      , pager(g, w, 10)
+      , queue_pager(g, w, 10)
       , pagerbuttons(w, g.Rows(21, 22))
     {
-      miso::connect(pagerbuttons.AddButton("PREVIOUS").signal_press, [this](){ pager.previous_page(); });
-      miso::connect(pagerbuttons.AddButton("NEXT")    .signal_press, [this](){ pager.next_page();     });
+      miso::connect(pagerbuttons.AddButton("PREVIOUS").signal_press, [this](){ queue_pager.previous_page(); });
+      miso::connect(pagerbuttons.AddButton("NEXT")    .signal_press, [this](){ queue_pager.next_page();     });
       RegisterChild(&pagerbuttons);
 
       miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
         for (auto& song : queue) {
-          pager.add_row(song);
+          queue_pager.add_row(song);
         }
       });
     }
 
     void Draw(SDL_Renderer* renderer) const override {
       MPDView::Draw(renderer);
-      pager.draw_page(renderer, Colours());
+      queue_pager.draw_page(renderer, Colours());
     }
 };
 
 
 class BrowseView : public MPDView {
   protected:
-    paginated_rows<mpdxx::artist> pager;
+    paginated_rows<mpdxx::artist> artist_pager;
     HorizontalButtonBar pagerbuttons;
 
   public:
     BrowseView(Grid g, Window& w, mpdxx::client& _mpdc)
       : MPDView("BROWSE", g, w, _mpdc)
-      , pager(g, w, 10)
+      , artist_pager(g, w, 10)
       , pagerbuttons(w, g.Rows(21, 22))
     {
-      miso::connect(pagerbuttons.AddButton("PREVIOUS").signal_press, [this](){ pager.previous_page(); });
-      miso::connect(pagerbuttons.AddButton("NEXT")    .signal_press, [this](){ pager.next_page();     });
+      miso::connect(pagerbuttons.AddButton("PREVIOUS").signal_press, [this](){ artist_pager.previous_page(); });
+      miso::connect(pagerbuttons.AddButton("NEXT")    .signal_press, [this](){ artist_pager.next_page();     });
       RegisterChild(&pagerbuttons);
 
       miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
         for (auto& artist : artist_list) {
-          pager.add_row(artist);
+          artist_pager.add_row(artist);
         }
       });
     }
 
     void Draw(SDL_Renderer* renderer) const override {
       MPDView::Draw(renderer);
-      pager.draw_page(renderer, Colours());
+      artist_pager.draw_page(renderer, Colours());
     }
 };
 
