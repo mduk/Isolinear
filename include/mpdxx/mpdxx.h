@@ -169,15 +169,20 @@ namespace mpdxx {
         return entitydata.at("duration");
       }
 
-      std::string const Name() const {
+      std::string const Header() const {
         return fmt::format("{} - {}", Artist(), Title());
       }
   };
+
 
   class artist : public entity {
     public:
       std::string const Name() const {
         return value_or_default<std::string>("Artist", "");
+      }
+
+      std::string const Header() const {
+        return Name();
       }
   };
 

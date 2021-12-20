@@ -135,7 +135,7 @@ class paginated_rows {
         EastHeaderBar songbar(
             grid.Rows((i*2)-1, i*2),
             window,
-            rows.at(row_index).Name()
+            rows.at(row_index).Header()
           );
         songbar.Colours(colours);
         songbar.Draw(renderer);
