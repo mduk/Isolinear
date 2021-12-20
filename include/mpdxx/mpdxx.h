@@ -288,6 +288,7 @@ namespace mpdxx {
       asio::io_context& io_context;
 
       asio::ip::tcp::socket command_socket;
+      asio::ip::tcp::resolver resolver;
 
       asio::streambuf command_read_buffer;
 
@@ -307,10 +308,9 @@ namespace mpdxx {
     public:
       client(asio::io_context& ioc, std::string host, std::string port)
         : io_context(ioc)
+        , resolver(io_context)
         , command_socket(io_context)
       {
-        asio::ip::tcp::resolver resolver(io_context);
-
         asio::async_connect(command_socket, resolver.resolve(host, port),
             [this](std::error_code ec, asio::ip::tcp::endpoint) {
               if (ec) {
