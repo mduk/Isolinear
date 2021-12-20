@@ -41,9 +41,6 @@ namespace mpdxx {
       int delimiter_start_index = line.find(delimiter);
       int delimiter_end_index = delimiter_start_index + delimiter_length;
 
-      cout << fmt::format("Line length: {} Delimiter: {}:{}\n",
-          line.length(), delimiter_start_index, delimiter_end_index);
-
       std::string key = line.substr(0, delimiter_start_index);
       std::string val = line.substr(delimiter_end_index);
       trim(val);
