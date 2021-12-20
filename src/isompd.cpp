@@ -136,13 +136,16 @@ int main(int argc, char* argv[])
             case SDLK_ESCAPE:
               running = false;
               break;
+
+            case 'g': drawdebug = !drawdebug; break;
+            case 's': mpdc.RequestStatus(); break;
+
             case 'd': window.Colours(debug_colours       ); break;
             case 'r': window.Colours(red_alert_colours   ); break;
             case 'y': window.Colours(yellow_alert_colours); break;
             case 'b': window.Colours(blue_alert_colours  ); break;
             case 'n': window.Colours(nightgazer_colours  ); break;
-            case 'g': drawdebug = !drawdebug; break;
-            case 's': mpdc.RequestStatus(); break;
+
             case 'a': mpdframe.SwitchView(mpdframe.V_BROWSE    ); break;
             case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;
             case 'q': mpdframe.SwitchView(mpdframe.V_QUEUE     ); break;
