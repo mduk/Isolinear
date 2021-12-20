@@ -105,12 +105,9 @@ int main(int argc, char* argv[])
 
   miso::connect(mpdframe.signal_view_change, [&](std::string from_view, std::string to_view){
     cout << fmt::format("View changed from {} to {}\n", from_view, to_view);
-    if (to_view == mpdframe.V_QUEUE) {
-      mpdc.RequestQueue();
-    }
-    if (to_view == mpdframe.V_NOWPLAYING) {
-     mpdc.RequestCurrentSong();
-    }
+    if (to_view == mpdframe.V_QUEUE     ) { mpdc.RequestQueue();       }
+    if (to_view == mpdframe.V_NOWPLAYING) { mpdc.RequestCurrentSong(); }
+    if (to_view == mpdframe.V_ARTISTS   ) { mpdc.RequestArtistList();  }
   });
 
   window.Colours(nightgazer_colours);
@@ -149,7 +146,6 @@ int main(int argc, char* argv[])
             case 's': mpdc.RequestStatus(); break;
             case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;
             case 'q': mpdframe.SwitchView(mpdframe.V_QUEUE); break;
-            case 'o': mpdframe.SwitchView(mpdframe.V_OUTPUTS); break;
           }
           break;
 

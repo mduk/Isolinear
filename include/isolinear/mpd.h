@@ -83,45 +83,124 @@ class NowPlayingView : public MPDView {
 
 
 
-class QueueView : public MPDView {
+template <class T>
+class paginated_rows {
+
   protected:
-    std::list<mpdxx::song> queue;
+    Grid grid;
+    Window& window;
+    uint8_t page = 1;
+    int page_rows;
+    std::vector<T> rows{};
 
   public:
-    QueueView(Grid g, Window& w, mpdxx::client& mpdc)
-      : MPDView("QUEUE", g, w,  mpdc)
+    paginated_rows(Grid g, Window& w, int pr)
+      : grid(g), window(w), page_rows(pr)
     {
-      miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> newqueue){
-        queue = newqueue;
-      });
+
     }
 
-    void Draw(SDL_Renderer* renderer) const override {
-      int i = 1;
-      for (auto const& song : queue) {
+    void add_row(T row) {
+      rows.push_back(row);
+    }
+
+    void next_page() {
+      page++;
+    }
+
+    void previous_page() {
+      if (page == 1) {
+        return;
+      }
+      page--;
+    }
+
+    void draw_page(SDL_Renderer* renderer, ColourScheme colours) const {
+      auto nrows = rows.size();
+
+      if (nrows == 0) {
+        return;
+      }
+
+      int end_index = page_rows * page;
+      int start_index = end_index - page_rows;
+
+      for (int i = 1; i <= page_rows; i++) {
+        int row_index = start_index + (i-1);
+
+        if (nrows <= row_index) {
+          continue;
+        }
+
         EastHeaderBar songbar(
             grid.Rows((i*2)-1, i*2),
             window,
-            song.Title()
+            rows.at(row_index).Name()
           );
-        songbar.Colours(Colours());
+        songbar.Colours(colours);
         songbar.Draw(renderer);
-
-        i++;
-
-        if (i == 12) {
-          return;
-        }
       }
+
+
     }
 };
 
 
-class OutputsView : public MPDView {
+class QueueView : public MPDView {
+  protected:
+    paginated_rows<mpdxx::song> pager;
+    HorizontalButtonBar pagerbuttons;
+
   public:
-    OutputsView(Grid g, Window& w, mpdxx::client& _mpdc)
-      : MPDView("OUTPUTS", g, w, _mpdc)
-    {}
+    QueueView(Grid g, Window& w, mpdxx::client& mpdc)
+      : MPDView("QUEUE", g, w,  mpdc)
+      , pager(g, w, 10)
+      , pagerbuttons(w, g.Rows(21, 22))
+    {
+      miso::connect(pagerbuttons.AddButton("PREVIOUS").signal_press, [this](){ pager.previous_page(); });
+      miso::connect(pagerbuttons.AddButton("NEXT")    .signal_press, [this](){ pager.next_page();     });
+      RegisterChild(&pagerbuttons);
+
+      miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
+        for (auto& song : queue) {
+          pager.add_row(song);
+        }
+      });
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      MPDView::Draw(renderer);
+      pager.draw_page(renderer, Colours());
+    }
+};
+
+
+class ArtistsView : public MPDView {
+  protected:
+    paginated_rows<mpdxx::artist> pager;
+    HorizontalButtonBar pagerbuttons;
+
+  public:
+    ArtistsView(Grid g, Window& w, mpdxx::client& _mpdc)
+      : MPDView("ARTISTS", g, w, _mpdc)
+      , pager(g, w, 10)
+      , pagerbuttons(w, g.Rows(21, 22))
+    {
+      miso::connect(pagerbuttons.AddButton("PREVIOUS").signal_press, [this](){ pager.previous_page(); });
+      miso::connect(pagerbuttons.AddButton("NEXT")    .signal_press, [this](){ pager.next_page();     });
+      RegisterChild(&pagerbuttons);
+
+      miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
+        for (auto& artist : artist_list) {
+          pager.add_row(artist);
+        }
+      });
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      MPDView::Draw(renderer);
+      pager.draw_page(renderer, Colours());
+    }
 };
 
 
@@ -129,10 +208,7 @@ class MpdFrame : public Drawable {
   public:
     const std::string V_NOWPLAYING = "NOW PLAYING";
     const std::string V_QUEUE = "QUEUE";
-    const std::string V_BROWSE = "BROWSE";
     const std::string V_ARTISTS = "ARTISTS";
-    const std::string V_SEARCH = "SEARCH";
-    const std::string V_OUTPUTS = "OUTPUTS";
 
   public:
     miso::signal<std::string, std::string> signal_view_change;
@@ -151,9 +227,9 @@ class MpdFrame : public Drawable {
     std::map<const std::string, View*> views;
     std::string activeView = V_QUEUE;
 
+    ArtistsView viewArtists;
     NowPlayingView viewNowPlaying;
     QueueView viewQueue;
-    OutputsView viewOutputs;
 
   public:
     MpdFrame(Grid g, Window& w, mpdxx::client& _mpdc)
@@ -168,7 +244,7 @@ class MpdFrame : public Drawable {
 
         , viewNowPlaying(layout.Centre(), w, mpdc)
         , viewQueue     (layout.Centre(), w, mpdc)
-        , viewOutputs   (layout.Centre(), w, mpdc)
+        , viewArtists   (layout.Centre(), w, mpdc)
     {
       RegisterChild(&hdrFrame);
       RegisterChild(&barView);
@@ -178,7 +254,7 @@ class MpdFrame : public Drawable {
 
       RegisterView(&viewNowPlaying);
       RegisterView(&viewQueue);
-      RegisterView(&viewOutputs);
+      RegisterView(&viewArtists);
 
       auto switch_view = [this]() {
         auto button = miso::sender<Button>();

@@ -168,6 +168,10 @@ namespace mpdxx {
       std::string const DurationString() const {
         return entitydata.at("duration");
       }
+
+      std::string const Name() const {
+        return fmt::format("{} - {}", Artist(), Title());
+      }
   };
 
   class artist : public entity {
@@ -180,24 +184,44 @@ namespace mpdxx {
 
   using event = std::string;
 
-
-  class poller {
+  class baseclient {
     protected:
+      std::string host;
+      std::string port;
+
       asio::io_context& io_context;
       asio::ip::tcp::socket socket;
       asio::streambuf socket_read_buffer;
+      asio::ip::tcp::resolver socket_resolver;
 
+    public:
+      baseclient(asio::io_context& ioc, std::string h, std::string p)
+        : io_context(ioc)
+        , host(h)
+        , port(p)
+        , socket(io_context)
+        , socket_resolver(io_context)
+      {
+        connect();
+      }
+
+    protected:
+      virtual void connect() {}
+  };
+
+
+  class poller : public baseclient {
     public:
       miso::signal<mpdxx::event> signal_idle_event;
 
     public:
-      poller(asio::io_context& ioc, std::string host, std::string port)
-        : io_context(ioc)
-        , socket(io_context)
-      {
-        asio::ip::tcp::resolver resolver(io_context);
+      poller(asio::io_context& ioc, std::string h, std::string p)
+        : baseclient(ioc, h, p)
+      { }
 
-        asio::async_connect(socket, resolver.resolve(host, port),
+    protected:
+      void connect() {
+        asio::async_connect(socket, socket_resolver.resolve(host, port),
             [this](std::error_code ec, asio::ip::tcp::endpoint) {
               if (ec) {
                 cout << "connect error: " << ec.message() << "\n";
@@ -213,7 +237,6 @@ namespace mpdxx {
             });
       }
 
-    protected:
       void SendIdleRequest() {
         std::string send_command = "idle player playlist\n";
 
@@ -321,7 +344,7 @@ namespace mpdxx {
       void RequestArtistList() {
         SendCommandRequest("list artist", [this](){
             artist_list.clear();
-            ReadEntityResponse<mpdxx::artist>("artists", artist_list, "Artist");
+            ReadEntityResponse<mpdxx::artist>("artist_list", artist_list, "Artist");
         });
       }
 
