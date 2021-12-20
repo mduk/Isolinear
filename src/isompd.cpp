@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
     cout << fmt::format("View changed from {} to {}\n", from_view, to_view);
     if (to_view == mpdframe.V_QUEUE     ) { mpdc.RequestQueue();       }
     if (to_view == mpdframe.V_NOWPLAYING) { mpdc.RequestCurrentSong(); }
-    if (to_view == mpdframe.V_ARTISTS   ) { mpdc.RequestArtistList();  }
+    if (to_view == mpdframe.V_BROWSE    ) { mpdc.RequestArtistList();  }
   });
 
   window.Colours(nightgazer_colours);
@@ -143,9 +143,9 @@ int main(int argc, char* argv[])
             case 'n': window.Colours(nightgazer_colours); break;
             case 'g': drawdebug = !drawdebug; break;
             case 's': mpdc.RequestStatus(); break;
-            case 'a': mpdframe.SwitchView(mpdframe.V_ARTISTS); break;
+            case 'a': mpdframe.SwitchView(mpdframe.V_BROWSE    ); break;
             case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;
-            case 'q': mpdframe.SwitchView(mpdframe.V_QUEUE); break;
+            case 'q': mpdframe.SwitchView(mpdframe.V_QUEUE     ); break;
           }
           break;
 

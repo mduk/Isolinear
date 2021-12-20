@@ -175,14 +175,14 @@ class QueueView : public MPDView {
 };
 
 
-class ArtistsView : public MPDView {
+class BrowseView : public MPDView {
   protected:
     paginated_rows<mpdxx::artist> pager;
     HorizontalButtonBar pagerbuttons;
 
   public:
-    ArtistsView(Grid g, Window& w, mpdxx::client& _mpdc)
-      : MPDView("ARTISTS", g, w, _mpdc)
+    BrowseView(Grid g, Window& w, mpdxx::client& _mpdc)
+      : MPDView("BROWSE", g, w, _mpdc)
       , pager(g, w, 10)
       , pagerbuttons(w, g.Rows(21, 22))
     {
@@ -208,7 +208,7 @@ class MpdFrame : public Drawable {
   public:
     const std::string V_NOWPLAYING = "NOW PLAYING";
     const std::string V_QUEUE = "QUEUE";
-    const std::string V_ARTISTS = "ARTISTS";
+    const std::string V_BROWSE = "BROWSE";
 
   public:
     miso::signal<std::string, std::string> signal_view_change;
@@ -227,7 +227,7 @@ class MpdFrame : public Drawable {
     std::map<const std::string, View*> views;
     std::string activeView = V_QUEUE;
 
-    ArtistsView viewArtists;
+    BrowseView viewBrowse;
     NowPlayingView viewNowPlaying;
     QueueView viewQueue;
 
@@ -244,7 +244,7 @@ class MpdFrame : public Drawable {
 
         , viewNowPlaying(layout.Centre(), w, mpdc)
         , viewQueue     (layout.Centre(), w, mpdc)
-        , viewArtists   (layout.Centre(), w, mpdc)
+        , viewBrowse   (layout.Centre(), w, mpdc)
     {
       RegisterChild(&hdrFrame);
       RegisterChild(&barView);
@@ -254,7 +254,7 @@ class MpdFrame : public Drawable {
 
       RegisterView(&viewNowPlaying);
       RegisterView(&viewQueue);
-      RegisterView(&viewArtists);
+      RegisterView(&viewBrowse);
 
       auto switch_view = [this]() {
         auto button = miso::sender<Button>();
