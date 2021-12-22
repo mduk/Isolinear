@@ -27,11 +27,17 @@ target_include_directories(LibMPDXX INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/include/mpdxx
 )
 
+add_library(LibIsoMPD INTERFACE)
+target_include_directories(LibIsoMPD INTERFACE
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/isompd
+)
+
 add_executable(IsoMPD src/isompd.cpp)
 target_link_libraries(IsoMPD
   ${CONAN_LIBS}
   LibMiso
   LibMPDXX
+  LibIsoMPD
   -lSDL2_gfx
 )
 
