@@ -100,6 +100,10 @@ class paginated_rows {
 
     }
 
+    void clear() {
+      rows.clear();
+    }
+
     void add_row(T row) {
       rows.push_back(row);
     }
@@ -162,6 +166,7 @@ class QueueView : public MPDView {
       RegisterChild(&queue_pager_buttons);
 
       miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
+        queue_pager.clear();
         for (auto& song : queue) {
           queue_pager.add_row(song);
         }
@@ -198,7 +203,7 @@ class BrowseView : public MPDView {
         artist_pager.previous_page();
         album_pager.previous_page();
       });
-      miso::connect(artist_pager_buttons.AddButton("NEXT")    .signal_press, [this](){
+      miso::connect(artist_pager_buttons.AddButton("NEXT").signal_press, [this](){
         artist_pager.next_page();
         album_pager.next_page();
       });

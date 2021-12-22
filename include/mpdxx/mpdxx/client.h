@@ -44,7 +44,7 @@ namespace mpdxx {
   using event = std::string;
 
 
-  class command_client : public base_client {
+  class command_client {
 
     protected:
       std::string host;

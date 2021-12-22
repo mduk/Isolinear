@@ -54,7 +54,6 @@ int main(int argc, char* argv[])
   }
 
   mpdxx::client mpdc(io_context, "localhost", "6600");
-  mpdxx::poller mpdp(io_context, "localhost", "6600");
 
   miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
     cout << "Status:\n";
@@ -95,13 +94,6 @@ int main(int argc, char* argv[])
       mpdc
     };
   window.Add(&mpdframe);
-
-  miso::connect(mpdp.signal_idle_event, [&](mpdxx::event e){
-    cout << fmt::format("Idle event: {}\n", e);
-    if (e == "player") {
-      mpdc.RequestCurrentSong();
-    }
-  });
 
   miso::connect(mpdframe.signal_view_change, [&](std::string from_view, std::string to_view){
     cout << fmt::format("View changed from {} to {}\n", from_view, to_view);
