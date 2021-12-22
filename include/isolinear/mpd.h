@@ -21,23 +21,26 @@
 
 using std::cerr;
 
+namespace isompd {
 
-class MPDView : public View {
-  protected:
-    mpdxx::client& mpdc;
-    Window& window;
+  class view : public View {
+    protected:
+      mpdxx::client& mpdc;
+      Window& window;
 
-  public:
-    MPDView(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
-      : View(t, g)
-      , window{w}
-      , mpdc{_mpdc}
-    {};
-};
+    public:
+      view(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
+        : View(t, g)
+        , window{w}
+        , mpdc{_mpdc}
+      {};
+  };
+
+}
 
 namespace isompd::now_playing {
 
-  class view : public MPDView {
+  class view : public isompd::view {
     protected:
       bool hide = false;
       PairHeaderBar title;
@@ -48,7 +51,7 @@ namespace isompd::now_playing {
 
     public:
       view(Grid g, Window& w, mpdxx::client& _mpdc)
-        : MPDView("NOW PLAYING", g, w, _mpdc)
+        : isompd::view("NOW PLAYING", g, w, _mpdc)
         , title(g.Rows(3,4), w, "TITLE", "[title]")
         , album(g.Rows(5,6), w, "ALBUM", "[album]")
         , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
@@ -77,7 +80,7 @@ namespace isompd::now_playing {
         if (hide) {
           return;
         }
-        MPDView::Draw(renderer);
+        isompd::view::Draw(renderer);
       }
   };
 
@@ -158,7 +161,7 @@ namespace isompd::browse {
       {}
   };
 
-  class view : public MPDView {
+  class view : public isompd::view {
     protected:
       Grid artist_grid;
       Grid album_grid;
@@ -169,7 +172,7 @@ namespace isompd::browse {
 
     public:
       view(Grid g, Window& w, mpdxx::client& _mpdc)
-        : MPDView("BROWSE", g, w, _mpdc)
+        : isompd::view("BROWSE", g, w, _mpdc)
         , artist_grid(g)
         , artist_pager(artist_grid, w, 10)
         , artist_pager_buttons(w, g.Rows(21, 22))
@@ -191,7 +194,7 @@ namespace isompd::browse {
       }
 
       void Draw(SDL_Renderer* renderer) const override {
-        MPDView::Draw(renderer);
+        isompd::view::Draw(renderer);
         artist_pager.draw_page(renderer, Colours());
       }
   };
@@ -207,14 +210,14 @@ namespace isompd::queue {
       {}
   };
 
-  class view : public MPDView {
+  class view : public isompd::view {
     protected:
       paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
       HorizontalButtonBar queue_pager_buttons;
 
     public:
       view(Grid g, Window& w, mpdxx::client& mpdc)
-        : MPDView("QUEUE", g, w,  mpdc)
+        : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
         , queue_pager_buttons(w, g.Rows(21, 22))
       {
@@ -231,7 +234,7 @@ namespace isompd::queue {
       }
 
       void Draw(SDL_Renderer* renderer) const override {
-        MPDView::Draw(renderer);
+        isompd::view::Draw(renderer);
         queue_pager.draw_page(renderer, Colours());
       }
   };
