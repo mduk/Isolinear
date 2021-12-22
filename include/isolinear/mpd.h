@@ -156,6 +156,43 @@ namespace isompd::browse {
       {}
   };
 
+  class view : public MPDView {
+    protected:
+      Grid artist_grid;
+      Grid album_grid;
+
+      paginated_rows<mpdxx::artist, isompd::browse::artist_row> artist_pager;
+
+      HorizontalButtonBar artist_pager_buttons;
+
+    public:
+      view(Grid g, Window& w, mpdxx::client& _mpdc)
+        : MPDView("BROWSE", g, w, _mpdc)
+        , artist_grid(g)
+        , artist_pager(artist_grid, w, 10)
+        , artist_pager_buttons(w, g.Rows(21, 22))
+      {
+        miso::connect(artist_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){
+          artist_pager.previous_page();
+        });
+        miso::connect(artist_pager_buttons.AddButton("NEXT").signal_press, [this](){
+          artist_pager.next_page();
+        });
+        RegisterChild(&artist_pager_buttons);
+
+        miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
+          artist_pager.clear();
+          for (auto& artist : artist_list) {
+            artist_pager.add_row(artist);
+          }
+        });
+      }
+
+      void Draw(SDL_Renderer* renderer) const override {
+        MPDView::Draw(renderer);
+        artist_pager.draw_page(renderer, Colours());
+      }
+  };
 }
 
 
@@ -201,43 +238,6 @@ namespace isompd::queue {
 }
 
 
-class BrowseView : public MPDView {
-  protected:
-    Grid artist_grid;
-    Grid album_grid;
-
-    paginated_rows<mpdxx::artist, isompd::browse::artist_row> artist_pager;
-
-    HorizontalButtonBar artist_pager_buttons;
-
-  public:
-    BrowseView(Grid g, Window& w, mpdxx::client& _mpdc)
-      : MPDView("BROWSE", g, w, _mpdc)
-      , artist_grid(g)
-      , artist_pager(artist_grid, w, 10)
-      , artist_pager_buttons(w, g.Rows(21, 22))
-    {
-      miso::connect(artist_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){
-        artist_pager.previous_page();
-      });
-      miso::connect(artist_pager_buttons.AddButton("NEXT").signal_press, [this](){
-        artist_pager.next_page();
-      });
-      RegisterChild(&artist_pager_buttons);
-
-      miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
-        artist_pager.clear();
-        for (auto& artist : artist_list) {
-          artist_pager.add_row(artist);
-        }
-      });
-    }
-
-    void Draw(SDL_Renderer* renderer) const override {
-      MPDView::Draw(renderer);
-      artist_pager.draw_page(renderer, Colours());
-    }
-};
 
 
 class MpdFrame : public Drawable {
@@ -263,7 +263,7 @@ class MpdFrame : public Drawable {
     std::map<const std::string, View*> views;
     std::string activeView = V_QUEUE;
 
-    BrowseView viewBrowse;
+    isompd::browse::view viewBrowse;
     NowPlayingView viewNowPlaying;
     isompd::queue::view viewQueue;
 
