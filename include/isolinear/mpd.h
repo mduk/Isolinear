@@ -168,37 +168,37 @@ namespace isompd::queue {
       {}
   };
 
+  class view : public MPDView {
+    protected:
+      paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
+      HorizontalButtonBar queue_pager_buttons;
+
+    public:
+      view(Grid g, Window& w, mpdxx::client& mpdc)
+        : MPDView("QUEUE", g, w,  mpdc)
+        , queue_pager(g, w, 10)
+        , queue_pager_buttons(w, g.Rows(21, 22))
+      {
+        miso::connect(queue_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){ queue_pager.previous_page(); });
+        miso::connect(queue_pager_buttons.AddButton("NEXT")    .signal_press, [this](){ queue_pager.next_page();     });
+        RegisterChild(&queue_pager_buttons);
+
+        miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
+          queue_pager.clear();
+          for (auto& song : queue) {
+            queue_pager.add_row(song);
+          }
+        });
+      }
+
+      void Draw(SDL_Renderer* renderer) const override {
+        MPDView::Draw(renderer);
+        queue_pager.draw_page(renderer, Colours());
+      }
+  };
+
+
 }
-
-
-class QueueView : public MPDView {
-  protected:
-    paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
-    HorizontalButtonBar queue_pager_buttons;
-
-  public:
-    QueueView(Grid g, Window& w, mpdxx::client& mpdc)
-      : MPDView("QUEUE", g, w,  mpdc)
-      , queue_pager(g, w, 10)
-      , queue_pager_buttons(w, g.Rows(21, 22))
-    {
-      miso::connect(queue_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){ queue_pager.previous_page(); });
-      miso::connect(queue_pager_buttons.AddButton("NEXT")    .signal_press, [this](){ queue_pager.next_page();     });
-      RegisterChild(&queue_pager_buttons);
-
-      miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
-        queue_pager.clear();
-        for (auto& song : queue) {
-          queue_pager.add_row(song);
-        }
-      });
-    }
-
-    void Draw(SDL_Renderer* renderer) const override {
-      MPDView::Draw(renderer);
-      queue_pager.draw_page(renderer, Colours());
-    }
-};
 
 
 class BrowseView : public MPDView {
@@ -265,7 +265,7 @@ class MpdFrame : public Drawable {
 
     BrowseView viewBrowse;
     NowPlayingView viewNowPlaying;
-    QueueView viewQueue;
+    isompd::queue::view viewQueue;
 
   public:
     MpdFrame(Grid g, Window& w, mpdxx::client& _mpdc)
