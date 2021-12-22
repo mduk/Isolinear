@@ -210,6 +210,8 @@ class BrowseView : public MPDView {
       RegisterChild(&artist_pager_buttons);
 
       miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
+        artist_pager.clear();
+        album_pager.clear();
         for (auto& artist : artist_list) {
           artist_pager.add_row(artist);
           album_pager.add_row(artist);
