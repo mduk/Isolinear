@@ -35,51 +35,53 @@ class MPDView : public View {
     {};
 };
 
+namespace isompd::now_playing {
 
-class NowPlayingView : public MPDView {
-  protected:
-    bool hide = false;
-    PairHeaderBar title;
-    PairHeaderBar album;
-    PairHeaderBar artist;
-    PairHeaderBar duration;
-    HorizontalProgressBar progress;
+  class view : public MPDView {
+    protected:
+      bool hide = false;
+      PairHeaderBar title;
+      PairHeaderBar album;
+      PairHeaderBar artist;
+      PairHeaderBar duration;
+      HorizontalProgressBar progress;
 
-  public:
-    NowPlayingView(Grid g, Window& w, mpdxx::client& _mpdc)
-      : MPDView("NOW PLAYING", g, w, _mpdc)
-      , title(g.Rows(3,4), w, "TITLE", "[title]")
-      , album(g.Rows(5,6), w, "ALBUM", "[album]")
-      , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
-      , duration(g.Rows(9,10), w, "DURATION", "[duration]")
-      , progress(g.Rows(11,12))
-    {
-      RegisterChild(&title);
-      RegisterChild(&album);
-      RegisterChild(&artist);
-      RegisterChild(&duration);
-      RegisterChild(&progress);
+    public:
+      view(Grid g, Window& w, mpdxx::client& _mpdc)
+        : MPDView("NOW PLAYING", g, w, _mpdc)
+        , title(g.Rows(3,4), w, "TITLE", "[title]")
+        , album(g.Rows(5,6), w, "ALBUM", "[album]")
+        , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
+        , duration(g.Rows(9,10), w, "DURATION", "[duration]")
+        , progress(g.Rows(11,12))
+      {
+        RegisterChild(&title);
+        RegisterChild(&album);
+        RegisterChild(&artist);
+        RegisterChild(&duration);
+        RegisterChild(&progress);
 
-      miso::connect(mpdc.signal_status, [this](mpdxx::status status){
-        hide = status.IsStopped();
-      });
+        miso::connect(mpdc.signal_status, [this](mpdxx::status status){
+          hide = status.IsStopped();
+        });
 
-      miso::connect(mpdc.signal_current_song, [this](mpdxx::song song){
-        title.Right(song.Title());
-        album.Right(song.Album());
-        artist.Right(song.Artist());
-        duration.Right(song.DurationString());
-      });
-    }
-
-    void Draw(SDL_Renderer* renderer) const override {
-      if (hide) {
-        return;
+        miso::connect(mpdc.signal_current_song, [this](mpdxx::song song){
+          title.Right(song.Title());
+          album.Right(song.Album());
+          artist.Right(song.Artist());
+          duration.Right(song.DurationString());
+        });
       }
-      MPDView::Draw(renderer);
-    }
 
-};
+      void Draw(SDL_Renderer* renderer) const override {
+        if (hide) {
+          return;
+        }
+        MPDView::Draw(renderer);
+      }
+  };
+
+}
 
 
 
@@ -264,7 +266,7 @@ class MpdFrame : public Drawable {
     std::string activeView = V_QUEUE;
 
     isompd::browse::view viewBrowse;
-    NowPlayingView viewNowPlaying;
+    isompd::now_playing::view viewNowPlaying;
     isompd::queue::view viewQueue;
 
   public:
