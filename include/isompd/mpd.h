@@ -155,6 +155,18 @@ class paginated_rows : public Drawable {
 
     }
 
+    int current_page() const {
+      return view_page;
+    }
+
+    bool on_first_page() const {
+      return view_page == 1;
+    }
+
+    bool on_final_page() const {
+      return view_page == page_count();
+    }
+
     void next_page() {
       page(view_page + 1);
     }
@@ -214,7 +226,6 @@ namespace isompd::queue {
         , playbtn(AddButton("PLAY"))
       {
         miso::connect(playbtn.signal_press, [this](){
-            cout << "BTN\n";
           cout << fmt::format("Play {}\n", song.Title());
         });
       }
@@ -224,17 +235,43 @@ namespace isompd::queue {
     protected:
       paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
       HorizontalButtonBar queue_pager_buttons;
+      Button& next_page_button;
+      Button& previous_page_button;
 
     public:
       view(Grid g, Window& w, mpdxx::client& mpdc)
         : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
         , queue_pager_buttons(w, g.Rows(21, 22))
+        , previous_page_button(queue_pager_buttons.AddButton("PREVIOUS"))
+        , next_page_button(queue_pager_buttons.AddButton("NEXT"))
       {
         RegisterChild(&queue_pager);
 
-        miso::connect(queue_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){ queue_pager.previous_page(); });
-        miso::connect(queue_pager_buttons.AddButton("NEXT")    .signal_press, [this](){ queue_pager.next_page();     });
+        miso::connect(previous_page_button.signal_press, [this](){
+            if (next_page_button.Disabled()) {
+              next_page_button.Enable();
+            }
+
+            queue_pager.previous_page();
+
+            if (queue_pager.on_first_page()) {
+              previous_page_button.Disable();
+            }
+          });
+
+        miso::connect(next_page_button.signal_press, [this](){
+            if (previous_page_button.Disabled()) {
+              previous_page_button.Enable();
+            }
+
+            queue_pager.next_page();
+
+            if (queue_pager.on_final_page()) {
+              next_page_button.Disable();
+            }
+          });
+
         RegisterChild(&queue_pager_buttons);
 
         miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
