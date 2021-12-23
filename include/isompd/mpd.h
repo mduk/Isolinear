@@ -256,9 +256,11 @@ namespace isompd::queue {
 
             queue_pager.previous_page();
 
-            if (queue_pager.on_first_page()) {
-              previous_page_button.Disable();
-            }
+            if (queue_pager.on_first_page()) { previous_page_button.Disable(); }
+            if (queue_pager.on_final_page()) { next_page_button.Disable(); }
+
+            queue_pager_buttons.Label(fmt::format("Page {} of {}",
+                queue_pager.current_page(), queue_pager.page_count()));
           });
 
         miso::connect(next_page_button.signal_press, [this](){
@@ -268,9 +270,11 @@ namespace isompd::queue {
 
             queue_pager.next_page();
 
-            if (queue_pager.on_final_page()) {
-              next_page_button.Disable();
-            }
+            if (queue_pager.on_first_page()) { previous_page_button.Disable(); }
+            if (queue_pager.on_final_page()) { next_page_button.Disable(); }
+
+            queue_pager_buttons.Label(fmt::format("Page {} of {}",
+                queue_pager.current_page(), queue_pager.page_count()));
           });
 
         queue_pager_buttons.Label(fmt::format("Page {} of {}", queue_pager.current_page(), queue_pager.page_count()));

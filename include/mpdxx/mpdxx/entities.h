@@ -108,8 +108,28 @@ namespace mpdxx {
         return entitydata.at("duration");
       }
 
+      std::string const file() const {
+        return entitydata.at("file");
+      }
+
       std::string const Header() const {
-        return fmt::format("{} - {}", Artist(), Title());
+        auto artist = Artist();
+        auto album = Album();
+        auto title = Title();
+
+        if (artist != "" && title != "") {
+          return fmt::format("{} - {}", Artist(), Title());
+        }
+
+        if (artist != "" && album != "") {
+          return fmt::format("{} - {}", Artist(), Album());
+        }
+
+        if (album != "") {
+          return album;
+        }
+
+        return file();
       }
   };
 
