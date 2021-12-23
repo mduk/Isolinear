@@ -94,8 +94,8 @@ class paginated_rows : public Drawable {
   protected:
     Grid grid;
     Window& window;
-    uint8_t view_page = 1;
-    int page_rows;
+    int view_page = 1;
+    int page_rows = 10;
     std::vector<DataT> data_rows{};
     std::vector<ViewT> view_rows{};
 
