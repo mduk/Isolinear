@@ -94,7 +94,7 @@ class paginated_rows : public Drawable {
   protected:
     Grid grid;
     Window& window;
-    int view_page = 1;
+    int view_page = 0;
     int page_rows = 10;
     std::vector<DataT> data_rows{};
     std::vector<ViewT> view_rows{};
@@ -108,6 +108,7 @@ class paginated_rows : public Drawable {
 
     void clear() {
       data_rows.clear();
+      view_page = 0;
     }
 
     void add_row(DataT row) {
@@ -234,7 +235,7 @@ namespace isompd::queue {
   class view : public isompd::view {
     protected:
       paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
-      HorizontalButtonBar queue_pager_buttons;
+      EastHeaderBar queue_pager_buttons;
       Button& next_page_button;
       Button& previous_page_button;
 
@@ -242,7 +243,7 @@ namespace isompd::queue {
       view(Grid g, Window& w, mpdxx::client& mpdc)
         : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
-        , queue_pager_buttons(w, g.Rows(21, 22))
+        , queue_pager_buttons(g.Rows(21, 22), w, "##")
         , previous_page_button(queue_pager_buttons.AddButton("PREVIOUS"))
         , next_page_button(queue_pager_buttons.AddButton("NEXT"))
       {
@@ -272,6 +273,8 @@ namespace isompd::queue {
             }
           });
 
+        queue_pager_buttons.Label(fmt::format("Page {} of {}", queue_pager.current_page(), queue_pager.page_count()));
+
         RegisterChild(&queue_pager_buttons);
 
         miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
@@ -279,6 +282,7 @@ namespace isompd::queue {
           for (auto& song : queue) {
             queue_pager.add_row(song);
           }
+          queue_pager.page(1);
         });
       }
   };
