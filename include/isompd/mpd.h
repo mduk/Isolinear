@@ -88,15 +88,16 @@ namespace isompd::now_playing {
 
 
 
-template <class DataT, class RowT>
-class paginated_rows {
+template <class DataT, class ViewT>
+class paginated_rows : public Drawable {
 
   protected:
     Grid grid;
     Window& window;
-    uint8_t page = 1;
+    uint8_t view_page = 1;
     int page_rows;
-    std::vector<DataT> rows{};
+    std::vector<DataT> data_rows{};
+    std::vector<ViewT> view_rows{};
 
   public:
     paginated_rows(Grid g, Window& w, int pr)
@@ -106,50 +107,84 @@ class paginated_rows {
     }
 
     void clear() {
-      rows.clear();
+      data_rows.clear();
     }
 
     void add_row(DataT row) {
-      rows.push_back(row);
+      data_rows.push_back(row);
+    }
+
+    void page(int p) {
+      view_page = p;
+
+      view_rows.clear();
+      children.clear();
+
+      int end_index = page_rows * view_page;
+      int start_index = end_index - page_rows;
+
+      auto nrows = data_rows.size();
+
+      for (int i = 1; i <= page_rows; i++) {
+        int data_row_index = start_index + (i-1);
+
+        if (nrows <= data_row_index) {
+          continue;
+        }
+
+        view_rows.emplace_back(
+            grid.Rows((i*2)-1, i*2),
+            window,
+            data_rows.at(data_row_index)
+          );
+
+        ViewT& row = view_rows.back();
+        RegisterChild(&row);
+      }
     }
 
     void next_page() {
-      page++;
+      page(view_page + 1);
     }
 
     void previous_page() {
-      if (page == 1) {
+      if (view_page == 1) {
         return;
       }
-      page--;
+      page(view_page - 1);
     }
 
-    void draw_page(SDL_Renderer* renderer, ColourScheme colours) const {
-      auto nrows = rows.size();
+    Region2D Bounds() const override {
+      return grid.bounds;
+    }
+
+    void Draw(SDL_Renderer* renderer) const override {
+      auto nrows = data_rows.size();
 
       if (nrows == 0) {
         return;
       }
 
-      int end_index = page_rows * page;
+      int end_index = page_rows * view_page;
       int start_index = end_index - page_rows;
 
       for (int i = 1; i <= page_rows; i++) {
-        int row_index = start_index + (i-1);
+        int data_row_index = start_index + (i-1);
 
-        if (nrows <= row_index) {
+        if (nrows <= data_row_index) {
           continue;
         }
 
-        RowT row(
+        ViewT row(
             grid.Rows((i*2)-1, i*2),
             window,
-            rows.at(row_index)
+            data_rows.at(data_row_index)
           );
-        row.Colours(colours);
+        row.Colours(Colours());
         row.Draw(renderer);
       }
     }
+
 };
 
 namespace isompd::browse {
@@ -177,6 +212,8 @@ namespace isompd::browse {
         , artist_pager(artist_grid, w, 10)
         , artist_pager_buttons(w, g.Rows(21, 22))
       {
+        RegisterChild(&artist_pager);
+
         miso::connect(artist_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){
           artist_pager.previous_page();
         });
@@ -192,22 +229,28 @@ namespace isompd::browse {
           }
         });
       }
-
-      void Draw(SDL_Renderer* renderer) const override {
-        isompd::view::Draw(renderer);
-        artist_pager.draw_page(renderer, Colours());
-      }
   };
 }
 
 
 namespace isompd::queue {
 
-  class row : public BasicHeader {
+  class row : public EastHeaderBar {
+    protected:
+      mpdxx::song song;
+      Button& playbtn;
+
     public:
-      row(Grid g, Window& w, mpdxx::song e)
-        : BasicHeader(g, w, Compass::WEST, e.Header())
-      {}
+      row(Grid g, Window& w, mpdxx::song s)
+        : EastHeaderBar(g, w, s.Header())
+        , song(s)
+        , playbtn(AddButton("PLAY"))
+      {
+        miso::connect(playbtn.signal_press, [this](){
+            cout << "BTN\n";
+          cout << fmt::format("Play {}\n", song.Title());
+        });
+      }
   };
 
   class view : public isompd::view {
@@ -221,6 +264,8 @@ namespace isompd::queue {
         , queue_pager(g, w, 10)
         , queue_pager_buttons(w, g.Rows(21, 22))
       {
+        RegisterChild(&queue_pager);
+
         miso::connect(queue_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){ queue_pager.previous_page(); });
         miso::connect(queue_pager_buttons.AddButton("NEXT")    .signal_press, [this](){ queue_pager.next_page();     });
         RegisterChild(&queue_pager_buttons);
@@ -231,11 +276,6 @@ namespace isompd::queue {
             queue_pager.add_row(song);
           }
         });
-      }
-
-      void Draw(SDL_Renderer* renderer) const override {
-        isompd::view::Draw(renderer);
-        queue_pager.draw_page(renderer, Colours());
       }
   };
 
