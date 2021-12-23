@@ -199,51 +199,6 @@ class paginated_rows : public Drawable {
 
 };
 
-namespace isompd::browse {
-
-  class artist_row : public BasicHeader {
-    public:
-      artist_row(Grid g, Window& w, mpdxx::artist e)
-        : BasicHeader(g, w, Compass::WEST, e.Header())
-      {}
-  };
-
-  class view : public isompd::view {
-    protected:
-      Grid artist_grid;
-      Grid album_grid;
-
-      paginated_rows<mpdxx::artist, isompd::browse::artist_row> artist_pager;
-
-      HorizontalButtonBar artist_pager_buttons;
-
-    public:
-      view(Grid g, Window& w, mpdxx::client& _mpdc)
-        : isompd::view("BROWSE", g, w, _mpdc)
-        , artist_grid(g)
-        , artist_pager(artist_grid, w, 10)
-        , artist_pager_buttons(w, g.Rows(21, 22))
-      {
-        RegisterChild(&artist_pager);
-
-        miso::connect(artist_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){
-          artist_pager.previous_page();
-        });
-        miso::connect(artist_pager_buttons.AddButton("NEXT").signal_press, [this](){
-          artist_pager.next_page();
-        });
-        RegisterChild(&artist_pager_buttons);
-
-        miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
-          artist_pager.clear();
-          for (auto& artist : artist_list) {
-            artist_pager.add_row(artist);
-          }
-        });
-      }
-  };
-}
-
 
 namespace isompd::queue {
 
@@ -295,6 +250,52 @@ namespace isompd::queue {
 }
 
 
+
+
+namespace isompd::browse {
+
+  class artist_row : public BasicHeader {
+    public:
+      artist_row(Grid g, Window& w, mpdxx::artist e)
+        : BasicHeader(g, w, Compass::WEST, e.Header())
+      {}
+  };
+
+  class view : public isompd::view {
+    protected:
+      Grid artist_grid;
+      Grid album_grid;
+
+      paginated_rows<mpdxx::artist, isompd::browse::artist_row> artist_pager;
+
+      HorizontalButtonBar artist_pager_buttons;
+
+    public:
+      view(Grid g, Window& w, mpdxx::client& _mpdc)
+        : isompd::view("BROWSE", g, w, _mpdc)
+        , artist_grid(g)
+        , artist_pager(artist_grid, w, 10)
+        , artist_pager_buttons(w, g.Rows(21, 22))
+      {
+        RegisterChild(&artist_pager);
+
+        miso::connect(artist_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){
+          artist_pager.previous_page();
+        });
+        miso::connect(artist_pager_buttons.AddButton("NEXT").signal_press, [this](){
+          artist_pager.next_page();
+        });
+        RegisterChild(&artist_pager_buttons);
+
+        miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
+          artist_pager.clear();
+          for (auto& artist : artist_list) {
+            artist_pager.add_row(artist);
+          }
+        });
+      }
+  };
+}
 
 
 class MpdFrame : public Drawable {
