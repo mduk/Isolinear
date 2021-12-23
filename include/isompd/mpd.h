@@ -115,6 +115,7 @@ class paginated_rows : public Drawable {
     }
 
     int page_count() const {
+      int nrows = data_rows.size();
       int npages = nrows / page_rows;
       if (nrows % page_rows > 0) {
         npages++;
