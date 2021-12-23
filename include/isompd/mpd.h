@@ -115,6 +115,8 @@ class paginated_rows : public Drawable {
     }
 
     void page(int p) {
+      int previous_page = view_page;
+
       view_page = p;
 
       view_rows.clear();
