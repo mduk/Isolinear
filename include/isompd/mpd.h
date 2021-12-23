@@ -114,6 +114,14 @@ class paginated_rows : public Drawable {
       data_rows.push_back(row);
     }
 
+    int page_count() const {
+      int npages = nrows / page_rows;
+      if (nrows % page_rows > 0) {
+        npages++;
+      }
+      return npages;
+    }
+
     void page(int p) {
       int previous_page = view_page;
 
@@ -143,6 +151,7 @@ class paginated_rows : public Drawable {
         ViewT& row = view_rows.back();
         RegisterChild(&row);
       }
+
     }
 
     void next_page() {
