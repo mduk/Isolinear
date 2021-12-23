@@ -236,12 +236,19 @@ namespace mpdxx {
 
     protected:
 
-
       void SimpleCommand(std::string command) {
         SendCommandRequest(
             command,
             [this](){ ReadEmptyResponse(); }
           );
+      }
+
+      std::string read_line() {
+        std::istream is(&command_read_buffer);
+        std::string line;
+        std::getline(is, line);
+        trim(line);
+        return line;
       }
 
       void ReadEmptyResponse() {
@@ -252,11 +259,7 @@ namespace mpdxx {
                 return;
               }
 
-              std::istream is(&command_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
-              trim(line);
+              auto line = read_line();
 
               if (line == "OK") {
                 cout << fmt::format("ReadEmptyResponse: OK\n");
@@ -276,10 +279,7 @@ namespace mpdxx {
                 return;
               }
 
-              std::istream is(&command_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
+              auto line = read_line();
               auto words = line_to_words(line);
               std::string version = words[2];
               cout << fmt::format("server version: {}\n", version);
@@ -312,13 +312,8 @@ namespace mpdxx {
                 return;
               }
 
-              std::istream is(&command_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
+              auto line = read_line();
               //cout << fmt::format("ReadStatusResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
-
-              trim(line);
 
               if (line == "OK") {
                 cout << fmt::format("ReadStatusResponse: OK\n");
@@ -341,13 +336,8 @@ namespace mpdxx {
                 return;
               }
 
-              std::istream is(&command_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
+              auto line = read_line();
               //cout << fmt::format("ReadEntityResponse: [{:2d} bytes] {}\n", bytes_transferred, line);
-
-              trim(line);
 
               if (line == "OK") {
                 cout << fmt::format("ReadEntityResponse: OK\n");
