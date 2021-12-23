@@ -72,6 +72,15 @@ namespace mpdxx {
 
 
     protected:
+
+      std::string read_line() {
+        std::istream is(&command_read_buffer);
+        std::string line;
+        std::getline(is, line);
+        trim(line);
+        return line;
+      }
+
       virtual void connect() {
         asio::async_connect(socket, socket_resolver.resolve(host, port),
             [this](std::error_code ec, asio::ip::tcp::endpoint) {
@@ -110,11 +119,7 @@ namespace mpdxx {
                 return;
               }
 
-              std::istream is(&socket_read_buffer);
-              std::string line;
-              std::getline(is, line);
-
-              trim(line);
+              auto line = read_line();
 
               if (line == "OK") {
                 disconnect();
