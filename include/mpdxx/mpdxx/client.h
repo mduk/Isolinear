@@ -74,7 +74,7 @@ namespace mpdxx {
     protected:
 
       std::string read_line() {
-        std::istream is(&command_read_buffer);
+        std::istream is(&socket_read_buffer);
         std::string line;
         std::getline(is, line);
         trim(line);

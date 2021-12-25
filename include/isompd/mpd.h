@@ -153,20 +153,11 @@ class paginated_rows : public Drawable {
         ViewT& row = view_rows.back();
         RegisterChild(&row);
       }
-
     }
 
-    int current_page() const {
-      return view_page;
-    }
-
-    bool on_first_page() const {
-      return view_page == 1;
-    }
-
-    bool on_final_page() const {
-      return view_page == page_count();
-    }
+    int current_page() const { return view_page; }
+    bool on_first_page() const { return view_page == 1; }
+    bool on_final_page() const { return view_page == page_count(); }
 
     void next_page() {
       page(view_page + 1);
@@ -179,9 +170,7 @@ class paginated_rows : public Drawable {
       page(view_page - 1);
     }
 
-    Region2D Bounds() const override {
-      return grid.bounds;
-    }
+    Region2D Bounds() const override { return grid.bounds; }
 
     void Draw(SDL_Renderer* renderer) const override {
       auto nrows = data_rows.size();
@@ -209,8 +198,124 @@ class paginated_rows : public Drawable {
         row.Draw(renderer);
       }
     }
-
 };
+
+
+namespace isompd::player {
+
+  class view : public isompd::view {
+    protected:
+      Grid gc;
+
+      Button btnPlay;
+      Button btnPause;
+      Button btnStop;
+
+      Button btnPrevious;
+      Button btnNext;
+
+      Button btnConsume;
+      Button btnRandom;
+      Button btnSingle;
+      Button btnRepeat;
+
+      int queue_length = 0;
+
+    public:
+      view(Grid g, Window& w, mpdxx::client& mpdc)
+        : isompd::view("PLAYER", g, w,  mpdc)
+
+        , gc(g.Columns(16,21))
+
+        , btnPlay(    w, gc.Rows(1,4).Columns(1,4), "PLAY")
+        , btnPause(   w, gc.Rows(1,4).Columns(5,6), "PAUSE")
+        , btnStop(    w, gc.Rows(5,7).Columns(1,6), "STOP")
+
+        , btnPrevious(w, gc.Rows(8,9).Columns(1,3), "PREVIOUS")
+        , btnNext(    w, gc.Rows(8,9).Columns(4,6), "NEXT")
+
+        , btnRepeat(  w, gc.Rows(11,12).Columns(1,4), "REPEAT")
+        , btnSingle(  w, gc.Rows(11,12).Columns(5,6), "SINGLE")
+        , btnConsume( w, gc.Rows(13,14).Columns(1,2), "CONSUME")
+        , btnRandom(  w, gc.Rows(13,14).Columns(3,6), "RANDOM")
+      {
+        RegisterChild(&btnPlay);
+        RegisterChild(&btnPause);
+        RegisterChild(&btnStop);
+        RegisterChild(&btnPrevious);
+        RegisterChild(&btnNext);
+        RegisterChild(&btnConsume);
+        RegisterChild(&btnRandom);
+        RegisterChild(&btnSingle);
+        RegisterChild(&btnRepeat);
+
+        miso::connect(mpdc.signal_status, [this](mpdxx::status status){
+          cout << fmt::format("PlayerView signal_status begin\n");
+          btnConsume.Active(status.Consume());
+          btnRandom.Active(status.Random());
+          btnSingle.Active(status.Single());
+          btnRepeat.Active(status.Repeat());
+
+          if (status.IsPlaying()) {
+            cout << " => Playing\n";
+
+            btnPlay.Enable();
+            btnPlay.Activate();
+
+            btnPause.Enable();
+            btnPause.Deactivate();
+
+            btnStop.Enable();
+            btnStop.Deactivate();
+          }
+
+          if (status.IsPaused()) {
+            cout << " => Paused\n";
+
+            btnPlay.Enable();
+            btnPlay.Enable();
+            btnPlay.Activate();
+
+            btnPause.Enable();
+            btnPause.Activate();
+
+            btnStop.Enable();
+            btnStop.Deactivate();
+          }
+
+          if (status.IsStopped()) {
+            cout << " => Stopped\n";
+
+            btnPlay.Enable();
+            btnStop.Enable();
+            btnStop.Activate();
+
+            btnPause.Disable();
+
+            btnPlay.Deactivate();
+            if (queue_length > 0) {
+              btnPlay.Disable();
+            } else {
+              btnPlay.Enable();
+            }
+          }
+
+          cout << fmt::format("PlayerView signal_status end\n");
+        });
+
+        miso::connect(    btnPlay.signal_press, [&]() { mpdc.Play();          });
+        miso::connect(    btnStop.signal_press, [&]() { mpdc.Stop();          });
+        miso::connect(btnPrevious.signal_press, [&]() { mpdc.Previous();      });
+        miso::connect(    btnNext.signal_press, [&]() { mpdc.Next();          });
+        miso::connect(   btnPause.signal_press, [&]() { mpdc.TogglePause();   });
+        miso::connect( btnConsume.signal_press, [&]() { mpdc.ToggleConsume(); });
+        miso::connect(  btnRandom.signal_press, [&]() { mpdc.ToggleRandom();  });
+        miso::connect(  btnRandom.signal_press, [&]() { mpdc.ToggleSingle();  });
+        miso::connect(  btnRandom.signal_press, [&]() { mpdc.ToggleRepeat();  });
+      }
+  };
+
+}
 
 
 namespace isompd::queue {
@@ -348,6 +453,7 @@ class MpdFrame : public Drawable {
     const std::string V_NOWPLAYING = "NOW PLAYING";
     const std::string V_QUEUE = "QUEUE";
     const std::string V_BROWSE = "BROWSE";
+    const std::string V_PLAYER = "PLAYER";
 
   public:
     miso::signal<std::string, std::string> signal_view_change;
@@ -369,6 +475,7 @@ class MpdFrame : public Drawable {
     isompd::browse::view viewBrowse;
     isompd::now_playing::view viewNowPlaying;
     isompd::queue::view viewQueue;
+    isompd::player::view viewPlayer;
 
   public:
     MpdFrame(Grid g, Window& w, mpdxx::client& _mpdc)
@@ -383,7 +490,8 @@ class MpdFrame : public Drawable {
 
         , viewNowPlaying(layout.Centre(), w, mpdc)
         , viewQueue     (layout.Centre(), w, mpdc)
-        , viewBrowse   (layout.Centre(), w, mpdc)
+        , viewBrowse    (layout.Centre(), w, mpdc)
+        , viewPlayer    (layout.Centre(), w, mpdc)
     {
       RegisterChild(&hdrFrame);
       RegisterChild(&barView);
@@ -394,6 +502,7 @@ class MpdFrame : public Drawable {
       RegisterView(&viewNowPlaying);
       RegisterView(&viewQueue);
       RegisterView(&viewBrowse);
+      RegisterView(&viewPlayer);
 
       auto switch_view = [this]() {
         auto button = miso::sender<Button>();

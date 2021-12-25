@@ -141,6 +141,7 @@ int main(int argc, char* argv[])
             case 'a': mpdframe.SwitchView(mpdframe.V_BROWSE    ); break;
             case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;
             case 'q': mpdframe.SwitchView(mpdframe.V_QUEUE     ); break;
+            case 'p': mpdframe.SwitchView(mpdframe.V_PLAYER    ); break;
           }
           break;
 
