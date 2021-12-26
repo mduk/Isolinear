@@ -11,7 +11,6 @@
 #include "pointerevent.h"
 #include "grid.h"
 #include "window.h"
-#include "buttonbar.h"
 #include "sweep.h"
 
 extern bool drawdebug;

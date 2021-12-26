@@ -13,7 +13,6 @@
 #include "header.h"
 #include "window.h"
 #include "mpdxx.h"
-#include "buttonbar.h"
 
 
 using std::cout;

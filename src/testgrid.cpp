@@ -11,7 +11,6 @@
 
 #include "miso.h"
 
-#include "buttonbar.h"
 #include "elbo.h"
 #include "frame.h"
 #include "geometry.h"

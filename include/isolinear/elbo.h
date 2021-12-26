@@ -10,8 +10,8 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "drawable.h"
+#include "ui.h"
 #include "grid.h"
-#include "button.h"
 #include "colours.h"
 #include "geometry.h"
 #include "window.h"

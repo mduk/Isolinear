@@ -17,7 +17,6 @@
 
 #include "miso.h"
 
-#include "buttonbar.h"
 #include "elbo.h"
 #include "compasslayout.h"
 #include "geometry.h"
