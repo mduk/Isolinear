@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
       Size2D{ display }
     );
 
-  MpdFrame mpdframe{
+  isompd::frame mpdframe{
       window.grid,
       window,
       mpdc

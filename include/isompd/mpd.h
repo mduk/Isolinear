@@ -455,10 +455,10 @@ namespace isompd::queue {
 
 namespace isompd::browse {
 
-  class artist_row : public isolinear::ui::header:basic {
+  class artist_row : public isolinear::ui::header::basic {
     public:
       artist_row(Grid g, Window& w, mpdxx::artist e)
-        : isolinear::ui::header:basic(g, w, Compass::WEST, e.Header())
+        : isolinear::ui::header::basic(g, w, Compass::WEST, e.Header())
       {}
   };
 
@@ -498,116 +498,118 @@ namespace isompd::browse {
   };
 }
 
+namespace isompd {
 
-class MpdFrame : public Drawable {
-  public:
-    const std::string V_NOWPLAYING = "NOW PLAYING";
-    const std::string V_QUEUE = "QUEUE";
-    const std::string V_BROWSE = "BROWSE";
-    const std::string V_PLAYER = "PLAYER";
+  class frame : public Drawable {
+    public:
+      const std::string V_NOWPLAYING = "NOW PLAYING";
+      const std::string V_QUEUE = "QUEUE";
+      const std::string V_BROWSE = "BROWSE";
+      const std::string V_PLAYER = "PLAYER";
 
-  public:
-    miso::signal<std::string, std::string> signal_view_change;
+    public:
+      miso::signal<std::string, std::string> signal_view_change;
 
-  protected:
-    mpdxx::client& mpdc;
+    protected:
+      mpdxx::client& mpdc;
 
-    CompassLayout layout;
+      CompassLayout layout;
 
-    isolinear::ui::header::east_bar hdrFrame;
-    VerticalButtonBar barView;
-    PlayerControlBar playerControlBar;
-    NorthWestSweep sweepNorthWest;
-    SouthWestSweep sweepSouthWest;
+      isolinear::ui::header::east_bar hdrFrame;
+      VerticalButtonBar barView;
+      PlayerControlBar playerControlBar;
+      NorthWestSweep sweepNorthWest;
+      SouthWestSweep sweepSouthWest;
 
-    std::map<const std::string, View*> views;
-    std::string activeView = V_QUEUE;
+      std::map<const std::string, View*> views;
+      std::string activeView = V_QUEUE;
 
-    isompd::browse::view viewBrowse;
-    isompd::now_playing::view viewNowPlaying;
-    isompd::queue::view viewQueue;
-    isompd::player::view viewPlayer;
+      isompd::browse::view viewBrowse;
+      isompd::now_playing::view viewNowPlaying;
+      isompd::queue::view viewQueue;
+      isompd::player::view viewPlayer;
 
-  public:
-    MpdFrame(Grid g, Window& w, mpdxx::client& _mpdc)
-        : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-        , hdrFrame{layout.North(), w, Compass::EAST, "MPD CONTROL"}
-        , barView{w, layout.West()}
-        , playerControlBar{w, layout.South(), mpdc}
-        , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
-        , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
+    public:
+      frame(Grid g, Window& w, mpdxx::client& _mpdc)
+          : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
+          , hdrFrame{layout.North(), w, Compass::EAST, "MPD CONTROL"}
+          , barView{w, layout.West()}
+          , playerControlBar{w, layout.South(), mpdc}
+          , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
+          , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
 
-        , mpdc(_mpdc)
+          , mpdc(_mpdc)
 
-        , viewNowPlaying(layout.Centre(), w, mpdc)
-        , viewQueue     (layout.Centre(), w, mpdc)
-        , viewBrowse    (layout.Centre(), w, mpdc)
-        , viewPlayer    (layout.Centre(), w, mpdc)
-    {
-      RegisterChild(&hdrFrame);
-      RegisterChild(&barView);
-      RegisterChild(&playerControlBar);
-      RegisterChild(&sweepNorthWest);
-      RegisterChild(&sweepSouthWest);
+          , viewNowPlaying(layout.Centre(), w, mpdc)
+          , viewQueue     (layout.Centre(), w, mpdc)
+          , viewBrowse    (layout.Centre(), w, mpdc)
+          , viewPlayer    (layout.Centre(), w, mpdc)
+      {
+        RegisterChild(&hdrFrame);
+        RegisterChild(&barView);
+        RegisterChild(&playerControlBar);
+        RegisterChild(&sweepNorthWest);
+        RegisterChild(&sweepSouthWest);
 
-      RegisterView(&viewNowPlaying);
-      RegisterView(&viewQueue);
-      RegisterView(&viewBrowse);
-      RegisterView(&viewPlayer);
+        RegisterView(&viewNowPlaying);
+        RegisterView(&viewQueue);
+        RegisterView(&viewBrowse);
+        RegisterView(&viewPlayer);
 
-      auto switch_view = [this]() {
-        auto button = miso::sender<isolinear::ui::button>();
-        SwitchView(button->Label());
-      };
+        auto switch_view = [this]() {
+          auto button = miso::sender<isolinear::ui::button>();
+          SwitchView(button->Label());
+        };
 
-      for (auto const& [view_name, view_ptr] : views) {
-        isolinear::ui::button& view_btn = barView.AddButton(view_name);
-        miso::connect(view_btn.signal_press, switch_view);
+        for (auto const& [view_name, view_ptr] : views) {
+          isolinear::ui::button& view_btn = barView.AddButton(view_name);
+          miso::connect(view_btn.signal_press, switch_view);
+        }
+
+        barView.GetButton(activeView).Activate();
+        emit signal_view_change("", activeView);
+
+        playerControlBar.Update();
+        Update();
       }
 
-      barView.GetButton(activeView).Activate();
-      emit signal_view_change("", activeView);
+      virtual void SwitchView(std::string view) {
+        auto previousView = activeView;
+        activeView = view;
 
-      playerControlBar.Update();
-      Update();
-    }
+        barView.DeactivateAll();
+        barView.ActivateOne(activeView);
 
-    virtual void SwitchView(std::string view) {
-      auto previousView = activeView;
-      activeView = view;
+        hdrFrame.Label(fmt::format("MPD : {}", activeView));
 
-      barView.DeactivateAll();
-      barView.ActivateOne(activeView);
-
-      hdrFrame.Label(fmt::format("MPD : {}", activeView));
-
-      emit signal_view_change(previousView, activeView);
-    }
-
-    virtual Region2D Bounds() const override {
-      return layout.Bounds();
-    }
-
-    virtual void OnPointerEvent(PointerEvent event) {
-      Drawable::OnPointerEvent(event);
-      views.at(activeView)->OnPointerEvent(event);
-    }
-
-    virtual void Draw(SDL_Renderer* renderer) const {
-      Drawable::Draw(renderer);
-      views.at(activeView)->Draw(renderer);
-    }
-
-    virtual void Colours(ColourScheme cs) {
-      Drawable::Colours(cs);
-      for (auto const& [view_name, view_ptr] : views) {
-        view_ptr->Colours(cs);
+        emit signal_view_change(previousView, activeView);
       }
-    }
 
-    void RegisterView(View* view) {
-      const std::string view_name = view->Name();
-      views.insert(std::pair<const std::string, View*>(view_name, view));
-    }
-};
+      virtual Region2D Bounds() const override {
+        return layout.Bounds();
+      }
 
+      virtual void OnPointerEvent(PointerEvent event) {
+        Drawable::OnPointerEvent(event);
+        views.at(activeView)->OnPointerEvent(event);
+      }
+
+      virtual void Draw(SDL_Renderer* renderer) const {
+        Drawable::Draw(renderer);
+        views.at(activeView)->Draw(renderer);
+      }
+
+      virtual void Colours(ColourScheme cs) {
+        Drawable::Colours(cs);
+        for (auto const& [view_name, view_ptr] : views) {
+          view_ptr->Colours(cs);
+        }
+      }
+
+      void RegisterView(View* view) {
+        const std::string view_name = view->Name();
+        views.insert(std::pair<const std::string, View*>(view_name, view));
+      }
+  };
+
+}
