@@ -130,7 +130,7 @@ namespace isolinear::ui {
   };
 
 
-  class ButtonBar : public drawable {
+  class button_bar : public drawable {
     protected:
       Grid grid;
       Window& window;
@@ -138,7 +138,7 @@ namespace isolinear::ui {
       Vector2D button_size{2,2};
 
     public:
-      ButtonBar(Window& w, Grid g)
+      button_bar(Window& w, Grid g)
         : window{w}, grid{g}
       {};
 
@@ -217,9 +217,9 @@ namespace isolinear::ui {
   };
 
 
-  class horizontal_button_bar : public ButtonBar {
+  class horizontal_button_bar : public button_bar {
     public:
-      horizontal_button_bar(Window& w, Grid g) : ButtonBar(w, g) {}
+      horizontal_button_bar(Window& w, Grid g) : button_bar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = button_size.x * (i-1) + 1;
@@ -247,9 +247,9 @@ namespace isolinear::ui {
   };
 
 
-  class vertical_button_bar : public ButtonBar {
+  class vertical_button_bar : public button_bar {
     public:
-      vertical_button_bar(Window& w, Grid g) : ButtonBar(w, g) {}
+      vertical_button_bar(Window& w, Grid g) : button_bar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = 1;
