@@ -125,9 +125,9 @@ namespace isolinear::ui {
       }
   };
 
-  class VerticalButtonBar : public ButtonBar {
+  class vertical_button_bar : public ButtonBar {
     public:
-      VerticalButtonBar(Window& w, Grid g) : ButtonBar(w, g) {}
+      vertical_button_bar(Window& w, Grid g) : ButtonBar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = 1;

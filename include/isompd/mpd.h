@@ -500,7 +500,7 @@ namespace isompd::browse {
 
 namespace isompd {
 
-  using isolinear::ui::VerticalButtonBar;
+  using isolinear::ui::vertical_button_bar;
   using isolinear::ui::horizontal_button_bar;
 
   class frame : public drawable {
@@ -519,7 +519,7 @@ namespace isompd {
       CompassLayout layout;
 
       isolinear::ui::header::east_bar hdrFrame;
-      VerticalButtonBar barView;
+      vertical_button_bar barView;
       PlayerControlBar playerControlBar;
       NorthWestSweep sweepNorthWest;
       SouthWestSweep sweepSouthWest;
