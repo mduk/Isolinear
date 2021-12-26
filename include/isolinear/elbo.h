@@ -30,7 +30,7 @@ class Elbo : public Drawable {
     Vector2D gutter{10,10};
     std::string header_string{""};
     Compass header_alignment{CENTRE};
-    std::list<Button> buttons{};
+    std::list<isolinear::ui::button> buttons{};
 
   public:
     Elbo(

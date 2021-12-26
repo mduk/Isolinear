@@ -59,7 +59,7 @@ class EastHeaderBar : public Drawable {
     Grid grid;
     Window& window;
     std::string text{""};
-    std::map<std::string, Button> buttons;
+    std::map<std::string, isolinear::ui::button> buttons;
     int button_width{2};
 
   public:
@@ -89,7 +89,7 @@ class EastHeaderBar : public Drawable {
       Drawable::Colours(cs);
     }
 
-    Button& AddButton(std::string label) {
+    isolinear::ui::button& AddButton(std::string label) {
       buttons.try_emplace(
           label,
           window,

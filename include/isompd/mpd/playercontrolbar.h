@@ -23,15 +23,15 @@ class PlayerControlBar : public HorizontalButtonBar {
   protected:
     mpdxx::client& mpd;
 
-    Button& btnPlay;
-    Button& btnPause;
-    Button& btnStop;
-    Button& btnPrevious;
-    Button& btnNext;
-    Button& btnConsume;
-    Button& btnRandom;
-    Button& btnSingle;
-    Button& btnRepeat;
+    isolinear::ui::button& btnPlay;
+    isolinear::ui::button& btnPause;
+    isolinear::ui::button& btnStop;
+    isolinear::ui::button& btnPrevious;
+    isolinear::ui::button& btnNext;
+    isolinear::ui::button& btnConsume;
+    isolinear::ui::button& btnRandom;
+    isolinear::ui::button& btnSingle;
+    isolinear::ui::button& btnRepeat;
 
     int queue_length = 0;
 

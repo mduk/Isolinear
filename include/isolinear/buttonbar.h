@@ -12,7 +12,7 @@ class ButtonBar : public Drawable {
   protected:
     Grid grid;
     Window& window;
-    std::map<std::string, Button> buttons;
+    std::map<std::string, isolinear::ui::button> buttons;
     Vector2D button_size{2,2};
 
   public:
@@ -34,7 +34,7 @@ class ButtonBar : public Drawable {
       Drawable::Colours(cs);
     }
 
-    virtual Button& AddButton(std::string label) {
+    virtual isolinear::ui::button& AddButton(std::string label) {
       buttons.try_emplace(
           label,
             window,
@@ -44,7 +44,7 @@ class ButtonBar : public Drawable {
       return buttons.at(label);
     }
 
-    virtual Button& GetButton(std::string label) {
+    virtual isolinear::ui::button& GetButton(std::string label) {
       return buttons.at(label);
     }
 

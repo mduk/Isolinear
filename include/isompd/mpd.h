@@ -248,21 +248,21 @@ namespace isompd::player {
     protected:
       Grid gc;
 
-      Button btnPlay;
-      Button btnPause;
-      Button btnStop;
+      isolinear::ui::button btnPlay;
+      isolinear::ui::button btnPause;
+      isolinear::ui::button btnStop;
 
       isolinear::hrule hrule1;
 
-      Button btnPrevious;
-      Button btnNext;
+      isolinear::ui::button btnPrevious;
+      isolinear::ui::button btnNext;
 
       isolinear::hrule hrule2;
 
-      Button btnConsume;
-      Button btnRandom;
-      Button btnSingle;
-      Button btnRepeat;
+      isolinear::ui::button btnConsume;
+      isolinear::ui::button btnRandom;
+      isolinear::ui::button btnSingle;
+      isolinear::ui::button btnRepeat;
 
       int queue_length = 0;
 
@@ -374,7 +374,7 @@ namespace isompd::queue {
   class row : public EastHeaderBar {
     protected:
       mpdxx::song song;
-      Button& playbtn;
+      isolinear::ui::button& playbtn;
 
     public:
       row(Grid g, Window& w, mpdxx::song s)
@@ -392,8 +392,8 @@ namespace isompd::queue {
     protected:
       paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
       EastHeaderBar queue_pager_buttons;
-      Button& next_page_button;
-      Button& previous_page_button;
+      isolinear::ui::button& next_page_button;
+      isolinear::ui::button& previous_page_button;
 
     public:
       view(Grid g, Window& w, mpdxx::client& mpdc)
@@ -556,12 +556,12 @@ class MpdFrame : public Drawable {
       RegisterView(&viewPlayer);
 
       auto switch_view = [this]() {
-        auto button = miso::sender<Button>();
+        auto button = miso::sender<isolinear::ui::button>();
         SwitchView(button->Label());
       };
 
       for (auto const& [view_name, view_ptr] : views) {
-        Button& view_btn = barView.AddButton(view_name);
+        isolinear::ui::button& view_btn = barView.AddButton(view_name);
         miso::connect(view_btn.signal_press, switch_view);
       }
 
