@@ -21,22 +21,6 @@
 
 using std::cerr;
 
-namespace isompd {
-
-  class view : public View {
-    protected:
-      mpdxx::client& mpdc;
-      Window& window;
-
-    public:
-      view(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
-        : View(t, g)
-        , window{w}
-        , mpdc{_mpdc}
-      {};
-  };
-
-}
 
 namespace isompd::now_playing {
 
@@ -499,6 +483,19 @@ namespace isompd::browse {
 }
 
 namespace isompd {
+
+  class view : public View {
+    protected:
+      mpdxx::client& mpdc;
+      Window& window;
+
+    public:
+      view(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
+        : View(t, g)
+        , window{w}
+        , mpdc{_mpdc}
+      {};
+  };
 
   class frame : public Drawable {
     public:
