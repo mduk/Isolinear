@@ -19,6 +19,9 @@
 #define FONT "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf"
 
 
+using isolinear::ui::Drawable;
+
+
 
 class Window {
   public:
