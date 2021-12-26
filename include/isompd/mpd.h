@@ -500,6 +500,9 @@ namespace isompd::browse {
 
 namespace isompd {
 
+  using isolinear::ui::VerticalButtonBar;
+  using isolinear::ui::HorizontalButtonBar;
+
   class frame : public drawable {
     public:
       const std::string V_NOWPLAYING = "NOW PLAYING";

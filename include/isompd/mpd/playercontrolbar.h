@@ -18,6 +18,8 @@
 
 using std::cout;
 
+using isolinear::ui::HorizontalButtonBar;
+
 
 class PlayerControlBar : public HorizontalButtonBar {
   protected:
