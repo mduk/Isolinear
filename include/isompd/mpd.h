@@ -21,6 +21,22 @@
 
 using std::cerr;
 
+namespace isompd {
+
+  class view : public View {
+    protected:
+      mpdxx::client& mpdc;
+      Window& window;
+
+    public:
+      view(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
+        : View(t, g)
+        , window{w}
+        , mpdc{_mpdc}
+      {};
+  };
+
+}
 
 namespace isompd::now_playing {
 
@@ -31,7 +47,7 @@ namespace isompd::now_playing {
       isolinear::ui::header::pair_bar album;
       isolinear::ui::header::pair_bar artist;
       isolinear::ui::header::pair_bar duration;
-      HorizontalProgressBar progress;
+      isolinear::ui::progress::horizontal_bar progress;
 
     public:
       view(Grid g, Window& w, mpdxx::client& _mpdc)
@@ -483,19 +499,6 @@ namespace isompd::browse {
 }
 
 namespace isompd {
-
-  class view : public View {
-    protected:
-      mpdxx::client& mpdc;
-      Window& window;
-
-    public:
-      view(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
-        : View(t, g)
-        , window{w}
-        , mpdc{_mpdc}
-      {};
-  };
 
   class frame : public Drawable {
     public:
