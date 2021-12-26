@@ -201,6 +201,47 @@ class paginated_rows : public Drawable {
 };
 
 
+namespace isolinear {
+
+  class hrule : public Drawable {
+
+    protected:
+      Window& window;
+      Grid grid;
+
+    public:
+      hrule(Window& w, Grid g)
+        : window(w)
+        , grid(g)
+      {}
+
+    public:
+      Region2D Bounds() const {
+        return grid.bounds;
+      }
+
+      void Draw(SDL_Renderer* renderer) const {
+        auto bound_height = grid.bounds.H();
+        auto offset_px = (bound_height - grid.gutter.y) / 2;
+
+        auto hrule_near_x = grid.bounds.NearX();
+        auto hrule_near_y = grid.bounds.NearY() + offset_px;
+
+        auto hrule_far_x = grid.bounds.FarX();
+        auto hrule_far_y = grid.bounds.FarY() - offset_px;
+
+        Region2D hrule(
+            Position2D(hrule_near_x, hrule_near_y),
+            Position2D(hrule_far_x,  hrule_far_y)
+          );
+
+       hrule.Fill(renderer, Colours().frame);
+      }
+  };
+
+}
+
+
 namespace isompd::player {
 
   class view : public isompd::view {
@@ -211,8 +252,12 @@ namespace isompd::player {
       Button btnPause;
       Button btnStop;
 
+      isolinear::hrule hrule1;
+
       Button btnPrevious;
       Button btnNext;
+
+      isolinear::hrule hrule2;
 
       Button btnConsume;
       Button btnRandom;
@@ -227,17 +272,21 @@ namespace isompd::player {
 
         , gc(g.Columns(16,21))
 
-        , btnPlay(    w, gc.Rows(1,4).Columns(1,4), "PLAY")
-        , btnPause(   w, gc.Rows(1,4).Columns(5,6), "PAUSE")
-        , btnStop(    w, gc.Rows(5,7).Columns(1,6), "STOP")
+        , btnPlay(    w, gc.Rows( 1, 4).Columns(1,4), "PLAY")
+        , btnPause(   w, gc.Rows( 1, 4).Columns(5,6), "PAUSE")
+        , btnStop(    w, gc.Rows( 5, 7).Columns(1,6), "STOP")
 
-        , btnPrevious(w, gc.Rows(8,9).Columns(1,3), "PREVIOUS")
-        , btnNext(    w, gc.Rows(8,9).Columns(4,6), "NEXT")
+        , hrule1(     w, gc.Rows( 8, 8))
 
-        , btnRepeat(  w, gc.Rows(11,12).Columns(1,4), "REPEAT")
-        , btnSingle(  w, gc.Rows(11,12).Columns(5,6), "SINGLE")
-        , btnConsume( w, gc.Rows(13,14).Columns(1,2), "CONSUME")
-        , btnRandom(  w, gc.Rows(13,14).Columns(3,6), "RANDOM")
+        , btnPrevious(w, gc.Rows( 9,10).Columns(1,3), "PREVIOUS")
+        , btnNext(    w, gc.Rows( 9,10).Columns(4,6), "NEXT")
+
+        , hrule2(     w, gc.Rows(11,11))
+
+        , btnRepeat(  w, gc.Rows(12,13).Columns(1,4), "REPEAT")
+        , btnSingle(  w, gc.Rows(12,13).Columns(5,6), "SINGLE")
+        , btnConsume( w, gc.Rows(14,15).Columns(1,2), "CONSUME")
+        , btnRandom(  w, gc.Rows(14,15).Columns(3,6), "RANDOM")
       {
         RegisterChild(&btnPlay);
         RegisterChild(&btnPause);
@@ -248,6 +297,8 @@ namespace isompd::player {
         RegisterChild(&btnRandom);
         RegisterChild(&btnSingle);
         RegisterChild(&btnRepeat);
+        RegisterChild(&hrule1);
+        RegisterChild(&hrule2);
 
         miso::connect(mpdc.signal_status, [this](mpdxx::status status){
           cout << fmt::format("PlayerView signal_status begin\n");

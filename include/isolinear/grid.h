@@ -12,10 +12,10 @@ class Grid {
 
   protected:
     int row_height{100};
-    Vector2D gutter{50, 50};
     Vector2D size{3,3};
 
   public:
+    Vector2D gutter{50, 50};
     Region2D bounds;
 
     Grid() {};
