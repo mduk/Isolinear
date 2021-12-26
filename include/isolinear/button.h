@@ -15,7 +15,7 @@
 
 namespace isolinear::ui {
 
-  class button : public Drawable {
+  class button : public drawable {
     protected:
       Window& window;
       bool enabled = true;

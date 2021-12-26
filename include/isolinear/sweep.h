@@ -10,7 +10,7 @@
 
 extern bool drawdebug;
 
-class Sweep : public Drawable {
+class Sweep : public drawable {
   protected:
     Window& window;
     Grid grid;

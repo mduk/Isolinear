@@ -89,7 +89,7 @@ namespace isompd::now_playing {
 
 
 template <class DataT, class ViewT>
-class paginated_rows : public Drawable {
+class paginated_rows : public drawable {
 
   protected:
     Grid grid;
@@ -203,7 +203,7 @@ class paginated_rows : public Drawable {
 
 namespace isolinear {
 
-  class hrule : public Drawable {
+  class hrule : public drawable {
 
     protected:
       Window& window;
@@ -500,7 +500,7 @@ namespace isompd::browse {
 
 namespace isompd {
 
-  class frame : public Drawable {
+  class frame : public drawable {
     public:
       const std::string V_NOWPLAYING = "NOW PLAYING";
       const std::string V_QUEUE = "QUEUE";
@@ -590,17 +590,17 @@ namespace isompd {
       }
 
       virtual void OnPointerEvent(PointerEvent event) {
-        Drawable::OnPointerEvent(event);
+        drawable::OnPointerEvent(event);
         views.at(activeView)->OnPointerEvent(event);
       }
 
       virtual void Draw(SDL_Renderer* renderer) const {
-        Drawable::Draw(renderer);
+        drawable::Draw(renderer);
         views.at(activeView)->Draw(renderer);
       }
 
       virtual void Colours(ColourScheme cs) {
-        Drawable::Colours(cs);
+        drawable::Colours(cs);
         for (auto const& [view_name, view_ptr] : views) {
           view_ptr->Colours(cs);
         }

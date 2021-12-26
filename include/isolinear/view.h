@@ -7,7 +7,7 @@
 #include "geometry.h"
 
 
-class View : public Drawable {
+class View : public drawable {
   protected:
     std::string title;
     Grid grid;

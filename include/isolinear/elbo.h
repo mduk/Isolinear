@@ -19,7 +19,7 @@
 
 
 
-class Elbo : public Drawable {
+class Elbo : public drawable {
 
   protected:
     Window& window;

@@ -7,7 +7,7 @@
 #include "geometry.h"
 
 
-class Quad : public Drawable {
+class Quad : public drawable {
   protected:
     Region2D bounds;
 

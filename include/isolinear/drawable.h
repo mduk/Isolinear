@@ -11,11 +11,11 @@
 
 namespace isolinear::ui {
 
-  class Drawable {
+  class drawable {
     protected:
       Region2D bounds;
       ColourScheme colours;
-      std::list<Drawable*> children;
+      std::list<drawable*> children;
 
     public:
       virtual Region2D Bounds() const = 0;
@@ -26,7 +26,7 @@ namespace isolinear::ui {
         }
       }
 
-      virtual void RegisterChild(Drawable* child) {
+      virtual void RegisterChild(drawable* child) {
         children.push_back(child);
         child->Colours(Colours());
       }

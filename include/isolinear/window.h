@@ -19,7 +19,7 @@
 #define FONT "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf"
 
 
-using isolinear::ui::Drawable;
+using isolinear::ui::drawable;
 
 
 
@@ -71,7 +71,7 @@ class Window {
       return button_font;
     }
 
-    void Add(Drawable* drawable) {
+    void Add(drawable* drawable) {
       drawables.push_back(drawable);
     }
 
@@ -102,7 +102,7 @@ class Window {
     SDL_Window* sdl_window;
 
     std::string title{"Isolinear"};
-    std::list<Drawable*> drawables;
+    std::list<drawable*> drawables;
 
     ColourScheme colours;
 

@@ -21,7 +21,7 @@ using std::cout;
 
 namespace isolinear::ui::progress {
 
-  class horizontal_bar : public Drawable {
+  class horizontal_bar : public drawable {
     protected:
       Grid grid;
       unsigned max = 100;

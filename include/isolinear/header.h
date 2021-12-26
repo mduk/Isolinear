@@ -12,7 +12,7 @@
 
 namespace isolinear::ui::header {
 
-  class basic : public Drawable {
+  class basic : public drawable {
     protected:
       Grid grid;
       Window& window;
@@ -33,11 +33,11 @@ namespace isolinear::ui::header {
           text = newlabel;
       }
       virtual ColourScheme Colours() const {
-        return Drawable::Colours();
+        return drawable::Colours();
       }
 
       virtual void Colours(ColourScheme cs) {
-        Drawable::Colours(cs);
+        drawable::Colours(cs);
       }
 
       virtual Region2D Bounds() const override {
@@ -57,7 +57,7 @@ namespace isolinear::ui::header {
       }
   };
 
-  class east_bar : public Drawable {
+  class east_bar : public drawable {
     protected:
       Grid grid;
       Window& window;
@@ -82,14 +82,14 @@ namespace isolinear::ui::header {
           text = newlabel;
       }
       virtual ColourScheme Colours() const {
-        return Drawable::Colours();
+        return drawable::Colours();
       }
 
       virtual void Colours(ColourScheme cs) {
         for (auto& [label, button] : buttons) {
           button.Colours(cs);
         }
-        Drawable::Colours(cs);
+        drawable::Colours(cs);
       }
 
       isolinear::ui::button& AddButton(std::string label) {
@@ -181,7 +181,7 @@ namespace isolinear::ui::header {
       }
   };
 
-  class pair_bar : public Drawable {
+  class pair_bar : public drawable {
     protected:
       Grid grid;
       Window& window;
@@ -207,11 +207,11 @@ namespace isolinear::ui::header {
       }
 
       virtual ColourScheme Colours() const {
-        return Drawable::Colours();
+        return drawable::Colours();
       }
 
       virtual void Colours(ColourScheme cs) {
-        Drawable::Colours(cs);
+        drawable::Colours(cs);
       }
 
       virtual Region2D Bounds() const override {

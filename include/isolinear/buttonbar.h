@@ -8,7 +8,7 @@
 #include "window.h"
 #include "button.h"
 
-class ButtonBar : public Drawable {
+class ButtonBar : public drawable {
   protected:
     Grid grid;
     Window& window;
@@ -24,14 +24,14 @@ class ButtonBar : public Drawable {
     virtual Region2D BarRegion() const = 0;
 
     virtual ColourScheme Colours() const {
-      return Drawable::Colours();
+      return drawable::Colours();
     }
 
     virtual void Colours(ColourScheme cs) {
       for (auto& [label, button] : buttons) {
         button.Colours(cs);
       }
-      Drawable::Colours(cs);
+      drawable::Colours(cs);
     }
 
     virtual isolinear::ui::button& AddButton(std::string label) {

@@ -16,7 +16,7 @@
 
 extern bool drawdebug;
 
-class CompassLayout : public Drawable {
+class CompassLayout : public drawable {
   protected:
     Grid grid;
     Window& window;
