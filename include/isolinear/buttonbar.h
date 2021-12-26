@@ -96,9 +96,9 @@ namespace isolinear::ui {
     }
   };
 
-  class HorizontalButtonBar : public ButtonBar {
+  class horizontal_button_bar : public ButtonBar {
     public:
-      HorizontalButtonBar(Window& w, Grid g) : ButtonBar(w, g) {}
+      horizontal_button_bar(Window& w, Grid g) : ButtonBar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = button_size.x * (i-1) + 1;

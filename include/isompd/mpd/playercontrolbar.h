@@ -18,10 +18,10 @@
 
 using std::cout;
 
-using isolinear::ui::HorizontalButtonBar;
+using isolinear::ui::horizontal_button_bar;
 
 
-class PlayerControlBar : public HorizontalButtonBar {
+class PlayerControlBar : public horizontal_button_bar {
   protected:
     mpdxx::client& mpd;
 
@@ -39,7 +39,7 @@ class PlayerControlBar : public HorizontalButtonBar {
 
   public:
     PlayerControlBar(Window& w, Grid g, mpdxx::client& _mpd)
-      : HorizontalButtonBar(w, g)
+      : horizontal_button_bar(w, g)
       , mpd{_mpd}
       , btnPlay(AddButton("PLAY"))
       , btnPause(AddButton("PAUSE"))

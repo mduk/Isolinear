@@ -469,7 +469,7 @@ namespace isompd::browse {
 
       paginated_rows<mpdxx::artist, isompd::browse::artist_row> artist_pager;
 
-      HorizontalButtonBar artist_pager_buttons;
+      horizontal_button_bar artist_pager_buttons;
 
     public:
       view(Grid g, Window& w, mpdxx::client& _mpdc)
@@ -501,7 +501,7 @@ namespace isompd::browse {
 namespace isompd {
 
   using isolinear::ui::VerticalButtonBar;
-  using isolinear::ui::HorizontalButtonBar;
+  using isolinear::ui::horizontal_button_bar;
 
   class frame : public drawable {
     public:
