@@ -15,7 +15,7 @@
 #include "mpdxx.h"
 #include "progressbar.h"
 #include "view.h"
-
+#include "ui.h"
 #include "mpd/playercontrolbar.h"
 
 
@@ -201,47 +201,6 @@ class paginated_rows : public drawable {
 };
 
 
-namespace isolinear {
-
-  class hrule : public drawable {
-
-    protected:
-      Window& window;
-      Grid grid;
-
-    public:
-      hrule(Window& w, Grid g)
-        : window(w)
-        , grid(g)
-      {}
-
-    public:
-      Region2D Bounds() const {
-        return grid.bounds;
-      }
-
-      void Draw(SDL_Renderer* renderer) const {
-        auto bound_height = grid.bounds.H();
-        auto offset_px = (bound_height - grid.gutter.y) / 2;
-
-        auto hrule_near_x = grid.bounds.NearX();
-        auto hrule_near_y = grid.bounds.NearY() + offset_px;
-
-        auto hrule_far_x = grid.bounds.FarX();
-        auto hrule_far_y = grid.bounds.FarY() - offset_px;
-
-        Region2D hrule(
-            Position2D(hrule_near_x, hrule_near_y),
-            Position2D(hrule_far_x,  hrule_far_y)
-          );
-
-       hrule.Fill(renderer, Colours().frame);
-      }
-  };
-
-}
-
-
 namespace isompd::player {
 
   class view : public isompd::view {
@@ -252,12 +211,12 @@ namespace isompd::player {
       isolinear::ui::button btnPause;
       isolinear::ui::button btnStop;
 
-      isolinear::hrule hrule1;
+      isolinear::ui::horizontal_rule hrule1;
 
       isolinear::ui::button btnPrevious;
       isolinear::ui::button btnNext;
 
-      isolinear::hrule hrule2;
+      isolinear::ui::horizontal_rule hrule2;
 
       isolinear::ui::button btnConsume;
       isolinear::ui::button btnRandom;
