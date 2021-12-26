@@ -455,10 +455,10 @@ namespace isompd::queue {
 
 namespace isompd::browse {
 
-  class artist_row : public isolinear::ui::header::basic {
+  class artist_row : public isolinear::ui::header:basic {
     public:
       artist_row(Grid g, Window& w, mpdxx::artist e)
-        : isolinear::ui::header::basic(g, w, Compass::WEST, e.Header())
+        : isolinear::ui::header:basic(g, w, Compass::WEST, e.Header())
       {}
   };
 
