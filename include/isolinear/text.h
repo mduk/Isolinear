@@ -7,6 +7,10 @@
 #include "geometry.h"
 
 
+using isolinear::geometry::Size2D;
+using isolinear::geometry::Region2D;
+using isolinear::geometry::Compass;
+
 
 class RenderedText {
   protected:

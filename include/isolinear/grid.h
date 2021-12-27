@@ -8,6 +8,9 @@
 
 #include "geometry.h"
 
+using isolinear::geometry::Vector2D;
+using isolinear::geometry::Region2D;
+
 class Grid {
 
   protected:

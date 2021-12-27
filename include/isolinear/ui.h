@@ -18,6 +18,9 @@
 #include "window.h"
 
 
+using isolinear::geometry::Region2D;
+
+
 namespace isolinear::ui {
 
   // Widgets

@@ -2,6 +2,9 @@
 
 #include "geometry.h"
 
+using isolinear::geometry::Position2D;
+using isolinear::geometry::Size2D;
+
 enum PointerType {
   MOUSE, FINGER
 };

@@ -2,11 +2,15 @@
 
 #include <string>
 #include <list>
+#include <map>
 
 #include "miso.h"
 
 #include "geometry.h"
 #include "window.h"
+
+
+using isolinear::geometry::Compass;
 
 
 namespace isolinear::ui::header {
@@ -15,7 +19,7 @@ namespace isolinear::ui::header {
     protected:
       Grid grid;
       Window& window;
-      Compass alignment{CENTRE};
+      Compass alignment = Compass::CENTRE;
       std::string text{""};
 
     public:

@@ -17,17 +17,20 @@
 
 #include "miso.h"
 
-#include "elbo.h"
+#include "colours.h"
 #include "compasslayout.h"
+#include "drawable.h"
 #include "geometry.h"
 #include "grid.h"
-#include "header.h"
+#include "mpd.h"
 #include "pointerevent.h"
+#include "progressbar.h"
 #include "shapes.h"
 #include "sweep.h"
+#include "ui.h"
 #include "window.h"
-#include "mpd.h"
-#include "progressbar.h"
+
+#include "header.h"
 
 
 using asio::ip::tcp;

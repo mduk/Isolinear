@@ -9,6 +9,11 @@
 #include "colours.h"
 #include "pointerevent.h"
 
+
+using isolinear::geometry::Position2D;
+using isolinear::geometry::Region2D;
+
+
 namespace isolinear::ui {
 
   class drawable {

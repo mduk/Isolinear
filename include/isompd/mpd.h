@@ -10,16 +10,19 @@
 #include "miso.h"
 
 #include "geometry.h"
-#include "header.h"
 #include "window.h"
 #include "mpdxx.h"
 #include "progressbar.h"
 #include "view.h"
 #include "ui.h"
+
+#include "header.h"
+
 #include "mpd/playercontrolbar.h"
 
 
 using std::cerr;
+
 
 namespace isompd {
 
