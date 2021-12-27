@@ -10,7 +10,6 @@
 #include <fmt/core.h>
 
 #include "geometry.h"
-#include "header.h"
 #include "window.h"
 #include "mpdxx.h"
 

@@ -15,7 +15,6 @@
 #include "frame.h"
 #include "geometry.h"
 #include "grid.h"
-#include "header.h"
 #include "pointerevent.h"
 #include "shapes.h"
 #include "sweep.h"

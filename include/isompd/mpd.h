@@ -16,7 +16,6 @@
 #include "view.h"
 #include "ui.h"
 
-#include "header.h"
 
 #include "mpd/playercontrolbar.h"
 

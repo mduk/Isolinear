@@ -30,7 +30,6 @@
 #include "ui.h"
 #include "window.h"
 
-#include "header.h"
 
 
 using asio::ip::tcp;
