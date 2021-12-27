@@ -575,4 +575,38 @@ namespace isolinear::ui {
   };
 
 
+  class label : public drawable {
+    protected:
+      Window& window;
+      Region2D bounds;
+      std::string label_text;
+
+    public:
+      label(Window& w, Region2D b, std::string l)
+        : window(w)
+        , bounds(b)
+        , label_text(l)
+      {}
+
+      label(Window& w, Grid g, std::string l)
+        : label(w, g.bounds, l)
+      {}
+
+    public:
+      Region2D Bounds() const {
+        return bounds;
+      }
+
+      void Draw(SDL_Renderer* renderer) const {
+        window.LabelFont().RenderText(
+            renderer,
+            bounds,
+            Compass::WEST,
+            std::string{" "} + label_text + " "
+          );
+      }
+
+  };
+
+
 }

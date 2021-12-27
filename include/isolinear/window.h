@@ -71,6 +71,10 @@ class Window {
       return button_font;
     }
 
+    Font const& LabelFont() const {
+      return label_font;
+    }
+
     void Add(drawable* drawable) {
       drawables.push_back(drawable);
     }
@@ -108,6 +112,7 @@ class Window {
 
     const Font header_font{ FONT, 96, 0xff0099ff };
     const Font button_font{ FONT, 44, 0xff000000 };
+    const Font  label_font{ FONT, 44, 0xff0099ff };
 
     void InitSdl() {
       printf("Window::InitSdl()\n");
