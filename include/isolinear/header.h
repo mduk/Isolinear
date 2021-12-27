@@ -13,9 +13,9 @@
 using isolinear::geometry::Compass;
 
 
-namespace isolinear::ui::header {
+namespace isolinear::ui {
 
-  class basic : public drawable {
+  class header_basic : public drawable {
     protected:
       Grid grid;
       Window& window;
@@ -23,11 +23,11 @@ namespace isolinear::ui::header {
       std::string text{""};
 
     public:
-      basic(Grid g, Window& w, Compass a)
-        : basic(g, w, a, "")
+      header_basic(Grid g, Window& w, Compass a)
+        : header_basic(g, w, a, "")
       {}
 
-      basic(Grid g, Window& w, Compass a, std::string t)
+      header_basic(Grid g, Window& w, Compass a, std::string t)
         : grid{g}, window{w}, alignment{a}, text{t}
       {}
 
@@ -60,7 +60,7 @@ namespace isolinear::ui::header {
       }
   };
 
-  class east_bar : public drawable {
+  class header_east_bar : public drawable {
     protected:
       Grid grid;
       Window& window;
@@ -69,15 +69,15 @@ namespace isolinear::ui::header {
       int button_width{2};
 
     public:
-      east_bar(Grid g, Window& w, std::string t)
+      header_east_bar(Grid g, Window& w, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      east_bar(Grid g, Window& w, Compass a, std::string t)
+      header_east_bar(Grid g, Window& w, Compass a, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      east_bar(Grid g, Window& w, Compass a)
+      header_east_bar(Grid g, Window& w, Compass a)
         : grid{g}, window{w}
       {};
 
@@ -184,7 +184,7 @@ namespace isolinear::ui::header {
       }
   };
 
-  class pair_bar : public drawable {
+  class header_pair_bar : public drawable {
     protected:
       Grid grid;
       Window& window;
@@ -192,12 +192,12 @@ namespace isolinear::ui::header {
       std::string right{""};
 
     public:
-      pair_bar(Grid g, Window& w,
+      header_pair_bar(Grid g, Window& w,
           std::string l, std::string r)
         : grid{g}, window{w}, left{l}, right{r}
       {};
 
-      pair_bar(Grid g, Window& w, Compass a)
+      header_pair_bar(Grid g, Window& w, Compass a)
         : grid{g}, window{w}
       {};
 

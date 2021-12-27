@@ -46,10 +46,10 @@ namespace isompd::now_playing {
   class view : public isompd::view {
     protected:
       bool hide = false;
-      isolinear::ui::header::pair_bar title;
-      isolinear::ui::header::pair_bar album;
-      isolinear::ui::header::pair_bar artist;
-      isolinear::ui::header::pair_bar duration;
+      isolinear::ui::header_pair_bar title;
+      isolinear::ui::header_pair_bar album;
+      isolinear::ui::header_pair_bar artist;
+      isolinear::ui::header_pair_bar duration;
       isolinear::ui::progress::horizontal_bar progress;
 
     public:
@@ -333,14 +333,14 @@ namespace isompd::player {
 
 namespace isompd::queue {
 
-  class row : public isolinear::ui::header::east_bar {
+  class row : public isolinear::ui::header_east_bar {
     protected:
       mpdxx::song song;
       isolinear::ui::button& playbtn;
 
     public:
       row(Grid g, Window& w, mpdxx::song s)
-        : isolinear::ui::header::east_bar(g, w, s.Header())
+        : isolinear::ui::header_east_bar(g, w, s.Header())
         , song(s)
         , playbtn(AddButton("PLAY"))
       {
@@ -353,7 +353,7 @@ namespace isompd::queue {
   class view : public isompd::view {
     protected:
       paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
-      isolinear::ui::header::east_bar queue_pager_buttons;
+      isolinear::ui::header_east_bar queue_pager_buttons;
       isolinear::ui::button& next_page_button;
       isolinear::ui::button& previous_page_button;
 
@@ -417,10 +417,10 @@ namespace isompd::queue {
 
 namespace isompd::browse {
 
-  class artist_row : public isolinear::ui::header::basic {
+  class artist_row : public isolinear::ui::header_basic {
     public:
       artist_row(Grid g, Window& w, mpdxx::artist e)
-        : isolinear::ui::header::basic(g, w, Compass::WEST, e.Header())
+        : isolinear::ui::header_basic(g, w, Compass::WEST, e.Header())
       {}
   };
 
@@ -480,7 +480,7 @@ namespace isompd {
 
       CompassLayout layout;
 
-      isolinear::ui::header::east_bar hdrFrame;
+      isolinear::ui::header_east_bar hdrFrame;
       vertical_button_bar barView;
       PlayerControlBar playerControlBar;
       NorthWestSweep sweepNorthWest;
