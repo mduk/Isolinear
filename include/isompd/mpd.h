@@ -205,8 +205,23 @@ class paginated_rows : public drawable {
 
 namespace isompd::player {
 
+  class queuerow : public isolinear::ui::label {
+    protected:
+      mpdxx::song song;
+
+    public:
+      queuerow(Grid g, Window& w, mpdxx::song s)
+        : isolinear::ui::label(w, g, s.Header())
+        , song(s)
+      {
+      }
+  };
+
   class view : public isompd::view {
     protected:
+      isolinear::ui::header_basic hdrQueue;
+      paginated_rows<mpdxx::song, isompd::player::queuerow> queue_pager;
+
       Grid gc;
 
       isolinear::ui::button btnPlay;
@@ -231,6 +246,9 @@ namespace isompd::player {
       view(Grid g, Window& w, mpdxx::client& mpdc)
         : isompd::view("PLAYER", g, w,  mpdc)
 
+        , hdrQueue   (g.Columns( 1,  6).Rows( 1,  2), w, Compass::WEST, "QUEUE")
+        , queue_pager(g.Columns( 1,  6).Rows( 3, 10), w, 20)
+
         , gc(g.Columns(16,21))
 
         , btnPlay(    w, gc.Rows( 1, 4).Columns(1,4), "PLAY")
@@ -249,6 +267,8 @@ namespace isompd::player {
         , btnConsume( w, gc.Rows(14,15).Columns(1,2), "CONSUME")
         , btnRandom(  w, gc.Rows(14,15).Columns(3,6), "RANDOM")
       {
+        RegisterChild(&hdrQueue);
+        RegisterChild(&queue_pager);
         RegisterChild(&btnPlay);
         RegisterChild(&btnPause);
         RegisterChild(&btnStop);
@@ -260,6 +280,14 @@ namespace isompd::player {
         RegisterChild(&btnRepeat);
         RegisterChild(&hrule1);
         RegisterChild(&hrule2);
+
+        miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
+          queue_pager.clear();
+          for (auto& song : queue) {
+            queue_pager.add_row(song);
+          }
+          queue_pager.page(1);
+        });
 
         miso::connect(mpdc.signal_status, [this](mpdxx::status status){
           cout << fmt::format("PlayerView signal_status begin\n");
