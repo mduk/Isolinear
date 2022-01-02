@@ -334,6 +334,10 @@ namespace isolinear::ui {
       int button_width{2};
 
     public:
+      header_east_bar(Window& w, Grid g, std::string t)
+        : grid{g}, window{w}, text{t}
+      {};
+
       header_east_bar(Grid g, Window& w, std::string t)
         : grid{g}, window{w}, text{t}
       {};

@@ -52,3 +52,14 @@ target_include_directories(IsoMPD PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear
 )
 
+add_executable(Timers src/timers.cpp)
+target_link_libraries(Timers
+  ${CONAN_LIBS}
+  LibMiso
+  -lSDL2_gfx
+)
+
+target_include_directories(Timers PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear
+)
+
