@@ -30,7 +30,6 @@
 #include "window.h"
 
 
-
 using asio::ip::tcp;
 
 
@@ -50,6 +49,17 @@ class timer {
       , seconds(s)
       , started(std::chrono::system_clock::now())
       , asio_timer(ioc, s)
+    {}
+};
+
+
+class timer_row : public isolinear::ui::header_east_bar {
+  public:
+    timer& m_timer;
+  public:
+    timer_row(Window& w, Grid g, timer& t)
+      : header_east_bar(w, g, fmt::format("{}", t.seconds.count()))
+      , m_timer(t)
     {}
 };
 
@@ -220,10 +230,10 @@ int main(int argc, char* argv[])
           ).count();
 
       int r = (i * 2) + 2;
-      isolinear::ui::header_east_bar heb(
+      timer_row heb(
           window,
           window.grid.Rows(r-1, r),
-          fmt::format("{} - {}", t_started_seconds, t_expires_relative_seconds)
+          timer
         );
       heb.Colours(window.Colours());
       heb.Draw(window.sdl_renderer);
