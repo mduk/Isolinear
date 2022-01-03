@@ -45,6 +45,10 @@ class timer {
     asio::high_resolution_timer asio_timer;
 
   public:
+    timer(asio::io_context& ioc, long int s)
+      : timer(ioc, std::chrono::seconds(s))
+    {}
+
     timer(asio::io_context& ioc, std::chrono::seconds s)
       : io_context(ioc)
       , seconds(s)
@@ -67,13 +71,24 @@ class timer_row : public isolinear::ui::header_east_bar {
 
   public:
     timer_row(Window& w, Grid g, timer& t)
-      : header_east_bar(w, g, fmt::format("{:%H:%M:%S} {}/{}",
-            t.started,
-            t.expires_in_seconds(),
-            t.seconds
-          ))
+      : header_east_bar(w, g, "")
       , m_timer(t)
-    {}
+    {
+      m_timer.asio_timer.async_wait([&](std::error_code){
+        cout << "Clang!\n";
+      });
+
+      Update();
+    }
+
+    void Update() {
+      Label(fmt::format(
+          "{:%H:%M:%S} {}/{}",
+          m_timer.started,
+          m_timer.expires_in_seconds(),
+          m_timer.seconds
+        ));
+    }
 };
 
 
@@ -126,12 +141,23 @@ int main(int argc, char* argv[])
   window.Add(&control_bar);
 
   std::list<timer> timers;
+  std::list<timer_row> timer_rows;
 
   miso::connect(five_second_button.signal_press, [&](){
     cout << "Ding!\n";
+
     five_second_button.Activate();
-    timers.emplace_back(io_context, std::chrono::seconds(5));
+
+    timers.emplace_back(io_context, 5);
     auto& timer = timers.back();
+
+    int r = (timer_rows.size() * 2) + 2;
+    timer_rows.emplace_back(
+        window,
+        window.grid.Rows(3, window.grid.MaxRows()).Rows(r-1, r),
+        timer
+      );
+
     timer.asio_timer.async_wait([&](std::error_code){
       cout << "Dong!\n";
       five_second_button.Deactivate();
@@ -230,27 +256,12 @@ int main(int argc, char* argv[])
 
 
     // Draw Timers
-    int i = 1;
-    for (auto it = timers.begin(); it != timers.end(); ++it) {
-      auto& timer = *it;
+    for (auto it = timer_rows.begin(); it != timer_rows.end(); ++it) {
+      auto& timer_row = *it;
 
-      auto t_started_seconds =
-        std::chrono::system_clock::to_time_t(timer.started);
-
-      auto t_expires_relative_seconds =
-        std::chrono::duration_cast<std::chrono::seconds>(
-            timer.asio_timer.expires_from_now()
-          ).count();
-
-      int r = (i * 2) + 2;
-      timer_row heb(
-          window,
-          window.grid.Rows(r-1, r),
-          timer
-        );
-      heb.Colours(window.Colours());
-      heb.Draw(window.sdl_renderer);
-      i++;
+      timer_row.Colours(window.Colours());
+      timer_row.Update();
+      timer_row.Draw(window.sdl_renderer);
     }
 
     SDL_RenderPresent(window.sdl_renderer);
