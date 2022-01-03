@@ -50,12 +50,20 @@ class timer {
       , started(std::chrono::system_clock::now())
       , asio_timer(ioc, s)
     {}
+
+  public:
+    int expires_in_seconds() const {
+      return std::chrono::duration_cast<std::chrono::seconds>(
+          asio_timer.expires_from_now()
+        ).count();
+    }
 };
 
 
 class timer_row : public isolinear::ui::header_east_bar {
   public:
     timer& m_timer;
+
   public:
     timer_row(Window& w, Grid g, timer& t)
       : header_east_bar(w, g, fmt::format("{}", t.seconds.count()))
@@ -203,10 +211,7 @@ int main(int argc, char* argv[])
     while (it != timers.end()) {
       auto& timer = *it;
 
-      auto t_expires_relative_seconds =
-        std::chrono::duration_cast<std::chrono::seconds>(
-            timer.asio_timer.expires_from_now()
-          ).count();
+      auto t_expires_relative_seconds = timer.expires_in_seconds();
 
       if (t_expires_relative_seconds <= 0) {
         timers.erase(it++);
