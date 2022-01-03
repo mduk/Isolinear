@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <fmt/core.h>
+#include <fmt/chrono.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -66,9 +67,10 @@ class timer_row : public isolinear::ui::header_east_bar {
 
   public:
     timer_row(Window& w, Grid g, timer& t)
-      : header_east_bar(w, g, fmt::format("{}/{}",
+      : header_east_bar(w, g, fmt::format("{:%H:%M:%S} {}/{}",
+            t.started,
             t.expires_in_seconds(),
-            t.seconds.count()
+            t.seconds
           ))
       , m_timer(t)
     {}
