@@ -207,19 +207,22 @@ int main(int argc, char* argv[])
     window.Draw();
 
     // Prune expired timers
-    std::list<timer>::iterator it = timers.begin();
-    while (it != timers.end()) {
-      auto& timer = *it;
+    if (false) {
+      std::list<timer>::iterator it = timers.begin();
+      while (it != timers.end()) {
+        auto& timer = *it;
 
-      auto t_expires_relative_seconds = timer.expires_in_seconds();
+        auto t_expires_relative_seconds = timer.expires_in_seconds();
 
-      if (t_expires_relative_seconds <= 0) {
-        timers.erase(it++);
-      }
-      else {
-        it++;
+        if (t_expires_relative_seconds <= 0) {
+          timers.erase(it++);
+        }
+        else {
+          it++;
+        }
       }
     }
+
 
     // Draw Timers
     int i = 1;
