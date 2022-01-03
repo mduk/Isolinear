@@ -43,19 +43,7 @@ namespace isolinear::ui {
       }
 
       virtual void OnPointerEvent(PointerEvent event) {
-        Region2D   b = Bounds();
         Position2D p = event.Position();
-
-        printf("Region: %d,%d (%d,%d) %d,%d \n",
-            b.NearX(), b.NearY(),
-            b.W(),     b.H(),
-            b.FarX(),  b.FarY()
-          );
-        printf(" Click: %d,%d (%d,%d local)\n",
-            p.x, p.y,
-            p.x - b.NearX(),
-            p.y - b.NearY()
-          );
 
         for (auto& child : children) {
           if (child->Bounds().Encloses(p)) {

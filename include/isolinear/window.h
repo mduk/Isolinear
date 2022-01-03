@@ -94,7 +94,6 @@ class Window {
     void OnPointerEvent(PointerEvent event) {
       for (auto* drawable : drawables) {
         Region2D bounds = drawable->Bounds();
-        bounds.Print();
         if (bounds.Encloses(event.Position())) {
           drawable->OnPointerEvent(event);
           continue;

@@ -31,6 +31,7 @@
 #include "window.h"
 
 
+using std::cout;
 using asio::ip::tcp;
 
 
@@ -66,6 +67,9 @@ class timer {
 
 
 class timer_row : public isolinear::ui::header_east_bar {
+  protected:
+    isolinear::ui::button& add_time;
+
   public:
     timer& m_timer;
 
@@ -73,9 +77,14 @@ class timer_row : public isolinear::ui::header_east_bar {
     timer_row(Window& w, Grid g, timer& t)
       : header_east_bar(w, g, "")
       , m_timer(t)
+      , add_time(AddButton("ADD 10 SEC"))
     {
       m_timer.asio_timer.async_wait([&](std::error_code){
         cout << "Clang!\n";
+      });
+
+      miso::connect(add_time.signal_press, [&](){
+        cout << "add time?\n";
       });
 
       Update();
@@ -89,6 +98,50 @@ class timer_row : public isolinear::ui::header_east_bar {
           m_timer.seconds
         ));
     }
+};
+
+
+template <class T>
+class drawable_list : public std::list<T>,
+                      public isolinear::ui::drawable {
+
+  public:
+    isolinear::geometry::Region2D Bounds() const {
+      return {1,1,1000,1000}; /// <-------- need to know the bounds
+    }
+
+    void Draw(SDL_Renderer* renderer) const {
+      for (auto& elem : *this) {
+        elem.Draw(renderer);
+      }
+    }
+
+    virtual void Colours(ColourScheme cs) {
+      drawable::Colours(cs);
+      for (auto& elem : *this) {
+        elem.Colours(cs);
+      }
+    }
+
+    void Update() {
+      for (auto& elem : *this) {
+        elem.Colours(drawable::Colours());
+        elem.Update();
+      }
+    }
+
+    virtual void OnPointerEvent(PointerEvent event) {
+      Position2D p = event.Position();
+      cout << "OnPointerEvent\n";
+
+      for (auto& elem : *this) {
+        if (elem.Bounds().Encloses(p)) {
+          cout << "found\n";
+          elem.OnPointerEvent(event);
+        }
+      }
+    }
+
 };
 
 
@@ -141,7 +194,8 @@ int main(int argc, char* argv[])
   window.Add(&control_bar);
 
   std::list<timer> timers;
-  std::list<timer_row> timer_rows;
+  drawable_list<timer_row> timer_rows;
+  window.Add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
     cout << "Ding!\n";
@@ -256,7 +310,7 @@ int main(int argc, char* argv[])
 
 
     // Draw Timers
-    for (auto it = timer_rows.begin(); it != timer_rows.end(); ++it) {
+    if (false) for (auto it = timer_rows.begin(); it != timer_rows.end(); ++it) {
       auto& timer_row = *it;
 
       timer_row.Colours(window.Colours());
