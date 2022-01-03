@@ -66,7 +66,10 @@ class timer_row : public isolinear::ui::header_east_bar {
 
   public:
     timer_row(Window& w, Grid g, timer& t)
-      : header_east_bar(w, g, fmt::format("{}", t.seconds.count()))
+      : header_east_bar(w, g, fmt::format("{}/{}",
+            t.expires_in_seconds(),
+            t.seconds.count()
+          ))
       , m_timer(t)
     {}
 };
