@@ -150,11 +150,9 @@ class drawable_list : public std::list<T>,
 
     virtual void OnPointerEvent(PointerEvent event) {
       Position2D p = event.Position();
-      cout << "OnPointerEvent\n";
 
       for (auto& elem : *this) {
         if (elem.Bounds().Encloses(p)) {
-          cout << "found\n";
           elem.OnPointerEvent(event);
         }
       }
