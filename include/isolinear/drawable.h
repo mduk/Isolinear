@@ -93,7 +93,7 @@ namespace isolinear::ui {
         return grid.bounds;
       }
 
-      void Draw(SDL_Renderer* renderer) const {
+      virtual void Draw(SDL_Renderer* renderer) const {
         for (auto& elem : *this) {
           elem.Draw(renderer);
         }
@@ -106,7 +106,7 @@ namespace isolinear::ui {
         }
       }
 
-      void Update() {
+      virtual void Update() {
         for (auto& elem : *this) {
           elem.Colours(drawable::Colours());
           elem.Update();
