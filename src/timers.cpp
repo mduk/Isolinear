@@ -46,6 +46,9 @@ class timer {
     asio::high_resolution_timer asio_timer;
 
   public:
+    miso::signal<> signal_expired;
+
+  public:
     timer(asio::io_context& ioc, long int s)
       : timer(ioc, std::chrono::seconds(s))
     {}
@@ -55,7 +58,11 @@ class timer {
       , seconds(s)
       , started(std::chrono::system_clock::now())
       , asio_timer(ioc, s)
-    {}
+    {
+      asio_timer.async_wait([&](std::error_code){
+        emit signal_expired();
+      });
+    }
 
   public:
     int expires_in_seconds() const {
@@ -228,8 +235,7 @@ int main(int argc, char* argv[])
         timer
       );
 
-    timer.asio_timer.async_wait([&](std::error_code){
-      cout << "Dong!\n";
+    miso::connect(timer.signal_expired, [&](){
       five_second_button.Deactivate();
     });
   });
