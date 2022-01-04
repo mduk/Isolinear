@@ -105,75 +105,20 @@ class timer_row : public isolinear::ui::header_east_bar {
 };
 
 
-template <class T>
-class drawable_list : public std::list<T>,
-                      public isolinear::ui::drawable {
-
-  protected:
-    Grid grid;
-
-  public:
-    drawable_list(Grid g)
-      : grid(g)
-    {}
-
-  protected:
-    virtual Grid grid_for_index(int index) = 0;
-
-  public:
-    Grid next_grid() {
-      return grid_for_index(std::list<T>::size() + 1);
-    }
-
-    isolinear::geometry::Region2D Bounds() const {
-      return grid.bounds;
-    }
-
-    void Draw(SDL_Renderer* renderer) const {
-      for (auto& elem : *this) {
-        elem.Draw(renderer);
-      }
-    }
-
-    virtual void Colours(ColourScheme cs) {
-      drawable::Colours(cs);
-      for (auto& elem : *this) {
-        elem.Colours(cs);
-      }
-    }
-
-    void Update() {
-      for (auto& elem : *this) {
-        elem.Colours(drawable::Colours());
-        elem.Update();
-      }
-    }
-
-    virtual void OnPointerEvent(PointerEvent event) {
-      Position2D p = event.Position();
-
-      for (auto& elem : *this) {
-        if (elem.Bounds().Encloses(p)) {
-          elem.OnPointerEvent(event);
-        }
-      }
-    }
-
-};
 
 
 template <class T>
-class button_bar_list : public drawable_list<T> {
+class button_bar_list : public isolinear::ui::drawable_list<T> {
 
   public:
     button_bar_list(Grid g)
-      : drawable_list<T>(g)
+      : isolinear::ui::drawable_list<T>(g)
     {}
 
   protected:
     Grid grid_for_index(int index) override {
       int far_row = index * 2;
-      return drawable_list<T>::grid.Rows(far_row-1, far_row);
+      return isolinear::ui::drawable_list<T>::grid.Rows(far_row-1, far_row);
     }
 };
 
