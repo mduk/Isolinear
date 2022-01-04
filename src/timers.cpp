@@ -105,9 +105,17 @@ template <class T>
 class drawable_list : public std::list<T>,
                       public isolinear::ui::drawable {
 
+  protected:
+    Grid grid;
+
+  public:
+    drawable_list(Grid g)
+      : grid(g)
+    {}
+
   public:
     isolinear::geometry::Region2D Bounds() const {
-      return {1,1,1000,1000}; /// <-------- need to know the bounds
+      return grid.bounds;
     }
 
     void Draw(SDL_Renderer* renderer) const {
@@ -194,7 +202,7 @@ int main(int argc, char* argv[])
   window.Add(&control_bar);
 
   std::list<timer> timers;
-  drawable_list<timer_row> timer_rows;
+  drawable_list<timer_row> timer_rows(window.grid.Rows(3, window.grid.MaxRows()));
   window.Add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
