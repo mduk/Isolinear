@@ -1,8 +1,4 @@
-#include <cstdlib>
 #include <sstream>
-#include <stdio.h>
-#include <time.h>
-#include <assert.h>
 #include <vector>
 
 #include <asio.hpp>
@@ -18,6 +14,7 @@
 
 #include "miso.h"
 
+#include "init.h"
 #include "colours.h"
 #include "compasslayout.h"
 #include "drawable.h"
@@ -170,42 +167,10 @@ class drawable_list : public std::list<T>,
 
 int main(int argc, char* argv[])
 {
-  printf("INIT\n");
+  isolinear::init();
 
-  srand(time(NULL));
-
-  asio::io_context io_context;
-  auto work_guard = asio::make_work_guard(io_context);
-
-  //size_t n_threads = std::thread::hardware_concurrency();
-  size_t n_threads = 1;
-  std::vector<std::thread> thread_pool;
-  for (size_t i = 0; i < n_threads; i++){
-    thread_pool.emplace_back([&io_context](){ io_context.run(); });
-  }
-
-  SDL_Init(SDL_INIT_VIDEO);
-  TTF_Init();
-  SDL_ShowCursor(SDL_DISABLE);
-
-  int number_of_displays = SDL_GetNumVideoDisplays();
-  std::vector<SDL_Rect> displays;
-
-  for (int i = 0; i < number_of_displays; i++) {
-    SDL_Rect bounds{};
-    SDL_GetDisplayBounds(i, &bounds);
-    displays.push_back(bounds);
-
-    printf("%d: %d,%d +(%d,%d) [%d]\n",
-        i,
-        bounds.w,
-        bounds.h,
-        bounds.x,
-        bounds.y,
-        bounds.w * bounds.h);
-  }
-
-  SDL_Rect display = displays.back();
+  auto work_guard = asio::make_work_guard(isolinear::io_context);
+  auto display = isolinear::detect_displays().back();
 
   Window window(
       Position2D{ display },
@@ -225,7 +190,7 @@ int main(int argc, char* argv[])
 
     five_second_button.Activate();
 
-    timers.emplace_back(io_context, 5);
+    timers.emplace_back(isolinear::io_context, 5);
     auto& timer = timers.back();
 
     int r = (timer_rows.size() * 2) + 2;
@@ -343,11 +308,7 @@ int main(int argc, char* argv[])
     SDL_RenderPresent(window.sdl_renderer);
   }
 
-  io_context.stop();
   work_guard.reset();
-  for(auto& thread : thread_pool) {
-    thread.join();
-  }
-
+  isolinear::shutdown();
   return 0;
 }
