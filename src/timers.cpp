@@ -113,7 +113,17 @@ class drawable_list : public std::list<T>,
       : grid(g)
     {}
 
+  protected:
+    Grid grid_for_index(int index) {
+      int far_row = index * 2;
+      return grid.Rows(far_row-1, far_row);
+    }
+
   public:
+    Grid next_grid() {
+      return grid_for_index(std::list<T>::size() + 1);
+    }
+
     isolinear::geometry::Region2D Bounds() const {
       return grid.bounds;
     }
@@ -216,7 +226,7 @@ int main(int argc, char* argv[])
     int r = (timer_rows.size() * 2) + 2;
     timer_rows.emplace_back(
         window,
-        window.grid.Rows(3, window.grid.MaxRows()).Rows(r-1, r),
+        timer_rows.next_grid(),
         timer
       );
 
