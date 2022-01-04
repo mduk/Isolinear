@@ -118,10 +118,7 @@ class drawable_list : public std::list<T>,
     {}
 
   protected:
-    Grid grid_for_index(int index) {
-      int far_row = index * 2;
-      return grid.Rows(far_row-1, far_row);
-    }
+    virtual Grid grid_for_index(int index) = 0;
 
   public:
     Grid next_grid() {
@@ -165,6 +162,22 @@ class drawable_list : public std::list<T>,
 };
 
 
+template <class T>
+class button_bar_list : public drawable_list<T> {
+
+  public:
+    button_bar_list(Grid g)
+      : drawable_list<T>(g)
+    {}
+
+  protected:
+    Grid grid_for_index(int index) override {
+      int far_row = index * 2;
+      return drawable_list<T>::grid.Rows(far_row-1, far_row);
+    }
+};
+
+
 int main(int argc, char* argv[])
 {
   isolinear::init();
@@ -182,7 +195,7 @@ int main(int argc, char* argv[])
   window.Add(&control_bar);
 
   std::list<timer> timers;
-  drawable_list<timer_row> timer_rows(window.grid.Rows(3, window.grid.MaxRows()));
+  button_bar_list<timer_row> timer_rows(window.grid.Rows(3, window.grid.MaxRows()));
   window.Add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
