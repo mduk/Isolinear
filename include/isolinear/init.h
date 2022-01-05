@@ -28,21 +28,22 @@ namespace isolinear {
   }
 
   std::vector<SDL_Rect> detect_displays() {
-    int number_of_displays = SDL_GetNumVideoDisplays();
     std::vector<SDL_Rect> displays;
 
+    fmt::print("Detecting displays:\n");
+
+    int number_of_displays = SDL_GetNumVideoDisplays();
     for (int i = 0; i < number_of_displays; i++) {
       SDL_Rect bounds{};
       SDL_GetDisplayBounds(i, &bounds);
       displays.push_back(bounds);
 
-      printf("%d: %d,%d +(%d,%d) [%d]\n",
+      fmt::print("  {}: {},{} +({},{}) [{}]\n",
           i,
-          bounds.w,
-          bounds.h,
-          bounds.x,
-          bounds.y,
-          bounds.w * bounds.h);
+          bounds.w, bounds.h,
+          bounds.x, bounds.y,
+          bounds.w * bounds.h
+        );
     }
 
     return displays;
