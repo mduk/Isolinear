@@ -114,18 +114,12 @@ class Window {
     const Font  label_font{ FONT, 44, 0xff0099ff };
 
     void InitSdl() {
-      printf("Window::InitSdl()\n");
-      printf("        Position: %d,%d\n", position.x, position.y);
-      printf("        Size: %d,%d\n", size.x, size.y);
-      printf("        Orientation: %s\n", (size.x >= size.y)
-                                          ? "landscape"
-                                          : "portrait");
       sdl_window = SDL_CreateWindow(
           title.c_str(),
           position.x, position.y,
           size.x, size.y,
           0 | SDL_WINDOW_ALLOW_HIGHDPI
-            | SDL_WINDOW_FULLSCREEN_DESKTOP
+            | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
             //| SDL_WINDOW_BORDERLESS
         );
 
