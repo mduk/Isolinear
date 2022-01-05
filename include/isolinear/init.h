@@ -1,13 +1,17 @@
 #pragma once
 
+#include <iostream>
+#include <fmt/core.h>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include <SDL2/SDL_ttf.h>
 
+
 namespace isolinear {
 
   asio::io_context io_context;
-  std::vector<std::thread> io_threads;
+  std::thread io_thread;
 
   void init() {
     srand(time(NULL));
@@ -15,18 +19,12 @@ namespace isolinear {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
-    size_t n_threads = std::thread::hardware_concurrency();
-    for (size_t i = 0; i < n_threads; i++){
-      io_threads.emplace_back([](){ io_context.run(); });
-    }
+    io_thread = std::thread([](){ io_context.run(); });
   }
 
   void shutdown() {
     io_context.stop();
-
-    for(auto& thread : io_threads) {
-      thread.join();
-    }
+    io_thread.join();
   }
 
   std::vector<SDL_Rect> detect_displays() {
