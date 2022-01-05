@@ -18,6 +18,7 @@
 #include "window.h"
 
 
+using isolinear::compass;
 using isolinear::geometry::Region2D;
 
 
@@ -121,7 +122,7 @@ namespace isolinear::ui {
         window.ButtonFont().RenderText(
             renderer,
             bounds,
-            Compass::SOUTHEAST,
+            compass::southeast,
             std::string{" "} + label + " "
           );
       }
@@ -284,15 +285,15 @@ namespace isolinear::ui {
     protected:
       Grid grid;
       Window& window;
-      Compass alignment = Compass::CENTRE;
+      compass alignment = compass::centre;
       std::string text{""};
 
     public:
-      header_basic(Grid g, Window& w, Compass a)
+      header_basic(Grid g, Window& w, compass a)
         : header_basic(g, w, a, "")
       {}
 
-      header_basic(Grid g, Window& w, Compass a, std::string t)
+      header_basic(Grid g, Window& w, compass a, std::string t)
         : grid{g}, window{w}, alignment{a}, text{t}
       {}
 
@@ -342,11 +343,11 @@ namespace isolinear::ui {
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, Window& w, Compass a, std::string t)
+      header_east_bar(Grid g, Window& w, compass a, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, Window& w, Compass a)
+      header_east_bar(Grid g, Window& w, compass a)
         : grid{g}, window{w}
       {};
 
@@ -413,7 +414,7 @@ namespace isolinear::ui {
         Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
           left_cap.Fill    (renderer, Colours().light);
-         right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
+         right_cap.Bullnose(renderer, compass::east, Colours().light);
         centre_bar.Fill    (renderer, Colours().background);
 
         if (buttons.size() > 0) {
@@ -426,7 +427,7 @@ namespace isolinear::ui {
         if (text.length() > 0) {
           std::string padded = std::string(" ") + text + " ";
           RenderedText headertext = window.HeaderFont().RenderText(Colours().active, padded);
-          Region2D headerregion = centre_bar.Align(Compass::EAST, headertext.Size());
+          Region2D headerregion = centre_bar.Align(compass::east, headertext.Size());
 
           int near = grid.PositionColumnIndex(headerregion.Near());
           int  far = grid.PositionColumnIndex(headerregion.Far());
@@ -443,7 +444,7 @@ namespace isolinear::ui {
             };
           fillerregion.Fill(renderer, Colours().light);
 
-          headertext.Draw(renderer, Compass::EAST, centre_bar);
+          headertext.Draw(renderer, compass::east, centre_bar);
         }
 
         grid.CalculateGridRegion(
@@ -466,7 +467,7 @@ namespace isolinear::ui {
         : grid{g}, window{w}, left{l}, right{r}
       {};
 
-      header_pair_bar(Grid g, Window& w, Compass a)
+      header_pair_bar(Grid g, Window& w, compass a)
         : grid{g}, window{w}
       {};
 
@@ -518,10 +519,10 @@ namespace isolinear::ui {
           );
 
         Region2D lefttextregion = centre_bar.Align(
-            Compass::WEST, lefttext.Size()
+            compass::west, lefttext.Size()
           );
         Region2D righttextregion = centre_bar.Align(
-            Compass::EAST, righttext.Size()
+            compass::east, righttext.Size()
           );
 
         Position2D leftlimit = lefttextregion.SouthEast();
@@ -570,11 +571,11 @@ namespace isolinear::ui {
         }
 
         drawcentrebar.Fill(renderer, Colours().frame);
-        left_cap.Bullnose(renderer, Compass::WEST, Colours().light);
-        right_cap.Bullnose(renderer, Compass::EAST, Colours().light);
+        left_cap.Bullnose(renderer, compass::west, Colours().light);
+        right_cap.Bullnose(renderer, compass::east, Colours().light);
 
-        lefttext.Draw(renderer, Compass::WEST, centre_bar);
-        righttext.Draw(renderer, Compass::EAST, centre_bar);
+        lefttext.Draw(renderer, compass::west, centre_bar);
+        righttext.Draw(renderer, compass::east, centre_bar);
       }
   };
 
@@ -605,7 +606,7 @@ namespace isolinear::ui {
         window.LabelFont().RenderText(
             renderer,
             bounds,
-            Compass::WEST,
+            compass::west,
             std::string{" "} + label_text + " "
           );
       }

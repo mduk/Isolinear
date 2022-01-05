@@ -18,6 +18,8 @@
 #include "shapes.h"
 
 
+using isolinear::compass;
+
 
 class Elbo : public drawable {
 
@@ -29,7 +31,7 @@ class Elbo : public drawable {
     Vector2D sweep_cells{4,2};
     Vector2D gutter{10,10};
     std::string header_string{""};
-    Compass header_alignment{CENTRE};
+    compass header_alignment{CENTRE};
     std::list<isolinear::ui::button> buttons{};
 
   public:
@@ -37,7 +39,7 @@ class Elbo : public drawable {
         Window& w,
         Grid& g,
         std::string h,
-        Compass ha
+        compass ha
       ) :
         window{w},
         grid{g},
@@ -209,7 +211,7 @@ class NorthWestElbo : public Elbo {
 
   public:
     NorthWestElbo(Window& w, Grid& g, std::string h)
-      : Elbo(w, g, h, Compass{NORTHWEST})
+      : Elbo(w, g, h, compass::northwest)
     {}
 
   protected:
@@ -233,7 +235,7 @@ class NorthWestElbo : public Elbo {
       Region2D sweep = SweepRegion();
 
       return sweep.Align(
-          Compass{SOUTHEAST},
+          compass::southeast,
           Size2D{
               sweep.FarX() - VerticalRegion().FarX(),
               HeaderRegion().H() + gutter.y
@@ -243,7 +245,7 @@ class NorthWestElbo : public Elbo {
 
     Region2D SweepInnerRadiusRegion() const override {
       return SweepInnerCornerRegion().Align(
-          Compass{NORTHWEST},
+          compass::northwest,
           Size2D{SweepInnerRadius()}
         );
     }
@@ -336,7 +338,7 @@ class SouthWestElbo : public Elbo {
 
   public:
     SouthWestElbo(Window& w, Grid& g, std::string h)
-      : Elbo(w, g, h, Compass{SOUTHWEST})
+      : Elbo(w, g, h, compass::southwest)
     {}
 
   protected:
@@ -351,7 +353,7 @@ class SouthWestElbo : public Elbo {
       Region2D sweep = SweepRegion();
 
       return sweep.Align(
-          Compass{SOUTHWEST},
+          compass::southwest,
           Size2D{SweepOuterRadius()}
         );
     }
@@ -362,7 +364,7 @@ class SouthWestElbo : public Elbo {
       Region2D header = HeaderRegion();
 
       return sweep.Align(
-          Compass{NORTHEAST},
+          compass::northeast,
           Size2D{
               sweep.FarX() - vertical.FarX(),
               header.H() + gutter.y
@@ -374,7 +376,7 @@ class SouthWestElbo : public Elbo {
       Region2D sweep = SweepRegion();
 
       return SweepInnerCornerRegion().Align(
-          Compass{SOUTHWEST},
+          compass::southwest,
           Size2D{SweepInnerRadius()}
         );
     }

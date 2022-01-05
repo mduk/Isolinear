@@ -8,10 +8,14 @@
 
 #include "geometry.h"
 
+
+using isolinear::compass;
 using isolinear::geometry::Vector2D;
 using isolinear::geometry::Region2D;
 
+
 extern bool drawdebug;
+
 
 class Sweep : public drawable {
   protected:
@@ -20,18 +24,18 @@ class Sweep : public drawable {
     Vector2D ports;
     int outer_radius;
     int inner_radius;
-    Compass alignment;
-    Compass opposite;
+    compass alignment;
+    compass opposite;
 
   public:
-    Sweep(Window& w, Grid g, Vector2D p, int oradius, int iradius, Compass ali)
+    Sweep(Window& w, Grid g, Vector2D p, int oradius, int iradius, compass ali)
       : window{w}, grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
     {
       switch (alignment) {
-        case Compass::NORTHEAST: opposite = Compass::SOUTHWEST; break;
-        case Compass::SOUTHEAST: opposite = Compass::NORTHWEST; break;
-        case Compass::SOUTHWEST: opposite = Compass::NORTHEAST; break;
-        case Compass::NORTHWEST: opposite = Compass::SOUTHEAST; break;
+        case compass::northeast: opposite = compass::southwest; break;
+        case compass::southeast: opposite = compass::northwest; break;
+        case compass::southwest: opposite = compass::northeast; break;
+        case compass::northwest: opposite = compass::southeast; break;
       }
     }
 
@@ -89,7 +93,7 @@ class Sweep : public drawable {
 class NorthEastSweep : public Sweep {
   public:
     NorthEastSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, ports, oradius, iradius, Compass::NORTHEAST}
+      : Sweep{window, grid, ports, oradius, iradius, compass::northeast}
     {}
 
     Region2D HorizontalPort() const override {
@@ -111,7 +115,7 @@ class NorthEastSweep : public Sweep {
 class SouthEastSweep : public Sweep {
   public:
     SouthEastSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, ports, oradius, iradius, Compass::SOUTHEAST}
+      : Sweep{window, grid, ports, oradius, iradius, compass::southeast}
     {}
 
     Region2D HorizontalPort() const override {
@@ -133,7 +137,7 @@ class SouthEastSweep : public Sweep {
 class SouthWestSweep : public Sweep {
   public:
     SouthWestSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, ports, oradius, iradius, Compass::SOUTHWEST}
+      : Sweep{window, grid, ports, oradius, iradius, compass::southwest}
     {}
 
     Region2D VerticalPort() const override {
@@ -155,7 +159,7 @@ class SouthWestSweep : public Sweep {
 class NorthWestSweep : public Sweep {
   public:
     NorthWestSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
-      : Sweep{window, grid, ports, oradius, iradius, Compass::NORTHWEST}
+      : Sweep{window, grid, ports, oradius, iradius, compass::northwest}
     {}
 
     Region2D HorizontalPort() const override {

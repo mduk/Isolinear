@@ -6,15 +6,12 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include "compass.h"
 #include "colours.h"
 
-namespace isolinear::geometry {
+using isolinear::compass;
 
-  enum Compass {
-    CENTRE,
-    NORTH, NORTHEAST, EAST, SOUTHEAST,
-    SOUTH, SOUTHWEST, WEST, NORTHWEST
-  };
+namespace isolinear::geometry {
 
   class Vector2D {
     public:
@@ -187,16 +184,16 @@ namespace isolinear::geometry {
             int FarX() const { return Far().x; }
             int FarY() const { return Far().y; }
 
-      // Compass points
-      Position2D Centre()     const { return Point(Compass::CENTRE   ); }
-      Position2D North()      const { return Point(Compass::NORTH    ); }
-      Position2D NorthEast()  const { return Point(Compass::NORTHEAST); }
-      Position2D East()       const { return Point(Compass::EAST     ); }
-      Position2D SouthEast()  const { return Point(Compass::SOUTHEAST); }
-      Position2D South()      const { return Point(Compass::SOUTH    ); }
-      Position2D SouthWest()  const { return Point(Compass::SOUTHWEST); }
-      Position2D West()       const { return Point(Compass::WEST     ); }
-      Position2D NorthWest()  const { return Point(Compass::NORTHWEST); }
+      // compass points
+      Position2D Centre()     const { return Point(compass::centre   ); }
+      Position2D North()      const { return Point(compass::north    ); }
+      Position2D NorthEast()  const { return Point(compass::northeast); }
+      Position2D East()       const { return Point(compass::east     ); }
+      Position2D SouthEast()  const { return Point(compass::southeast); }
+      Position2D South()      const { return Point(compass::south    ); }
+      Position2D SouthWest()  const { return Point(compass::southwest); }
+      Position2D West()       const { return Point(compass::west     ); }
+      Position2D NorthWest()  const { return Point(compass::northwest); }
 
       int CentreX()    const { return Centre().x;    }
       int CentreY()    const { return Centre().y;    }
@@ -217,39 +214,39 @@ namespace isolinear::geometry {
       int NorthWestX() const { return NorthWest().x; }
       int NorthWestY() const { return NorthWest().y; }
 
-      // Compass Points
-      Position2D Point(Compass align) const {
+      // compass Points
+      Position2D Point(compass align) const {
         switch (align) {
-          case    Compass::CENTRE: return Origin().Add(Size().Centre());
-          case     Compass::NORTH: return Origin().Add(Size().North());
-          case Compass::NORTHEAST: return Origin().Add(Size().NorthEast());
-          case      Compass::EAST: return Origin().Add(Size().East());
-          case Compass::SOUTHEAST: return Origin().Add(Size().SouthEast());
-          case     Compass::SOUTH: return Origin().Add(Size().South());
-          case Compass::SOUTHWEST: return Origin().Add(Size().SouthWest());
-          case      Compass::WEST: return Origin().Add(Size().West());
-          case Compass::NORTHWEST: return Origin().Add(Size().NorthWest());
+          case    compass::centre: return Origin().Add(Size().Centre());
+          case     compass::north: return Origin().Add(Size().North());
+          case compass::northeast: return Origin().Add(Size().NorthEast());
+          case      compass::east: return Origin().Add(Size().East());
+          case compass::southeast: return Origin().Add(Size().SouthEast());
+          case     compass::south: return Origin().Add(Size().South());
+          case compass::southwest: return Origin().Add(Size().SouthWest());
+          case      compass::west: return Origin().Add(Size().West());
+          case compass::northwest: return Origin().Add(Size().NorthWest());
         }
         return Position2D();
       }
 
-      // Compass Alignment
-      Region2D Align(Compass align, Size2D s) const {
+      // compass Alignment
+      Region2D Align(compass align, Size2D s) const {
         switch (align) {
-          case    Compass::CENTRE: return Region2D{    Centre().Subtract(s.Centre()   ), s };
-          case     Compass::NORTH: return Region2D{     North().Subtract(s.North()    ), s };
-          case Compass::NORTHEAST: return Region2D{ NorthEast().Subtract(s.NorthEast()), s };
-          case      Compass::EAST: return Region2D{      East().Subtract(s.East()     ), s };
-          case Compass::SOUTHEAST: return Region2D{ SouthEast().Subtract(s.SouthEast()), s };
-          case     Compass::SOUTH: return Region2D{     South().Subtract(s.South()    ), s };
-          case Compass::SOUTHWEST: return Region2D{ SouthWest().Subtract(s.SouthWest()), s };
-          case      Compass::WEST: return Region2D{      West().Subtract(s.West()     ), s };
-          case Compass::NORTHWEST: return Region2D{ NorthWest().Subtract(s.NorthWest()), s };
+          case    compass::centre: return Region2D{    Centre().Subtract(s.Centre()   ), s };
+          case     compass::north: return Region2D{     North().Subtract(s.North()    ), s };
+          case compass::northeast: return Region2D{ NorthEast().Subtract(s.NorthEast()), s };
+          case      compass::east: return Region2D{      East().Subtract(s.East()     ), s };
+          case compass::southeast: return Region2D{ SouthEast().Subtract(s.SouthEast()), s };
+          case     compass::south: return Region2D{     South().Subtract(s.South()    ), s };
+          case compass::southwest: return Region2D{ SouthWest().Subtract(s.SouthWest()), s };
+          case      compass::west: return Region2D{      West().Subtract(s.West()     ), s };
+          case compass::northwest: return Region2D{ NorthWest().Subtract(s.NorthWest()), s };
         }
         return Region2D();
       }
 
-      // Compass Quadrants
+      // compass Quadrants
       Region2D NorthEastQuadrant() const { return Region2D{ North(),       East() }; }
       Region2D SouthEastQuadrant() const { return Region2D{ Centre(), SouthEast() }; }
       Region2D SouthWestQuadrant() const { return Region2D{ West(),       South() }; }
@@ -295,35 +292,35 @@ namespace isolinear::geometry {
         boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
       }
 
-      virtual void QuadrantArc(SDL_Renderer* renderer, Compass orientation, Colour colour) const {
+      virtual void QuadrantArc(SDL_Renderer* renderer, compass orientation, Colour colour) const {
         switch (orientation) {
-          case Compass::NORTHEAST: filledPieColor(renderer, SouthWestX(), SouthWestY(), W(), 270,   0, colour); break;
-          case Compass::SOUTHEAST: filledPieColor(renderer, NorthWestX(), NorthWestY(), W(),   0,  90, colour); break;
-          case Compass::NORTHWEST: filledPieColor(renderer, SouthEastX(), SouthEastY(), W(), 180, 270, colour); break;
-          case Compass::SOUTHWEST: filledPieColor(renderer, NorthEastX(), NorthEastY(), W(),  90, 180, colour); break;
+          case compass::northeast: filledPieColor(renderer, SouthWestX(), SouthWestY(), W(), 270,   0, colour); break;
+          case compass::southeast: filledPieColor(renderer, NorthWestX(), NorthWestY(), W(),   0,  90, colour); break;
+          case compass::northwest: filledPieColor(renderer, SouthEastX(), SouthEastY(), W(), 180, 270, colour); break;
+          case compass::southwest: filledPieColor(renderer, NorthEastX(), NorthEastY(), W(),  90, 180, colour); break;
         }
       }
 
-      virtual void Bullnose(SDL_Renderer* renderer, Compass orientation, Colour colour) const {
+      virtual void Bullnose(SDL_Renderer* renderer, compass orientation, Colour colour) const {
         switch (orientation) {
-          case Compass::NORTH:
-            Align(Compass::NORTH, Size2D{W()}).Ellipse(renderer, colour);
-            Align(Compass::SOUTH, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
+          case compass::north:
+            Align(compass::north, Size2D{W()}).Ellipse(renderer, colour);
+            Align(compass::south, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
             break;
 
-          case Compass::EAST:
-            Align(Compass::EAST, Size2D{H()}).Ellipse(renderer, colour);
-            Align(Compass::WEST, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
+          case compass::east:
+            Align(compass::east, Size2D{H()}).Ellipse(renderer, colour);
+            Align(compass::west, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
             break;
 
-          case Compass::SOUTH:
-            Align(Compass::SOUTH, Size2D{W()}).Ellipse(renderer, colour);
-            Align(Compass::NORTH, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
+          case compass::south:
+            Align(compass::south, Size2D{W()}).Ellipse(renderer, colour);
+            Align(compass::north, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
             break;
 
-          case Compass::WEST:
-            Align(Compass::WEST, Size2D{H()}).Ellipse(renderer, colour);
-            Align(Compass::EAST, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
+          case compass::west:
+            Align(compass::west, Size2D{H()}).Ellipse(renderer, colour);
+            Align(compass::east, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
             break;
         }
       }

@@ -246,7 +246,7 @@ namespace isompd::player {
       view(Grid g, Window& w, mpdxx::client& mpdc)
         : isompd::view("PLAYER", g, w,  mpdc)
 
-        , hdrQueue   (g.Columns( 1,  6).Rows( 1,  2), w, Compass::WEST, "QUEUE")
+        , hdrQueue   (g.Columns( 1,  6).Rows( 1,  2), w, isolinear::compass::west, "QUEUE")
         , queue_pager(g.Columns( 1,  6).Rows( 3, 10), w, 20)
 
         , gc(g.Columns(16,21))
@@ -447,7 +447,7 @@ namespace isompd::browse {
   class artist_row : public isolinear::ui::header_basic {
     public:
       artist_row(Grid g, Window& w, mpdxx::artist e)
-        : isolinear::ui::header_basic(g, w, Compass::WEST, e.Header())
+        : isolinear::ui::header_basic(g, w, isolinear::compass::west, e.Header())
       {}
   };
 
@@ -524,7 +524,7 @@ namespace isompd {
     public:
       frame(Grid g, Window& w, mpdxx::client& _mpdc)
           : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-          , hdrFrame{layout.North(), w, Compass::EAST, "MPD CONTROL"}
+          , hdrFrame{layout.North(), w, isolinear::compass::east, "MPD CONTROL"}
           , barView{w, layout.West()}
           , playerControlBar{w, layout.South(), mpdc}
           , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}

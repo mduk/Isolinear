@@ -9,7 +9,7 @@
 
 using isolinear::geometry::Size2D;
 using isolinear::geometry::Region2D;
-using isolinear::geometry::Compass;
+using isolinear::compass;
 
 
 class RenderedText {
@@ -39,7 +39,7 @@ class RenderedText {
       return Size2D{sdl_surface};
     }
 
-    void Draw(SDL_Renderer* renderer, Compass alignment, Region2D bounds) const {
+    void Draw(SDL_Renderer* renderer, compass alignment, Region2D bounds) const {
       SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, sdl_surface);
       SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
@@ -82,7 +82,7 @@ class Font {
     void RenderText(
         SDL_Renderer* renderer,
         Region2D bounds,
-        Compass align,
+        compass align,
         std::string text
     ) const {
       uint8_t r = colour,
