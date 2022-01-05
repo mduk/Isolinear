@@ -21,20 +21,20 @@ class CompassLayout : public drawable {
     Window& window;
 
          int north;
-    Vector2D northeast;
+    vector northeast;
          int east;
-    Vector2D southeast;
+    vector southeast;
          int south;
-    Vector2D southwest;
+    vector southwest;
          int west;
-    Vector2D northwest;
+    vector northwest;
 
   public:
     CompassLayout(
         Grid g, Window& win,
         int n, int e, int s, int w,
-        Vector2D ne, Vector2D se,
-        Vector2D sw, Vector2D nw
+        vector ne, vector se,
+        vector sw, vector nw
       ) :
         grid(g), window(win),
         north(n), east(e), south(s), west(w),

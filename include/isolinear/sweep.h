@@ -10,7 +10,7 @@
 
 
 using isolinear::compass;
-using isolinear::geometry::Vector2D;
+using isolinear::geometry::vector;
 using isolinear::geometry::Region2D;
 
 
@@ -21,14 +21,14 @@ class Sweep : public drawable {
   protected:
     Window& window;
     Grid grid;
-    Vector2D ports;
+    vector ports;
     int outer_radius;
     int inner_radius;
     compass alignment;
     compass opposite;
 
   public:
-    Sweep(Window& w, Grid g, Vector2D p, int oradius, int iradius, compass ali)
+    Sweep(Window& w, Grid g, vector p, int oradius, int iradius, compass ali)
       : window{w}, grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
     {
       switch (alignment) {
@@ -92,7 +92,7 @@ class Sweep : public drawable {
 
 class NorthEastSweep : public Sweep {
   public:
-    NorthEastSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+    NorthEastSweep(Window& window, Grid grid,  vector ports, int oradius, int iradius)
       : Sweep{window, grid, ports, oradius, iradius, compass::northeast}
     {}
 
@@ -114,7 +114,7 @@ class NorthEastSweep : public Sweep {
 
 class SouthEastSweep : public Sweep {
   public:
-    SouthEastSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+    SouthEastSweep(Window& window, Grid grid,  vector ports, int oradius, int iradius)
       : Sweep{window, grid, ports, oradius, iradius, compass::southeast}
     {}
 
@@ -136,7 +136,7 @@ class SouthEastSweep : public Sweep {
 
 class SouthWestSweep : public Sweep {
   public:
-    SouthWestSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+    SouthWestSweep(Window& window, Grid grid,  vector ports, int oradius, int iradius)
       : Sweep{window, grid, ports, oradius, iradius, compass::southwest}
     {}
 
@@ -158,7 +158,7 @@ class SouthWestSweep : public Sweep {
 
 class NorthWestSweep : public Sweep {
   public:
-    NorthWestSweep(Window& window, Grid grid,  Vector2D ports, int oradius, int iradius)
+    NorthWestSweep(Window& window, Grid grid,  vector ports, int oradius, int iradius)
       : Sweep{window, grid, ports, oradius, iradius, compass::northwest}
     {}
 

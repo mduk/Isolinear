@@ -13,39 +13,39 @@ using isolinear::compass;
 
 namespace isolinear::geometry {
 
-  class Vector2D {
+  class vector {
     public:
       int x, y;
 
-      Vector2D()
+      vector()
           : x{0}, y{0}
         {};
 
-      Vector2D(int _x, int _y)
+      vector(int _x, int _y)
           : x{_x}, y{_y}
         {};
 
-      Vector2D(SDL_MouseButtonEvent e)
+      vector(SDL_MouseButtonEvent e)
           : x{e.x}, y{e.y}
         {};
 
-      Vector2D(SDL_MouseMotionEvent e)
+      vector(SDL_MouseMotionEvent e)
           : x{e.x}, y{e.y}
         {};
 
-      Vector2D(SDL_Surface* s)
+      vector(SDL_Surface* s)
           : x{s->w}, y{s->h}
         {};
 
-      Vector2D Add(Vector2D c) const {
-        return Vector2D{
+      vector Add(vector c) const {
+        return vector{
             x + c.x,
             y + c.y
           };
       }
 
-      Vector2D Subtract(Vector2D c) const {
-        return Vector2D{
+      vector Subtract(vector c) const {
+        return vector{
             x - c.x,
             y - c.y
           };
@@ -70,38 +70,38 @@ namespace isolinear::geometry {
       int NorthWestX() const { return 0;     }
       int NorthWestY() const { return 0;     }
 
-      Vector2D Centre()    const { return Vector2D{ CentreX(),    CentreY()    }; }
-      Vector2D North()     const { return Vector2D{ NorthX(),     NorthY()     }; }
-      Vector2D East()      const { return Vector2D{ EastX(),      EastY()      }; }
-      Vector2D South()     const { return Vector2D{ SouthX(),     SouthY()     }; }
-      Vector2D West()      const { return Vector2D{ WestX(),      WestY()      }; }
-      Vector2D NorthEast() const { return Vector2D{ NorthEastX(), NorthEastY() }; }
-      Vector2D SouthEast() const { return Vector2D{ SouthEastX(), SouthEastY() }; }
-      Vector2D SouthWest() const { return Vector2D{ SouthWestX(), SouthWestY() }; }
-      Vector2D NorthWest() const { return Vector2D{ NorthWestX(), NorthWestY() }; }
+      vector Centre()    const { return vector{ CentreX(),    CentreY()    }; }
+      vector North()     const { return vector{ NorthX(),     NorthY()     }; }
+      vector East()      const { return vector{ EastX(),      EastY()      }; }
+      vector South()     const { return vector{ SouthX(),     SouthY()     }; }
+      vector West()      const { return vector{ WestX(),      WestY()      }; }
+      vector NorthEast() const { return vector{ NorthEastX(), NorthEastY() }; }
+      vector SouthEast() const { return vector{ SouthEastX(), SouthEastY() }; }
+      vector SouthWest() const { return vector{ SouthWestX(), SouthWestY() }; }
+      vector NorthWest() const { return vector{ NorthWestX(), NorthWestY() }; }
   };
 
 
-  class Position2D : public Vector2D {
+  class Position2D : public vector {
     public:
-      Position2D() : Vector2D() {}
-      Position2D(Vector2D c) : Vector2D{c} {}
-      Position2D(int x, int y) : Vector2D(x, y) {};
-      Position2D(SDL_MouseButtonEvent e) : Vector2D(e) {};
-      Position2D(SDL_Rect r) : Vector2D(r.x, r.y) {};
+      Position2D() : vector() {}
+      Position2D(vector c) : vector{c} {}
+      Position2D(int x, int y) : vector(x, y) {};
+      Position2D(SDL_MouseButtonEvent e) : vector(e) {};
+      Position2D(SDL_Rect r) : vector(r.x, r.y) {};
 
       void Draw(SDL_Renderer* renderer) {
         filledEllipseColor(renderer, x, y,  5,  5, 0xff00ffff);
       }
   };
 
-  class Size2D : public Vector2D {
+  class Size2D : public vector {
     public:
-      Size2D() : Vector2D() {};
-      Size2D(int w) : Vector2D{w, w} {};
-      Size2D(int w, int h) : Vector2D(w, h) {};
-      Size2D(SDL_Surface* s) : Vector2D(s) {};
-      Size2D(SDL_Rect r) : Vector2D(r.w, r.h) {};
+      Size2D() : vector() {};
+      Size2D(int w) : vector{w, w} {};
+      Size2D(int w, int h) : vector(w, h) {};
+      Size2D(SDL_Surface* s) : vector(s) {};
+      Size2D(SDL_Rect r) : vector(r.w, r.h) {};
   };
 
 
@@ -258,7 +258,7 @@ namespace isolinear::geometry {
       Region2D LeftHalf()   const { return Region2D{ NorthWest(), South()     }; }
       Region2D RightHalf()  const { return Region2D{ North(),     SouthEast() }; }
 
-      bool Encloses(Vector2D point) const {
+      bool Encloses(vector point) const {
         return ( NearX() <= point.x )
             && ( NearY() <= point.y )
             && ( point.x <= FarX()  )

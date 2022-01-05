@@ -28,8 +28,8 @@ class Elbo : public drawable {
     Grid& grid;
 
     int reach_weight{30};
-    Vector2D sweep_cells{4,2};
-    Vector2D gutter{10,10};
+    vector sweep_cells{4,2};
+    vector gutter{10,10};
     std::string header_string{""};
     compass header_alignment{CENTRE};
     std::list<isolinear::ui::button> buttons{};

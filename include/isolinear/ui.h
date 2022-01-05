@@ -139,7 +139,7 @@ namespace isolinear::ui {
       Grid grid;
       Window& window;
       std::map<std::string, isolinear::ui::button> buttons;
-      Vector2D button_size{2,2};
+      vector button_size{2,2};
 
     public:
       button_bar(Window& w, Grid g)

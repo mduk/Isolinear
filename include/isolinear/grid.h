@@ -8,17 +8,17 @@
 
 #include "geometry.h"
 
-using isolinear::geometry::Vector2D;
+using isolinear::geometry::vector;
 using isolinear::geometry::Region2D;
 
 class Grid {
 
   protected:
     int row_height{100};
-    Vector2D size{3,3};
+    vector size{3,3};
 
   public:
-    Vector2D gutter{50, 50};
+    vector gutter{50, 50};
     Region2D bounds;
 
     Grid() {};
@@ -26,8 +26,8 @@ class Grid {
     Grid(
         Region2D b,
         int rh,
-        Vector2D g,
-        Vector2D s
+        vector g,
+        vector s
       ) :
         bounds{b},
         row_height{rh},
@@ -50,7 +50,7 @@ class Grid {
             ),
           row_height,
           gutter,
-          Vector2D(
+          vector(
               far_col - near_col + 1,
               far_row - near_row + 1
             )
@@ -167,7 +167,7 @@ class Grid {
       return size.y;
     }
 
-    Vector2D Gutter() const {
+    vector Gutter() const {
       return gutter;
     }
 
