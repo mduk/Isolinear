@@ -15,7 +15,7 @@
 #include "geometry.h"
 #include "grid.h"
 #include "pointerevent.h"
-#include "window.h"
+#include "display.h"
 
 
 using isolinear::compass;

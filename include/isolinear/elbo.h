@@ -14,7 +14,7 @@
 #include "grid.h"
 #include "colours.h"
 #include "geometry.h"
-#include "window.h"
+#include "display.h"
 #include "shapes.h"
 
 

@@ -10,7 +10,7 @@
 #include "drawable.h"
 #include "pointerevent.h"
 #include "grid.h"
-#include "window.h"
+#include "display.h"
 #include "sweep.h"
 
 extern bool drawdebug;

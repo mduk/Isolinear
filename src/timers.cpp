@@ -25,7 +25,7 @@
 #include "shapes.h"
 #include "sweep.h"
 #include "ui.h"
-#include "window.h"
+#include "display.h"
 
 
 using std::cout;

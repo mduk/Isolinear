@@ -18,7 +18,7 @@
 #include "pointerevent.h"
 #include "shapes.h"
 #include "sweep.h"
-#include "window.h"
+#include "display.h"
 
 
 bool drawdebug = true;

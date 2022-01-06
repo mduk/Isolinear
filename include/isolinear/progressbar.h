@@ -9,7 +9,7 @@
 
 #include "miso.h"
 
-#include "window.h"
+#include "display.h"
 #include "drawable.h"
 #include "grid.h"
 #include "geometry.h"

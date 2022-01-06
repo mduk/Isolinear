@@ -10,7 +10,7 @@
 #include "miso.h"
 
 #include "geometry.h"
-#include "window.h"
+#include "display.h"
 #include "mpdxx.h"
 #include "progressbar.h"
 #include "view.h"
