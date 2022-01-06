@@ -20,6 +20,10 @@
 
 using isolinear::compass;
 using isolinear::geometry::Region2D;
+namespace display = isolinear::display;
+
+
+extern bool drawdebug;
 
 
 namespace isolinear::ui {
@@ -29,11 +33,11 @@ namespace isolinear::ui {
   class horizontal_rule : public drawable {
 
     protected:
-      Window& window;
+      display::window& window;
       Grid grid;
 
     public:
-      horizontal_rule(Window& w, Grid g)
+      horizontal_rule(display::window& w, Grid g)
         : window(w)
         , grid(g)
       {}
@@ -65,7 +69,7 @@ namespace isolinear::ui {
 
   class button : public drawable {
     protected:
-      Window& window;
+      display::window& window;
       bool enabled = true;
       bool active = false;
       std::string label;
@@ -74,12 +78,12 @@ namespace isolinear::ui {
       miso::signal<> signal_press;
       Region2D bounds;
 
-      button( Window& w, Grid g, std::string l)
+      button( display::window& w, Grid g, std::string l)
         : button(w, g.bounds, l)
       {}
 
       button(
-          Window& w,
+          display::window& w,
           Region2D b,
           std::string l
         ) :
@@ -137,12 +141,12 @@ namespace isolinear::ui {
   class button_bar : public drawable {
     protected:
       Grid grid;
-      Window& window;
+      display::window& window;
       std::map<std::string, isolinear::ui::button> buttons;
       vector button_size{2,2};
 
     public:
-      button_bar(Window& w, Grid g)
+      button_bar(display::window& w, Grid g)
         : window{w}, grid{g}
       {};
 
@@ -223,7 +227,7 @@ namespace isolinear::ui {
 
   class horizontal_button_bar : public button_bar {
     public:
-      horizontal_button_bar(Window& w, Grid g) : button_bar(w, g) {}
+      horizontal_button_bar(display::window& w, Grid g) : button_bar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = button_size.x * (i-1) + 1;
@@ -253,7 +257,7 @@ namespace isolinear::ui {
 
   class vertical_button_bar : public button_bar {
     public:
-      vertical_button_bar(Window& w, Grid g) : button_bar(w, g) {}
+      vertical_button_bar(display::window& w, Grid g) : button_bar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = 1;
@@ -284,16 +288,16 @@ namespace isolinear::ui {
   class header_basic : public drawable {
     protected:
       Grid grid;
-      Window& window;
+      display::window& window;
       compass alignment = compass::centre;
       std::string text{""};
 
     public:
-      header_basic(Grid g, Window& w, compass a)
+      header_basic(Grid g, display::window& w, compass a)
         : header_basic(g, w, a, "")
       {}
 
-      header_basic(Grid g, Window& w, compass a, std::string t)
+      header_basic(Grid g, display::window& w, compass a, std::string t)
         : grid{g}, window{w}, alignment{a}, text{t}
       {}
 
@@ -329,25 +333,25 @@ namespace isolinear::ui {
   class header_east_bar : public drawable {
     protected:
       Grid grid;
-      Window& window;
+      display::window& window;
       std::string text{""};
       std::map<std::string, isolinear::ui::button> buttons;
       int button_width{2};
 
     public:
-      header_east_bar(Window& w, Grid g, std::string t)
+      header_east_bar(display::window& w, Grid g, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, Window& w, std::string t)
+      header_east_bar(Grid g, display::window& w, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, Window& w, compass a, std::string t)
+      header_east_bar(Grid g, display::window& w, compass a, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, Window& w, compass a)
+      header_east_bar(Grid g, display::window& w, compass a)
         : grid{g}, window{w}
       {};
 
@@ -457,17 +461,17 @@ namespace isolinear::ui {
   class header_pair_bar : public drawable {
     protected:
       Grid grid;
-      Window& window;
+      display::window& window;
       std::string left{""};
       std::string right{""};
 
     public:
-      header_pair_bar(Grid g, Window& w,
+      header_pair_bar(Grid g, display::window& w,
           std::string l, std::string r)
         : grid{g}, window{w}, left{l}, right{r}
       {};
 
-      header_pair_bar(Grid g, Window& w, compass a)
+      header_pair_bar(Grid g, display::window& w, compass a)
         : grid{g}, window{w}
       {};
 
@@ -582,18 +586,18 @@ namespace isolinear::ui {
 
   class label : public drawable {
     protected:
-      Window& window;
+      display::window& window;
       Region2D bounds;
       std::string label_text;
 
     public:
-      label(Window& w, Region2D b, std::string l)
+      label(display::window& w, Region2D b, std::string l)
         : window(w)
         , bounds(b)
         , label_text(l)
       {}
 
-      label(Window& w, Grid g, std::string l)
+      label(display::window& w, Grid g, std::string l)
         : label(w, g.bounds, l)
       {}
 
@@ -612,6 +616,172 @@ namespace isolinear::ui {
       }
 
   };
+
+
+
+
+  class Sweep : public drawable {
+    protected:
+      display::window& window;
+      Grid grid;
+      vector ports;
+      int outer_radius;
+      int inner_radius;
+      compass alignment;
+      compass opposite;
+
+    public:
+      Sweep(display::window& w, Grid g, vector p, int oradius, int iradius, compass ali)
+        : window{w}, grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
+      {
+        switch (alignment) {
+          case compass::northeast: opposite = compass::southwest; break;
+          case compass::southeast: opposite = compass::northwest; break;
+          case compass::southwest: opposite = compass::northeast; break;
+          case compass::northwest: opposite = compass::southeast; break;
+        }
+      }
+
+      int VerticalPortSize() const {
+        return ports.x;
+      }
+
+      int HorizontalPortSize() const {
+        return ports.y;
+      }
+
+      virtual Region2D HorizontalPort() const = 0;
+      virtual Region2D VerticalPort() const = 0;
+
+      virtual Region2D InnerCornerRegion() const {
+        return Region2D{
+            HorizontalPort().Point(opposite),
+            VerticalPort().Point(opposite)
+          };
+      }
+
+      Region2D OuterRadiusRegion() const {
+        return grid.bounds.Align(alignment, Size2D{outer_radius});
+      }
+
+      void DrawOuterRadius(SDL_Renderer* renderer) const {
+        Region2D region = OuterRadiusRegion();
+        region.Fill(renderer, Colours().background);
+        region.QuadrantArc(renderer, alignment, Colours().frame);
+      }
+
+      Region2D Bounds() const override {
+        return grid.bounds;
+      }
+
+      void Draw(SDL_Renderer* renderer) const override {
+        Region2D icorner = InnerCornerRegion();
+        Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
+
+        grid.bounds.Fill(renderer, Colours().frame);
+        icorner.Fill(renderer, Colours().background);
+
+        iradius.Fill(renderer, Colours().frame);
+        iradius.QuadrantArc(renderer, alignment, Colours().background);
+        DrawOuterRadius(renderer);
+
+        if (drawdebug) {
+          HorizontalPort().Draw(renderer);
+          VerticalPort().Draw(renderer);
+          icorner.Draw(renderer);
+        }
+      }
+  };
+
+  class NorthEastSweep : public Sweep {
+    public:
+      NorthEastSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+        : Sweep{window, grid, ports, oradius, iradius, compass::northeast}
+      {}
+
+      Region2D HorizontalPort() const override {
+        return grid.CalculateGridRegion(
+            1, 1,
+            1, ports.y
+          );
+      }
+
+      Region2D VerticalPort() const override {
+        return grid.CalculateGridRegion(
+            grid.MaxColumns() - ports.x + 1, grid.MaxRows(),
+                          grid.MaxColumns(), grid.MaxRows()
+          );
+      }
+
+  };
+
+  class SouthEastSweep : public Sweep {
+    public:
+      SouthEastSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+        : Sweep{window, grid, ports, oradius, iradius, compass::southeast}
+      {}
+
+      Region2D HorizontalPort() const override {
+        return grid.CalculateGridRegion(
+            1, grid.MaxRows() - ports.y + 1,
+            1, grid.MaxRows()
+          );
+      }
+
+      Region2D VerticalPort() const override {
+        return grid.CalculateGridRegion(
+            grid.MaxColumns() - ports.x + 1, 1,
+            grid.MaxColumns(), 1
+          );
+      }
+
+  };
+
+  class SouthWestSweep : public Sweep {
+    public:
+      SouthWestSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+        : Sweep{window, grid, ports, oradius, iradius, compass::southwest}
+      {}
+
+      Region2D VerticalPort() const override {
+        return grid.CalculateGridRegion(
+            1, 1,
+            ports.x, 1
+          );
+      }
+
+      Region2D HorizontalPort() const override {
+        return grid.CalculateGridRegion(
+            grid.MaxColumns(), grid.MaxRows() - ports.y + 1,
+                          grid.MaxColumns(), grid.MaxRows()
+          );
+      }
+
+  };
+
+  class NorthWestSweep : public Sweep {
+    public:
+      NorthWestSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+        : Sweep{window, grid, ports, oradius, iradius, compass::northwest}
+      {}
+
+      Region2D HorizontalPort() const override {
+        return grid.CalculateGridRegion(
+            grid.MaxColumns(), 1,
+            grid.MaxColumns(), ports.y
+          );
+      }
+
+      Region2D VerticalPort() const override {
+        return grid.CalculateGridRegion(
+            1, grid.MaxRows(),
+            ports.x, grid.MaxRows()
+          );
+      }
+
+
+  };
+
 
 
 }

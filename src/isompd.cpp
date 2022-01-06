@@ -26,7 +26,6 @@
 #include "pointerevent.h"
 #include "progressbar.h"
 #include "shapes.h"
-#include "sweep.h"
 #include "ui.h"
 #include "display.h"
 

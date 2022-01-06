@@ -17,6 +17,7 @@
 using std::cout;
 
 using isolinear::ui::horizontal_button_bar;
+namespace display = isolinear::display;
 
 
 class PlayerControlBar : public horizontal_button_bar {
@@ -32,7 +33,7 @@ class PlayerControlBar : public horizontal_button_bar {
     int queue_length = 0;
 
   public:
-    PlayerControlBar(Window& w, Grid g, mpdxx::client& _mpd)
+    PlayerControlBar(display::window& w, Grid g, mpdxx::client& _mpd)
       : horizontal_button_bar(w, g)
       , mpd{_mpd}
       , btnPlay(AddButton("PLAY"))

@@ -21,6 +21,12 @@
 
 
 using std::cerr;
+using isolinear::CompassLayout;
+using isolinear::ui::NorthWestSweep;
+using isolinear::ui::SouthWestSweep;
+
+
+namespace display = isolinear::display;
 
 
 namespace isompd {
@@ -28,10 +34,10 @@ namespace isompd {
   class view : public View {
     protected:
       mpdxx::client& mpdc;
-      Window& window;
+      display::window& window;
 
     public:
-      view(std::string t, Grid g, Window& w, mpdxx::client& _mpdc)
+      view(std::string t, Grid g, display::window& w, mpdxx::client& _mpdc)
         : View(t, g)
         , window{w}
         , mpdc{_mpdc}
@@ -52,7 +58,7 @@ namespace isompd::now_playing {
       isolinear::ui::progress::horizontal_bar progress;
 
     public:
-      view(Grid g, Window& w, mpdxx::client& _mpdc)
+      view(Grid g, display::window& w, mpdxx::client& _mpdc)
         : isompd::view("NOW PLAYING", g, w, _mpdc)
         , title(g.Rows(3,4), w, "TITLE", "[title]")
         , album(g.Rows(5,6), w, "ALBUM", "[album]")
@@ -95,14 +101,14 @@ class paginated_rows : public drawable {
 
   protected:
     Grid grid;
-    Window& window;
+    display::window& window;
     int view_page = 0;
     int page_rows = 10;
     std::vector<DataT> data_rows{};
     std::vector<ViewT> view_rows{};
 
   public:
-    paginated_rows(Grid g, Window& w, int pr)
+    paginated_rows(Grid g, display::window& w, int pr)
       : grid(g), window(w), page_rows(pr)
     {
 
@@ -210,7 +216,7 @@ namespace isompd::player {
       mpdxx::song song;
 
     public:
-      queuerow(Grid g, Window& w, mpdxx::song s)
+      queuerow(Grid g, display::window& w, mpdxx::song s)
         : isolinear::ui::label(w, g, s.Header())
         , song(s)
       {
@@ -243,7 +249,7 @@ namespace isompd::player {
       int queue_length = 0;
 
     public:
-      view(Grid g, Window& w, mpdxx::client& mpdc)
+      view(Grid g, display::window& w, mpdxx::client& mpdc)
         : isompd::view("PLAYER", g, w,  mpdc)
 
         , hdrQueue   (g.Columns( 1,  6).Rows( 1,  2), w, isolinear::compass::west, "QUEUE")
@@ -366,7 +372,7 @@ namespace isompd::queue {
       isolinear::ui::button& playbtn;
 
     public:
-      row(Grid g, Window& w, mpdxx::song s)
+      row(Grid g, display::window& w, mpdxx::song s)
         : isolinear::ui::header_east_bar(g, w, s.Header())
         , song(s)
         , playbtn(AddButton("PLAY"))
@@ -385,7 +391,7 @@ namespace isompd::queue {
       isolinear::ui::button& previous_page_button;
 
     public:
-      view(Grid g, Window& w, mpdxx::client& mpdc)
+      view(Grid g, display::window& w, mpdxx::client& mpdc)
         : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
         , queue_pager_buttons(g.Rows(21, 22), w, "##")
@@ -446,7 +452,7 @@ namespace isompd::browse {
 
   class artist_row : public isolinear::ui::header_basic {
     public:
-      artist_row(Grid g, Window& w, mpdxx::artist e)
+      artist_row(Grid g, display::window& w, mpdxx::artist e)
         : isolinear::ui::header_basic(g, w, isolinear::compass::west, e.Header())
       {}
   };
@@ -461,7 +467,7 @@ namespace isompd::browse {
       horizontal_button_bar artist_pager_buttons;
 
     public:
-      view(Grid g, Window& w, mpdxx::client& _mpdc)
+      view(Grid g, display::window& w, mpdxx::client& _mpdc)
         : isompd::view("BROWSE", g, w, _mpdc)
         , artist_grid(g)
         , artist_pager(artist_grid, w, 10)
@@ -522,7 +528,7 @@ namespace isompd {
       isompd::player::view viewPlayer;
 
     public:
-      frame(Grid g, Window& w, mpdxx::client& _mpdc)
+      frame(Grid g, display::window& w, mpdxx::client& _mpdc)
           : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
           , hdrFrame{layout.North(), w, isolinear::compass::east, "MPD CONTROL"}
           , barView{w, layout.West()}

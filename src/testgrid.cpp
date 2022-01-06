@@ -17,7 +17,6 @@
 #include "grid.h"
 #include "pointerevent.h"
 #include "shapes.h"
-#include "sweep.h"
 #include "display.h"
 
 

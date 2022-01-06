@@ -176,5 +176,3 @@ namespace isolinear::display {
   }
 
 }
-
-using Window = isolinear::display::window;
