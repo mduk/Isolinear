@@ -37,10 +37,10 @@ namespace isolinear::ui {
 
     protected:
       display::window& window;
-      Grid grid;
+      isolinear::grid grid;
 
     public:
-      horizontal_rule(display::window& w, Grid g)
+      horizontal_rule(display::window& w, isolinear::grid g)
         : window(w)
         , grid(g)
       {}
@@ -81,7 +81,7 @@ namespace isolinear::ui {
       miso::signal<> signal_press;
       Region2D bounds;
 
-      button( display::window& w, Grid g, std::string l)
+      button( display::window& w, isolinear::grid g, std::string l)
         : button(w, g.bounds, l)
       {}
 
@@ -143,13 +143,13 @@ namespace isolinear::ui {
 
   class button_bar : public drawable {
     protected:
-      Grid grid;
+      isolinear::grid grid;
       display::window& window;
       std::map<std::string, isolinear::ui::button> buttons;
       vector button_size{2,2};
 
     public:
-      button_bar(display::window& w, Grid g)
+      button_bar(display::window& w, isolinear::grid g)
         : window{w}, grid{g}
       {};
 
@@ -230,7 +230,7 @@ namespace isolinear::ui {
 
   class horizontal_button_bar : public button_bar {
     public:
-      horizontal_button_bar(display::window& w, Grid g) : button_bar(w, g) {}
+      horizontal_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = button_size.x * (i-1) + 1;
@@ -260,7 +260,7 @@ namespace isolinear::ui {
 
   class vertical_button_bar : public button_bar {
     public:
-      vertical_button_bar(display::window& w, Grid g) : button_bar(w, g) {}
+      vertical_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
       Region2D ButtonRegion(int i) const override {
         int near_col = 1;
@@ -290,17 +290,17 @@ namespace isolinear::ui {
 
   class header_basic : public drawable {
     protected:
-      Grid grid;
+      isolinear::grid grid;
       display::window& window;
       compass alignment = compass::centre;
       std::string text{""};
 
     public:
-      header_basic(Grid g, display::window& w, compass a)
+      header_basic(isolinear::grid g, display::window& w, compass a)
         : header_basic(g, w, a, "")
       {}
 
-      header_basic(Grid g, display::window& w, compass a, std::string t)
+      header_basic(isolinear::grid g, display::window& w, compass a, std::string t)
         : grid{g}, window{w}, alignment{a}, text{t}
       {}
 
@@ -335,26 +335,26 @@ namespace isolinear::ui {
 
   class header_east_bar : public drawable {
     protected:
-      Grid grid;
+      isolinear::grid grid;
       display::window& window;
       std::string text{""};
       std::map<std::string, isolinear::ui::button> buttons;
       int button_width{2};
 
     public:
-      header_east_bar(display::window& w, Grid g, std::string t)
+      header_east_bar(display::window& w, isolinear::grid g, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, display::window& w, std::string t)
+      header_east_bar(isolinear::grid g, display::window& w, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, display::window& w, compass a, std::string t)
+      header_east_bar(isolinear::grid g, display::window& w, compass a, std::string t)
         : grid{g}, window{w}, text{t}
       {};
 
-      header_east_bar(Grid g, display::window& w, compass a)
+      header_east_bar(isolinear::grid g, display::window& w, compass a)
         : grid{g}, window{w}
       {};
 
@@ -463,18 +463,18 @@ namespace isolinear::ui {
 
   class header_pair_bar : public drawable {
     protected:
-      Grid grid;
+      isolinear::grid grid;
       display::window& window;
       std::string left{""};
       std::string right{""};
 
     public:
-      header_pair_bar(Grid g, display::window& w,
+      header_pair_bar(isolinear::grid g, display::window& w,
           std::string l, std::string r)
         : grid{g}, window{w}, left{l}, right{r}
       {};
 
-      header_pair_bar(Grid g, display::window& w, compass a)
+      header_pair_bar(isolinear::grid g, display::window& w, compass a)
         : grid{g}, window{w}
       {};
 
@@ -600,7 +600,7 @@ namespace isolinear::ui {
         , label_text(l)
       {}
 
-      label(display::window& w, Grid g, std::string l)
+      label(display::window& w, isolinear::grid g, std::string l)
         : label(w, g.bounds, l)
       {}
 
@@ -626,7 +626,7 @@ namespace isolinear::ui {
   class Sweep : public drawable {
     protected:
       display::window& window;
-      Grid grid;
+      isolinear::grid grid;
       vector ports;
       int outer_radius;
       int inner_radius;
@@ -634,7 +634,7 @@ namespace isolinear::ui {
       compass opposite;
 
     public:
-      Sweep(display::window& w, Grid g, vector p, int oradius, int iradius, compass ali)
+      Sweep(display::window& w, isolinear::grid g, vector p, int oradius, int iradius, compass ali)
         : window{w}, grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
       {
         switch (alignment) {
@@ -698,7 +698,7 @@ namespace isolinear::ui {
 
   class NorthEastSweep : public Sweep {
     public:
-      NorthEastSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+      NorthEastSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::northeast}
       {}
 
@@ -720,7 +720,7 @@ namespace isolinear::ui {
 
   class SouthEastSweep : public Sweep {
     public:
-      SouthEastSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+      SouthEastSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::southeast}
       {}
 
@@ -742,7 +742,7 @@ namespace isolinear::ui {
 
   class SouthWestSweep : public Sweep {
     public:
-      SouthWestSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+      SouthWestSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::southwest}
       {}
 
@@ -764,7 +764,7 @@ namespace isolinear::ui {
 
   class NorthWestSweep : public Sweep {
     public:
-      NorthWestSweep(display::window& window, Grid grid,  vector ports, int oradius, int iradius)
+      NorthWestSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::northwest}
       {}
 
@@ -788,7 +788,7 @@ namespace isolinear::ui {
 
   class horizontal_progress_bar : public drawable {
     protected:
-      Grid grid;
+      isolinear::grid grid;
       unsigned max = 100;
       unsigned val = 50;
       unsigned gutter = 6;
@@ -806,7 +806,7 @@ namespace isolinear::ui {
     public:
       miso::signal<> signal_valuechanged;
 
-      horizontal_progress_bar(Grid _g)
+      horizontal_progress_bar(isolinear::grid _g)
         : grid{_g}
         , bar_region(
             Position2D(

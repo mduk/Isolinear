@@ -74,18 +74,18 @@ namespace isolinear::ui {
                         public isolinear::ui::drawable {
 
     protected:
-      Grid grid;
+      isolinear::grid grid;
 
     public:
-      drawable_list(Grid g)
+      drawable_list(isolinear::grid g)
         : grid(g)
       {}
 
     protected:
-      virtual Grid grid_for_index(int index) = 0;
+      virtual isolinear::grid grid_for_index(int index) = 0;
 
     public:
-      Grid next_grid() {
+      isolinear::grid next_grid() {
         return grid_for_index(std::list<T>::size() + 1);
       }
 

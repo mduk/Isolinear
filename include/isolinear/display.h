@@ -29,7 +29,7 @@ namespace isolinear::display {
     public:
       vector position;
       vector size;
-      Grid grid;
+      isolinear::grid grid;
       SDL_Renderer* sdl_renderer;
 
       window(vector p, vector s)
@@ -37,7 +37,7 @@ namespace isolinear::display {
       {
         InitSdl();
 
-        grid = Grid{
+        grid = isolinear::grid{
             Region2D(0, 0, size.x, size.y),
             button_font.Height(), // Row height
             vector(10,10),

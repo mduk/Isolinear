@@ -21,7 +21,7 @@ namespace isolinear {
 
   class CompassLayout : public drawable {
     protected:
-      Grid grid;
+      isolinear::grid grid;
       display::window& window;
 
       int north;
@@ -35,7 +35,7 @@ namespace isolinear {
 
     public:
       CompassLayout(
-          Grid g, display::window& win,
+          isolinear::grid g, display::window& win,
           int n, int e, int s, int w,
           vector ne, vector se,
           vector sw, vector nw
@@ -46,7 +46,7 @@ namespace isolinear {
           southwest(sw), northwest(nw)
       {}
 
-      Grid North() const {
+      isolinear::grid North() const {
         int near_col = northwest.x + 1;
         int near_row = 1;
         int  far_col = grid.MaxColumns() - northeast.x;
@@ -58,7 +58,7 @@ namespace isolinear {
           );
       }
 
-      Grid NorthEast() const {
+      isolinear::grid NorthEast() const {
         int near_col = grid.MaxColumns() - (northeast.x - 1);
         int near_row = 1;
         int  far_col = grid.MaxColumns();
@@ -70,7 +70,7 @@ namespace isolinear {
           );
       }
 
-      Grid East() const {
+      isolinear::grid East() const {
         int near_col = grid.MaxColumns() - (east - 1);
         int near_row = northeast.y + 1;
         int  far_col = grid.MaxColumns();
@@ -82,7 +82,7 @@ namespace isolinear {
           );
       }
 
-      Grid SouthEast() const {
+      isolinear::grid SouthEast() const {
         int near_col = grid.MaxColumns() - (southeast.x - 1);
         int near_row = grid.MaxRows() - (southeast.y - 1);
         int  far_col = grid.MaxColumns();;
@@ -94,7 +94,7 @@ namespace isolinear {
           );
       }
 
-      Grid South() const {
+      isolinear::grid South() const {
         int near_col = southwest.x + 1;
         int near_row = grid.MaxRows() - (south - 1);
         int  far_col = grid.MaxColumns() - southeast.x;
@@ -106,7 +106,7 @@ namespace isolinear {
           );
       }
 
-      Grid SouthWest() const {
+      isolinear::grid SouthWest() const {
         int near_col = 1;
         int near_row = grid.MaxRows() - (southwest.y - 1);
         int  far_col = southwest.x;
@@ -118,7 +118,7 @@ namespace isolinear {
           );
       }
 
-      Grid West() const {
+      isolinear::grid West() const {
         int near_col = 1;
         int near_row = northwest.y + 1;
         int  far_col = west;
@@ -130,7 +130,7 @@ namespace isolinear {
           );
       }
 
-      Grid NorthWest() const {
+      isolinear::grid NorthWest() const {
         int near_col = 1;
         int near_row = 1;
         int  far_col = northwest.x;
@@ -142,7 +142,7 @@ namespace isolinear {
           );
       }
 
-      Grid Centre() const {
+      isolinear::grid Centre() const {
         int near_col = northwest.x + 1;
         int near_row = northwest.y + 1;
         int  far_col = grid.MaxColumns() - southeast.x;

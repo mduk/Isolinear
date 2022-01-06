@@ -16,10 +16,10 @@ namespace isolinear {
 class View : public drawable {
   protected:
     std::string title;
-    Grid grid;
+    isolinear::grid grid;
 
   public:
-    View(std::string t, Grid g) : title{t}, grid{g} {}
+    View(std::string t, isolinear::grid g) : title{t}, grid{g} {}
 
     std::string Name() const {
       return title;

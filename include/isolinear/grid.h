@@ -15,7 +15,7 @@ using isolinear::geometry::Region2D;
 namespace isolinear {
 
 
-  class Grid {
+  class grid {
 
     protected:
       int row_height{100};
@@ -25,9 +25,9 @@ namespace isolinear {
       vector gutter{50, 50};
       Region2D bounds;
 
-      Grid() {};
+      grid() {};
 
-      Grid(
+      grid(
           Region2D b,
           int rh,
           vector g,
@@ -43,11 +43,11 @@ namespace isolinear {
         }
       };
 
-      Grid SubGrid(
+      grid SubGrid(
         int near_col, int near_row,
         int  far_col, int  far_row
       ) const {
-        return Grid{
+        return grid{
             CalculateGridRegion(
                 near_col, near_row,
                 far_col, far_row
@@ -61,7 +61,7 @@ namespace isolinear {
           };
       }
 
-      Grid Row(int row) const {
+      grid Row(int row) const {
         int cols = MaxColumns();
         int rows = MaxRows();
 
@@ -70,7 +70,7 @@ namespace isolinear {
         return SubGrid(1, row, cols, row);
       }
 
-      Grid Rows(int from, int to) const {
+      grid Rows(int from, int to) const {
         int cols = MaxColumns();
         int rows = MaxRows();
 
@@ -80,7 +80,7 @@ namespace isolinear {
         return SubGrid(1, from, cols, to);
       }
 
-      Grid Column(int col) const {
+      grid Column(int col) const {
         int cols = MaxColumns();
         int rows = MaxRows();
 
@@ -89,7 +89,7 @@ namespace isolinear {
         return SubGrid(col, 1, col, rows);
       }
 
-      Grid Columns(int from, int to) const {
+      grid Columns(int from, int to) const {
         int cols = MaxColumns();
         int rows = MaxRows();
 
@@ -99,27 +99,27 @@ namespace isolinear {
         return SubGrid(from, 1, to, rows);
       }
 
-      Grid LeftColumns(int n) const {
+      grid LeftColumns(int n) const {
         return Columns(1, n);
       }
 
-      Grid RightColumns(int n) const {
+      grid RightColumns(int n) const {
         return Columns(MaxColumns() - n + 1, MaxColumns());
       }
 
-      Grid CentreColumns(int l, int r) const {
+      grid CentreColumns(int l, int r) const {
         return Columns(l + 1, MaxColumns() - r);
       }
 
-      Grid TopRows(int n) const {
+      grid TopRows(int n) const {
         return Rows(1, n);
       }
 
-      Grid BottomRows(int n) const {
+      grid BottomRows(int n) const {
         return Rows(MaxRows() - n, MaxRows());
       }
 
-      Grid MiddleRows(int t, int b) const {
+      grid MiddleRows(int t, int b) const {
         return Rows(t + 1, MaxRows() - b);
       }
 

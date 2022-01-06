@@ -76,7 +76,7 @@ namespace isolinear {
       timer& m_timer;
 
     public:
-      timer_row(display::window& w, Grid g, timer& t)
+      timer_row(display::window& w, isolinear::grid g, timer& t)
         : header_east_bar(w, g, "")
         , m_timer(t)
         , add_time(AddButton("ADD 10 SEC"))
@@ -109,12 +109,12 @@ namespace isolinear {
   class button_bar_list : public isolinear::ui::drawable_list<T> {
 
     public:
-      button_bar_list(Grid g)
+      button_bar_list(isolinear::grid g)
         : isolinear::ui::drawable_list<T>(g)
       {}
 
     protected:
-      Grid grid_for_index(int index) override {
+      isolinear::grid grid_for_index(int index) override {
         int far_row = index * 2;
         return isolinear::ui::drawable_list<T>::grid.Rows(far_row-1, far_row);
       }
