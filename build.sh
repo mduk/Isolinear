@@ -2,20 +2,19 @@
 
 set -eu
 
+declare proj="${1:-IsoMPD}"
+
 mkdir -p .build
 cd .build
 
 conan install ..
 cmake ..
-make
+make $proj
 
 touchscreen on
 i3-msg focus output eDP-1 >/dev/null
 
-case "$1" in
-  timers) ./bin/Timers ;;
-  *) ./bin/IsoMPD ;;
-esac
+./bin/$proj
 
 touchscreen off
 i3-msg focus output DP-3 >/dev/null || true
