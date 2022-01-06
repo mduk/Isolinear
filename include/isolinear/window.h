@@ -22,132 +22,137 @@
 using isolinear::ui::drawable;
 
 
+namespace isolinear::display {
 
-class Window {
-  public:
-    Position2D position;
-    Size2D size;
-    Grid grid;
-    SDL_Renderer* sdl_renderer;
+  class window {
+    public:
+      Position2D position;
+      Size2D size;
+      Grid grid;
+      SDL_Renderer* sdl_renderer;
 
-    Window(Position2D p, Size2D s)
-      : position{p}, size{s}
-    {
-      InitSdl();
+      window(Position2D p, Size2D s)
+        : position{p}, size{s}
+      {
+        InitSdl();
 
-      grid = Grid{
-          Region2D{size},
-          button_font.Height(), // Row height
-          vector(10,10),
-          //vector(21,40)
-          vector(25,28)
-        };
-    };
+        grid = Grid{
+            Region2D{size},
+            button_font.Height(), // Row height
+            vector(10,10),
+            //vector(21,40)
+            vector(25,28)
+          };
+      };
 
-    ~Window() {
-      SDL_DestroyRenderer(sdl_renderer);
-      SDL_DestroyWindow(sdl_window);
-    }
-
-    ColourScheme Colours() {
-      return colours;
-    }
-    void Colours(ColourScheme cs) {
-      colours = cs;
-      for (auto* drawable : drawables) {
-        drawable->Colours(cs);
+      ~window() {
+        SDL_DestroyRenderer(sdl_renderer);
+        SDL_DestroyWindow(sdl_window);
       }
-    }
 
-    void Title(std::string newtitle) {
-      SDL_SetWindowTitle(sdl_window, newtitle.c_str());
-    }
-
-    Font const& HeaderFont() const {
-      return header_font;
-    }
-
-    Font const& ButtonFont() const {
-      return button_font;
-    }
-
-    Font const& LabelFont() const {
-      return label_font;
-    }
-
-    void Add(drawable* drawable) {
-      drawables.push_back(drawable);
-    }
-
-    void Update() {
-      for (auto* drawable : drawables) {
-        drawable->Update();
+      ColourScheme Colours() {
+        return colours;
       }
-    }
-
-    void Draw() {
-      for (auto* drawable : drawables) {
-        drawable->Draw(sdl_renderer);
-      }
-    }
-
-    void OnPointerEvent(PointerEvent event) {
-      for (auto* drawable : drawables) {
-        Region2D bounds = drawable->Bounds();
-        if (bounds.Encloses(event.Position())) {
-          drawable->OnPointerEvent(event);
-          continue;
+      void Colours(ColourScheme cs) {
+        colours = cs;
+        for (auto* drawable : drawables) {
+          drawable->Colours(cs);
         }
       }
-    }
 
-  protected:
-    SDL_Window* sdl_window;
-
-    std::string title{"Isolinear"};
-    std::list<drawable*> drawables;
-
-    ColourScheme colours;
-
-    const Font header_font{ FONT, 96, 0xff0099ff };
-    const Font button_font{ FONT, 44, 0xff000000 };
-    const Font  label_font{ FONT, 44, 0xff0099ff };
-
-    void InitSdl() {
-      sdl_window = SDL_CreateWindow(
-          title.c_str(),
-          position.x, position.y,
-          size.x, size.y,
-          0 | SDL_WINDOW_ALLOW_HIGHDPI
-            | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
-            //| SDL_WINDOW_BORDERLESS
-        );
-
-      if (!sdl_window) {
-        throw std::runtime_error(
-          "Failed to create SDL window"
-        );
+      void Title(std::string newtitle) {
+        SDL_SetWindowTitle(sdl_window, newtitle.c_str());
       }
 
-      sdl_renderer = SDL_CreateRenderer(
-          sdl_window, -1, SDL_RENDERER_SOFTWARE
-        );
-
-      if (!sdl_renderer) {
-        throw std::runtime_error(
-          "Failed to create SDL renderer"
-        );
+      Font const& HeaderFont() const {
+        return header_font;
       }
 
-      SDL_SetRenderDrawBlendMode(
-          sdl_renderer, SDL_BLENDMODE_BLEND
-        );
+      Font const& ButtonFont() const {
+        return button_font;
+      }
 
-      SDL_GetWindowSize(
-          sdl_window,
-          &size.x,
-          &size.y
-        );
-    }
+      Font const& LabelFont() const {
+        return label_font;
+      }
 
-};
+      void Add(drawable* drawable) {
+        drawables.push_back(drawable);
+      }
+
+      void Update() {
+        for (auto* drawable : drawables) {
+          drawable->Update();
+        }
+      }
+
+      void Draw() {
+        for (auto* drawable : drawables) {
+          drawable->Draw(sdl_renderer);
+        }
+      }
+
+      void OnPointerEvent(PointerEvent event) {
+        for (auto* drawable : drawables) {
+          Region2D bounds = drawable->Bounds();
+          if (bounds.Encloses(event.Position())) {
+            drawable->OnPointerEvent(event);
+            continue;
+          }
+        }
+      }
+
+    protected:
+      SDL_Window* sdl_window;
+
+      std::string title{"Isolinear"};
+      std::list<drawable*> drawables;
+
+      ColourScheme colours;
+
+      const Font header_font{ FONT, 96, 0xff0099ff };
+      const Font button_font{ FONT, 44, 0xff000000 };
+      const Font  label_font{ FONT, 44, 0xff0099ff };
+
+      void InitSdl() {
+        sdl_window = SDL_CreateWindow(
+            title.c_str(),
+            position.x, position.y,
+            size.x, size.y,
+            0 | SDL_WINDOW_ALLOW_HIGHDPI
+              | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
+              //| SDL_WINDOW_BORDERLESS
+          );
+
+        if (!sdl_window) {
+          throw std::runtime_error(
+            "Failed to create SDL window"
+          );
+        }
+
+        sdl_renderer = SDL_CreateRenderer(
+            sdl_window, -1, SDL_RENDERER_SOFTWARE
+          );
+
+        if (!sdl_renderer) {
+          throw std::runtime_error(
+            "Failed to create SDL renderer"
+          );
+        }
+
+        SDL_SetRenderDrawBlendMode(
+            sdl_renderer, SDL_BLENDMODE_BLEND
+          );
+
+        SDL_GetWindowSize(
+            sdl_window,
+            &size.x,
+            &size.y
+          );
+      }
+
+  };
+
+}
+
+using Window = isolinear::display::window;
