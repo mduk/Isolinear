@@ -11,7 +11,6 @@
 #include "pointerevent.h"
 #include "drawable.h"
 #include "pointerevent.h"
-#include "grid.h"
 #include "colours.h"
 #include "geometry.h"
 #include "text.h"
@@ -29,21 +28,12 @@ namespace isolinear::display {
     public:
       vector position;
       vector size;
-      isolinear::grid grid;
       SDL_Renderer* sdl_renderer;
 
       window(vector p, vector s)
         : position{p}, size{s}
       {
         InitSdl();
-
-        grid = isolinear::grid{
-            Region2D(0, 0, size.x, size.y),
-            button_font.Height(), // Row height
-            vector(10,10),
-            //vector(21,40)
-            vector(25,28)
-          };
       };
 
       ~window() {

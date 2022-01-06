@@ -131,17 +131,26 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
+  Size2D display_size{ display };
+
   isolinear::display::window window(
       Position2D{ display },
-      Size2D{ display }
+      display_size
     );
 
-  isolinear::ui::horizontal_button_bar control_bar(window, window.grid.Rows(1,2));
+  isolinear::grid grid(
+      Region2D(0, 0, display_size.x, display_size.y),
+      window.ButtonFont().Height(), // Row height
+      vector(10,10),
+      vector(25,28)
+    );
+
+  isolinear::ui::horizontal_button_bar control_bar(window, grid.Rows(1,2));
   auto& five_second_button = control_bar.AddButton("5 SEC");
   window.Add(&control_bar);
 
   std::list<isolinear::timer> timers;
-  isolinear::button_bar_list<isolinear::timer_row> timer_rows(window.grid.Rows(3, window.grid.MaxRows()));
+  isolinear::button_bar_list<isolinear::timer_row> timer_rows(grid.Rows(3, grid.MaxRows()));
   window.Add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
@@ -177,7 +186,7 @@ int main(int argc, char* argv[])
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
 
     if (drawdebug) {
-      window.grid.Draw(window.sdl_renderer);
+      grid.Draw(window.sdl_renderer);
     }
 
     SDL_Event e;
@@ -206,8 +215,8 @@ int main(int argc, char* argv[])
               y = e.motion.y;
 
           Position2D pos{x, y};
-          int gx = window.grid.PositionColumnIndex(pos),
-              gy = window.grid.PositionRowIndex(pos);
+          int gx = grid.PositionColumnIndex(pos),
+              gy = grid.PositionRowIndex(pos);
 
           std::stringstream ss;
           ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;

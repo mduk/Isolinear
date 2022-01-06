@@ -17,6 +17,7 @@
 
 #include "miso.h"
 
+#include "init.h"
 #include "colours.h"
 #include "compasslayout.h"
 #include "drawable.h"
@@ -38,60 +39,33 @@ bool drawdebug = false;
 
 int main(int argc, char* argv[])
 {
-  printf("INIT\n");
+  isolinear::init();
 
-  srand(time(NULL));
-
-  asio::io_context io_context;
-  auto work_guard = asio::make_work_guard(io_context);
-
-  //size_t n_threads = std::thread::hardware_concurrency();
-  size_t n_threads = 1;
-  std::vector<std::thread> thread_pool;
-  for (size_t i = 0; i < n_threads; i++){
-    thread_pool.emplace_back([&io_context](){ io_context.run(); });
-  }
-
-  mpdxx::client mpdc(io_context, "localhost", "6600");
+  mpdxx::client mpdc(isolinear::io_context, "localhost", "6600");
 
   miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
     cout << "Status:\n";
     cout << status << "\n";
   });
 
-  SDL_Init(SDL_INIT_VIDEO);
-  TTF_Init();
-  SDL_ShowCursor(SDL_DISABLE);
+  auto work_guard = asio::make_work_guard(isolinear::io_context);
+  auto display = isolinear::display::detect_displays().back();
 
-  int number_of_displays = SDL_GetNumVideoDisplays();
-  std::vector<SDL_Rect> displays;
-
-  for (int i = 0; i < number_of_displays; i++) {
-    SDL_Rect bounds{};
-    SDL_GetDisplayBounds(i, &bounds);
-    displays.push_back(bounds);
-
-    printf("%d: %d,%d +(%d,%d) [%d]\n",
-        i,
-        bounds.w,
-        bounds.h,
-        bounds.x,
-        bounds.y,
-        bounds.w * bounds.h);
-  }
-
-  SDL_Rect display = displays.back();
+  Size2D display_size{ display };
 
   isolinear::display::window window(
       Position2D{ display },
-      Size2D{ display }
+      display_size
     );
 
-  isompd::frame mpdframe{
-      window.grid,
-      window,
-      mpdc
-    };
+  isolinear::grid grid(
+      Region2D(0, 0, display_size.x, display_size.y),
+      window.ButtonFont().Height(), // Row height
+      vector(10,10),
+      vector(25,28)
+    );
+
+  isompd::frame mpdframe(grid, window, mpdc);
   window.Add(&mpdframe);
 
   miso::connect(mpdframe.signal_view_change, [&](std::string from_view, std::string to_view){
@@ -115,7 +89,7 @@ int main(int argc, char* argv[])
     SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
 
     if (drawdebug) {
-      window.grid.Draw(window.sdl_renderer);
+      grid.Draw(window.sdl_renderer);
     }
 
     SDL_Event e;
@@ -149,8 +123,8 @@ int main(int argc, char* argv[])
               y = e.motion.y;
 
           Position2D pos{x, y};
-          int gx = window.grid.PositionColumnIndex(pos),
-              gy = window.grid.PositionRowIndex(pos);
+          int gx = grid.PositionColumnIndex(pos),
+              gy = grid.PositionRowIndex(pos);
 
           std::stringstream ss;
           ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
@@ -183,11 +157,7 @@ int main(int argc, char* argv[])
     SDL_RenderPresent(window.sdl_renderer);
   }
 
-  io_context.stop();
   work_guard.reset();
-  for(auto& thread : thread_pool) {
-    thread.join();
-  }
-
+  isolinear::shutdown();
   return 0;
 }
