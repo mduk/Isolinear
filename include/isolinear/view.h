@@ -7,6 +7,12 @@
 #include "geometry.h"
 
 
+using isolinear::geometry::Region2D;
+
+
+namespace isolinear {
+
+
 class View : public drawable {
   protected:
     std::string title;
@@ -24,3 +30,6 @@ class View : public drawable {
     }
 
 };
+
+
+}

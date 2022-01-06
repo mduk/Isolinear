@@ -17,6 +17,7 @@
 using std::cout;
 
 using isolinear::ui::horizontal_button_bar;
+using isolinear::Grid;
 namespace display = isolinear::display;
 
 

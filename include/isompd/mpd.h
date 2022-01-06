@@ -30,7 +30,7 @@ namespace display = isolinear::display;
 
 namespace isompd {
 
-  class view : public View {
+  class view : public isolinear::View {
     protected:
       mpdxx::client& mpdc;
       display::window& window;
@@ -54,7 +54,7 @@ namespace isompd::now_playing {
       isolinear::ui::header_pair_bar album;
       isolinear::ui::header_pair_bar artist;
       isolinear::ui::header_pair_bar duration;
-      isolinear::ui::progress::horizontal_bar progress;
+      isolinear::ui::horizontal_progress_bar progress;
 
     public:
       view(Grid g, display::window& w, mpdxx::client& _mpdc)
@@ -518,7 +518,7 @@ namespace isompd {
       NorthWestSweep sweepNorthWest;
       SouthWestSweep sweepSouthWest;
 
-      std::map<const std::string, View*> views;
+      std::map<const std::string, isolinear::View*> views;
       std::string activeView = V_QUEUE;
 
       isompd::browse::view viewBrowse;
