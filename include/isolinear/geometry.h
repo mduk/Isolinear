@@ -17,38 +17,28 @@ namespace isolinear::geometry {
     public:
       int x, y;
 
-      vector()
-          : x{0}, y{0}
-        {};
+      vector(int _x, int _y) : x{_x}, y{_y} {};
+      vector(int x) : vector(x, x) {};
+      vector() : vector(0, 0) {}
 
-      vector(int _x, int _y)
-          : x{_x}, y{_y}
-        {};
+      //vector(vector c) : vector{c} {}
 
-      vector(SDL_MouseButtonEvent e)
-          : x{e.x}, y{e.y}
-        {};
+      vector(SDL_MouseButtonEvent e) : x{e.x}, y{e.y} {};
+      vector(SDL_MouseMotionEvent e) : x{e.x}, y{e.y} {};
 
-      vector(SDL_MouseMotionEvent e)
-          : x{e.x}, y{e.y}
-        {};
+      vector(SDL_Surface* s) : x{s->w}, y{s->h} {};
 
-      vector(SDL_Surface* s)
-          : x{s->w}, y{s->h}
-        {};
+      //vector(SDL_Rect r) : vector(r.x, r.y) {};
+      //vector(SDL_Rect r) : vector(r.w, r.h) {};
 
+
+    public:
       vector Add(vector c) const {
-        return vector{
-            x + c.x,
-            y + c.y
-          };
+        return vector{ x + c.x, y + c.y };
       }
 
       vector Subtract(vector c) const {
-        return vector{
-            x - c.x,
-            y - c.y
-          };
+        return vector{ x - c.x, y - c.y };
       }
 
       int CentreX()    const { return x / 2; }

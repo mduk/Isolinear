@@ -20,24 +20,25 @@
 
 
 using isolinear::ui::drawable;
+using isolinear::geometry::vector;
 
 
 namespace isolinear::display {
 
   class window {
     public:
-      Position2D position;
-      Size2D size;
+      vector position;
+      vector size;
       Grid grid;
       SDL_Renderer* sdl_renderer;
 
-      window(Position2D p, Size2D s)
+      window(vector p, vector s)
         : position{p}, size{s}
       {
         InitSdl();
 
         grid = Grid{
-            Region2D{size},
+            Region2D(0, 0, size.x, size.y),
             button_font.Height(), // Row height
             vector(10,10),
             //vector(21,40)
