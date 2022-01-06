@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 
   SDL_Rect display = displays.back();
 
-  Window window(
+  isolinear::display::window window(
       Position2D{ display },
       Size2D{ display }
     );

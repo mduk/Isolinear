@@ -16,111 +16,112 @@
 
 #include "init.h"
 #include "colours.h"
-#include "compasslayout.h"
 #include "drawable.h"
 #include "geometry.h"
 #include "grid.h"
 #include "pointerevent.h"
-#include "progressbar.h"
-#include "shapes.h"
-#include "sweep.h"
 #include "ui.h"
 #include "display.h"
 
 
 using std::cout;
-using asio::ip::tcp;
 
 
 bool drawdebug = false;
 
 
-class timer {
-  public:
-    asio::io_context& io_context;
-    std::chrono::seconds seconds;
-    std::chrono::time_point<std::chrono::system_clock> started;
-    asio::high_resolution_timer asio_timer;
-
-  public:
-    miso::signal<> signal_expired;
-
-  public:
-    timer(asio::io_context& ioc, long int s)
-      : timer(ioc, std::chrono::seconds(s))
-    {}
-
-    timer(asio::io_context& ioc, std::chrono::seconds s)
-      : io_context(ioc)
-      , seconds(s)
-      , started(std::chrono::system_clock::now())
-      , asio_timer(ioc, s)
-    {
-      asio_timer.async_wait([&](std::error_code){
-        emit signal_expired();
-      });
-    }
-
-  public:
-    int expires_in_seconds() const {
-      return std::chrono::duration_cast<std::chrono::seconds>(
-          asio_timer.expires_from_now()
-        ).count();
-    }
-};
+namespace isolinear {
 
 
-class timer_row : public isolinear::ui::header_east_bar {
-  protected:
-    isolinear::ui::button& add_time;
+  class timer {
+    public:
+      asio::io_context& io_context;
+      std::chrono::seconds seconds;
+      std::chrono::time_point<std::chrono::system_clock> started;
+      asio::high_resolution_timer asio_timer;
 
-  public:
-    timer& m_timer;
+    public:
+      miso::signal<> signal_expired;
 
-  public:
-    timer_row(Window& w, Grid g, timer& t)
-      : header_east_bar(w, g, "")
-      , m_timer(t)
-      , add_time(AddButton("ADD 10 SEC"))
-    {
-      m_timer.asio_timer.async_wait([&](std::error_code){
-        cout << "Clang!\n";
-      });
+    public:
+      timer(asio::io_context& ioc, long int s)
+        : timer(ioc, std::chrono::seconds(s))
+      {}
 
-      miso::connect(add_time.signal_press, [&](){
-        cout << "add time?\n";
-      });
+      timer(asio::io_context& ioc, std::chrono::seconds s)
+        : io_context(ioc)
+        , seconds(s)
+        , started(std::chrono::system_clock::now())
+        , asio_timer(ioc, s)
+      {
+        asio_timer.async_wait([&](std::error_code){
+          emit signal_expired();
+        });
+      }
 
-      Update();
-    }
-
-    void Update() {
-      Label(fmt::format(
-          "{:%H:%M:%S} {}/{}",
-          m_timer.started,
-          m_timer.expires_in_seconds(),
-          m_timer.seconds
-        ));
-    }
-};
-
-
+    public:
+      int expires_in_seconds() const {
+        return std::chrono::duration_cast<std::chrono::seconds>(
+            asio_timer.expires_from_now()
+          ).count();
+      }
+  };
 
 
-template <class T>
-class button_bar_list : public isolinear::ui::drawable_list<T> {
+  class timer_row : public isolinear::ui::header_east_bar {
+    protected:
+      isolinear::ui::button& add_time;
 
-  public:
-    button_bar_list(Grid g)
-      : isolinear::ui::drawable_list<T>(g)
-    {}
+    public:
+      timer& m_timer;
 
-  protected:
-    Grid grid_for_index(int index) override {
-      int far_row = index * 2;
-      return isolinear::ui::drawable_list<T>::grid.Rows(far_row-1, far_row);
-    }
-};
+    public:
+      timer_row(display::window& w, Grid g, timer& t)
+        : header_east_bar(w, g, "")
+        , m_timer(t)
+        , add_time(AddButton("ADD 10 SEC"))
+      {
+        m_timer.asio_timer.async_wait([&](std::error_code){
+          cout << "Clang!\n";
+        });
+
+        miso::connect(add_time.signal_press, [&](){
+          cout << "add time?\n";
+        });
+
+        Update();
+      }
+
+      void Update() {
+        Label(fmt::format(
+            "{:%H:%M:%S} {}/{}",
+            m_timer.started,
+            m_timer.expires_in_seconds(),
+            m_timer.seconds
+          ));
+      }
+  };
+
+
+
+
+  template <class T>
+  class button_bar_list : public isolinear::ui::drawable_list<T> {
+
+    public:
+      button_bar_list(Grid g)
+        : isolinear::ui::drawable_list<T>(g)
+      {}
+
+    protected:
+      Grid grid_for_index(int index) override {
+        int far_row = index * 2;
+        return isolinear::ui::drawable_list<T>::grid.Rows(far_row-1, far_row);
+      }
+  };
+
+
+}
 
 
 int main(int argc, char* argv[])
@@ -130,7 +131,7 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
-  Window window(
+  isolinear::display::window window(
       Position2D{ display },
       Size2D{ display }
     );
@@ -139,8 +140,8 @@ int main(int argc, char* argv[])
   auto& five_second_button = control_bar.AddButton("5 SEC");
   window.Add(&control_bar);
 
-  std::list<timer> timers;
-  button_bar_list<timer_row> timer_rows(window.grid.Rows(3, window.grid.MaxRows()));
+  std::list<isolinear::timer> timers;
+  isolinear::button_bar_list<isolinear::timer_row> timer_rows(window.grid.Rows(3, window.grid.MaxRows()));
   window.Add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
@@ -238,7 +239,7 @@ int main(int argc, char* argv[])
 
     // Prune expired timers
     if (false) {
-      std::list<timer>::iterator it = timers.begin();
+      std::list<isolinear::timer>::iterator it = timers.begin();
       while (it != timers.end()) {
         auto& timer = *it;
 
@@ -270,3 +271,4 @@ int main(int argc, char* argv[])
   isolinear::shutdown();
   return 0;
 }
+
