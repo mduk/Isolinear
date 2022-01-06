@@ -24,7 +24,6 @@
 #include "grid.h"
 #include "mpd.h"
 #include "pointerevent.h"
-#include "progressbar.h"
 #include "shapes.h"
 #include "ui.h"
 #include "display.h"

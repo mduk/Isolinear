@@ -12,7 +12,6 @@
 #include "geometry.h"
 #include "display.h"
 #include "mpdxx.h"
-#include "progressbar.h"
 #include "view.h"
 #include "ui.h"
 
