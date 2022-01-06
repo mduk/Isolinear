@@ -128,7 +128,7 @@ int main(int argc, char* argv[])
   isolinear::init();
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
-  auto display = isolinear::detect_displays().back();
+  auto display = isolinear::display::detect_displays().back();
 
   Window window(
       Position2D{ display },
