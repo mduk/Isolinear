@@ -46,23 +46,22 @@ int main(int argc, char* argv[])
     );
 
   std::list<isolinear::window::region> squares;
+  geometry::vector margin{4,4};
+  geometry::vector cell_size{40,40};
+  geometry::vector grid_size{64,36};
 
-  for (int i=1; i<=10; i++) {
-    for (int j=1; j<=10; j++) {
-      isolinear::window::position boundsfar{ window, 100*i, 100*j };
-      isolinear::window::position boundsnear{ window, boundsfar.Subtract({100,100}) };
+  for (int i=1; i<=grid_size.x; i++) {
+    for (int j=1; j<=grid_size.y; j++) {
+      isolinear::window::position boundsfar{ window, cell_size.x*i, cell_size.y*j };
+      isolinear::window::position boundsnear{ window, boundsfar.Subtract(cell_size) };
 
       squares.emplace_back(window, boundsnear, boundsfar);
       auto& bg = squares.back();
       bg.fill_colour(0xff990000);
 
-      squares.emplace_back(window, boundsnear.Add({10,10}), boundsfar.Subtract({10,10}));
+      squares.emplace_back(window, boundsnear.Add(margin), boundsfar.Subtract(margin));
       auto& square = squares.back();
       square.fill_colour(0xffccaa99);
-
-      squares.emplace_back(window, boundsfar, isolinear::window::position{ window, boundsfar.Subtract({ 20, 20}) });
-      auto& innersquare = squares.back();
-      innersquare.fill_colour(0xff99ccaa);
     }
   }
 
