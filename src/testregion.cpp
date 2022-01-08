@@ -38,12 +38,34 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
-  Size2D display_size{ display };
+  isolinear::Size2D display_size{ display };
 
   isolinear::display::window window(
       geometry::Position2D{ display },
       display_size
     );
+
+  std::list<isolinear::window::region> squares;
+
+  for (int i=1; i<=10; i++) {
+    for (int j=1; j<=10; j++) {
+      isolinear::window::position boundsfar{ window, 100*i, 100*j };
+      isolinear::window::position boundsnear{ window, boundsfar.Subtract({100,100}) };
+
+      squares.emplace_back(window, boundsnear, boundsfar);
+      auto& bg = squares.back();
+      bg.fill_colour(0xff990000);
+
+      squares.emplace_back(window, boundsnear.Add({10,10}), boundsfar.Subtract({10,10}));
+      auto& square = squares.back();
+      square.fill_colour(0xffccaa99);
+
+      squares.emplace_back(window, boundsfar, isolinear::window::position{ window, boundsfar.Subtract({ 20, 20}) });
+      auto& innersquare = squares.back();
+      innersquare.fill_colour(0xff99ccaa);
+    }
+  }
+
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -75,6 +97,10 @@ int main(int argc, char* argv[])
 
     window.Update();
     window.Draw();
+
+    for (auto& square : squares) {
+      square.draw();
+    }
 
     SDL_RenderPresent(window.sdl_renderer);
   }

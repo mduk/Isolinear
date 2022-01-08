@@ -174,8 +174,13 @@ namespace isolinear::window {
       }
 
     public: // Debug draw
+      uint32_t col;
+      void fill_colour(uint32_t c) {
+        col = c;
+      }
       virtual void draw() const {
-        boxColor(m_window.sdl_renderer, m_near.x, m_near.y, m_far.x, m_far.y, 0xff666666);
+        fill(col);
+        return;
 
         centre().draw();
         north().draw();
