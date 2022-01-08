@@ -29,6 +29,7 @@ namespace isolinear::ui {
   namespace ui = isolinear::ui;
   namespace display = isolinear::display;
   namespace pointer = isolinear::pointer;
+  namespace geometry = isolinear::geometry;
 
 
   using isolinear::compass;
@@ -150,7 +151,7 @@ namespace isolinear::ui {
       isolinear::grid grid;
       display::window& window;
       std::map<std::string, isolinear::ui::button> buttons;
-      vector button_size{2,2};
+      geometry::vector button_size{2,2};
 
     public:
       button_bar(display::window& w, isolinear::grid g)
@@ -631,14 +632,14 @@ namespace isolinear::ui {
     protected:
       display::window& window;
       isolinear::grid grid;
-      vector ports;
+      geometry::vector ports;
       int outer_radius;
       int inner_radius;
       compass alignment;
       compass opposite;
 
     public:
-      Sweep(display::window& w, isolinear::grid g, vector p, int oradius, int iradius, compass ali)
+      Sweep(display::window& w, isolinear::grid g, geometry::vector p, int oradius, int iradius, compass ali)
         : window{w}, grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
       {
         switch (alignment) {
@@ -702,7 +703,7 @@ namespace isolinear::ui {
 
   class NorthEastSweep : public Sweep {
     public:
-      NorthEastSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
+      NorthEastSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::northeast}
       {}
 
@@ -724,7 +725,7 @@ namespace isolinear::ui {
 
   class SouthEastSweep : public Sweep {
     public:
-      SouthEastSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
+      SouthEastSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::southeast}
       {}
 
@@ -746,7 +747,7 @@ namespace isolinear::ui {
 
   class SouthWestSweep : public Sweep {
     public:
-      SouthWestSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
+      SouthWestSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::southwest}
       {}
 
@@ -768,7 +769,7 @@ namespace isolinear::ui {
 
   class NorthWestSweep : public Sweep {
     public:
-      NorthWestSweep(display::window& window, isolinear::grid grid,  vector ports, int oradius, int iradius)
+      NorthWestSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
         : Sweep{window, grid, ports, oradius, iradius, compass::northwest}
       {}
 

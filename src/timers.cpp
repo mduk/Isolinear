@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
-  Size2D display_size{ display };
+  geometry::Size2D display_size{ display };
 
   isolinear::display::window window(
       geometry::Position2D{ display },
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
     );
 
   isolinear::grid grid(
-      Region2D(0, 0, display_size.x, display_size.y),
+      geometry::Region2D(0, 0, display_size.x, display_size.y),
       window.ButtonFont().Height(), // Row height
       geometry::vector(10,10),
       geometry::vector(25,28)
@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
-  window.Colours(nightgazer_colours);
+  window.Colours(isolinear::nightgazer_colours);
 
   bool running = true;
   SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
@@ -210,11 +210,11 @@ int main(int argc, char* argv[])
 
             case 'g': drawdebug = !drawdebug; break;
 
-            case 'd': window.Colours(debug_colours       ); break;
-            case 'r': window.Colours(red_alert_colours   ); break;
-            case 'y': window.Colours(yellow_alert_colours); break;
-            case 'b': window.Colours(blue_alert_colours  ); break;
-            case 'n': window.Colours(nightgazer_colours  ); break;
+            case 'd': window.Colours(isolinear::debug_colours       ); break;
+            case 'r': window.Colours(isolinear::red_alert_colours   ); break;
+            case 'y': window.Colours(isolinear::yellow_alert_colours); break;
+            case 'b': window.Colours(isolinear::blue_alert_colours  ); break;
+            case 'n': window.Colours(isolinear::nightgazer_colours  ); break;
 
           }
           break;
