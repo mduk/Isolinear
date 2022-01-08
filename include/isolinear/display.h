@@ -21,19 +21,17 @@
 namespace isolinear::display {
   namespace display = isolinear::display;
   namespace pointer = isolinear::pointer;
-
-
-  using isolinear::ui::drawable;
-  using isolinear::geometry::vector;
+  namespace geometry = isolinear::geometry;
+  namespace ui = isolinear::ui;
 
 
   class window {
     public:
-      vector position;
-      vector size;
+      geometry::vector position;
+      geometry::vector size;
       SDL_Renderer* sdl_renderer;
 
-      window(vector p, vector s)
+      window(geometry::vector p, geometry::vector s)
         : position{p}, size{s}
       {
         InitSdl();
@@ -70,7 +68,7 @@ namespace isolinear::display {
         return label_font;
       }
 
-      void Add(drawable* drawable) {
+      void Add(ui::drawable* drawable) {
         drawables.push_back(drawable);
       }
 
@@ -100,7 +98,7 @@ namespace isolinear::display {
       SDL_Window* sdl_window;
 
       std::string title{"Isolinear"};
-      std::list<drawable*> drawables;
+      std::list<ui::drawable*> drawables;
 
       ColourScheme colours;
 
