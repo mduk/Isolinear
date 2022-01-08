@@ -62,6 +62,14 @@ namespace isolinear::window {
         , m_far(w, max(a.x, b.x), max(a.y, b.y))
       {}
 
+      region(
+          display::window& w,
+          geometry::vector a,
+          geometry::vector b
+        )
+        : region(w, window::position{w, a}, window::position{w, b})
+      {}
+
       region(display::window& w) : region(w, {w, 0, 0}, {w, 0, 0}) {}
 
     public: // window::position factories
