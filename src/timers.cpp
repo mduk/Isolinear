@@ -22,6 +22,7 @@
 #include "pointerevent.h"
 #include "ui.h"
 #include "display.h"
+#include "window.h"
 
 
 using std::cout;
@@ -173,6 +174,10 @@ int main(int argc, char* argv[])
     });
   });
 
+  isolinear::window::position near(window, 100, 100);
+  isolinear::window::position far(window, 500, 500);
+  isolinear::window::region square(window, near, far);
+
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   window.Colours(nightgazer_colours);
@@ -245,6 +250,11 @@ int main(int argc, char* argv[])
 
     window.Update();
     window.Draw();
+
+    square.fill(0xff333333);
+    auto half = square.half(compass::south);
+    half.fill(0xff666633);
+    half.southeast().draw();
 
     // Prune expired timers
     if (false) {
