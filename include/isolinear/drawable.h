@@ -11,12 +11,14 @@
 #include "grid.h"
 
 
-using isolinear::geometry::Position2D;
-using isolinear::geometry::Region2D;
-
 
 namespace isolinear::ui {
+  namespace ui = isolinear::ui;
+  namespace pointer = isolinear::pointer;
 
+
+  using isolinear::geometry::Position2D;
+  using isolinear::geometry::Region2D;
 
 
   class drawable {
@@ -45,7 +47,7 @@ namespace isolinear::ui {
         }
       }
 
-      virtual void OnPointerEvent(PointerEvent event) {
+      virtual void OnPointerEvent(pointer::event event) {
         Position2D p = event.Position();
 
         for (auto& child : children) {
@@ -113,7 +115,7 @@ namespace isolinear::ui {
         }
       }
 
-      virtual void OnPointerEvent(PointerEvent event) {
+      virtual void OnPointerEvent(pointer::event event) {
         Position2D p = event.Position();
 
         for (auto& elem : *this) {

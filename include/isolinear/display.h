@@ -18,11 +18,14 @@
 #define FONT "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf"
 
 
-using isolinear::ui::drawable;
-using isolinear::geometry::vector;
-
-
 namespace isolinear::display {
+  namespace display = isolinear::display;
+  namespace pointer = isolinear::pointer;
+
+
+  using isolinear::ui::drawable;
+  using isolinear::geometry::vector;
+
 
   class window {
     public:
@@ -83,7 +86,7 @@ namespace isolinear::display {
         }
       }
 
-      void OnPointerEvent(PointerEvent event) {
+      void OnPointerEvent(pointer::event event) {
         for (auto* drawable : drawables) {
           Region2D bounds = drawable->Bounds();
           if (bounds.Encloses(event.Position())) {

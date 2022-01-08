@@ -127,6 +127,10 @@ namespace isolinear {
 
 int main(int argc, char* argv[])
 {
+  namespace geometry = isolinear::geometry;
+  namespace pointer = isolinear::pointer;
+
+
   isolinear::init();
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
@@ -135,15 +139,15 @@ int main(int argc, char* argv[])
   Size2D display_size{ display };
 
   isolinear::display::window window(
-      Position2D{ display },
+      geometry::Position2D{ display },
       display_size
     );
 
   isolinear::grid grid(
       Region2D(0, 0, display_size.x, display_size.y),
       window.ButtonFont().Height(), // Row height
-      vector(10,10),
-      vector(25,28)
+      geometry::vector(10,10),
+      geometry::vector(25,28)
     );
 
   isolinear::ui::horizontal_button_bar control_bar(window, grid.Rows(1,2));
@@ -219,7 +223,7 @@ int main(int argc, char* argv[])
           int x = e.motion.x,
               y = e.motion.y;
 
-          Position2D pos{x, y};
+          geometry::Position2D pos{x, y};
           int gx = grid.PositionColumnIndex(pos),
               gy = grid.PositionRowIndex(pos);
 
@@ -233,13 +237,13 @@ int main(int argc, char* argv[])
 /*
       case SDL_FINGERDOWN:
         printf("TAP\n");
-        window.OnPointerEvent(PointerEvent{ e.tfinger, window.size });
+        window.OnPointerEvent(pointer::event{ e.tfinger, window.size });
         break;
 */
 
       case SDL_MOUSEBUTTONDOWN:
         printf("CLICK\n");
-        window.OnPointerEvent(PointerEvent{ e.button });
+        window.OnPointerEvent(pointer::event{ e.button });
         break;
 
       case SDL_QUIT:

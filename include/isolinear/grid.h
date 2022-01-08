@@ -8,11 +8,14 @@
 
 #include "geometry.h"
 
-using isolinear::geometry::vector;
-using isolinear::geometry::Region2D;
-
 
 namespace isolinear {
+
+
+  using isolinear::geometry::vector;
+  using isolinear::geometry::Region2D;
+  using isolinear::geometry::Size2D;
+  using isolinear::geometry::Position2D;
 
 
   class grid {

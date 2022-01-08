@@ -21,15 +21,19 @@
 #include "pointerevent.h"
 
 
-using isolinear::compass;
-using isolinear::geometry::Region2D;
-namespace display = isolinear::display;
-
 
 extern bool drawdebug;
 
 
 namespace isolinear::ui {
+  namespace ui = isolinear::ui;
+  namespace display = isolinear::display;
+  namespace pointer = isolinear::pointer;
+
+
+  using isolinear::compass;
+  using isolinear::geometry::Region2D;
+
 
   // Widgets
 
@@ -135,7 +139,7 @@ namespace isolinear::ui {
       }
 
 
-      void OnPointerEvent(PointerEvent event) {
+      void OnPointerEvent(pointer::event event) {
         emit signal_press();
       }
   };
@@ -191,7 +195,7 @@ namespace isolinear::ui {
         buttons.at(label).Activate();
       }
 
-      virtual void OnPointerEvent(PointerEvent event) override {
+      virtual void OnPointerEvent(pointer::event event) override {
         for (auto& [label, button] : buttons) {
           if (button.Bounds().Encloses(event.Position())) {
             button.OnPointerEvent(event);
@@ -390,7 +394,7 @@ namespace isolinear::ui {
           );
       }
 
-      virtual void OnPointerEvent(PointerEvent event) override {
+      virtual void OnPointerEvent(pointer::event event) override {
         for (auto& [label, button] : buttons) {
           if (button.Bounds().Encloses(event.Position())) {
             button.OnPointerEvent(event);
