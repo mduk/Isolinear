@@ -63,3 +63,12 @@ target_include_directories(Timers PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear
 )
 
+add_executable(testregion src/testregion.cpp)
+target_include_directories(testregion PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear
+)
+target_link_libraries(testregion
+  ${CONAN_LIBS}
+  LibMiso
+  -lSDL2_gfx
+)
