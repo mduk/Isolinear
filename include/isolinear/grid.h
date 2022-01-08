@@ -10,31 +10,26 @@
 
 
 namespace isolinear {
-
-
-  using isolinear::geometry::vector;
-  using isolinear::geometry::Region2D;
-  using isolinear::geometry::Size2D;
-  using isolinear::geometry::Position2D;
+  namespace geometry = isolinear::geometry;
 
 
   class grid {
 
     protected:
       int row_height{100};
-      vector size{3,3};
+      geometry::vector size{3,3};
 
     public:
-      vector gutter{50, 50};
-      Region2D bounds;
+      geometry::vector gutter{50, 50};
+      geometry::Region2D bounds;
 
       grid() {};
 
       grid(
-          Region2D b,
+          geometry::Region2D b,
           int rh,
-          vector g,
-          vector s
+          geometry::vector g,
+          geometry::vector s
         ) :
           bounds{b},
           row_height{rh},
@@ -57,7 +52,7 @@ namespace isolinear {
               ),
             row_height,
             gutter,
-            vector(
+            geometry::vector(
                 far_col - near_col + 1,
                 far_row - near_row + 1
               )
@@ -126,14 +121,14 @@ namespace isolinear {
         return Rows(t + 1, MaxRows() - b);
       }
 
-      Region2D Cell(int col, int row) const {
+      geometry::Region2D Cell(int col, int row) const {
         return CalculateGridRegion(col, row, col, row);
       }
 
-      Region2D CalculateGridRegion(int near_col, int near_row, int far_col, int far_row) const {
-        Position2D origin = bounds.Origin();
-        Size2D cell_size = CellSize();
-        return Region2D{
+      geometry::Region2D CalculateGridRegion(int near_col, int near_row, int far_col, int far_row) const {
+        geometry::Position2D origin = bounds.Origin();
+        geometry::Size2D cell_size = CellSize();
+        return geometry::Region2D{
           /* x */ origin.x + (cell_size.x * (near_col - 1)),
           /* y */ origin.y + (cell_size.y * (near_row - 1)),
           /* w */ cell_size.x * ((far_col - near_col) + 1) - gutter.x,
@@ -149,20 +144,20 @@ namespace isolinear {
         }
       }
 
-      void ResizeBounds(Size2D size) {
+      void ResizeBounds(geometry::Size2D size) {
         bounds.Resize(size);
       }
 
-      Size2D CellSize() const {
-        return Size2D{ row_height*2, row_height };
+      geometry::Size2D CellSize() const {
+        return geometry::Size2D{ row_height*2, row_height };
       }
 
-      int PositionColumnIndex(Position2D p) const {
-        Size2D s = CellSize();
+      int PositionColumnIndex(geometry::Position2D p) const {
+        geometry::Size2D s = CellSize();
         return floor((p.x - bounds.X()) / s.x) + 1;
       }
 
-      int PositionRowIndex(Position2D p) const {
+      int PositionRowIndex(geometry::Position2D p) const {
         return floor((p.y - bounds.Y()) / row_height) + 1;
       }
 
@@ -174,7 +169,7 @@ namespace isolinear {
         return size.y;
       }
 
-      vector Gutter() const {
+      geometry::vector Gutter() const {
         return gutter;
       }
 
