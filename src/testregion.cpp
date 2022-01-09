@@ -82,15 +82,14 @@ int main(int argc, char* argv[])
 
         case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
-            case SDLK_ESCAPE:
-              running = false;
-              break;
+            case SDLK_ESCAPE: running = false; break;
           }
           break;
 
-      case SDL_QUIT:
-        running = false;
-        break;
+        case SDL_QUIT:
+          running = false;
+          break;
+
       }
     }
 
