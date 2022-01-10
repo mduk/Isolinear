@@ -16,7 +16,6 @@
 #include "geometry.h"
 #include "grid.h"
 #include "pointerevent.h"
-#include "shapes.h"
 #include "display.h"
 
 
@@ -50,10 +49,11 @@ int main(int argc, char* argv[])
   }
 
   SDL_Rect display = displays.back();
+  geometry::vector display_size{ display.w, display.h };
 
   isolinear::display::window window(
       Position2D{ display },
-      Size2D{ display }
+      display_size
     );
 
   window.Colours(nightgazer_colours);

@@ -25,7 +25,6 @@
 #include "grid.h"
 #include "mpd.h"
 #include "pointerevent.h"
-#include "shapes.h"
 #include "ui.h"
 #include "display.h"
 
@@ -39,6 +38,9 @@ bool drawdebug = false;
 
 int main(int argc, char* argv[])
 {
+  namespace geometry = isolinear::geometry;
+
+
   isolinear::init();
 
   mpdxx::client mpdc(isolinear::io_context, "localhost", "6600");
@@ -51,18 +53,18 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
-  Size2D display_size{ display };
+  geometry::vector display_size{ display.w, display.h };
 
   isolinear::display::window window(
-      Position2D{ display },
+      isolinear::geometry::Position2D{ display },
       display_size
     );
 
   isolinear::grid grid(
-      Region2D(0, 0, display_size.x, display_size.y),
+      isolinear::geometry::Region2D(0, 0, display_size.x, display_size.y),
       window.ButtonFont().Height(), // Row height
-      vector(10,10),
-      vector(25,28)
+      geometry::vector(10,10),
+      geometry::vector(25,28)
     );
 
   isompd::frame mpdframe(grid, window, mpdc);
@@ -75,7 +77,7 @@ int main(int argc, char* argv[])
     if (to_view == mpdframe.V_BROWSE    ) { mpdc.RequestArtistList();  }
   });
 
-  window.Colours(nightgazer_colours);
+  window.Colours(isolinear::nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -105,11 +107,11 @@ int main(int argc, char* argv[])
             case 'g': drawdebug = !drawdebug; break;
             case 's': mpdc.RequestStatus(); break;
 
-            case 'd': window.Colours(debug_colours       ); break;
-            case 'r': window.Colours(red_alert_colours   ); break;
-            case 'y': window.Colours(yellow_alert_colours); break;
-            case 'b': window.Colours(blue_alert_colours  ); break;
-            case 'n': window.Colours(nightgazer_colours  ); break;
+            case 'd': window.Colours(isolinear::debug_colours       ); break;
+            case 'r': window.Colours(isolinear::red_alert_colours   ); break;
+            case 'y': window.Colours(isolinear::yellow_alert_colours); break;
+            case 'b': window.Colours(isolinear::blue_alert_colours  ); break;
+            case 'n': window.Colours(isolinear::nightgazer_colours  ); break;
 
             case 'a': mpdframe.SwitchView(mpdframe.V_BROWSE    ); break;
             case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;
@@ -122,7 +124,7 @@ int main(int argc, char* argv[])
           int x = e.motion.x,
               y = e.motion.y;
 
-          Position2D pos{x, y};
+          isolinear::geometry::Position2D pos{x, y};
           int gx = grid.PositionColumnIndex(pos),
               gy = grid.PositionRowIndex(pos);
 
@@ -136,13 +138,13 @@ int main(int argc, char* argv[])
 /*
       case SDL_FINGERDOWN:
         printf("TAP\n");
-        window.OnPointerEvent(PointerEvent{ e.tfinger, window.size });
+        window.OnPointerEvent(isolinear::pointer::event{ e.tfinger, window.size });
         break;
 */
 
       case SDL_MOUSEBUTTONDOWN:
         printf("CLICK\n");
-        window.OnPointerEvent(PointerEvent{ e.button });
+        window.OnPointerEvent(isolinear::pointer::event{ e.button });
         break;
 
       case SDL_QUIT:

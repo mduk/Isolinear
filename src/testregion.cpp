@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
-  isolinear::Size2D display_size{ display };
+  geometry::vector display_size{ display.w, display.h };
 
   isolinear::display::window window(
       geometry::Position2D{ display },
@@ -47,8 +47,8 @@ int main(int argc, char* argv[])
 
   std::list<isolinear::window::region> squares;
   geometry::vector margin{4,4};
-  geometry::vector cell_size{40,40};
-  geometry::vector grid_size{64,36};
+  geometry::vector cell_size{200,200};
+  geometry::vector grid_size{3,3};
 
   for (int i=1; i<=grid_size.x; i++) {
     for (int j=1; j<=grid_size.y; j++) {

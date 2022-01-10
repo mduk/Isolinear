@@ -96,7 +96,7 @@ namespace isompd::now_playing {
 
 
 template <class DataT, class ViewT>
-class paginated_rows : public drawable {
+class paginated_rows : public isolinear::ui::drawable {
 
   protected:
     isolinear::grid grid;
@@ -177,7 +177,7 @@ class paginated_rows : public drawable {
       page(view_page - 1);
     }
 
-    Region2D Bounds() const override { return grid.bounds; }
+    isolinear::geometry::Region2D Bounds() const override { return grid.bounds; }
 
     void Draw(SDL_Renderer* renderer) const override {
       auto nrows = data_rows.size();
@@ -497,7 +497,7 @@ namespace isompd {
   using isolinear::ui::vertical_button_bar;
   using isolinear::ui::horizontal_button_bar;
 
-  class frame : public drawable {
+  class frame : public isolinear::ui::drawable {
     public:
       const std::string V_NOWPLAYING = "NOW PLAYING";
       const std::string V_QUEUE = "QUEUE";
@@ -582,11 +582,11 @@ namespace isompd {
         emit signal_view_change(previousView, activeView);
       }
 
-      virtual Region2D Bounds() const override {
+      virtual isolinear::geometry::Region2D Bounds() const override {
         return layout.Bounds();
       }
 
-      virtual void OnPointerEvent(PointerEvent event) {
+      virtual void OnPointerEvent(isolinear::pointer::event event) {
         drawable::OnPointerEvent(event);
         views.at(activeView)->OnPointerEvent(event);
       }
@@ -596,7 +596,7 @@ namespace isompd {
         views.at(activeView)->Draw(renderer);
       }
 
-      virtual void Colours(ColourScheme cs) {
+      virtual void Colours(isolinear::ColourScheme cs) {
         drawable::Colours(cs);
         for (auto const& [view_name, view_ptr] : views) {
           view_ptr->Colours(cs);

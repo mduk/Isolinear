@@ -15,7 +15,6 @@
 #include "colours.h"
 #include "geometry.h"
 #include "display.h"
-#include "shapes.h"
 
 
 namespace isolinear {

@@ -19,7 +19,7 @@ extern bool drawdebug;
 namespace isolinear {
 
 
-  class CompassLayout : public drawable {
+  class CompassLayout : public ui::drawable {
     protected:
       isolinear::grid grid;
       display::window& window;
@@ -28,17 +28,17 @@ namespace isolinear {
       int east;
       int south;
       int west;
-      vector northeast;
-      vector southeast;
-      vector southwest;
-      vector northwest;
+      geometry::vector northeast;
+      geometry::vector southeast;
+      geometry::vector southwest;
+      geometry::vector northwest;
 
     public:
       CompassLayout(
           isolinear::grid g, display::window& win,
           int n, int e, int s, int w,
-          vector ne, vector se,
-          vector sw, vector nw
+          geometry::vector ne, geometry::vector se,
+          geometry::vector sw, geometry::vector nw
         ) :
           grid(g), window(win),
           north(n), east(e), south(s), west(w),
