@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
-  geometry::vector display_size{ display };
+  geometry::vector display_size{ display.w, display.h };
 
   isolinear::display::window window(
       geometry::Position2D{ display },
