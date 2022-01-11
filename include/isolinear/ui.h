@@ -669,7 +669,7 @@ namespace isolinear::ui {
       }
 
       Region2D OuterRadiusRegion() const {
-        return grid.bounds.Align(alignment, Size2D{outer_radius});
+        return grid.bounds.Align(alignment, geometry::vector{outer_radius});
       }
 
       void DrawOuterRadius(SDL_Renderer* renderer) const {
@@ -684,7 +684,7 @@ namespace isolinear::ui {
 
       void Draw(SDL_Renderer* renderer) const override {
         Region2D icorner = InnerCornerRegion();
-        Region2D iradius = icorner.Align(alignment, Size2D{inner_radius});
+        Region2D iradius = icorner.Align(alignment, geometry::vector{inner_radius});
 
         grid.bounds.Fill(renderer, Colours().frame);
         icorner.Fill(renderer, Colours().background);
@@ -803,7 +803,7 @@ namespace isolinear::ui {
 
       Colour bar_colour;
       Region2D bar_region;
-      Size2D segment_size;
+      geometry::vector segment_size;
       unsigned remainder_px = 0;
       unsigned n_segments = 0;
 

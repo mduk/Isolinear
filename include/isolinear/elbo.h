@@ -226,7 +226,7 @@ namespace isolinear {
 
         return Region2D{
             sweep.Origin(),
-            Size2D{SweepOuterRadius()}
+            geometry::vector{SweepOuterRadius()}
           };
       }
 
@@ -235,7 +235,7 @@ namespace isolinear {
 
         return sweep.Align(
             compass::southeast,
-            Size2D{
+            geometry::vector{
                 sweep.FarX() - VerticalRegion().FarX(),
                 HeaderRegion().H() + gutter.y
               }
@@ -245,7 +245,7 @@ namespace isolinear {
       Region2D SweepInnerRadiusRegion() const override {
         return SweepInnerCornerRegion().Align(
             compass::northwest,
-            Size2D{SweepInnerRadius()}
+            geometry::vector{SweepInnerRadius()}
           );
       }
 
@@ -261,7 +261,7 @@ namespace isolinear {
 
         return Region2D{
             horizontal.Origin(),
-            Size2D{
+            geometry::vector{
               horizontal.W(),
               reach_weight
             }
@@ -278,7 +278,7 @@ namespace isolinear {
                 + reach_weight
                 + gutter.y
             },
-            Size2D{
+            geometry::vector{
               horizontal.Size().x,
               horizontal.Size().y
                 - reach_weight
@@ -353,7 +353,7 @@ namespace isolinear {
 
         return sweep.Align(
             compass::southwest,
-            Size2D{SweepOuterRadius()}
+            geometry::vector{SweepOuterRadius()}
           );
       }
 
@@ -364,10 +364,10 @@ namespace isolinear {
 
         return sweep.Align(
             compass::northeast,
-            Size2D{
-                sweep.FarX() - vertical.FarX(),
-                header.H() + gutter.y
-              }
+            geometry::vector{
+              sweep.FarX() - vertical.FarX(),
+              header.H() + gutter.y
+            }
           );
       }
 
@@ -376,7 +376,7 @@ namespace isolinear {
 
         return SweepInnerCornerRegion().Align(
             compass::southwest,
-            Size2D{SweepInnerRadius()}
+            geometry::vector{SweepInnerRadius()}
           );
       }
 
@@ -395,10 +395,10 @@ namespace isolinear {
               horizontal.X(),
               horizontal.Y() + horizontal.H() - reach_weight
             },
-            Size2D{
-                horizontal.W(),
-                reach_weight
-              }
+            geometry::vector{
+              horizontal.W(),
+              reach_weight
+            }
           };
       }
 
@@ -410,10 +410,10 @@ namespace isolinear {
               horizontal.X(),
               horizontal.Y()
             },
-            Size2D{
-                horizontal.W(),
-                horizontal.H() - reach_weight - gutter.y
-              }
+            geometry::vector{
+              horizontal.W(),
+              horizontal.H() - reach_weight - gutter.y
+            }
           };
       }
 

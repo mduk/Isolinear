@@ -127,7 +127,7 @@ namespace isolinear {
 
       geometry::Region2D CalculateGridRegion(int near_col, int near_row, int far_col, int far_row) const {
         geometry::Position2D origin = bounds.Origin();
-        geometry::Size2D cell_size = CellSize();
+        auto cell_size = CellSize();
         return geometry::Region2D{
           /* x */ origin.x + (cell_size.x * (near_col - 1)),
           /* y */ origin.y + (cell_size.y * (near_row - 1)),
@@ -144,16 +144,12 @@ namespace isolinear {
         }
       }
 
-      void ResizeBounds(geometry::Size2D size) {
-        bounds.Resize(size);
-      }
-
-      geometry::Size2D CellSize() const {
-        return geometry::Size2D{ row_height*2, row_height };
+      geometry::vector CellSize() const {
+        return geometry::vector{ row_height*2, row_height };
       }
 
       int PositionColumnIndex(geometry::Position2D p) const {
-        geometry::Size2D s = CellSize();
+        auto s = CellSize();
         return floor((p.x - bounds.X()) / s.x) + 1;
       }
 

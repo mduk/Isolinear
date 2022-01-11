@@ -9,7 +9,6 @@
 
 namespace isolinear {
 
-  using isolinear::geometry::Size2D;
   using isolinear::geometry::Region2D;
   using isolinear::compass;
 
@@ -37,8 +36,8 @@ namespace isolinear {
         SDL_FreeSurface(sdl_surface);
       }
 
-      Size2D Size() const {
-        return Size2D{sdl_surface};
+      geometry::vector Size() const {
+        return geometry::vector{sdl_surface};
       }
 
       void Draw(SDL_Renderer* renderer, compass alignment, Region2D bounds) const {
@@ -100,7 +99,7 @@ namespace isolinear {
         );
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-        Region2D label_region = bounds.Align(align, Size2D{surface});
+        Region2D label_region = bounds.Align(align, geometry::vector{surface->w, surface->h});
         SDL_Rect label_rect{
             label_region.X(),
             label_region.Y(),

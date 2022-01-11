@@ -5,10 +5,10 @@
 
 
 namespace isolinear::pointer {
+  namespace geometry = isolinear::geometry;
   namespace pointer = isolinear::pointer;
 
   using isolinear::geometry::Position2D;
-  using isolinear::geometry::Size2D;
 
 
   enum type {
@@ -23,7 +23,7 @@ namespace isolinear::pointer {
 
     public:
       event(SDL_MouseButtonEvent e) : position{e.x, e.y}, type{MOUSE}  {};
-      event(SDL_TouchFingerEvent e, Size2D ws)
+      event(SDL_TouchFingerEvent e, geometry::vector ws)
         : position{
               static_cast<int>(ws.x * e.x),
               static_cast<int>(ws.y * e.y)

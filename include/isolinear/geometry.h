@@ -85,27 +85,17 @@ namespace isolinear::geometry {
       }
   };
 
-  class Size2D : public vector {
-    public:
-      Size2D() : vector() {};
-      Size2D(int w) : vector{w, w} {};
-      Size2D(int w, int h) : vector(w, h) {};
-      Size2D(SDL_Surface* s) : vector(s) {};
-      Size2D(SDL_Rect r) : vector(r.w, r.h) {};
-  };
-
-
   class Region2D {
     protected:
       Position2D _position;
-      Size2D _size;
+      vector _size;
 
     public:
       Region2D()
           : _position{0,0}, _size{0,0}
         {};
 
-      Region2D(Size2D s)
+      Region2D(vector s)
           : _position{0,0}, _size{s}
         {};
 
@@ -113,7 +103,7 @@ namespace isolinear::geometry {
           : _position{r.x, r.y}, _size{r.w, r.h}
         {};
 
-      Region2D(Position2D _p, Size2D _s)
+      Region2D(Position2D _p, vector _s)
           : _position{_p}, _size{_s}
         {};
 
@@ -129,7 +119,7 @@ namespace isolinear::geometry {
             };
 
           _position = near;
-          _size = Size2D{
+          _size = vector{
               far.x - near.x,
               far.y - near.y
             };
@@ -140,7 +130,7 @@ namespace isolinear::geometry {
         {};
 
 
-      void Resize(Size2D newsize) {
+      void Resize(vector newsize) {
         _size = newsize;
       }
 
@@ -155,7 +145,7 @@ namespace isolinear::geometry {
 
       // Sources of truth
       virtual Position2D Origin() const { return _position; };
-      virtual Size2D     Size()   const { return _size; };
+      virtual vector     Size()   const { return _size; };
 
 
       // X, Y, W, H shortcuts
@@ -221,7 +211,7 @@ namespace isolinear::geometry {
       }
 
       // compass Alignment
-      Region2D Align(compass align, Size2D s) const {
+      Region2D Align(compass align, vector s) const {
         switch (align) {
           case    compass::centre: return Region2D{    Centre().Subtract(s.Centre()   ), s };
           case     compass::north: return Region2D{     North().Subtract(s.North()    ), s };
@@ -294,23 +284,23 @@ namespace isolinear::geometry {
       virtual void Bullnose(SDL_Renderer* renderer, compass orientation, Colour colour) const {
         switch (orientation) {
           case compass::north:
-            Align(compass::north, Size2D{W()}).Ellipse(renderer, colour);
-            Align(compass::south, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
+            Align(compass::north, vector{W()}).Ellipse(renderer, colour);
+            Align(compass::south, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
             break;
 
           case compass::east:
-            Align(compass::east, Size2D{H()}).Ellipse(renderer, colour);
-            Align(compass::west, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
+            Align(compass::east, vector{H()}).Ellipse(renderer, colour);
+            Align(compass::west, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
             break;
 
           case compass::south:
-            Align(compass::south, Size2D{W()}).Ellipse(renderer, colour);
-            Align(compass::north, Size2D{W(), H() - (W() / 2)}).Fill(renderer, colour);
+            Align(compass::south, vector{W()}).Ellipse(renderer, colour);
+            Align(compass::north, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
             break;
 
           case compass::west:
-            Align(compass::west, Size2D{H()}).Ellipse(renderer, colour);
-            Align(compass::east, Size2D{W() - (H() / 2), H()}).Fill(renderer, colour);
+            Align(compass::west, vector{H()}).Ellipse(renderer, colour);
+            Align(compass::east, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
             break;
         }
       }
