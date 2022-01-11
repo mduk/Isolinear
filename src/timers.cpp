@@ -129,6 +129,7 @@ int main(int argc, char* argv[])
 {
   namespace geometry = isolinear::geometry;
   namespace pointer = isolinear::pointer;
+  namespace display = isolinear::display;
 
 
   isolinear::init();
@@ -136,12 +137,10 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
 
+  geometry::vector display_position{ display.x, display.y };
   geometry::vector display_size{ display.w, display.h };
 
-  isolinear::display::window window(
-      geometry::Position2D{ display },
-      display_size
-    );
+  display::window window(display_position, display_size);
 
   isolinear::grid grid(
       geometry::Region2D(0, 0, display_size.x, display_size.y),
