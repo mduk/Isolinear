@@ -43,23 +43,11 @@ int main(int argc, char* argv[])
 
 
   isolinear::init();
-
-  mpdxx::client mpdc(isolinear::io_context, "localhost", "6600");
-
-  miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
-    cout << "Status:\n";
-    cout << status << "\n";
-  });
-
   auto work_guard = asio::make_work_guard(isolinear::io_context);
   auto display = isolinear::display::detect_displays().back();
-
   geometry::vector display_size{ display.w, display.h };
-
-  isolinear::display::window window(
-      isolinear::geometry::Position2D{ display },
-      display_size
-    );
+  geometry::vector display_position{ display.x, display.y };
+  isolinear::display::window window(display_position, display_size);
 
   isolinear::grid grid(
       isolinear::geometry::Region2D(0, 0, display_size.x, display_size.y),
@@ -67,6 +55,14 @@ int main(int argc, char* argv[])
       geometry::vector(10,10),
       geometry::vector(25,28)
     );
+
+
+  mpdxx::client mpdc(isolinear::io_context, "localhost", "6600");
+
+  miso::connect(mpdc.signal_status, [&mpdc](mpdxx::status status){
+    cout << "Status:\n";
+    cout << status << "\n";
+  });
 
   isompd::frame mpdframe(grid, window, mpdc);
   window.Add(&mpdframe);

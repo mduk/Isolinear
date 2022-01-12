@@ -951,4 +951,446 @@ namespace isolinear::ui {
       }
   };
 
+
+  class elbo : public drawable {
+
+    protected:
+      display::window& window;
+      isolinear::grid& grid;
+
+      int reach_weight{30};
+      geometry::vector sweep_cells{4,2};
+      geometry::vector gutter{10,10};
+      std::string header_string{""};
+      isolinear::compass header_alignment = isolinear::compass::centre;
+      std::list<isolinear::ui::button> buttons{};
+
+    public:
+      elbo(
+          display::window& w,
+          isolinear::grid& g,
+          std::string h,
+          compass ha
+        ) :
+          window{w},
+          grid{g},
+          header_string{h},
+          header_alignment{ha}
+      {};
+
+      virtual Region2D ContainerRegion() const = 0;
+      virtual Region2D VerticalRegion() const = 0;
+      virtual Region2D SweepRegion() const = 0;
+      virtual Region2D SweepOuterRadiusRegion() const = 0;
+      virtual Region2D SweepInnerCornerRegion() const = 0;
+      virtual Region2D SweepInnerRadiusRegion() const = 0;
+      virtual Region2D HorizontalRegion() const = 0;
+      virtual Region2D ButtonRegion(int) const = 0;
+
+      virtual Region2D ReachRegion() const = 0;
+      virtual Region2D HeaderRegion() const = 0;
+
+      virtual int SweepOuterRadius() const {
+        return std::min(
+            SweepRegion().W() / 2,
+            VerticalRegion().W()
+          );
+      }
+
+      virtual int SweepInnerRadius() const {
+        return SweepRegion().H() / 2;
+      }
+
+      void OnPointerEvent(pointer::event event) override {
+        Position2D cursor = event.Position();
+
+        auto const container_region = ContainerRegion();
+        if (container_region.Encloses(cursor)) {
+          printf("Container: ");
+          container_region.Print();
+          return;
+        }
+
+        auto const vertical_region = VerticalRegion();
+        if (vertical_region.Encloses(cursor)) {
+          printf("Vertical: ");
+          vertical_region.Print();
+          return;
+        }
+
+        for (auto& button : buttons) {
+          if (button.bounds.Encloses(cursor)) {
+            button.OnPointerEvent(event);
+            return;
+          }
+        }
+
+        auto const sweep_region = SweepRegion();
+        if (sweep_region.Encloses(cursor)) {
+          printf("Sweep: ");
+          sweep_region.Print();
+          return;
+        }
+
+        auto const horizontal_region = HorizontalRegion();
+        if (horizontal_region.Encloses(cursor)) {
+          printf("Horizontal: ");
+          horizontal_region.Print();
+
+          auto const reach_region = ReachRegion();
+          if (reach_region.Encloses(cursor)) {
+            printf("Reach: ");
+            reach_region.Print();
+            return;
+          }
+
+          auto const header_region = HeaderRegion();
+          if (header_region.Encloses(cursor)) {
+            printf("Header: ");
+            header_region.Print();
+            return;
+          }
+
+          return;
+        }
+
+      };
+
+      void AddButton(std::string label) {
+        buttons.emplace_back(
+            window,
+            ButtonRegion(buttons.size() + 1),
+            label
+          );
+      }
+
+      virtual void Draw(SDL_Renderer* renderer) const override {
+        DrawSweep(renderer);
+        DrawReach(renderer);
+        DrawVertical(renderer);
+        DrawHeader(renderer);
+        for (auto const& button : buttons) {
+          button.Draw(renderer);
+        }
+      }
+
+      virtual void DrawSweep(SDL_Renderer* renderer) const {
+        Region2D sweep = SweepRegion();
+        Region2D outer_radius = SweepOuterRadiusRegion();
+        Region2D inner_corner = SweepInnerCornerRegion();
+        Region2D inner_radius = SweepInnerRadiusRegion();
+
+        boxColor(renderer,
+            sweep.NearX(), sweep.NearY(),
+            sweep.FarX(), sweep.FarY(),
+            Colours().frame
+          );
+
+        boxColor(renderer,
+            outer_radius.NearX(), outer_radius.NearY(),
+            outer_radius.FarX(), outer_radius.FarY(),
+            Colours().background
+          );
+
+        boxColor(renderer,
+            inner_corner.NearX(), inner_corner.NearY(),
+            inner_corner.FarX(), inner_corner.FarY(),
+            Colours().background
+          );
+
+        boxColor(renderer,
+            inner_radius.NearX(), inner_radius.NearY(),
+            inner_radius.FarX(), inner_radius.FarY(),
+            Colours().frame
+          );
+
+      };
+
+      virtual void DrawReach(SDL_Renderer* renderer) const {
+        Region2D reach = ReachRegion();
+        boxColor(renderer,
+            reach.NearX(), reach.NearY(),
+            reach.FarX(), reach.FarY(),
+            Colours().frame
+          );
+      }
+
+      virtual void DrawHeader(SDL_Renderer* renderer) const {
+        window.HeaderFont().RenderText(
+            renderer,
+            HeaderRegion(),
+            header_alignment,
+            header_string
+          );
+      }
+
+      virtual void DrawVertical(SDL_Renderer* renderer) const {
+        Region2D vertical = VerticalRegion();
+        boxColor(renderer,
+            vertical.NearX(), vertical.NearY(),
+            vertical.FarX(), vertical.FarY(),
+            Colours().frame
+          );
+      }
+  };
+
+
+  // // // // // // // // // // // // // // // // // // // //
+
+
+  class NorthWestElbo : public elbo {
+
+    public:
+      NorthWestElbo(display::window& w, isolinear::grid& g, std::string h)
+        : elbo(w, g, h, compass::northwest)
+      {}
+
+    protected:
+      Region2D SweepRegion() const override {
+        return grid.CalculateGridRegion(
+          1,1,
+          sweep_cells.x, sweep_cells.y
+        );
+      }
+
+      Region2D SweepOuterRadiusRegion() const override {
+        Region2D sweep = SweepRegion();
+
+        return Region2D{
+            sweep.Origin(),
+            geometry::vector{SweepOuterRadius()}
+          };
+      }
+
+      Region2D SweepInnerCornerRegion() const override {
+        Region2D sweep = SweepRegion();
+
+        return sweep.Align(
+            compass::southeast,
+            geometry::vector{
+                sweep.FarX() - VerticalRegion().FarX(),
+                HeaderRegion().H() + gutter.y
+              }
+          );
+      }
+
+      Region2D SweepInnerRadiusRegion() const override {
+        return SweepInnerCornerRegion().Align(
+            compass::northwest,
+            geometry::vector{SweepInnerRadius()}
+          );
+      }
+
+      Region2D HorizontalRegion() const override {
+        return grid.CalculateGridRegion(
+          sweep_cells.x + 1, 1,
+          grid.MaxColumns(), 2
+        );
+      }
+
+      Region2D ReachRegion() const override {
+        Region2D horizontal = HorizontalRegion();
+
+        return Region2D{
+            horizontal.Origin(),
+            geometry::vector{
+              horizontal.W(),
+              reach_weight
+            }
+          };
+      }
+
+      Region2D HeaderRegion() const override {
+        Region2D horizontal = HorizontalRegion();
+
+        return Region2D{
+            Position2D{
+              horizontal.Origin().x,
+              horizontal.Origin().y
+                + reach_weight
+                + gutter.y
+            },
+            geometry::vector{
+              horizontal.Size().x,
+              horizontal.Size().y
+                - reach_weight
+                - gutter.y
+            }
+          };
+      }
+
+      Region2D VerticalRegion() const override {
+        return grid.CalculateGridRegion(
+            1, sweep_cells.y + 1 + buttons.size(),
+            sweep_cells.x - 1, grid.MaxRows()
+          );
+      }
+
+      Region2D ContainerRegion() const override {
+        return grid.CalculateGridRegion(
+            sweep_cells.x, sweep_cells.y + 1,
+            grid.MaxColumns(), grid.MaxRows()
+          );
+      }
+
+      Region2D ButtonRegion(int i) const override {
+        return grid.CalculateGridRegion(
+            1, sweep_cells.y +  i,
+            sweep_cells.x - 1, sweep_cells.y  + i
+          );
+      }
+
+      void DrawSweep(SDL_Renderer* renderer) const {
+        Region2D outer_radius = SweepOuterRadiusRegion();
+        Region2D inner_radius = SweepInnerRadiusRegion();
+
+        elbo::DrawSweep(renderer);
+
+        filledPieColor(renderer,
+            outer_radius.FarX(), outer_radius.FarY(),
+            outer_radius.H(),
+            180, 270,
+            Colours().frame
+          );
+
+        filledPieColor(renderer,
+            inner_radius.FarX(), inner_radius.FarY(),
+            inner_radius.H(),
+            180, 270,
+            Colours().background
+          );
+      }
+
+  };
+
+
+
+  class SouthWestElbo : public elbo {
+
+    public:
+      SouthWestElbo(display::window& w, isolinear::grid& g, std::string h)
+        : elbo(w, g, h, compass::southwest)
+      {}
+
+    protected:
+      Region2D SweepRegion() const override {
+        return grid.CalculateGridRegion(
+          1, grid.MaxRows() - sweep_cells.y + 1,
+          sweep_cells.x, grid.MaxRows()
+        );
+      }
+
+      Region2D SweepOuterRadiusRegion() const override {
+        Region2D sweep = SweepRegion();
+
+        return sweep.Align(
+            compass::southwest,
+            geometry::vector{SweepOuterRadius()}
+          );
+      }
+
+      Region2D SweepInnerCornerRegion() const override {
+        Region2D sweep = SweepRegion();
+        Region2D vertical = VerticalRegion();
+        Region2D header = HeaderRegion();
+
+        return sweep.Align(
+            compass::northeast,
+            geometry::vector{
+              sweep.FarX() - vertical.FarX(),
+              header.H() + gutter.y
+            }
+          );
+      }
+
+      Region2D SweepInnerRadiusRegion() const override {
+        Region2D sweep = SweepRegion();
+
+        return SweepInnerCornerRegion().Align(
+            compass::southwest,
+            geometry::vector{SweepInnerRadius()}
+          );
+      }
+
+      Region2D HorizontalRegion() const override {
+        return grid.CalculateGridRegion(
+          sweep_cells.x + 1, grid.MaxRows() - sweep_cells.y + 1,
+          grid.MaxColumns(), grid.MaxRows()
+        );
+      }
+
+      Region2D ReachRegion() const override {
+        Region2D horizontal = HorizontalRegion();
+
+        return Region2D{
+            Position2D{
+              horizontal.X(),
+              horizontal.Y() + horizontal.H() - reach_weight
+            },
+            geometry::vector{
+              horizontal.W(),
+              reach_weight
+            }
+          };
+      }
+
+      Region2D HeaderRegion() const override {
+        Region2D horizontal = HorizontalRegion();
+
+        return Region2D{
+            Position2D{
+              horizontal.X(),
+              horizontal.Y()
+            },
+            geometry::vector{
+              horizontal.W(),
+              horizontal.H() - reach_weight - gutter.y
+            }
+          };
+      }
+
+      Region2D VerticalRegion() const override {
+        return grid.CalculateGridRegion(
+            1,1,
+            sweep_cells.x -1, grid.MaxRows() - sweep_cells.y - buttons.size()
+          );
+      }
+
+      Region2D ContainerRegion() const override {
+        return Region2D{ };
+      }
+
+      Region2D ButtonRegion(int i) const override {
+        return grid.CalculateGridRegion(
+            sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size(),
+            sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size()
+          );
+      };
+
+      void DrawSweep(SDL_Renderer* renderer) const override {
+        Region2D outer_radius = SweepOuterRadiusRegion();
+        Region2D inner_radius = SweepInnerRadiusRegion();
+
+        elbo::DrawSweep(renderer);
+
+        filledPieColor(renderer,
+            outer_radius.NorthEastX(),
+            outer_radius.NorthEastY(),
+            outer_radius.H(),
+            90, 180,
+            Colours().frame
+          );
+
+
+        filledPieColor(renderer,
+            inner_radius.NorthEastX(),
+            inner_radius.NorthEastY(),
+            inner_radius.H(),
+            90, 180,
+            Colours().background
+          );
+      }
+  };
+
+
 }
