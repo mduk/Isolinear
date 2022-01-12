@@ -39,6 +39,7 @@ bool drawdebug = false;
 int main(int argc, char* argv[])
 {
   namespace geometry = isolinear::geometry;
+  namespace pointer = isolinear::pointer;
 
 
   isolinear::init();
@@ -138,13 +139,13 @@ int main(int argc, char* argv[])
 /*
       case SDL_FINGERDOWN:
         printf("TAP\n");
-        window.OnPointerEvent(isolinear::pointer::event{ e.tfinger, window.size });
+        window.OnPointerEvent(pointer::event{ e.tfinger, window.size });
         break;
 */
 
       case SDL_MOUSEBUTTONDOWN:
         printf("CLICK\n");
-        window.OnPointerEvent(isolinear::pointer::event{ e.button });
+        window.OnPointerEvent(pointer::event{ e.button });
         break;
 
       case SDL_QUIT:
