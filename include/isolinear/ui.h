@@ -628,7 +628,7 @@ namespace isolinear::ui {
 
 
 
-  class Sweep : public drawable {
+  class sweep : public drawable {
     protected:
       display::window& window;
       isolinear::grid grid;
@@ -639,7 +639,7 @@ namespace isolinear::ui {
       compass opposite;
 
     public:
-      Sweep(display::window& w, isolinear::grid g, geometry::vector p, int oradius, int iradius, compass ali)
+      sweep(display::window& w, isolinear::grid g, geometry::vector p, int oradius, int iradius, compass ali)
         : window{w}, grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
       {
         switch (alignment) {
@@ -701,10 +701,10 @@ namespace isolinear::ui {
       }
   };
 
-  class NorthEastSweep : public Sweep {
+  class north_east_sweep : public sweep {
     public:
-      NorthEastSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
-        : Sweep{window, grid, ports, oradius, iradius, compass::northeast}
+      north_east_sweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
+        : sweep{window, grid, ports, oradius, iradius, compass::northeast}
       {}
 
       Region2D HorizontalPort() const override {
@@ -723,10 +723,10 @@ namespace isolinear::ui {
 
   };
 
-  class SouthEastSweep : public Sweep {
+  class south_east_sweep : public sweep {
     public:
-      SouthEastSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
-        : Sweep{window, grid, ports, oradius, iradius, compass::southeast}
+      south_east_sweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
+        : sweep{window, grid, ports, oradius, iradius, compass::southeast}
       {}
 
       Region2D HorizontalPort() const override {
@@ -745,10 +745,10 @@ namespace isolinear::ui {
 
   };
 
-  class SouthWestSweep : public Sweep {
+  class south_west_sweep : public sweep {
     public:
-      SouthWestSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
-        : Sweep{window, grid, ports, oradius, iradius, compass::southwest}
+      south_west_sweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
+        : sweep{window, grid, ports, oradius, iradius, compass::southwest}
       {}
 
       Region2D VerticalPort() const override {
@@ -767,10 +767,10 @@ namespace isolinear::ui {
 
   };
 
-  class NorthWestSweep : public Sweep {
+  class north_west_sweep : public sweep {
     public:
-      NorthWestSweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
-        : Sweep{window, grid, ports, oradius, iradius, compass::northwest}
+      north_west_sweep(display::window& window, isolinear::grid grid,  geometry::vector ports, int oradius, int iradius)
+        : sweep{window, grid, ports, oradius, iradius, compass::northwest}
       {}
 
       Region2D HorizontalPort() const override {

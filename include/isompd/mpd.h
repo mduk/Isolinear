@@ -21,8 +21,8 @@
 
 using std::cerr;
 using isolinear::CompassLayout;
-using isolinear::ui::NorthWestSweep;
-using isolinear::ui::SouthWestSweep;
+using isolinear::ui::north_west_sweep;
+using isolinear::ui::south_west_sweep;
 
 
 namespace display = isolinear::display;
@@ -515,8 +515,8 @@ namespace isompd {
       isolinear::ui::header_east_bar hdrFrame;
       vertical_button_bar barView;
       PlayerControlBar playerControlBar;
-      NorthWestSweep sweepNorthWest;
-      SouthWestSweep sweepSouthWest;
+      north_west_sweep sweepNorthWest;
+      south_west_sweep sweepSouthWest;
 
       std::map<const std::string, isolinear::View*> views;
       std::string activeView = V_QUEUE;
