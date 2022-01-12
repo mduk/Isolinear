@@ -12,7 +12,6 @@
 #include "miso.h"
 
 #include "elbo.h"
-#include "frame.h"
 #include "geometry.h"
 #include "grid.h"
 #include "pointerevent.h"
