@@ -29,10 +29,6 @@
 #include "display.h"
 
 
-
-using asio::ip::tcp;
-
-
 bool drawdebug = false;
 
 
