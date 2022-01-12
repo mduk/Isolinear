@@ -64,11 +64,9 @@ target_include_directories(Timers PUBLIC
 )
 
 add_executable(testregion src/testregion.cpp)
-target_include_directories(testregion PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear
-)
-target_link_libraries(testregion
-  ${CONAN_LIBS}
-  LibMiso
-  -lSDL2_gfx
-)
+target_include_directories(testregion PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
+target_link_libraries(testregion ${CONAN_LIBS} LibMiso -lSDL2_gfx)
+
+add_executable(testgrid src/testgrid.cpp)
+target_include_directories(testgrid PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
+target_link_libraries(testgrid ${CONAN_LIBS} LibMiso -lSDL2_gfx)
