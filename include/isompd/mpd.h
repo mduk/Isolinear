@@ -448,6 +448,7 @@ namespace isompd::queue {
 
 
 namespace isompd::browse {
+  namespace ui = isolinear::ui;
 
   class artist_row : public isolinear::ui::header_basic {
     public:
@@ -463,7 +464,7 @@ namespace isompd::browse {
 
       paginated_rows<mpdxx::artist, isompd::browse::artist_row> artist_pager;
 
-      horizontal_button_bar artist_pager_buttons;
+      ui::horizontal_button_bar artist_pager_buttons;
 
     public:
       view(isolinear::grid g, display::window& w, mpdxx::client& _mpdc)
@@ -493,9 +494,7 @@ namespace isompd::browse {
 }
 
 namespace isompd {
-
-  using isolinear::ui::vertical_button_bar;
-  using isolinear::ui::horizontal_button_bar;
+  namespace ui = isolinear::ui;
 
   class frame : public isolinear::ui::drawable {
     public:
@@ -512,11 +511,11 @@ namespace isompd {
 
       CompassLayout layout;
 
-      isolinear::ui::header_east_bar hdrFrame;
-      vertical_button_bar barView;
+      ui::header_east_bar hdrFrame;
+      ui::vertical_button_bar barView;
       PlayerControlBar playerControlBar;
-      north_west_sweep sweepNorthWest;
-      south_west_sweep sweepSouthWest;
+      ui::north_west_sweep sweepNorthWest;
+      ui::south_west_sweep sweepSouthWest;
 
       std::map<const std::string, isolinear::View*> views;
       std::string activeView = V_QUEUE;
