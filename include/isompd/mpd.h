@@ -20,9 +20,6 @@
 
 
 using std::cerr;
-using isolinear::CompassLayout;
-using isolinear::ui::north_west_sweep;
-using isolinear::ui::south_west_sweep;
 
 
 namespace display = isolinear::display;
@@ -46,15 +43,16 @@ namespace isompd {
 }
 
 namespace isompd::now_playing {
+  namespace ui = isolinear::ui;
 
   class view : public isompd::view {
     protected:
       bool hide = false;
-      isolinear::ui::header_pair_bar title;
-      isolinear::ui::header_pair_bar album;
-      isolinear::ui::header_pair_bar artist;
-      isolinear::ui::header_pair_bar duration;
-      isolinear::ui::horizontal_progress_bar progress;
+      ui::header_pair_bar title;
+      ui::header_pair_bar album;
+      ui::header_pair_bar artist;
+      ui::header_pair_bar duration;
+      ui::horizontal_progress_bar progress;
 
     public:
       view(isolinear::grid g, display::window& w, mpdxx::client& _mpdc)
@@ -209,14 +207,15 @@ class paginated_rows : public isolinear::ui::drawable {
 
 
 namespace isompd::player {
+  namespace ui = isolinear::ui;
 
-  class queuerow : public isolinear::ui::label {
+  class queuerow : public ui::label {
     protected:
       mpdxx::song song;
 
     public:
       queuerow(isolinear::grid g, display::window& w, mpdxx::song s)
-        : isolinear::ui::label(w, g, s.Header())
+        : ui::label(w, g, s.Header())
         , song(s)
       {
       }
@@ -224,26 +223,26 @@ namespace isompd::player {
 
   class view : public isompd::view {
     protected:
-      isolinear::ui::header_basic hdrQueue;
+      ui::header_basic hdrQueue;
       paginated_rows<mpdxx::song, isompd::player::queuerow> queue_pager;
 
       isolinear::grid gc;
 
-      isolinear::ui::button btnPlay;
-      isolinear::ui::button btnPause;
-      isolinear::ui::button btnStop;
+      ui::button btnPlay;
+      ui::button btnPause;
+      ui::button btnStop;
 
-      isolinear::ui::horizontal_rule hrule1;
+      ui::horizontal_rule hrule1;
 
-      isolinear::ui::button btnPrevious;
-      isolinear::ui::button btnNext;
+      ui::button btnPrevious;
+      ui::button btnNext;
 
-      isolinear::ui::horizontal_rule hrule2;
+      ui::horizontal_rule hrule2;
 
-      isolinear::ui::button btnConsume;
-      isolinear::ui::button btnRandom;
-      isolinear::ui::button btnSingle;
-      isolinear::ui::button btnRepeat;
+      ui::button btnConsume;
+      ui::button btnRandom;
+      ui::button btnSingle;
+      ui::button btnRepeat;
 
       int queue_length = 0;
 
@@ -364,15 +363,16 @@ namespace isompd::player {
 
 
 namespace isompd::queue {
+  namespace ui = isolinear::ui;
 
-  class row : public isolinear::ui::header_east_bar {
+  class row : public ui::header_east_bar {
     protected:
       mpdxx::song song;
-      isolinear::ui::button& playbtn;
+      ui::button& playbtn;
 
     public:
       row(isolinear::grid g, display::window& w, mpdxx::song s)
-        : isolinear::ui::header_east_bar(g, w, s.Header())
+        : ui::header_east_bar(g, w, s.Header())
         , song(s)
         , playbtn(AddButton("PLAY"))
       {
@@ -385,9 +385,9 @@ namespace isompd::queue {
   class view : public isompd::view {
     protected:
       paginated_rows<mpdxx::song, isompd::queue::row> queue_pager;
-      isolinear::ui::header_east_bar queue_pager_buttons;
-      isolinear::ui::button& next_page_button;
-      isolinear::ui::button& previous_page_button;
+      ui::header_east_bar queue_pager_buttons;
+      ui::button& next_page_button;
+      ui::button& previous_page_button;
 
     public:
       view(isolinear::grid g, display::window& w, mpdxx::client& mpdc)
@@ -450,10 +450,10 @@ namespace isompd::queue {
 namespace isompd::browse {
   namespace ui = isolinear::ui;
 
-  class artist_row : public isolinear::ui::header_basic {
+  class artist_row : public ui::header_basic {
     public:
       artist_row(isolinear::grid g, display::window& w, mpdxx::artist e)
-        : isolinear::ui::header_basic(g, w, isolinear::compass::west, e.Header())
+        : ui::header_basic(g, w, isolinear::compass::west, e.Header())
       {}
   };
 
@@ -496,7 +496,8 @@ namespace isompd::browse {
 namespace isompd {
   namespace ui = isolinear::ui;
 
-  class frame : public isolinear::ui::drawable {
+
+  class frame : public ui::drawable {
     public:
       const std::string V_NOWPLAYING = "NOW PLAYING";
       const std::string V_QUEUE = "QUEUE";
@@ -509,7 +510,7 @@ namespace isompd {
     protected:
       mpdxx::client& mpdc;
 
-      CompassLayout layout;
+      isolinear::CompassLayout layout;
 
       ui::header_east_bar hdrFrame;
       ui::vertical_button_bar barView;
@@ -553,12 +554,12 @@ namespace isompd {
         RegisterView(&viewPlayer);
 
         auto switch_view = [this]() {
-          auto button = miso::sender<isolinear::ui::button>();
+          auto button = miso::sender<ui::button>();
           SwitchView(button->Label());
         };
 
         for (auto const& [view_name, view_ptr] : views) {
-          isolinear::ui::button& view_btn = barView.AddButton(view_name);
+          ui::button& view_btn = barView.AddButton(view_name);
           miso::connect(view_btn.signal_press, switch_view);
         }
 
