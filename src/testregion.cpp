@@ -15,7 +15,7 @@
 #include "miso.h"
 
 #include "init.h"
-#include "colours.h"
+#include "theme.h"
 #include "drawable.h"
 #include "geometry.h"
 #include "pointerevent.h"

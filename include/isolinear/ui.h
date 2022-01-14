@@ -13,7 +13,7 @@
 
 #include <miso.h>
 
-#include "colours.h"
+#include "theme.h"
 #include "display.h"
 #include "drawable.h"
 #include "geometry.h"
@@ -114,7 +114,7 @@ namespace isolinear::ui {
       }
 
       void Draw(SDL_Renderer* renderer) const override {
-        Colour drawcolour = enabled == true
+        theme::colour drawcolour = enabled == true
                           ? active == true
                             ? Colours().active
                             : Colours().light_alternate
@@ -157,11 +157,11 @@ namespace isolinear::ui {
       virtual Region2D ButtonRegion(int i) const = 0;
       virtual Region2D BarRegion() const = 0;
 
-      virtual ColourScheme Colours() const {
+      virtual theme::colour_scheme Colours() const {
         return drawable::Colours();
       }
 
-      virtual void Colours(ColourScheme cs) {
+      virtual void Colours(theme::colour_scheme cs) {
         for (auto& [label, button] : buttons) {
           button.Colours(cs);
         }
@@ -309,11 +309,11 @@ namespace isolinear::ui {
       void Label(std::string newlabel) {
           text = newlabel;
       }
-      virtual ColourScheme Colours() const {
+      virtual theme::colour_scheme Colours() const {
         return drawable::Colours();
       }
 
-      virtual void Colours(ColourScheme cs) {
+      virtual void Colours(theme::colour_scheme cs) {
         drawable::Colours(cs);
       }
 
@@ -362,11 +362,11 @@ namespace isolinear::ui {
       void Label(std::string newlabel) {
           text = newlabel;
       }
-      virtual ColourScheme Colours() const {
+      virtual theme::colour_scheme Colours() const {
         return drawable::Colours();
       }
 
-      virtual void Colours(ColourScheme cs) {
+      virtual void Colours(theme::colour_scheme cs) {
         for (auto& [label, button] : buttons) {
           button.Colours(cs);
         }
@@ -487,11 +487,11 @@ namespace isolinear::ui {
           right = newlabel;
       }
 
-      virtual ColourScheme Colours() const {
+      virtual theme::colour_scheme Colours() const {
         return drawable::Colours();
       }
 
-      virtual void Colours(ColourScheme cs) {
+      virtual void Colours(theme::colour_scheme cs) {
         drawable::Colours(cs);
       }
 
@@ -797,7 +797,7 @@ namespace isolinear::ui {
       bool draw_stripes = true;
       bool draw_tail = true;
 
-      Colour bar_colour;
+      theme::colour bar_colour;
       Region2D bar_region;
       geometry::vector segment_size;
       unsigned remainder_px = 0;
@@ -927,7 +927,7 @@ namespace isolinear::ui {
           }
         }
 
-        Colour bar_colour = Colours().active;
+        theme::colour bar_colour = Colours().active;
 
         Region2D filled_region{
             Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },

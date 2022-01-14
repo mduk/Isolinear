@@ -7,7 +7,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "compass.h"
-#include "colours.h"
+#include "theme.h"
 
 using isolinear::compass;
 
@@ -250,15 +250,15 @@ namespace isolinear::geometry {
             && Encloses(r.Far());
       }
 
-      virtual void Fill(SDL_Renderer* renderer, Colour colour) const {
+      virtual void Fill(SDL_Renderer* renderer, theme::colour colour) const {
         boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
       }
 
-      virtual void RoundedFill(SDL_Renderer* renderer, int radius, Colour colour) const {
+      virtual void RoundedFill(SDL_Renderer* renderer, int radius, theme::colour colour) const {
         roundedBoxColor(renderer, NearX(), NearY(), FarX(), FarY(), radius, colour);
       }
 
-      virtual void Ellipse(SDL_Renderer* renderer, Colour colour) const {
+      virtual void Ellipse(SDL_Renderer* renderer, theme::colour colour) const {
         filledEllipseColor(renderer,
             CentreX(), CentreY(),
             W()/2, H()/2,
@@ -266,13 +266,13 @@ namespace isolinear::geometry {
           );
       }
 
-      virtual void Stroke(SDL_Renderer* renderer, Colour colour) const {
+      virtual void Stroke(SDL_Renderer* renderer, theme::colour colour) const {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         boxColor(renderer, NearX()  , NearY()  , FarX()  , FarY()  , colour);
         boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
       }
 
-      virtual void QuadrantArc(SDL_Renderer* renderer, compass orientation, Colour colour) const {
+      virtual void QuadrantArc(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
         switch (orientation) {
           case compass::northeast: filledPieColor(renderer, SouthWestX(), SouthWestY(), W(), 270,   0, colour); break;
           case compass::southeast: filledPieColor(renderer, NorthWestX(), NorthWestY(), W(),   0,  90, colour); break;
@@ -281,7 +281,7 @@ namespace isolinear::geometry {
         }
       }
 
-      virtual void Bullnose(SDL_Renderer* renderer, compass orientation, Colour colour) const {
+      virtual void Bullnose(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
         switch (orientation) {
           case compass::north:
             Align(compass::north, vector{W()}).Ellipse(renderer, colour);

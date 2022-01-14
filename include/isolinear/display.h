@@ -11,7 +11,7 @@
 #include "pointerevent.h"
 #include "drawable.h"
 #include "pointerevent.h"
-#include "colours.h"
+#include "theme.h"
 #include "geometry.h"
 #include "text.h"
 
@@ -38,10 +38,10 @@ namespace isolinear::display {
         SDL_DestroyWindow(sdl_window);
       }
 
-      ColourScheme Colours() {
+      theme::colour_scheme Colours() {
         return colours;
       }
-      void Colours(ColourScheme cs) {
+      void Colours(theme::colour_scheme cs) {
         colours = cs;
         for (auto* drawable : drawables) {
           drawable->Colours(cs);
@@ -96,7 +96,7 @@ namespace isolinear::display {
       std::string title{"Isolinear"};
       std::list<ui::drawable*> drawables;
 
-      ColourScheme colours;
+      theme::colour_scheme colours;
 
       const Font header_font{ FONT, 96, 0xff0099ff };
       const Font button_font{ FONT, 44, 0xff000000 };

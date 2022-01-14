@@ -16,13 +16,13 @@ namespace isolinear {
   class RenderedText {
     protected:
       TTF_Font* sdl_font;
-      Colour colour;
+      theme::colour colour;
       std::string text;
 
       SDL_Surface* sdl_surface;
 
     public:
-      RenderedText(TTF_Font* f, Colour c, std::string t)
+      RenderedText(TTF_Font* f, theme::colour c, std::string t)
         : sdl_font{f}, colour{c}, text{t}
       {
         uint8_t r = colour,
@@ -59,7 +59,7 @@ namespace isolinear {
 
   class Font {
     public:
-      Font(std::string p, int s, Colour c)
+      Font(std::string p, int s, theme::colour c)
           : path{p}, size_pt{s}, colour{c}
       {
         sdl_font = TTF_OpenFont(path.c_str(), size_pt);
@@ -112,14 +112,14 @@ namespace isolinear {
         SDL_DestroyTexture(texture);
       };
 
-      RenderedText RenderText(Colour colour, std::string text) const {
+      RenderedText RenderText(theme::colour colour, std::string text) const {
         return RenderedText{sdl_font, colour, text};
       }
 
     protected:
       std::string path;
       int size_pt;
-      Colour colour;
+      theme::colour colour;
       TTF_Font* sdl_font;
   };
 

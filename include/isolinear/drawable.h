@@ -6,7 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "colours.h"
+#include "theme.h"
 #include "pointerevent.h"
 #include "grid.h"
 
@@ -22,7 +22,7 @@ namespace isolinear::ui {
   class drawable {
     protected:
       Region2D bounds;
-      ColourScheme colours;
+      theme::colour_scheme colours;
       std::list<drawable*> children;
 
     public:
@@ -55,11 +55,11 @@ namespace isolinear::ui {
         }
       }
 
-      virtual ColourScheme Colours() const {
+      virtual theme::colour_scheme Colours() const {
         return colours;
       }
 
-      virtual void Colours(ColourScheme cs) {
+      virtual void Colours(theme::colour_scheme cs) {
         colours = cs;
         for (auto& child : children) {
           child->Colours(cs);
@@ -99,7 +99,7 @@ namespace isolinear::ui {
         }
       }
 
-      virtual void Colours(ColourScheme cs) {
+      virtual void Colours(theme::colour_scheme cs) {
         drawable::Colours(cs);
         for (auto& elem : *this) {
           elem.Colours(cs);

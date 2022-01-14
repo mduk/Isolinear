@@ -596,7 +596,7 @@ namespace isompd {
         views.at(activeView)->Draw(renderer);
       }
 
-      virtual void Colours(isolinear::ColourScheme cs) {
+      virtual void Colours(isolinear::theme::colour_scheme cs) {
         drawable::Colours(cs);
         for (auto const& [view_name, view_ptr] : views) {
           view_ptr->Colours(cs);

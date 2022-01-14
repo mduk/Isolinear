@@ -18,7 +18,7 @@
 #include "miso.h"
 
 #include "init.h"
-#include "colours.h"
+#include "theme.h"
 #include "compasslayout.h"
 #include "drawable.h"
 #include "geometry.h"
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
     if (to_view == mpdframe.V_BROWSE    ) { mpdc.RequestArtistList();  }
   });
 
-  window.Colours(isolinear::nightgazer_colours);
+  window.Colours(isolinear::theme::nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -100,11 +100,11 @@ int main(int argc, char* argv[])
             case 'g': drawdebug = !drawdebug; break;
             case 's': mpdc.RequestStatus(); break;
 
-            case 'd': window.Colours(isolinear::debug_colours       ); break;
-            case 'r': window.Colours(isolinear::red_alert_colours   ); break;
-            case 'y': window.Colours(isolinear::yellow_alert_colours); break;
-            case 'b': window.Colours(isolinear::blue_alert_colours  ); break;
-            case 'n': window.Colours(isolinear::nightgazer_colours  ); break;
+            case 'd': window.Colours(isolinear::theme::debug_colours       ); break;
+            case 'r': window.Colours(isolinear::theme::red_alert_colours   ); break;
+            case 'y': window.Colours(isolinear::theme::yellow_alert_colours); break;
+            case 'b': window.Colours(isolinear::theme::blue_alert_colours  ); break;
+            case 'n': window.Colours(isolinear::theme::nightgazer_colours  ); break;
 
             case 'a': mpdframe.SwitchView(mpdframe.V_BROWSE    ); break;
             case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;

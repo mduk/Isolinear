@@ -12,7 +12,7 @@
 #include "drawable.h"
 #include "ui.h"
 #include "grid.h"
-#include "colours.h"
+#include "theme.h"
 #include "geometry.h"
 #include "display.h"
 

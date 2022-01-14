@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
     );
 
 
-  window.Colours(isolinear::nightgazer_colours);
+  window.Colours(isolinear::theme::nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -73,19 +73,19 @@ int main(int argc, char* argv[])
             SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
             break;
           case 'd':
-            window.Colours(isolinear::debug_colours);
+            window.Colours(isolinear::theme::debug_colours);
             break;
           case 'r':
-            window.Colours(isolinear::red_alert_colours);
+            window.Colours(isolinear::theme::red_alert_colours);
             break;
           case 'y':
-            window.Colours(isolinear::yellow_alert_colours);
+            window.Colours(isolinear::theme::yellow_alert_colours);
             break;
           case 'b':
-            window.Colours(isolinear::blue_alert_colours);
+            window.Colours(isolinear::theme::blue_alert_colours);
             break;
           case 'n':
-            window.Colours(isolinear::nightgazer_colours);
+            window.Colours(isolinear::theme::nightgazer_colours);
             break;
           case 'g':
             drawdebug = !drawdebug;
