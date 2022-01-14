@@ -7,9 +7,6 @@
 
 namespace isolinear::window {
 
-  namespace display = isolinear::display;
-  namespace geometry = isolinear::geometry;
-  namespace window = isolinear::window;
 
 
   using isolinear::compass;

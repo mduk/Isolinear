@@ -18,7 +18,6 @@ extern bool drawdebug;
 
 namespace isolinear::layout {
 
-
   class compass : public ui::drawable {
     protected:
       isolinear::grid grid;

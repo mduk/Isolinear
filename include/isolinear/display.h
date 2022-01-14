@@ -19,10 +19,6 @@
 
 
 namespace isolinear::display {
-  namespace display = isolinear::display;
-  namespace pointer = isolinear::pointer;
-  namespace geometry = isolinear::geometry;
-  namespace ui = isolinear::ui;
 
 
   class window {

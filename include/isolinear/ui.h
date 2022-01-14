@@ -26,10 +26,6 @@ extern bool drawdebug;
 
 
 namespace isolinear::ui {
-  namespace ui = isolinear::ui;
-  namespace display = isolinear::display;
-  namespace pointer = isolinear::pointer;
-  namespace geometry = isolinear::geometry;
 
 
   using isolinear::compass;

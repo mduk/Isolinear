@@ -13,8 +13,6 @@
 
 
 namespace isolinear::ui {
-  namespace ui = isolinear::ui;
-  namespace pointer = isolinear::pointer;
 
 
   using isolinear::geometry::Position2D;

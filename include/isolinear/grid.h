@@ -10,7 +10,6 @@
 
 
 namespace isolinear {
-  namespace geometry = isolinear::geometry;
 
 
   class grid {

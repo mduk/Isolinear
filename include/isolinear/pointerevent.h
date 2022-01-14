@@ -5,8 +5,6 @@
 
 
 namespace isolinear::pointer {
-  namespace geometry = isolinear::geometry;
-  namespace pointer = isolinear::pointer;
 
   using isolinear::geometry::Position2D;
 
