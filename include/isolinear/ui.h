@@ -1138,10 +1138,10 @@ namespace isolinear::ui {
   // // // // // // // // // // // // // // // // // // // //
 
 
-  class NorthWestElbo : public elbo {
+  class northwest_elbo : public elbo {
 
     public:
-      NorthWestElbo(display::window& w, isolinear::grid& g, std::string h)
+      northwest_elbo(display::window& w, isolinear::grid& g, std::string h)
         : elbo(w, g, h, compass::northwest)
       {}
 
@@ -1265,10 +1265,10 @@ namespace isolinear::ui {
 
 
 
-  class SouthWestElbo : public elbo {
+  class southwest_elbo : public elbo {
 
     public:
-      SouthWestElbo(display::window& w, isolinear::grid& g, std::string h)
+      southwest_elbo(display::window& w, isolinear::grid& g, std::string h)
         : elbo(w, g, h, compass::southwest)
       {}
 
