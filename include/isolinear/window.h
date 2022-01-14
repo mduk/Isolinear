@@ -67,6 +67,14 @@ namespace isolinear::window {
         : region(w, window::position{w, a}, window::position{w, b})
       {}
 
+      region(
+          display::window& w,
+          window::position p,
+          geometry::vector s
+        )
+        : region(w, p, window::position{w, p.Add(s) })
+      {}
+
       region(display::window& w) : region(w, {w, 0, 0}, {w, 0, 0}) {}
 
     public: // window::position factories

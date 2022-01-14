@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
       isolinear::window::position boundsfar{ window, cell_size.x*i, cell_size.y*j };
       isolinear::window::position boundsnear{ window, boundsfar.Subtract(cell_size) };
 
-      squares.emplace_back(window, boundsnear, boundsfar);
+      squares.emplace_back(window, boundsnear, cell_size);
       auto& bg = squares.back();
       bg.fill_colour(0xff990000);
 
