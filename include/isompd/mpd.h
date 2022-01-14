@@ -27,14 +27,14 @@ namespace display = isolinear::display;
 
 namespace isompd {
 
-  class view : public isolinear::View {
+  class view : public isolinear::view {
     protected:
       mpdxx::client& mpdc;
       display::window& window;
 
     public:
       view(std::string t, isolinear::grid g, display::window& w, mpdxx::client& _mpdc)
-        : View(t, g)
+        : isolinear::view(t, g)
         , window{w}
         , mpdc{_mpdc}
       {};
@@ -518,7 +518,7 @@ namespace isompd {
       ui::north_west_sweep sweepNorthWest;
       ui::south_west_sweep sweepSouthWest;
 
-      std::map<const std::string, isolinear::View*> views;
+      std::map<const std::string, isolinear::view*> views;
       std::string activeView = V_QUEUE;
 
       isompd::browse::view viewBrowse;
@@ -603,9 +603,9 @@ namespace isompd {
         }
       }
 
-      void RegisterView(isolinear::View* view) {
+      void RegisterView(isolinear::view* view) {
         const std::string view_name = view->Name();
-        views.insert(std::pair<const std::string, isolinear::View*>(view_name, view));
+        views.insert(std::pair<const std::string, isolinear::view*>(view_name, view));
       }
   };
 

@@ -11,13 +11,13 @@
 
 namespace isolinear {
 
-  class View : public ui::drawable {
+  class view : public ui::drawable {
     protected:
       std::string title;
       isolinear::grid grid;
 
     public:
-      View(std::string t, isolinear::grid g) : title{t}, grid{g} {}
+      view(std::string t, isolinear::grid g) : title{t}, grid{g} {}
 
       std::string Name() const {
         return title;
