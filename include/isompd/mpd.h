@@ -510,7 +510,7 @@ namespace isompd {
     protected:
       mpdxx::client& mpdc;
 
-      isolinear::CompassLayout layout;
+      isolinear::layout::compass layout;
 
       ui::header_east_bar hdrFrame;
       ui::vertical_button_bar barView;
