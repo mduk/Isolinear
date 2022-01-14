@@ -7,13 +7,13 @@
 #include "geometry.h"
 
 
-namespace isolinear {
+namespace isolinear::text {
 
   using isolinear::geometry::Region2D;
   using isolinear::compass;
 
 
-  class RenderedText {
+  class rendered_text {
     protected:
       TTF_Font* sdl_font;
       theme::colour colour;
@@ -22,7 +22,7 @@ namespace isolinear {
       SDL_Surface* sdl_surface;
 
     public:
-      RenderedText(TTF_Font* f, theme::colour c, std::string t)
+      rendered_text(TTF_Font* f, theme::colour c, std::string t)
         : sdl_font{f}, colour{c}, text{t}
       {
         uint8_t r = colour,
@@ -32,7 +32,7 @@ namespace isolinear {
         sdl_surface = TTF_RenderUTF8_Blended(sdl_font, text.c_str(), colour);
       };
 
-      ~RenderedText() {
+      ~rendered_text() {
         SDL_FreeSurface(sdl_surface);
       }
 
@@ -57,9 +57,9 @@ namespace isolinear {
       }
   };
 
-  class Font {
+  class font {
     public:
-      Font(std::string p, int s, theme::colour c)
+      font(std::string p, int s, theme::colour c)
           : path{p}, size_pt{s}, colour{c}
       {
         sdl_font = TTF_OpenFont(path.c_str(), size_pt);
@@ -72,7 +72,7 @@ namespace isolinear {
         }
       };
 
-      ~Font() {
+      ~font() {
         TTF_CloseFont(sdl_font);
       }
 
@@ -112,8 +112,8 @@ namespace isolinear {
         SDL_DestroyTexture(texture);
       };
 
-      RenderedText RenderText(theme::colour colour, std::string text) const {
-        return RenderedText{sdl_font, colour, text};
+      rendered_text RenderText(theme::colour colour, std::string text) const {
+        return rendered_text{sdl_font, colour, text};
       }
 
     protected:

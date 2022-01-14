@@ -329,7 +329,7 @@ namespace isolinear::ui {
 
         std::string padded = std::string(" ") + text + " ";
 
-        RenderedText headertext = window.HeaderFont().RenderText(Colours().active, padded);
+        text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
         headertext.Draw(renderer, alignment, grid.bounds);
       }
   };
@@ -434,7 +434,7 @@ namespace isolinear::ui {
 
         if (text.length() > 0) {
           std::string padded = std::string(" ") + text + " ";
-          RenderedText headertext = window.HeaderFont().RenderText(Colours().active, padded);
+          text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
           Region2D headerregion = centre_bar.Align(compass::east, headertext.Size());
 
           int near = grid.PositionColumnIndex(headerregion.Near());
@@ -519,10 +519,10 @@ namespace isolinear::ui {
         std::string paddedright = " " + right + " ";
 
         auto const& headerfont = window.HeaderFont();
-        RenderedText  lefttext = headerfont.RenderText(
+        text::rendered_text  lefttext = headerfont.RenderText(
             Colours().active, paddedleft
           );
-        RenderedText righttext = headerfont.RenderText(
+        text::rendered_text righttext = headerfont.RenderText(
             Colours().active, paddedright
           );
 

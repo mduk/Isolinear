@@ -52,15 +52,15 @@ namespace isolinear::display {
         SDL_SetWindowTitle(sdl_window, newtitle.c_str());
       }
 
-      Font const& HeaderFont() const {
+      text::font const& HeaderFont() const {
         return header_font;
       }
 
-      Font const& ButtonFont() const {
+      text::font const& ButtonFont() const {
         return button_font;
       }
 
-      Font const& LabelFont() const {
+      text::font const& LabelFont() const {
         return label_font;
       }
 
@@ -82,7 +82,7 @@ namespace isolinear::display {
 
       void OnPointerEvent(pointer::event event) {
         for (auto* drawable : drawables) {
-          Region2D bounds = drawable->Bounds();
+          geometry::Region2D bounds = drawable->Bounds();
           if (bounds.Encloses(event.Position())) {
             drawable->OnPointerEvent(event);
             continue;
@@ -98,9 +98,9 @@ namespace isolinear::display {
 
       theme::colour_scheme colours;
 
-      const Font header_font{ FONT, 96, 0xff0099ff };
-      const Font button_font{ FONT, 44, 0xff000000 };
-      const Font  label_font{ FONT, 44, 0xff0099ff };
+      const text::font header_font{ FONT, 96, 0xff0099ff };
+      const text::font button_font{ FONT, 44, 0xff000000 };
+      const text::font  label_font{ FONT, 44, 0xff0099ff };
 
       void InitSdl() {
         sdl_window = SDL_CreateWindow(
