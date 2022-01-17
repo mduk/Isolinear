@@ -22,15 +22,27 @@ namespace isolinear::display {
 
 
   class window {
-    public:
+
+    public: // Geometry
       geometry::vector position;
       geometry::vector size;
-      SDL_Renderer* sdl_renderer;
 
+    public: // SDL
+      SDL_Renderer* sdl_renderer;
+    protected:
+      SDL_Window* sdl_window;
+
+    protected: // Fonts
+      const text::font header_font{ FONT, 96, 0xff0099ff };
+      const text::font button_font{ FONT, 44, 0xff000000 };
+      const text::font  label_font{ FONT, 44, 0xff0099ff };
+
+
+    public: // Constructors & Destructors
       window(geometry::vector p, geometry::vector s)
         : position{p}, size{s}
       {
-        InitSdl();
+        init_sdl();
       };
 
       ~window() {
@@ -38,39 +50,15 @@ namespace isolinear::display {
         SDL_DestroyWindow(sdl_window);
       }
 
+    public: // ui::drawable interface
       theme::colour_scheme Colours() {
         return colours;
       }
+
       void Colours(theme::colour_scheme cs) {
         colours = cs;
         for (auto* drawable : drawables) {
           drawable->Colours(cs);
-        }
-      }
-
-      void Title(std::string newtitle) {
-        SDL_SetWindowTitle(sdl_window, newtitle.c_str());
-      }
-
-      text::font const& HeaderFont() const {
-        return header_font;
-      }
-
-      text::font const& ButtonFont() const {
-        return button_font;
-      }
-
-      text::font const& LabelFont() const {
-        return label_font;
-      }
-
-      void Add(ui::drawable* drawable) {
-        drawables.push_back(drawable);
-      }
-
-      void Update() {
-        for (auto* drawable : drawables) {
-          drawable->Update();
         }
       }
 
@@ -90,19 +78,33 @@ namespace isolinear::display {
         }
       }
 
-    protected:
-      SDL_Window* sdl_window;
+      void Update() {
+        for (auto* drawable : drawables) {
+          drawable->Update();
+        }
+      }
 
+    public: // Font accessors
+      text::font const& HeaderFont() const { return header_font; }
+      text::font const& ButtonFont() const { return button_font; }
+      text::font const& LabelFont()  const { return label_font; }
+
+    protected: // Protected window properties
       std::string title{"Isolinear"};
       std::list<ui::drawable*> drawables;
-
       theme::colour_scheme colours;
 
-      const text::font header_font{ FONT, 96, 0xff0099ff };
-      const text::font button_font{ FONT, 44, 0xff000000 };
-      const text::font  label_font{ FONT, 44, 0xff0099ff };
+    public: // Public window methods
+      void Title(std::string newtitle) {
+        SDL_SetWindowTitle(sdl_window, newtitle.c_str());
+      }
 
-      void InitSdl() {
+      void Add(ui::drawable* drawable) {
+        drawables.push_back(drawable);
+      }
+
+    protected: // Protected window methods
+      void init_sdl() {
         sdl_window = SDL_CreateWindow(
             title.c_str(),
             position.x, position.y,
@@ -141,6 +143,7 @@ namespace isolinear::display {
 
   };
 
+
   std::vector<SDL_Rect> detect_displays() {
     std::vector<SDL_Rect> displays;
 
@@ -162,5 +165,6 @@ namespace isolinear::display {
 
     return displays;
   }
+
 
 }
