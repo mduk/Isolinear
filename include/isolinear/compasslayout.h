@@ -153,13 +153,11 @@ namespace isolinear::layout {
           );
       }
 
-      geometry::Region2D Bounds() const
-      {
+      geometry::Region2D Bounds() const {
         return grid.bounds;
       }
 
-      virtual void Draw(SDL_Renderer* renderer) const override
-      {
+      virtual void Draw(SDL_Renderer* renderer) const override {
         if (north > 0) {
           North().bounds.Draw(renderer);
         }
