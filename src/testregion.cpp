@@ -78,10 +78,6 @@ int main(int argc, char* argv[])
   SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
 
   while (running) {
-    SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
-    SDL_RenderClear(window.sdl_renderer);
-    SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
-
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {

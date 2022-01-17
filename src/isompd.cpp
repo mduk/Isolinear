@@ -79,10 +79,6 @@ int main(int argc, char* argv[])
   mpdc.RequestStatus();
 
   while (running) {
-    SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 255);
-    SDL_RenderClear(window.sdl_renderer);
-    SDL_SetRenderDrawColor(window.sdl_renderer, 0, 0, 0, 0);
-
     if (drawdebug) {
       grid.Draw(window.sdl_renderer);
     }
