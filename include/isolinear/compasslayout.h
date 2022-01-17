@@ -153,7 +153,7 @@ namespace isolinear::layout {
           );
       }
 
-      Region2D Bounds() const
+      geometry::Region2D Bounds() const
       {
         return grid.bounds;
       }
