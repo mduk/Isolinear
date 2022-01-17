@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
   printf("LOOP\n");
   while (running) {
     if (drawdebug) {
-      grid.Draw(window.sdl_renderer);
+      grid.Draw(window.renderer());
     }
 
     SDL_Event e;
@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
         }
 
         case SDL_FINGERDOWN:
-          window.OnPointerEvent(pointer::event{ e.tfinger, window.size });
+          window.OnPointerEvent(pointer::event{ e.tfinger, window.size() });
           break;
         case SDL_MOUSEBUTTONDOWN:
           window.OnPointerEvent(pointer::event{ e.button });
@@ -123,9 +123,9 @@ int main(int argc, char* argv[])
     window.Update();
     window.Draw();
     grid.Cell(grid.PositionColumnIndex(pos), grid.PositionRowIndex(pos))
-      .Fill(window.sdl_renderer, 0xff00ffff);
+      .Fill(window.renderer(), 0xff00ffff);
 
-    SDL_RenderPresent(window.sdl_renderer);
+    SDL_RenderPresent(window.renderer());
   }
 
   return 0;

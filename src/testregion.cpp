@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
       square.draw();
     }
 
-    SDL_RenderPresent(window.sdl_renderer);
+    SDL_RenderPresent(window.renderer());
   }
 
   work_guard.reset();

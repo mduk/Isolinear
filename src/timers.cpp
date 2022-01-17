@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
 
   while (running) {
     if (drawdebug) {
-      grid.Draw(window.sdl_renderer);
+      grid.Draw(window.renderer());
     }
 
     SDL_Event e;
@@ -227,7 +227,7 @@ int main(int argc, char* argv[])
 /*
       case SDL_FINGERDOWN:
         printf("TAP\n");
-        window.OnPointerEvent(pointer::event{ e.tfinger, window.size });
+        window.OnPointerEvent(pointer::event{ e.tfinger, window.size() });
         break;
 */
 
@@ -269,10 +269,10 @@ int main(int argc, char* argv[])
 
       timer_row.Colours(window.Colours());
       timer_row.Update();
-      timer_row.Draw(window.sdl_renderer);
+      timer_row.Draw(window.renderer());
     }
 
-    SDL_RenderPresent(window.sdl_renderer);
+    SDL_RenderPresent(window.renderer());
   }
 
   work_guard.reset();

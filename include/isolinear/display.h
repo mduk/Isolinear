@@ -23,31 +23,30 @@ namespace isolinear::display {
 
   class window {
 
-    public: // Geometry
-      geometry::vector position;
-      geometry::vector size;
+    protected: // Geometry
+      geometry::vector _position;
+      geometry::vector _size;
 
-    public: // SDL
-      SDL_Renderer* sdl_renderer;
-    protected:
-      SDL_Window* sdl_window;
+    protected: // SDL
+      SDL_Renderer* _sdl_renderer;
+      SDL_Window* _sdl_window;
 
     protected: // Fonts
-      const text::font header_font{ FONT, 96, 0xff0099ff };
-      const text::font button_font{ FONT, 44, 0xff000000 };
-      const text::font  label_font{ FONT, 44, 0xff0099ff };
+      const text::font _header_font{ FONT, 96, 0xff0099ff };
+      const text::font _button_font{ FONT, 44, 0xff000000 };
+      const text::font  _label_font{ FONT, 44, 0xff0099ff };
 
 
     public: // Constructors & Destructors
       window(geometry::vector p, geometry::vector s)
-        : position{p}, size{s}
+        : _position{p}, _size{s}
       {
         init_sdl();
       };
 
       ~window() {
-        SDL_DestroyRenderer(sdl_renderer);
-        SDL_DestroyWindow(sdl_window);
+        SDL_DestroyRenderer(_sdl_renderer);
+        SDL_DestroyWindow(_sdl_window);
       }
 
     public: // ui::drawable interface
@@ -63,11 +62,11 @@ namespace isolinear::display {
       }
 
       void Draw() {
-        SDL_SetRenderDrawColor(sdl_renderer, 0, 0, 0, 255);
-        SDL_RenderClear(sdl_renderer);
+        SDL_SetRenderDrawColor(_sdl_renderer, 0, 0, 0, 255);
+        SDL_RenderClear(_sdl_renderer);
 
         for (auto* drawable : drawables) {
-          drawable->Draw(sdl_renderer);
+          drawable->Draw(_sdl_renderer);
         }
       }
 
@@ -87,10 +86,14 @@ namespace isolinear::display {
         }
       }
 
-    public: // Font accessors
-      text::font const& HeaderFont() const { return header_font; }
-      text::font const& ButtonFont() const { return button_font; }
-      text::font const& LabelFont()  const { return label_font; }
+    public: // Accessors
+      text::font const& HeaderFont() const { return _header_font; }
+      text::font const& ButtonFont() const { return _button_font; }
+      text::font const& LabelFont()  const { return _label_font; }
+
+      geometry::vector const size() const { return _size; }
+
+      SDL_Renderer* renderer() const { return _sdl_renderer; }
 
     protected: // Protected window properties
       std::string title{"Isolinear"};
@@ -99,7 +102,7 @@ namespace isolinear::display {
 
     public: // Public window methods
       void Title(std::string newtitle) {
-        SDL_SetWindowTitle(sdl_window, newtitle.c_str());
+        SDL_SetWindowTitle(_sdl_window, newtitle.c_str());
       }
 
       void Add(ui::drawable* drawable) {
@@ -108,39 +111,39 @@ namespace isolinear::display {
 
     protected: // Protected window methods
       void init_sdl() {
-        sdl_window = SDL_CreateWindow(
+        _sdl_window = SDL_CreateWindow(
             title.c_str(),
-            position.x, position.y,
-            size.x, size.y,
+            _position.x, _position.y,
+            _size.x, _size.y,
             0 | SDL_WINDOW_ALLOW_HIGHDPI
               | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
               //| SDL_WINDOW_BORDERLESS
           );
 
-        if (!sdl_window) {
+        if (!_sdl_window) {
           throw std::runtime_error(
             "Failed to create SDL window"
           );
         }
 
-        sdl_renderer = SDL_CreateRenderer(
-            sdl_window, -1, SDL_RENDERER_SOFTWARE
+        _sdl_renderer = SDL_CreateRenderer(
+            _sdl_window, -1, SDL_RENDERER_SOFTWARE
           );
 
-        if (!sdl_renderer) {
+        if (!_sdl_renderer) {
           throw std::runtime_error(
             "Failed to create SDL renderer"
           );
         }
 
         SDL_SetRenderDrawBlendMode(
-            sdl_renderer, SDL_BLENDMODE_BLEND
+            _sdl_renderer, SDL_BLENDMODE_BLEND
           );
 
         SDL_GetWindowSize(
-            sdl_window,
-            &size.x,
-            &size.y
+            _sdl_window,
+            &_size.x,
+            &_size.y
           );
       }
 

@@ -38,7 +38,7 @@ namespace isolinear::window {
 
     public:
       void draw() const {
-        filledEllipseColor(window.sdl_renderer, x, y,  5,  5, 0xff00ffff);
+        filledEllipseColor(window.renderer(), x, y,  5,  5, 0xff00ffff);
       }
   };
 
@@ -175,7 +175,7 @@ namespace isolinear::window {
 
     public: // Drawing
       virtual void fill(uint32_t colour) const {
-        boxColor(m_window.sdl_renderer, m_near.x, m_near.y, m_far.x, m_far.y, colour);
+        boxColor(m_window.renderer(), m_near.x, m_near.y, m_far.x, m_far.y, colour);
       }
 
     public: // Debug draw
