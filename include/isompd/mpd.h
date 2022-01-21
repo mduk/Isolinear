@@ -565,9 +565,6 @@ namespace isompd {
 
         barView.GetButton(activeView).Activate();
         emit signal_view_change("", activeView);
-
-        playerControlBar.Update();
-        Update();
       }
 
       virtual void SwitchView(std::string view) {

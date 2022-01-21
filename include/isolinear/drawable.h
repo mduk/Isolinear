@@ -39,12 +39,6 @@ namespace isolinear::ui {
         child->Colours(Colours());
       }
 
-      virtual void Update() {
-        for (auto& child : children) {
-          child->Update();
-        }
-      }
-
       virtual void OnPointerEvent(pointer::event event) {
         Position2D p = event.Position();
 
@@ -103,13 +97,6 @@ namespace isolinear::ui {
         drawable::Colours(cs);
         for (auto& elem : *this) {
           elem.Colours(cs);
-        }
-      }
-
-      virtual void Update() {
-        for (auto& elem : *this) {
-          elem.Colours(drawable::Colours());
-          elem.Update();
         }
       }
 

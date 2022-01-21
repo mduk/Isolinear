@@ -90,10 +90,10 @@ namespace isolinear {
           cout << "add time?\n";
         });
 
-        Update();
+        render_label();
       }
 
-      void Update() {
+      void render_label() {
         Label(fmt::format(
             "{:%H:%M:%S} {}/{}",
             m_timer.started,
@@ -242,7 +242,6 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.Update();
     window.Draw();
 
     // Prune expired timers
@@ -268,7 +267,7 @@ int main(int argc, char* argv[])
       auto& timer_row = *it;
 
       timer_row.Colours(window.Colours());
-      timer_row.Update();
+      timer_row.render_label();
       timer_row.Draw(window.renderer());
     }
 

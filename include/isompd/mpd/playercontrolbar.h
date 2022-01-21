@@ -99,5 +99,4 @@ class PlayerControlBar : public horizontal_button_bar {
       miso::connect(   btnPause.signal_press, [this]() { mpd.TogglePause();   });
     }
 
-    void Update() { }
 };

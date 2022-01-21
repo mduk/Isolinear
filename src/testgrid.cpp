@@ -120,7 +120,6 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.Update();
     window.Draw();
     grid.Cell(grid.PositionColumnIndex(pos), grid.PositionRowIndex(pos))
       .Fill(window.renderer(), 0xff00ffff);

@@ -80,12 +80,6 @@ namespace isolinear::display {
         }
       }
 
-      void Update() {
-        for (auto* drawable : drawables) {
-          drawable->Update();
-        }
-      }
-
     public: // Accessors
       text::font const& HeaderFont() const { return _header_font; }
       text::font const& ButtonFont() const { return _button_font; }
