@@ -170,6 +170,8 @@ int main(int argc, char* argv[])
         timer_rows.next_grid(),
         timer
       );
+    auto& timer_row = timer_rows.back();
+    timer_row.Colours(window.Colours());
 
     miso::connect(timer.signal_expired, [&](){
       five_second_button.Deactivate();
