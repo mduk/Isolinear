@@ -82,6 +82,8 @@ namespace isolinear {
         , m_timer(t)
         , add_time(AddButton("ADD 10 SEC"))
       {
+        Colours(w.Colours());
+
         m_timer.asio_timer.async_wait([&](std::error_code){
           cout << "Clang!\n";
         });
