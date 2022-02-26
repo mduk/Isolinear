@@ -38,7 +38,8 @@ namespace isolinear {
       asio::io_context& io_context;
       std::chrono::time_point<std::chrono::system_clock> started;
       asio::high_resolution_timer asio_timer;
-      int tick_count = 1;
+      int ticks_remaining = 1;
+      int ticks_elapsed = 0;
 
     public:
       miso::signal<> signal_expired;
@@ -46,7 +47,7 @@ namespace isolinear {
     public:
       timer(asio::io_context& ioc, long int s)
         : io_context(ioc)
-        , tick_count(s)
+        , ticks_remaining(s)
         , started(std::chrono::system_clock::now())
         , asio_timer(ioc, std::chrono::seconds(1))
       {
@@ -55,16 +56,18 @@ namespace isolinear {
 
     public:
       void tick_handler(std::error_code) {
-        if (tick_count == 1) {
+        if (ticks_remaining == 1) {
           cout << fmt::format("Tock\n");
           emit signal_expired();
         }
         else {
-          cout << fmt::format("Tick {}\n", tick_count);
-          --tick_count;
+          cout << fmt::format("Tick {}\n", ticks_remaining);
           asio_timer.expires_at(asio_timer.expires_at() + std::chrono::seconds(1));
           asio_timer.async_wait(std::bind(&timer::tick_handler, this, std::placeholders::_1));
         }
+
+        --ticks_remaining;
+        ++ticks_elapsed;
       };
 
 
@@ -95,17 +98,15 @@ namespace isolinear {
         miso::connect(add_time.signal_press, [&](){
           cout << "add time?\n";
         });
-
-        render_label();
       }
 
-      void render_label() {
-        Label(fmt::format(
+      virtual std::string Label() const override {
+        return fmt::format(
             "{:%H:%M:%S} {}/{}",
             m_timer.started,
-            m_timer.expires_in_seconds(),
-            m_timer.tick_count
-          ));
+            m_timer.ticks_elapsed,
+            m_timer.ticks_remaining
+          );
       }
   };
 
@@ -275,7 +276,6 @@ int main(int argc, char* argv[])
       auto& timer_row = *it;
 
       timer_row.Colours(window.Colours());
-      timer_row.render_label();
       timer_row.Draw(window.renderer());
     }
 

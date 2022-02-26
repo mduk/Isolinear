@@ -362,6 +362,10 @@ namespace isolinear::ui {
       void Label(std::string newlabel) {
           text = newlabel;
       }
+      virtual std::string Label() const {
+          return text;
+      }
+
       virtual theme::colour_scheme Colours() const {
         return drawable::Colours();
       }
@@ -432,8 +436,9 @@ namespace isolinear::ui {
           }
         }
 
-        if (text.length() > 0) {
-          std::string padded = std::string(" ") + text + " ";
+        auto header_text = Label();
+        if (header_text.length() > 0) {
+          std::string padded = std::string(" ") + header_text + " ";
           text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
           Region2D headerregion = centre_bar.Align(compass::east, headertext.Size());
 
