@@ -46,14 +46,10 @@ namespace isolinear {
 
     public:
       timer(asio::io_context& ioc, long int s)
-        : timer(ioc, std::chrono::seconds(s))
-      {}
-
-      timer(asio::io_context& ioc, std::chrono::seconds s)
         : io_context(ioc)
         , seconds(s)
         , started(std::chrono::system_clock::now())
-        , asio_timer(ioc, s)
+        , asio_timer(ioc, std::chrono::seconds(s))
       {
         asio_timer.async_wait([&](std::error_code){
           emit signal_expired();
