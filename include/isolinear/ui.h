@@ -341,6 +341,8 @@ namespace isolinear::ui {
       std::string text{""};
       std::map<std::string, isolinear::ui::button> buttons;
       int button_width{2};
+      theme::colour left_cap_colour;
+      theme::colour right_cap_colour;
 
     public:
       header_east_bar(display::window& w, isolinear::grid g, std::string t)
@@ -371,10 +373,21 @@ namespace isolinear::ui {
       }
 
       virtual void Colours(theme::colour_scheme cs) {
+        left_cap_colour = cs.light;
+        left_cap_colour = cs.light;
+
         for (auto& [label, button] : buttons) {
           button.Colours(cs);
         }
+
         drawable::Colours(cs);
+      }
+
+      virtual theme::colour LeftCapColour() const {
+        return left_cap_colour;
+      }
+      virtual theme::colour RightCapColour() const {
+        return right_cap_colour;
       }
 
       isolinear::ui::button& AddButton(std::string label) {
@@ -425,8 +438,8 @@ namespace isolinear::ui {
         Region2D  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
         Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
-          left_cap.Fill    (renderer, Colours().light);
-         right_cap.Bullnose(renderer, compass::east, Colours().light);
+          left_cap.Fill    (renderer, LeftCapColour());
+         right_cap.Bullnose(renderer, compass::east, RightCapColour());
         centre_bar.Fill    (renderer, Colours().background);
 
         if (buttons.size() > 0) {
@@ -455,7 +468,7 @@ namespace isolinear::ui {
                   cell.FarY()
                 }
             };
-          fillerregion.Fill(renderer, Colours().light);
+          fillerregion.Fill(renderer, RightCapColour());
 
           headertext.Draw(renderer, compass::east, centre_bar);
         }

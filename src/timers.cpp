@@ -62,6 +62,16 @@ namespace isolinear {
             m_timer.ticks_remaining
           );
       }
+
+      virtual theme::colour LeftCapColour() const override {
+        return (m_timer.ticks_remaining == 0)
+          ? Colours().disabled
+          : Colours().light;
+      }
+
+      virtual theme::colour RightCapColour() const override {
+        return LeftCapColour();
+      }
   };
 
 }
