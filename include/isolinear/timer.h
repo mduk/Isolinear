@@ -7,8 +7,8 @@ namespace isolinear {
       asio::io_context& io_context;
       std::chrono::time_point<std::chrono::system_clock> started;
       asio::high_resolution_timer asio_timer;
-      int ticks_remaining = 1;
-      int ticks_elapsed = 0;
+      unsigned ticks_remaining = 1;
+      unsigned ticks_elapsed = 0;
 
     public:
       miso::signal<int, int> signal_tick;
