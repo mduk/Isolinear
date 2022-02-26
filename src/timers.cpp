@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
   window.Colours(isolinear::theme::nightgazer_colours);
 
   bool running = true;
-  SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
+  //SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
 
   while (running) {
     if (drawdebug) {
