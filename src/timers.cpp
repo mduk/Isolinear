@@ -71,14 +71,6 @@ namespace isolinear {
         --ticks_remaining;
         ++ticks_elapsed;
       };
-
-
-    public:
-      int expires_in_seconds() const {
-        return std::chrono::duration_cast<std::chrono::seconds>(
-            asio_timer.expires_from_now()
-          ).count();
-      }
   };
 
 
@@ -262,32 +254,6 @@ int main(int argc, char* argv[])
     }
 
     window.Draw();
-
-    // Prune expired timers
-    if (false) {
-      std::list<isolinear::timer>::iterator it = timers.begin();
-      while (it != timers.end()) {
-        auto& timer = *it;
-
-        auto t_expires_relative_seconds = timer.expires_in_seconds();
-
-        if (t_expires_relative_seconds <= 0) {
-          timers.erase(it++);
-        }
-        else {
-          it++;
-        }
-      }
-    }
-
-
-    // Draw Timers
-    if (false) for (auto it = timer_rows.begin(); it != timer_rows.end(); ++it) {
-      auto& timer_row = *it;
-
-      timer_row.Colours(window.Colours());
-      timer_row.Draw(window.renderer());
-    }
 
     SDL_RenderPresent(window.renderer());
   }
