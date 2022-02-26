@@ -11,11 +11,11 @@ namespace isolinear {
       unsigned ticks_elapsed = 0;
 
     public:
-      miso::signal<int, int> signal_tick;
+      miso::signal<unsigned, unsigned> signal_tick;
       miso::signal<> signal_expired;
 
     public:
-      timer(asio::io_context& ioc, long int s)
+      timer(asio::io_context& ioc, unsigned s)
         : io_context(ioc)
         , ticks_remaining(s)
         , started(std::chrono::system_clock::now())
@@ -40,6 +40,11 @@ namespace isolinear {
         --ticks_remaining;
         ++ticks_elapsed;
       };
+
+    public:
+      unsigned add_ticks(unsigned ticks) {
+        ticks_remaining += ticks;
+      }
   };
 
 }

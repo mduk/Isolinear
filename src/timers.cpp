@@ -50,7 +50,7 @@ namespace isolinear {
         Colours(w.Colours());
 
         miso::connect(add_time.signal_press, [&](){
-          cout << "add time?\n";
+          m_timer.add_ticks(10);
         });
       }
 
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
     timers.emplace_back(isolinear::io_context, 5);
     auto& timer = timers.back();
 
-    miso::connect(timer.signal_tick, [&](int remaining, int elapsed) {
+    miso::connect(timer.signal_tick, [&](unsigned remaining, unsigned elapsed) {
       cout << fmt::format("Tick {}\n", remaining);
     });
 
