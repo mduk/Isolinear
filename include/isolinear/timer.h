@@ -24,7 +24,7 @@ namespace isolinear {
         asio_timer.async_wait(std::bind(&timer::tick_handler, this, std::placeholders::_1));
       }
 
-    public:
+    protected:
       void tick_handler(std::error_code) {
         if (ticks_remaining == 1) {
           emit signal_tick(ticks_remaining, ticks_elapsed);
