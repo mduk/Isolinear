@@ -42,6 +42,7 @@ namespace isolinear {
       int ticks_elapsed = 0;
 
     public:
+      miso::signal<int, int> signal_tick;
       miso::signal<> signal_expired;
 
     public:
@@ -57,11 +58,12 @@ namespace isolinear {
     public:
       void tick_handler(std::error_code) {
         if (ticks_remaining == 1) {
-          cout << fmt::format("Tock\n");
+          emit signal_tick(ticks_remaining, ticks_elapsed);
           emit signal_expired();
         }
         else {
-          cout << fmt::format("Tick {}\n", ticks_remaining);
+          emit signal_tick(ticks_remaining, ticks_elapsed);
+
           asio_timer.expires_at(asio_timer.expires_at() + std::chrono::seconds(1));
           asio_timer.async_wait(std::bind(&timer::tick_handler, this, std::placeholders::_1));
         }
@@ -164,12 +166,20 @@ int main(int argc, char* argv[])
   window.Add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
-    cout << "Ding!\n";
+    cout << "Click!\n";
 
     five_second_button.Activate();
 
     timers.emplace_back(isolinear::io_context, 5);
     auto& timer = timers.back();
+
+    miso::connect(timer.signal_tick, [&](int remaining, int elapsed) {
+        cout << fmt::format("Tick {}\n", remaining);
+      });
+
+    miso::connect(timer.signal_expired, [&]() {
+        cout << fmt::format("Tock\n");
+      });
 
     int r = (timer_rows.size() * 2) + 2;
     timer_rows.emplace_back(
