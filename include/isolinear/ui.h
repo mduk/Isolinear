@@ -1393,5 +1393,19 @@ namespace isolinear::ui {
       }
   };
 
+  template <class T, int H>
+  class layout_vertical : public isolinear::ui::drawable_list<T> {
+
+    public:
+      layout_vertical(isolinear::grid g)
+        : isolinear::ui::drawable_list<T>(g)
+      {}
+
+    protected:
+      isolinear::grid grid_for_index(int index) override {
+        int far_row = index * H;
+        return isolinear::ui::drawable_list<T>::grid.Rows(far_row-(H-1), far_row);
+      }
+  };
 
 }

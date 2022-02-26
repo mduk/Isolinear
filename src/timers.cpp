@@ -67,20 +67,6 @@ namespace isolinear {
 
 
 
-  template <class T>
-  class button_bar_list : public isolinear::ui::drawable_list<T> {
-
-    public:
-      button_bar_list(isolinear::grid g)
-        : isolinear::ui::drawable_list<T>(g)
-      {}
-
-    protected:
-      isolinear::grid grid_for_index(int index) override {
-        int far_row = index * 2;
-        return isolinear::ui::drawable_list<T>::grid.Rows(far_row-1, far_row);
-      }
-  };
 
 
 }
@@ -114,7 +100,7 @@ int main(int argc, char* argv[])
   window.Add(&control_bar);
 
   std::list<isolinear::timer> timers;
-  isolinear::button_bar_list<isolinear::timer_row> timer_rows(grid.Rows(3, grid.MaxRows()));
+  isolinear::ui::layout_vertical<isolinear::timer_row, 2> timer_rows(grid.Rows(3, grid.MaxRows()));
   window.Add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
