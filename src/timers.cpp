@@ -184,7 +184,6 @@ int main(int argc, char* argv[])
 */
 
       case SDL_MOUSEBUTTONDOWN:
-        printf("CLICK\n");
         window.OnPointerEvent(pointer::event{ e.button });
         break;
 
