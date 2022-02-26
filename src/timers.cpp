@@ -64,11 +64,6 @@ namespace isolinear {
       }
   };
 
-
-
-
-
-
 }
 
 
@@ -112,12 +107,12 @@ int main(int argc, char* argv[])
     auto& timer = timers.back();
 
     miso::connect(timer.signal_tick, [&](int remaining, int elapsed) {
-        cout << fmt::format("Tick {}\n", remaining);
-      });
+      cout << fmt::format("Tick {}\n", remaining);
+    });
 
     miso::connect(timer.signal_expired, [&]() {
-        cout << fmt::format("Tock\n");
-      });
+      cout << fmt::format("Tock\n");
+    });
 
     int r = (timer_rows.size() * 2) + 2;
     timer_rows.emplace_back(
