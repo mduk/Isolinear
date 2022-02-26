@@ -33,13 +33,12 @@ bool drawdebug = false;
 
 namespace isolinear {
 
-
   class timer {
     public:
       asio::io_context& io_context;
-      std::chrono::seconds seconds;
       std::chrono::time_point<std::chrono::system_clock> started;
       asio::high_resolution_timer asio_timer;
+      int tick_count = 1;
 
     public:
       miso::signal<> signal_expired;
@@ -47,14 +46,27 @@ namespace isolinear {
     public:
       timer(asio::io_context& ioc, long int s)
         : io_context(ioc)
-        , seconds(s)
+        , tick_count(s)
         , started(std::chrono::system_clock::now())
-        , asio_timer(ioc, std::chrono::seconds(s))
+        , asio_timer(ioc, std::chrono::seconds(1))
       {
-        asio_timer.async_wait([&](std::error_code){
-          emit signal_expired();
-        });
+        asio_timer.async_wait(std::bind(&timer::tick_handler, this, std::placeholders::_1));
       }
+
+    public:
+      void tick_handler(std::error_code) {
+        if (tick_count == 1) {
+          cout << fmt::format("Tock\n");
+          emit signal_expired();
+        }
+        else {
+          cout << fmt::format("Tick {}\n", tick_count);
+          --tick_count;
+          asio_timer.expires_at(asio_timer.expires_at() + std::chrono::seconds(1));
+          asio_timer.async_wait(std::bind(&timer::tick_handler, this, std::placeholders::_1));
+        }
+      };
+
 
     public:
       int expires_in_seconds() const {
@@ -80,10 +92,6 @@ namespace isolinear {
       {
         Colours(w.Colours());
 
-        m_timer.asio_timer.async_wait([&](std::error_code){
-          cout << "Clang!\n";
-        });
-
         miso::connect(add_time.signal_press, [&](){
           cout << "add time?\n";
         });
@@ -96,7 +104,7 @@ namespace isolinear {
             "{:%H:%M:%S} {}/{}",
             m_timer.started,
             m_timer.expires_in_seconds(),
-            m_timer.seconds
+            m_timer.tick_count
           ));
       }
   };
