@@ -374,7 +374,7 @@ namespace isolinear::ui {
 
       virtual void Colours(theme::colour_scheme cs) {
         left_cap_colour = cs.light;
-        left_cap_colour = cs.light;
+        right_cap_colour = cs.light;
 
         for (auto& [label, button] : buttons) {
           button.Colours(cs);
