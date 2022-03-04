@@ -41,8 +41,8 @@ target_link_libraries(IsoMPD
   -lSDL2_gfx
 )
 
-add_executable(MPDXX src/mpdxx.cpp)
-target_link_libraries(MPDXX
+add_executable(mpdxx src/mpdxx.cpp)
+target_link_libraries(mpdxx
   ${CONAN_LIBS}
   LibMiso
   LibMPDXX

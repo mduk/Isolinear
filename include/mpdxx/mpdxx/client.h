@@ -122,7 +122,6 @@ namespace mpdxx {
               auto line = read_line();
 
               if (line == "OK") {
-                disconnect();
                 complete();
                 return;
               }
@@ -133,19 +132,36 @@ namespace mpdxx {
             });
       }
 
-      virtual void disconnect() {
+      virtual void complete() {
         socket.close();
       }
 
-      virtual void complete() {
-        cout << "All done\n";
-      }
-
-      virtual void process_line(std::string line) {
-
-      }
+      virtual void process_line(std::string line) { }
 
   };
+
+  class polling_client : public command_client {
+
+    public:
+      miso::signal<std::string> signal_change;
+
+    public:
+      polling_client(asio::io_context& ioc, std::string h, std::string p)
+        : command_client(ioc, h, p, "idle playlist player mixer options")
+      {}
+
+    protected:
+      virtual void process_line(std::string line) override {
+        auto pair = line_to_pair(line);
+        emit signal_change(pair.second);
+      }
+
+      virtual void complete() override {
+        send_command();
+      }
+  };
+
+
 
 
   class client {

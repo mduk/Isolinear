@@ -29,7 +29,15 @@ int main(int argc, char* argv[]) {
       io_context.run();
     });
 
-    mpdxx::command_client mpd(io_context, "localhost", "6600", "status");
+    mpdxx::polling_client mpd(io_context, "localhost", "6600");
+    miso::connect(mpd.signal_change, [](std::string subsystem){
+      if (subsystem == "player") {
+        cout << "PLAYER!\n";
+      }
+      else if (subsystem == "playlist") {
+        cout << "QUEUE!\n";
+      }
+    });
 
     while(true);
 
