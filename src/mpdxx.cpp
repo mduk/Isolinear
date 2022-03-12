@@ -29,8 +29,10 @@ int main(int argc, char* argv[]) {
       io_context.run();
     });
 
+    mpdxx::status_client sc(io_context, "localhost", "6600");
+/*
     mpdxx::polling_client mpd(io_context, "localhost", "6600");
-    miso::connect(mpd.signal_change, [](std::string subsystem){
+    miso::connect(mpd.signal_change, [&](std::string subsystem){
       if (subsystem == "player") {
         cout << "PLAYER!\n";
       }
@@ -38,7 +40,7 @@ int main(int argc, char* argv[]) {
         cout << "QUEUE!\n";
       }
     });
-
+*/
     while(true);
 
     work_guard.reset();

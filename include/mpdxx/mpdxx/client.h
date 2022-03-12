@@ -43,7 +43,7 @@ namespace mpdxx {
 
   using event = std::string;
 
-
+  template <class T>
   class command_client {
 
     protected:
@@ -56,8 +56,8 @@ namespace mpdxx {
       asio::streambuf socket_read_buffer;
 
       std::string command;
-      std::list<mpdxx::idle> entities;
-      std::string entity_delimiter_key = "changed";
+      std::list<T> entities;
+      std::string entity_delimiter_key;
 
 
     public:
@@ -147,7 +147,7 @@ namespace mpdxx {
 
   };
 
-  class polling_client : public command_client {
+  class polling_client : public command_client<mpdxx::idle> {
 
     public:
       miso::signal<std::string> signal_change;
@@ -162,6 +162,13 @@ namespace mpdxx {
         emit signal_change(entities.back().changed());
         send_command();
       }
+  };
+
+  class status_client : public command_client<mpdxx::status> {
+    public:
+      status_client(asio::io_context& ioc, std::string h, std::string p)
+        : command_client(ioc, h, p, "status", "volume")
+      {}
   };
 
 
