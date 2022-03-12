@@ -122,7 +122,6 @@ namespace mpdxx {
               }
 
               auto line = read_line();
-              cout << fmt::format("Read: {}\n", line);
 
               if (line == "OK") {
                 complete();
