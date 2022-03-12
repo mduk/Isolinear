@@ -61,13 +61,14 @@ namespace mpdxx {
 
 
     public:
-      command_client(asio::io_context& ioc, std::string h, std::string p, std::string c)
+      command_client(asio::io_context& ioc, std::string h, std::string p, std::string c, std::string edk)
         : io_context(ioc)
         , host(h)
         , port(p)
         , socket(io_context)
         , socket_resolver(io_context)
         , command(c)
+        , entity_delimiter_key(edk)
       {
         connect();
       }
@@ -153,7 +154,7 @@ namespace mpdxx {
 
     public:
       polling_client(asio::io_context& ioc, std::string h, std::string p)
-        : command_client(ioc, h, p, "idle playlist player mixer options")
+        : command_client(ioc, h, p, "idle playlist player mixer options", "changed")
       {}
 
     protected:
