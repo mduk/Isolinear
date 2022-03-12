@@ -42,6 +42,14 @@ namespace mpdxx {
   }
 
 
+  class idle : public entity {
+    public:
+      std::string changed() const {
+        return entitydata.at("changed");
+      }
+  };
+
+
   class status : public entity {
     public:
       std::string StateString() const {

@@ -56,6 +56,8 @@ namespace mpdxx {
       asio::streambuf socket_read_buffer;
 
       std::string command;
+      std::list<mpdxx::idle> entities;
+      std::string entity_delimiter_key = "changed";
 
 
     public:
@@ -120,14 +122,19 @@ namespace mpdxx {
               }
 
               auto line = read_line();
+              cout << fmt::format("Read: {}\n", line);
 
               if (line == "OK") {
                 complete();
                 return;
               }
+              auto pair = line_to_pair(line);
 
-              process_line(line);
+              if (pair.first == entity_delimiter_key) {
+                entities.emplace_back();
+              }
 
+              entities.back().consume_pair(line_to_pair(line));
               read_response();
             });
       }
@@ -151,12 +158,8 @@ namespace mpdxx {
       {}
 
     protected:
-      virtual void process_line(std::string line) override {
-        auto pair = line_to_pair(line);
-        emit signal_change(pair.second);
-      }
-
       virtual void complete() override {
+        emit signal_change(entities.back().changed());
         send_command();
       }
   };
