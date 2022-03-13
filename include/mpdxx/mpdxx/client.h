@@ -128,13 +128,25 @@ namespace mpdxx {
                 complete();
                 return;
               }
-              auto pair = line_to_pair(line);
 
-              if (pair.first == entity_delimiter_key) {
+              auto pair = line_to_pair(line);
+              auto key = pair.first;
+
+              size_t colon_position = key.find(":");
+              if (colon_position) {
+                key = pair.first.substr(colon_position + 1);
+              }
+
+              bool is_delimiter_field = key.find(entity_delimiter_key);
+              bool initialise_singleton = entity_delimiter_key == ""
+                                       && entities.size() == 0;
+
+              if (initialise_singleton || is_delimiter_field) {
                 entities.emplace_back();
               }
 
               entities.back().consume_pair(line_to_pair(line));
+
               read_response();
             });
       }
@@ -154,7 +166,7 @@ namespace mpdxx {
 
     public:
       polling_client(asio::io_context& ioc, std::string h, std::string p)
-        : command_client(ioc, h, p, "idle playlist player mixer options", "changed")
+        : command_client(ioc, h, p, "idle playlist player mixer options", "")
       {}
 
     protected:
@@ -167,9 +179,18 @@ namespace mpdxx {
   class status_client : public command_client<mpdxx::status> {
     public:
       status_client(asio::io_context& ioc, std::string h, std::string p)
-        : command_client(ioc, h, p, "status", "volume")
+        : command_client(ioc, h, p, "status", "")
       {}
   };
+
+  class queue_client : public command_client<mpdxx::song> {
+    public:
+      queue_client(asio::io_context& ioc, std::string h, std::string p)
+        : command_client(ioc, h, p, "playlist", "file")
+      {}
+  };
+
+
 
 
 

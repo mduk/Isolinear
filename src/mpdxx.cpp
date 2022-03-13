@@ -18,6 +18,10 @@ using std::cout;
 using asio::ip::tcp;
 
 
+auto h = "localhost";
+auto p = "6600";
+
+
 int main(int argc, char* argv[]) {
   cout << "MPDXX main()\n";
 
@@ -29,18 +33,14 @@ int main(int argc, char* argv[]) {
       io_context.run();
     });
 
-    mpdxx::status_client sc(io_context, "localhost", "6600");
-/*
-    mpdxx::polling_client mpd(io_context, "localhost", "6600");
+    mpdxx::status_client sc(io_context, h, p);
+    mpdxx::queue_client qc(io_context, h, p);
+
+    mpdxx::polling_client mpd(io_context, h, p);
     miso::connect(mpd.signal_change, [&](std::string subsystem){
-      if (subsystem == "player") {
-        cout << "PLAYER!\n";
-      }
-      else if (subsystem == "playlist") {
-        cout << "QUEUE!\n";
-      }
+      cout << fmt::format("Change: {}\n", subsystem);
     });
-*/
+
     while(true);
 
     work_guard.reset();
