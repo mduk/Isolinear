@@ -41,8 +41,6 @@ namespace mpdxx {
   }
 
 
-  using event = std::string;
-
   template <class T>
   class command_client {
 
