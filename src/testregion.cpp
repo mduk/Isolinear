@@ -75,7 +75,6 @@ int main(int argc, char* argv[])
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
 
   while (running) {
     SDL_Event e;
