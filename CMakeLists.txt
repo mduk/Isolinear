@@ -14,9 +14,6 @@ set(CMAKE_MODULE_PATH
   "${PROJECT_SOURCE_DIR}/cmake/"
 )
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-
 add_library(LibMiso INTERFACE)
 target_include_directories(LibMiso INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/include/miso
@@ -32,18 +29,29 @@ target_include_directories(LibIsoMPD INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/include/isompd
 )
 
+add_library(LibSDL2 INTERFACE)
+target_link_libraries(LibSDL2 INTERFACE
+  -lSDL2
+  -lSDL2_gfx
+  -lSDL2_ttf
+)
+
+add_library(LibFmt INTERFACE)
+target_link_libraries(LibFmt INTERFACE -lfmt)
+
 add_executable(IsoMPD src/isompd.cpp)
 target_link_libraries(IsoMPD
-  ${CONAN_LIBS}
+  LibSDL2
+  LibFmt
   LibMiso
   LibMPDXX
   LibIsoMPD
-  -lSDL2_gfx
 )
 
 add_executable(mpdxx src/mpdxx.cpp)
 target_link_libraries(mpdxx
-  ${CONAN_LIBS}
+  LibSDL2
+  LibFmt
   LibMiso
   LibMPDXX
 )
@@ -54,9 +62,9 @@ target_include_directories(IsoMPD PUBLIC
 
 add_executable(timers src/timers.cpp)
 target_link_libraries(timers
-  ${CONAN_LIBS}
+  LibSDL2
+  LibFmt
   LibMiso
-  -lSDL2_gfx
 )
 
 target_include_directories(timers PUBLIC
@@ -65,8 +73,8 @@ target_include_directories(timers PUBLIC
 
 add_executable(testregion src/testregion.cpp)
 target_include_directories(testregion PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
-target_link_libraries(testregion ${CONAN_LIBS} LibMiso -lSDL2_gfx)
+target_link_libraries(testregion LibSDL2 LibMiso LibFmt)
 
 add_executable(testgrid src/testgrid.cpp)
 target_include_directories(testgrid PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
-target_link_libraries(testgrid ${CONAN_LIBS} LibMiso -lSDL2_gfx)
+target_link_libraries(testgrid LibSDL2 LibMiso LibFmt)
