@@ -15,7 +15,7 @@
 #include "geometry.h"
 #include "text.h"
 
-#define FONT "/home/daniel/.fonts/Swiss 911 Ultra Compressed BT.ttf"
+#define FONT "/home/daniel/.fonts/Swiss 911 Ultra Compressed Regular.otf"
 
 
 namespace isolinear::display {
