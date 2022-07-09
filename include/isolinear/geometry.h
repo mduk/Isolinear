@@ -165,15 +165,15 @@ namespace isolinear::geometry {
             int far_y() const { return Far().y; }
 
       // compass points
-      Position2D centre()     const { return Point(compass::centre   ); }
-      Position2D north()      const { return Point(compass::north    ); }
-      Position2D northeast()  const { return Point(compass::northeast); }
-      Position2D east()       const { return Point(compass::east     ); }
-      Position2D southeast()  const { return Point(compass::southeast); }
-      Position2D south()      const { return Point(compass::south    ); }
-      Position2D southwest()  const { return Point(compass::southwest); }
-      Position2D west()       const { return Point(compass::west     ); }
-      Position2D northwest()  const { return Point(compass::northwest); }
+      Position2D centre()     const { return point(compass::centre   ); }
+      Position2D north()      const { return point(compass::north    ); }
+      Position2D northeast()  const { return point(compass::northeast); }
+      Position2D east()       const { return point(compass::east     ); }
+      Position2D southeast()  const { return point(compass::southeast); }
+      Position2D south()      const { return point(compass::south    ); }
+      Position2D southwest()  const { return point(compass::southwest); }
+      Position2D west()       const { return point(compass::west     ); }
+      Position2D northwest()  const { return point(compass::northwest); }
 
       int centre_x()    const { return centre().x;    }
       int centre_y()    const { return centre().y;    }
@@ -195,7 +195,7 @@ namespace isolinear::geometry {
       int northwest_y() const { return northwest().y; }
 
       // compass Points
-      Position2D Point(compass align) const {
+      Position2D point(compass align) const {
         switch (align) {
           case    compass::centre: return origin().add(size().centre());
           case     compass::north: return origin().add(size().north());

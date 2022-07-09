@@ -677,8 +677,8 @@ namespace isolinear::ui {
 
       virtual Region2D InnerCornerRegion() const {
         return Region2D{
-            HorizontalPort().Point(opposite),
-            VerticalPort().Point(opposite)
+            HorizontalPort().point(opposite),
+            VerticalPort().point(opposite)
           };
       }
 
