@@ -227,10 +227,10 @@ namespace isolinear::geometry {
       }
 
       // compass Quadrants
-      Region2D northeastQuadrant() const { return Region2D{ north(),       east() }; }
-      Region2D southeastQuadrant() const { return Region2D{ centre(), southeast() }; }
-      Region2D southwestQuadrant() const { return Region2D{ west(),       south() }; }
-      Region2D northwestQuadrant() const { return Region2D{ northwest(), centre() }; }
+      Region2D northeast_quadrant() const { return Region2D{ north(),       east() }; }
+      Region2D southeast_quadrant() const { return Region2D{ centre(), southeast() }; }
+      Region2D southwest_quadrant() const { return Region2D{ west(),       south() }; }
+      Region2D northwest_quadrant() const { return Region2D{ northwest(), centre() }; }
 
       // Halfs
       Region2D TopHalf()    const { return Region2D{ northwest(), east()      }; }
