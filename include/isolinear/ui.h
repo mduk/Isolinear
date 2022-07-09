@@ -453,7 +453,7 @@ namespace isolinear::ui {
         if (header_text.length() > 0) {
           std::string padded = std::string(" ") + header_text + " ";
           text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
-          Region2D headerregion = centre_bar.Align(compass::east, headertext.Size());
+          Region2D headerregion = centre_bar.Align(compass::east, headertext.size());
 
           int near = grid.PositionColumnIndex(headerregion.Near());
           int  far = grid.PositionColumnIndex(headerregion.Far());
@@ -545,10 +545,10 @@ namespace isolinear::ui {
           );
 
         Region2D lefttextregion = centre_bar.Align(
-            compass::west, lefttext.Size()
+            compass::west, lefttext.size()
           );
         Region2D righttextregion = centre_bar.Align(
-            compass::east, righttext.Size()
+            compass::east, righttext.size()
           );
 
         Position2D leftlimit = lefttextregion.southeast();
@@ -1225,8 +1225,8 @@ namespace isolinear::ui {
                 + gutter.y
             },
             geometry::vector{
-              horizontal.Size().x,
-              horizontal.Size().y
+              horizontal.size().x,
+              horizontal.size().y
                 - reach_weight
                 - gutter.y
             }

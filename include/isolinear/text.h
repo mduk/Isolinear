@@ -36,7 +36,7 @@ namespace isolinear::text {
         SDL_FreeSurface(sdl_surface);
       }
 
-      geometry::vector Size() const {
+      geometry::vector size() const {
         return geometry::vector{sdl_surface};
       }
 
@@ -44,7 +44,7 @@ namespace isolinear::text {
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, sdl_surface);
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-        Region2D label_region = bounds.Align(alignment, Size());
+        Region2D label_region = bounds.Align(alignment, size());
         SDL_Rect label_rect{
             label_region.X(),
             label_region.Y(),
