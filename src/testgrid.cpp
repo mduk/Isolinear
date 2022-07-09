@@ -19,8 +19,7 @@
 #include "display.h"
 #include "window.h"
 
-
-bool drawdebug = true;
+int gx, gy;
 
 int main(int argc, char* argv[])
 {
@@ -52,10 +51,6 @@ int main(int argc, char* argv[])
 
   printf("LOOP\n");
   while (running) {
-    if (drawdebug) {
-      grid.Draw(window.renderer());
-    }
-
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
@@ -64,27 +59,6 @@ int main(int argc, char* argv[])
           switch (e.key.keysym.sym) {
           case SDLK_ESCAPE:
             running = false;
-            break;
-          case 'c':
-            SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
-            break;
-          case 'd':
-            window.Colours(isolinear::theme::debug_colours);
-            break;
-          case 'r':
-            window.Colours(isolinear::theme::red_alert_colours);
-            break;
-          case 'y':
-            window.Colours(isolinear::theme::yellow_alert_colours);
-            break;
-          case 'b':
-            window.Colours(isolinear::theme::blue_alert_colours);
-            break;
-          case 'n':
-            window.Colours(isolinear::theme::nightgazer_colours);
-            break;
-          case 'g':
-            drawdebug = !drawdebug;
             break;
           }
           break;
@@ -95,8 +69,8 @@ int main(int argc, char* argv[])
               y = e.motion.y;
 
           pos = geometry::Position2D{x, y};
-          int gx = grid.PositionColumnIndex(pos),
-              gy = grid.PositionRowIndex(pos);
+          gx = grid.PositionColumnIndex(pos),
+          gy = grid.PositionRowIndex(pos);
 
           std::stringstream ss;
           ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
@@ -106,13 +80,6 @@ int main(int argc, char* argv[])
           break;
         }
 
-        case SDL_FINGERDOWN:
-          window.OnPointerEvent(pointer::event{ e.tfinger, window.size() });
-          break;
-        case SDL_MOUSEBUTTONDOWN:
-          window.OnPointerEvent(pointer::event{ e.button });
-          break;
-
         case SDL_QUIT: {
           running = false;
           break;
@@ -121,7 +88,7 @@ int main(int argc, char* argv[])
     }
 
     window.Draw();
-    grid.Cell(grid.PositionColumnIndex(pos), grid.PositionRowIndex(pos))
+    grid.Cell(gx, gy)
       .Fill(window.renderer(), 0xff00ffff);
 
     SDL_RenderPresent(window.renderer());
