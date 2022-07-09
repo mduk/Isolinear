@@ -551,14 +551,14 @@ namespace isolinear::ui {
             compass::east, righttext.Size()
           );
 
-        Position2D leftlimit = lefttextregion.SouthEast();
-        Position2D rightlimit = righttextregion.NorthWest();
+        Position2D leftlimit = lefttextregion.southeast();
+        Position2D rightlimit = righttextregion.northwest();
 
         int left_text_end_col_index = grid.PositionColumnIndex(
-            lefttextregion.East()
+            lefttextregion.east()
           );
         int right_text_end_col_index = grid.PositionColumnIndex(
-            righttextregion.West()
+            righttextregion.west()
           );
 
         Region2D drawcentrebar = grid.CalculateGridRegion(
@@ -580,11 +580,11 @@ namespace isolinear::ui {
 
         Region2D left_text_filler{
             Position2D(leftlimit.x, left_text_end_cell.northwest_y()),
-            left_text_end_cell.SouthEast()
+            left_text_end_cell.southeast()
           };
 
         Region2D right_text_filler{
-            right_text_end_cell.NorthWest(),
+            right_text_end_cell.northwest(),
             Position2D(rightlimit.x, right_text_end_cell.southeast_y())
           };
 

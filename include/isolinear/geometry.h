@@ -60,15 +60,15 @@ namespace isolinear::geometry {
       int northwest_x() const { return 0;     }
       int northwest_y() const { return 0;     }
 
-      vector Centre()    const { return vector{ centre_x(),    centre_y()    }; }
-      vector North()     const { return vector{ north_x(),     north_y()     }; }
-      vector East()      const { return vector{ east_x(),      east_y()      }; }
-      vector South()     const { return vector{ south_x(),     south_y()     }; }
-      vector West()      const { return vector{ west_x(),      west_y()      }; }
-      vector NorthEast() const { return vector{ northeast_x(), northeast_y() }; }
-      vector SouthEast() const { return vector{ southeast_x(), southeast_y() }; }
-      vector SouthWest() const { return vector{ southwest_x(), southwest_y() }; }
-      vector NorthWest() const { return vector{ northwest_x(), northwest_y() }; }
+      vector centre()    const { return vector{ centre_x(),    centre_y()    }; }
+      vector north()     const { return vector{ north_x(),     north_y()     }; }
+      vector east()      const { return vector{ east_x(),      east_y()      }; }
+      vector south()     const { return vector{ south_x(),     south_y()     }; }
+      vector west()      const { return vector{ west_x(),      west_y()      }; }
+      vector northeast() const { return vector{ northeast_x(), northeast_y() }; }
+      vector southeast() const { return vector{ southeast_x(), southeast_y() }; }
+      vector southwest() const { return vector{ southwest_x(), southwest_y() }; }
+      vector northwest() const { return vector{ northwest_x(), northwest_y() }; }
   };
 
 
@@ -165,47 +165,47 @@ namespace isolinear::geometry {
             int far_y() const { return Far().y; }
 
       // compass points
-      Position2D Centre()     const { return Point(compass::centre   ); }
-      Position2D North()      const { return Point(compass::north    ); }
-      Position2D NorthEast()  const { return Point(compass::northeast); }
-      Position2D East()       const { return Point(compass::east     ); }
-      Position2D SouthEast()  const { return Point(compass::southeast); }
-      Position2D South()      const { return Point(compass::south    ); }
-      Position2D SouthWest()  const { return Point(compass::southwest); }
-      Position2D West()       const { return Point(compass::west     ); }
-      Position2D NorthWest()  const { return Point(compass::northwest); }
+      Position2D centre()     const { return Point(compass::centre   ); }
+      Position2D north()      const { return Point(compass::north    ); }
+      Position2D northeast()  const { return Point(compass::northeast); }
+      Position2D east()       const { return Point(compass::east     ); }
+      Position2D southeast()  const { return Point(compass::southeast); }
+      Position2D south()      const { return Point(compass::south    ); }
+      Position2D southwest()  const { return Point(compass::southwest); }
+      Position2D west()       const { return Point(compass::west     ); }
+      Position2D northwest()  const { return Point(compass::northwest); }
 
-      int centre_x()    const { return Centre().x;    }
-      int centre_y()    const { return Centre().y;    }
-      int north_x()     const { return North().x;     }
-      int north_y()     const { return North().y;     }
-      int east_x()      const { return East().x;      }
-      int east_y()      const { return East().y;      }
-      int south_x()     const { return South().x;     }
-      int south_y()     const { return South().y;     }
-      int west_x()      const { return West().x;      }
-      int west_y()      const { return West().y;      }
-      int northeast_x() const { return NorthEast().x; }
-      int northeast_y() const { return NorthEast().y; }
-      int southeast_x() const { return SouthEast().x; }
-      int southeast_y() const { return SouthEast().y; }
-      int southwest_x() const { return SouthWest().x; }
-      int southwest_y() const { return SouthWest().y; }
-      int northwest_x() const { return NorthWest().x; }
-      int northwest_y() const { return NorthWest().y; }
+      int centre_x()    const { return centre().x;    }
+      int centre_y()    const { return centre().y;    }
+      int north_x()     const { return north().x;     }
+      int north_y()     const { return north().y;     }
+      int east_x()      const { return east().x;      }
+      int east_y()      const { return east().y;      }
+      int south_x()     const { return south().x;     }
+      int south_y()     const { return south().y;     }
+      int west_x()      const { return west().x;      }
+      int west_y()      const { return west().y;      }
+      int northeast_x() const { return northeast().x; }
+      int northeast_y() const { return northeast().y; }
+      int southeast_x() const { return southeast().x; }
+      int southeast_y() const { return southeast().y; }
+      int southwest_x() const { return southwest().x; }
+      int southwest_y() const { return southwest().y; }
+      int northwest_x() const { return northwest().x; }
+      int northwest_y() const { return northwest().y; }
 
       // compass Points
       Position2D Point(compass align) const {
         switch (align) {
-          case    compass::centre: return Origin().add(Size().Centre());
-          case     compass::north: return Origin().add(Size().North());
-          case compass::northeast: return Origin().add(Size().NorthEast());
-          case      compass::east: return Origin().add(Size().East());
-          case compass::southeast: return Origin().add(Size().SouthEast());
-          case     compass::south: return Origin().add(Size().South());
-          case compass::southwest: return Origin().add(Size().SouthWest());
-          case      compass::west: return Origin().add(Size().West());
-          case compass::northwest: return Origin().add(Size().NorthWest());
+          case    compass::centre: return Origin().add(Size().centre());
+          case     compass::north: return Origin().add(Size().north());
+          case compass::northeast: return Origin().add(Size().northeast());
+          case      compass::east: return Origin().add(Size().east());
+          case compass::southeast: return Origin().add(Size().southeast());
+          case     compass::south: return Origin().add(Size().south());
+          case compass::southwest: return Origin().add(Size().southwest());
+          case      compass::west: return Origin().add(Size().west());
+          case compass::northwest: return Origin().add(Size().northwest());
         }
         return Position2D();
       }
@@ -213,30 +213,30 @@ namespace isolinear::geometry {
       // compass Alignment
       Region2D Align(compass align, vector s) const {
         switch (align) {
-          case    compass::centre: return Region2D{    Centre().subtract(s.Centre()   ), s };
-          case     compass::north: return Region2D{     North().subtract(s.North()    ), s };
-          case compass::northeast: return Region2D{ NorthEast().subtract(s.NorthEast()), s };
-          case      compass::east: return Region2D{      East().subtract(s.East()     ), s };
-          case compass::southeast: return Region2D{ SouthEast().subtract(s.SouthEast()), s };
-          case     compass::south: return Region2D{     South().subtract(s.South()    ), s };
-          case compass::southwest: return Region2D{ SouthWest().subtract(s.SouthWest()), s };
-          case      compass::west: return Region2D{      West().subtract(s.West()     ), s };
-          case compass::northwest: return Region2D{ NorthWest().subtract(s.NorthWest()), s };
+          case    compass::centre: return Region2D{    centre().subtract(s.centre()   ), s };
+          case     compass::north: return Region2D{     north().subtract(s.north()    ), s };
+          case compass::northeast: return Region2D{ northeast().subtract(s.northeast()), s };
+          case      compass::east: return Region2D{      east().subtract(s.east()     ), s };
+          case compass::southeast: return Region2D{ southeast().subtract(s.southeast()), s };
+          case     compass::south: return Region2D{     south().subtract(s.south()    ), s };
+          case compass::southwest: return Region2D{ southwest().subtract(s.southwest()), s };
+          case      compass::west: return Region2D{      west().subtract(s.west()     ), s };
+          case compass::northwest: return Region2D{ northwest().subtract(s.northwest()), s };
         }
         return Region2D();
       }
 
       // compass Quadrants
-      Region2D NorthEastQuadrant() const { return Region2D{ North(),       East() }; }
-      Region2D SouthEastQuadrant() const { return Region2D{ Centre(), SouthEast() }; }
-      Region2D SouthWestQuadrant() const { return Region2D{ West(),       South() }; }
-      Region2D NorthWestQuadrant() const { return Region2D{ NorthWest(), Centre() }; }
+      Region2D northeastQuadrant() const { return Region2D{ north(),       east() }; }
+      Region2D southeastQuadrant() const { return Region2D{ centre(), southeast() }; }
+      Region2D southwestQuadrant() const { return Region2D{ west(),       south() }; }
+      Region2D northwestQuadrant() const { return Region2D{ northwest(), centre() }; }
 
       // Halfs
-      Region2D TopHalf()    const { return Region2D{ NorthWest(), East()      }; }
-      Region2D BottomHalf() const { return Region2D{ West(),      SouthEast() }; }
-      Region2D LeftHalf()   const { return Region2D{ NorthWest(), South()     }; }
-      Region2D RightHalf()  const { return Region2D{ North(),     SouthEast() }; }
+      Region2D TopHalf()    const { return Region2D{ northwest(), east()      }; }
+      Region2D BottomHalf() const { return Region2D{ west(),      southeast() }; }
+      Region2D LeftHalf()   const { return Region2D{ northwest(), south()     }; }
+      Region2D RightHalf()  const { return Region2D{ north(),     southeast() }; }
 
       bool Encloses(vector point) const {
         return ( near_x() <= point.x )

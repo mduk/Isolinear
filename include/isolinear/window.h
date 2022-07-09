@@ -110,15 +110,15 @@ namespace isolinear::window {
     public: // Calculate position of a compass point on this region
       window::position point(compass align) const {
         switch (align) {
-          case compass::centre:    return position(near().add(size().Centre()   ));
-          case compass::north:     return position(near().add(size().North()    ));
-          case compass::northeast: return position(near().add(size().NorthEast()));
-          case compass::east:      return position(near().add(size().East()     ));
-          case compass::southeast: return position(near().add(size().SouthEast()));
-          case compass::south:     return position(near().add(size().South()    ));
-          case compass::southwest: return position(near().add(size().SouthWest()));
-          case compass::west:      return position(near().add(size().West()     ));
-          case compass::northwest: return position(near().add(size().NorthWest()));
+          case compass::centre:    return position(near().add(size().centre()   ));
+          case compass::north:     return position(near().add(size().north()    ));
+          case compass::northeast: return position(near().add(size().northeast()));
+          case compass::east:      return position(near().add(size().east()     ));
+          case compass::southeast: return position(near().add(size().southeast()));
+          case compass::south:     return position(near().add(size().south()    ));
+          case compass::southwest: return position(near().add(size().southwest()));
+          case compass::west:      return position(near().add(size().west()     ));
+          case compass::northwest: return position(near().add(size().northwest()));
         }
         return near();
       }
