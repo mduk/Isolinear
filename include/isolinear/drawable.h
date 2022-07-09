@@ -21,28 +21,28 @@ namespace isolinear::ui {
 
   class drawable {
     protected:
-      region bounds;
-      theme::colour_scheme colours;
-      std::list<drawable*> children;
+      region m_bounds;
+      theme::colour_scheme m_colours;
+      std::list<drawable*> m_children;
 
     public:
       virtual region Bounds() const = 0;
 
       virtual void Draw(SDL_Renderer* renderer) const {
-        for (auto& child : children) {
+        for (auto& child : m_children) {
           child->Draw(renderer);
         }
       }
 
       virtual void RegisterChild(drawable* child) {
-        children.push_back(child);
+        m_children.push_back(child);
         child->Colours(Colours());
       }
 
       virtual void OnPointerEvent(pointer::event event) {
         position p = event.Position();
 
-        for (auto& child : children) {
+        for (auto& child : m_children) {
           if (child->Bounds().encloses(p)) {
             child->OnPointerEvent(event);
           }
@@ -50,12 +50,12 @@ namespace isolinear::ui {
       }
 
       virtual theme::colour_scheme Colours() const {
-        return colours;
+        return m_colours;
       }
 
       virtual void Colours(theme::colour_scheme cs) {
-        colours = cs;
-        for (auto& child : children) {
+        m_colours = cs;
+        for (auto& child : m_children) {
           child->Colours(cs);
         }
       }

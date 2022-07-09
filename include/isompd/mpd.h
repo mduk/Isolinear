@@ -135,7 +135,7 @@ class paginated_rows : public isolinear::ui::drawable {
       view_page = p;
 
       view_rows.clear();
-      children.clear();
+      m_children.clear();
 
       int end_index = page_rows * view_page;
       int start_index = end_index - page_rows;
