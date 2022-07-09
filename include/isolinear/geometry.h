@@ -144,23 +144,23 @@ namespace isolinear::geometry {
 
 
       // Sources of truth
-      virtual Position2D Origin() const { return _position; };
+      virtual Position2D origin() const { return _position; };
       virtual vector     Size()   const { return _size; };
 
 
       // X, Y, W, H shortcuts
-      int X() const { return Origin().x; }
-      int Y() const { return Origin().y; }
+      int X() const { return origin().x; }
+      int Y() const { return origin().y; }
       int W() const { return Size().x; }
       int H() const { return Size().y; }
 
 
       // Near and Far Point Positions
-      Position2D Near() const { return Origin(); }
-            int near_x() const { return Origin().x; }
-            int near_y() const { return Origin().y; }
+      Position2D Near() const { return origin(); }
+            int near_x() const { return origin().x; }
+            int near_y() const { return origin().y; }
 
-      Position2D Far() const { return Origin().add(Size()); }
+      Position2D Far() const { return origin().add(Size()); }
             int far_x() const { return Far().x; }
             int far_y() const { return Far().y; }
 
@@ -197,15 +197,15 @@ namespace isolinear::geometry {
       // compass Points
       Position2D Point(compass align) const {
         switch (align) {
-          case    compass::centre: return Origin().add(Size().centre());
-          case     compass::north: return Origin().add(Size().north());
-          case compass::northeast: return Origin().add(Size().northeast());
-          case      compass::east: return Origin().add(Size().east());
-          case compass::southeast: return Origin().add(Size().southeast());
-          case     compass::south: return Origin().add(Size().south());
-          case compass::southwest: return Origin().add(Size().southwest());
-          case      compass::west: return Origin().add(Size().west());
-          case compass::northwest: return Origin().add(Size().northwest());
+          case    compass::centre: return origin().add(Size().centre());
+          case     compass::north: return origin().add(Size().north());
+          case compass::northeast: return origin().add(Size().northeast());
+          case      compass::east: return origin().add(Size().east());
+          case compass::southeast: return origin().add(Size().southeast());
+          case     compass::south: return origin().add(Size().south());
+          case compass::southwest: return origin().add(Size().southwest());
+          case      compass::west: return origin().add(Size().west());
+          case compass::northwest: return origin().add(Size().northwest());
         }
         return Position2D();
       }

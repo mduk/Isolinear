@@ -462,7 +462,7 @@ namespace isolinear::ui {
           int col = grid.PositionColumnIndex(headerregion.Near());
           Region2D cell = grid.CalculateGridRegion(col, y, col, y+1);
           Region2D fillerregion{
-              cell.Origin(),
+              cell.origin(),
               Position2D{
                   headerregion.southwest_x(),
                   cell.far_y()
@@ -1171,7 +1171,7 @@ namespace isolinear::ui {
         Region2D sweep = SweepRegion();
 
         return Region2D{
-            sweep.Origin(),
+            sweep.origin(),
             geometry::vector{SweepOuterRadius()}
           };
       }
@@ -1206,7 +1206,7 @@ namespace isolinear::ui {
         Region2D horizontal = HorizontalRegion();
 
         return Region2D{
-            horizontal.Origin(),
+            horizontal.origin(),
             geometry::vector{
               horizontal.W(),
               reach_weight
@@ -1219,8 +1219,8 @@ namespace isolinear::ui {
 
         return Region2D{
             Position2D{
-              horizontal.Origin().x,
-              horizontal.Origin().y
+              horizontal.origin().x,
+              horizontal.origin().y
                 + reach_weight
                 + gutter.y
             },

@@ -125,7 +125,7 @@ namespace isolinear {
       }
 
       geometry::Region2D CalculateGridRegion(int near_col, int near_row, int far_col, int far_row) const {
-        geometry::Position2D origin = bounds.Origin();
+        geometry::Position2D origin = bounds.origin();
         auto cell_size = CellSize();
         return geometry::Region2D{
           /* x */ origin.x + (cell_size.x * (near_col - 1)),
