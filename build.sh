@@ -10,13 +10,11 @@ sudo apt install -y libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-gfx-de
 
 declare proj="${1:-}"
 
-mkdir -p .build
-cd .build
+mkdir -p build
 
-cmake ..
-make $proj
+cmake -B./build -S.
 
 if [[ ! -z $proj ]]
 then
-  ./bin/$proj
+  ./build/$proj
 fi
