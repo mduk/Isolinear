@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
   isolinear::display::window window(display_position, display_size);
 
   isolinear::grid grid(
-      geometry::Region2D(0, 0, display_size.x, display_size.y),
+      geometry::region(0, 0, display_size.x, display_size.y),
       window.ButtonFont().Height(), // Row height
       geometry::vector(10,10),
       geometry::vector(25,28)

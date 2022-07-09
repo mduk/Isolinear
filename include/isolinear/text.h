@@ -9,7 +9,7 @@
 
 namespace isolinear::text {
 
-  using isolinear::geometry::Region2D;
+  using isolinear::geometry::region;
   using isolinear::compass;
 
 
@@ -40,11 +40,11 @@ namespace isolinear::text {
         return geometry::vector{sdl_surface};
       }
 
-      void Draw(SDL_Renderer* renderer, compass alignment, Region2D bounds) const {
+      void Draw(SDL_Renderer* renderer, compass alignment, region bounds) const {
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, sdl_surface);
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-        Region2D label_region = bounds.align(alignment, size());
+        region label_region = bounds.align(alignment, size());
         SDL_Rect label_rect{
             label_region.X(),
             label_region.Y(),
@@ -82,7 +82,7 @@ namespace isolinear::text {
 
       void RenderText(
           SDL_Renderer* renderer,
-          Region2D bounds,
+          region bounds,
           compass align,
           std::string text
       ) const {
@@ -99,7 +99,7 @@ namespace isolinear::text {
         );
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-        Region2D label_region = bounds.align(align, geometry::vector{surface->w, surface->h});
+        region label_region = bounds.align(align, geometry::vector{surface->w, surface->h});
         SDL_Rect label_rect{
             label_region.X(),
             label_region.Y(),

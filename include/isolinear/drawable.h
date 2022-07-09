@@ -16,17 +16,17 @@ namespace isolinear::ui {
 
 
   using isolinear::geometry::Position2D;
-  using isolinear::geometry::Region2D;
+  using isolinear::geometry::region;
 
 
   class drawable {
     protected:
-      Region2D bounds;
+      region bounds;
       theme::colour_scheme colours;
       std::list<drawable*> children;
 
     public:
-      virtual Region2D Bounds() const = 0;
+      virtual region Bounds() const = 0;
 
       virtual void Draw(SDL_Renderer* renderer) const {
         for (auto& child : children) {
@@ -83,7 +83,7 @@ namespace isolinear::ui {
         return grid_for_index(std::list<T>::size() + 1);
       }
 
-      isolinear::geometry::Region2D Bounds() const {
+      isolinear::geometry::region Bounds() const {
         return grid.bounds;
       }
 

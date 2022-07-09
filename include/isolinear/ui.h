@@ -29,7 +29,7 @@ namespace isolinear::ui {
 
 
   using isolinear::compass;
-  using isolinear::geometry::Region2D;
+  using isolinear::geometry::region;
 
 
   // Widgets
@@ -47,7 +47,7 @@ namespace isolinear::ui {
       {}
 
     public:
-      Region2D Bounds() const {
+      region Bounds() const {
         return grid.bounds;
       }
 
@@ -61,7 +61,7 @@ namespace isolinear::ui {
         auto hrule_far_x = grid.bounds.far_x();
         auto hrule_far_y = grid.bounds.far_y() - offset_px;
 
-        Region2D hrule(
+        region hrule(
             Position2D(hrule_near_x, hrule_near_y),
             Position2D(hrule_far_x,  hrule_far_y)
           );
@@ -80,7 +80,7 @@ namespace isolinear::ui {
 
     public:
       miso::signal<> signal_press;
-      Region2D bounds;
+      region bounds;
 
       button( display::window& w, isolinear::grid g, std::string l)
         : button(w, g.bounds, l)
@@ -88,7 +88,7 @@ namespace isolinear::ui {
 
       button(
           display::window& w,
-          Region2D b,
+          region b,
           std::string l
         ) :
           bounds{b},
@@ -109,7 +109,7 @@ namespace isolinear::ui {
       std::string Label() { return label; }
       void Label(std::string newlabel) { label = newlabel + " "; }
 
-      virtual Region2D Bounds() const override {
+      virtual region Bounds() const override {
         return bounds;
       }
 
@@ -154,8 +154,8 @@ namespace isolinear::ui {
         : window{w}, grid{g}
       {};
 
-      virtual Region2D ButtonRegion(int i) const = 0;
-      virtual Region2D BarRegion() const = 0;
+      virtual region ButtonRegion(int i) const = 0;
+      virtual region BarRegion() const = 0;
 
       virtual theme::colour_scheme Colours() const {
         return drawable::Colours();
@@ -209,7 +209,7 @@ namespace isolinear::ui {
         return grid.MaxColumns();
       }
 
-      virtual Region2D Bounds() const override {
+      virtual region Bounds() const override {
         return grid.bounds;
       }
 
@@ -218,7 +218,7 @@ namespace isolinear::ui {
           button.Draw(renderer);
         }
 
-        Region2D bar = BarRegion();
+        region bar = BarRegion();
 
         boxColor(renderer,
             bar.near_x(), bar.near_y(),
@@ -233,7 +233,7 @@ namespace isolinear::ui {
     public:
       horizontal_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
-      Region2D ButtonRegion(int i) const override {
+      region ButtonRegion(int i) const override {
         int near_col = button_size.x * (i-1) + 1;
         int near_row = 1;
         int  far_col = button_size.x * i;
@@ -245,7 +245,7 @@ namespace isolinear::ui {
           );
       }
 
-      Region2D BarRegion() const override {
+      region BarRegion() const override {
         int near_col = button_size.x * buttons.size() + 1;
         int near_row = 1;
         int  far_col = grid.MaxColumns();
@@ -263,7 +263,7 @@ namespace isolinear::ui {
     public:
       vertical_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
-      Region2D ButtonRegion(int i) const override {
+      region ButtonRegion(int i) const override {
         int near_col = 1;
         int near_row = button_size.y * (i-1) + 1;
         int  far_col = grid.MaxColumns();
@@ -275,7 +275,7 @@ namespace isolinear::ui {
           );
       }
 
-      Region2D BarRegion() const override {
+      region BarRegion() const override {
         int near_col = 1;
         int near_row = button_size.y * buttons.size() + 1;
         int  far_col = grid.MaxColumns();
@@ -317,7 +317,7 @@ namespace isolinear::ui {
         drawable::Colours(cs);
       }
 
-      virtual Region2D Bounds() const override {
+      virtual region Bounds() const override {
         return grid.bounds;
       }
 
@@ -400,7 +400,7 @@ namespace isolinear::ui {
         return buttons.at(label);
       }
 
-      Region2D ButtonRegion(int i) const  {
+      region ButtonRegion(int i) const  {
         i = (i-1) * button_width;
         return grid.CalculateGridRegion(
             2+i,   1,
@@ -417,7 +417,7 @@ namespace isolinear::ui {
         }
       };
 
-      virtual Region2D Bounds() const override {
+      virtual region Bounds() const override {
         return grid.bounds;
       }
 
@@ -434,9 +434,9 @@ namespace isolinear::ui {
         int filler_start = westcap_width + 1;
         int filler_end = w;
 
-        Region2D   left_cap = grid.CalculateGridRegion(  x  , y,   x  , y+1);
-        Region2D  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
-        Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
+        region   left_cap = grid.CalculateGridRegion(  x  , y,   x  , y+1);
+        region  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
+        region centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
           left_cap.fill(renderer, LeftCapColour());
          right_cap.bullnose(renderer, compass::east, RightCapColour());
@@ -453,15 +453,15 @@ namespace isolinear::ui {
         if (header_text.length() > 0) {
           std::string padded = std::string(" ") + header_text + " ";
           text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
-          Region2D headerregion = centre_bar.align(compass::east, headertext.size());
+          region headerregion = centre_bar.align(compass::east, headertext.size());
 
           int near = grid.PositionColumnIndex(headerregion.Near());
           int  far = grid.PositionColumnIndex(headerregion.Far());
           filler_end -= (far - near) + 1;
 
           int col = grid.PositionColumnIndex(headerregion.Near());
-          Region2D cell = grid.CalculateGridRegion(col, y, col, y+1);
-          Region2D fillerregion{
+          region cell = grid.CalculateGridRegion(col, y, col, y+1);
+          region fillerregion{
               cell.origin(),
               Position2D{
                   headerregion.southwest_x(),
@@ -513,22 +513,22 @@ namespace isolinear::ui {
         drawable::Colours(cs);
       }
 
-      virtual Region2D Bounds() const override {
+      virtual region Bounds() const override {
         return grid.bounds;
       }
 
       void Draw(SDL_Renderer* renderer) const override {
-        Region2D left_cap = grid.CalculateGridRegion(
+        region left_cap = grid.CalculateGridRegion(
             1, 1,
             1, grid.MaxRows()
           );
 
-        Region2D centre_bar = grid.CalculateGridRegion(
+        region centre_bar = grid.CalculateGridRegion(
             2, 1,
             grid.MaxColumns() - 1, grid.MaxRows()
           );
 
-        Region2D right_cap = grid.CalculateGridRegion(
+        region right_cap = grid.CalculateGridRegion(
             grid.MaxColumns(), 1,
             grid.MaxColumns(), grid.MaxRows()
           );
@@ -544,10 +544,10 @@ namespace isolinear::ui {
             Colours().active, paddedright
           );
 
-        Region2D lefttextregion = centre_bar.align(
+        region lefttextregion = centre_bar.align(
             compass::west, lefttext.size()
           );
-        Region2D righttextregion = centre_bar.align(
+        region righttextregion = centre_bar.align(
             compass::east, righttext.size()
           );
 
@@ -561,29 +561,29 @@ namespace isolinear::ui {
             righttextregion.west()
           );
 
-        Region2D drawcentrebar = grid.CalculateGridRegion(
+        region drawcentrebar = grid.CalculateGridRegion(
             left_text_end_col_index + 1, 1,
             right_text_end_col_index - 1, grid.MaxRows()
           );
 
-        Region2D left_text_end_cell =
+        region left_text_end_cell =
           grid.CalculateGridRegion(
               left_text_end_col_index, 1,
               left_text_end_col_index, grid.MaxRows()
             );
 
-        Region2D right_text_end_cell =
+        region right_text_end_cell =
           grid.CalculateGridRegion(
               right_text_end_col_index, 1,
               right_text_end_col_index, grid.MaxRows()
             );
 
-        Region2D left_text_filler{
+        region left_text_filler{
             Position2D(leftlimit.x, left_text_end_cell.northwest_y()),
             left_text_end_cell.southeast()
           };
 
-        Region2D right_text_filler{
+        region right_text_filler{
             right_text_end_cell.northwest(),
             Position2D(rightlimit.x, right_text_end_cell.southeast_y())
           };
@@ -609,11 +609,11 @@ namespace isolinear::ui {
   class label : public drawable {
     protected:
       display::window& window;
-      Region2D bounds;
+      region bounds;
       std::string label_text;
 
     public:
-      label(display::window& w, Region2D b, std::string l)
+      label(display::window& w, region b, std::string l)
         : window(w)
         , bounds(b)
         , label_text(l)
@@ -624,7 +624,7 @@ namespace isolinear::ui {
       {}
 
     public:
-      Region2D Bounds() const {
+      region Bounds() const {
         return bounds;
       }
 
@@ -672,33 +672,33 @@ namespace isolinear::ui {
         return ports.y;
       }
 
-      virtual Region2D HorizontalPort() const = 0;
-      virtual Region2D VerticalPort() const = 0;
+      virtual region HorizontalPort() const = 0;
+      virtual region VerticalPort() const = 0;
 
-      virtual Region2D InnerCornerRegion() const {
-        return Region2D{
+      virtual region InnerCornerRegion() const {
+        return region{
             HorizontalPort().point(opposite),
             VerticalPort().point(opposite)
           };
       }
 
-      Region2D OuterRadiusRegion() const {
+      region OuterRadiusRegion() const {
         return grid.bounds.align(alignment, geometry::vector{outer_radius});
       }
 
       void DrawOuterRadius(SDL_Renderer* renderer) const {
-        Region2D region = OuterRadiusRegion();
+        region region = OuterRadiusRegion();
         region.fill(renderer, Colours().background);
         region.quadrant_arc(renderer, alignment, Colours().frame);
       }
 
-      Region2D Bounds() const override {
+      region Bounds() const override {
         return grid.bounds;
       }
 
       void Draw(SDL_Renderer* renderer) const override {
-        Region2D icorner = InnerCornerRegion();
-        Region2D iradius = icorner.align(alignment, geometry::vector{inner_radius});
+        region icorner = InnerCornerRegion();
+        region iradius = icorner.align(alignment, geometry::vector{inner_radius});
 
         grid.bounds.fill(renderer, Colours().frame);
         icorner.fill(renderer, Colours().background);
@@ -721,14 +721,14 @@ namespace isolinear::ui {
         : sweep{window, grid, ports, oradius, iradius, compass::northeast}
       {}
 
-      Region2D HorizontalPort() const override {
+      region HorizontalPort() const override {
         return grid.CalculateGridRegion(
             1, 1,
             1, ports.y
           );
       }
 
-      Region2D VerticalPort() const override {
+      region VerticalPort() const override {
         return grid.CalculateGridRegion(
             grid.MaxColumns() - ports.x + 1, grid.MaxRows(),
                           grid.MaxColumns(), grid.MaxRows()
@@ -743,14 +743,14 @@ namespace isolinear::ui {
         : sweep{window, grid, ports, oradius, iradius, compass::southeast}
       {}
 
-      Region2D HorizontalPort() const override {
+      region HorizontalPort() const override {
         return grid.CalculateGridRegion(
             1, grid.MaxRows() - ports.y + 1,
             1, grid.MaxRows()
           );
       }
 
-      Region2D VerticalPort() const override {
+      region VerticalPort() const override {
         return grid.CalculateGridRegion(
             grid.MaxColumns() - ports.x + 1, 1,
             grid.MaxColumns(), 1
@@ -765,14 +765,14 @@ namespace isolinear::ui {
         : sweep{window, grid, ports, oradius, iradius, compass::southwest}
       {}
 
-      Region2D VerticalPort() const override {
+      region VerticalPort() const override {
         return grid.CalculateGridRegion(
             1, 1,
             ports.x, 1
           );
       }
 
-      Region2D HorizontalPort() const override {
+      region HorizontalPort() const override {
         return grid.CalculateGridRegion(
             grid.MaxColumns(), grid.MaxRows() - ports.y + 1,
                           grid.MaxColumns(), grid.MaxRows()
@@ -787,14 +787,14 @@ namespace isolinear::ui {
         : sweep{window, grid, ports, oradius, iradius, compass::northwest}
       {}
 
-      Region2D HorizontalPort() const override {
+      region HorizontalPort() const override {
         return grid.CalculateGridRegion(
             grid.MaxColumns(), 1,
             grid.MaxColumns(), ports.y
           );
       }
 
-      Region2D VerticalPort() const override {
+      region VerticalPort() const override {
         return grid.CalculateGridRegion(
             1, grid.MaxRows(),
             ports.x, grid.MaxRows()
@@ -816,7 +816,7 @@ namespace isolinear::ui {
       bool draw_tail = true;
 
       theme::colour bar_colour;
-      Region2D bar_region;
+      region bar_region;
       geometry::vector segment_size;
       unsigned remainder_px = 0;
       unsigned n_segments = 0;
@@ -913,7 +913,7 @@ namespace isolinear::ui {
         draw_stripes = v;
       }
 
-      Region2D Bounds() const override {
+      region Bounds() const override {
         return grid.bounds;
       }
 
@@ -931,7 +931,7 @@ namespace isolinear::ui {
 
         if (draw_stripes) {
           for (int i=0; i<n_segments; i++) {
-            Region2D region{
+            region region{
                 Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
                 segment_size
               };
@@ -947,7 +947,7 @@ namespace isolinear::ui {
 
         theme::colour bar_colour = Colours().active;
 
-        Region2D filled_region{
+        region filled_region{
             Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
             segment_size
           };
@@ -955,7 +955,7 @@ namespace isolinear::ui {
 
         if (draw_tail) {
           for (int i=0; i<FilledSegments(); i++) {
-            Region2D region{
+            region region{
                 Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
                 segment_size
               };
@@ -992,17 +992,17 @@ namespace isolinear::ui {
           header_alignment{ha}
       {};
 
-      virtual Region2D ContainerRegion() const = 0;
-      virtual Region2D VerticalRegion() const = 0;
-      virtual Region2D SweepRegion() const = 0;
-      virtual Region2D SweepOuterRadiusRegion() const = 0;
-      virtual Region2D SweepInnerCornerRegion() const = 0;
-      virtual Region2D SweepInnerRadiusRegion() const = 0;
-      virtual Region2D HorizontalRegion() const = 0;
-      virtual Region2D ButtonRegion(int) const = 0;
+      virtual region ContainerRegion() const = 0;
+      virtual region VerticalRegion() const = 0;
+      virtual region SweepRegion() const = 0;
+      virtual region SweepOuterRadiusRegion() const = 0;
+      virtual region SweepInnerCornerRegion() const = 0;
+      virtual region SweepInnerRadiusRegion() const = 0;
+      virtual region HorizontalRegion() const = 0;
+      virtual region ButtonRegion(int) const = 0;
 
-      virtual Region2D ReachRegion() const = 0;
-      virtual Region2D HeaderRegion() const = 0;
+      virtual region ReachRegion() const = 0;
+      virtual region HeaderRegion() const = 0;
 
       virtual int SweepOuterRadius() const {
         return std::min(
@@ -1089,10 +1089,10 @@ namespace isolinear::ui {
       }
 
       virtual void DrawSweep(SDL_Renderer* renderer) const {
-        Region2D sweep = SweepRegion();
-        Region2D outer_radius = SweepOuterRadiusRegion();
-        Region2D inner_corner = SweepInnerCornerRegion();
-        Region2D inner_radius = SweepInnerRadiusRegion();
+        region sweep = SweepRegion();
+        region outer_radius = SweepOuterRadiusRegion();
+        region inner_corner = SweepInnerCornerRegion();
+        region inner_radius = SweepInnerRadiusRegion();
 
         boxColor(renderer,
             sweep.near_x(), sweep.near_y(),
@@ -1121,7 +1121,7 @@ namespace isolinear::ui {
       };
 
       virtual void DrawReach(SDL_Renderer* renderer) const {
-        Region2D reach = ReachRegion();
+        region reach = ReachRegion();
         boxColor(renderer,
             reach.near_x(), reach.near_y(),
             reach.far_x(), reach.far_y(),
@@ -1139,7 +1139,7 @@ namespace isolinear::ui {
       }
 
       virtual void DrawVertical(SDL_Renderer* renderer) const {
-        Region2D vertical = VerticalRegion();
+        region vertical = VerticalRegion();
         boxColor(renderer,
             vertical.near_x(), vertical.near_y(),
             vertical.far_x(), vertical.far_y(),
@@ -1160,24 +1160,24 @@ namespace isolinear::ui {
       {}
 
     protected:
-      Region2D SweepRegion() const override {
+      region SweepRegion() const override {
         return grid.CalculateGridRegion(
           1,1,
           sweep_cells.x, sweep_cells.y
         );
       }
 
-      Region2D SweepOuterRadiusRegion() const override {
-        Region2D sweep = SweepRegion();
+      region SweepOuterRadiusRegion() const override {
+        region sweep = SweepRegion();
 
-        return Region2D{
+        return region{
             sweep.origin(),
             geometry::vector{SweepOuterRadius()}
           };
       }
 
-      Region2D SweepInnerCornerRegion() const override {
-        Region2D sweep = SweepRegion();
+      region SweepInnerCornerRegion() const override {
+        region sweep = SweepRegion();
 
         return sweep.align(
             compass::southeast,
@@ -1188,24 +1188,24 @@ namespace isolinear::ui {
           );
       }
 
-      Region2D SweepInnerRadiusRegion() const override {
+      region SweepInnerRadiusRegion() const override {
         return SweepInnerCornerRegion().align(
             compass::northwest,
             geometry::vector{SweepInnerRadius()}
           );
       }
 
-      Region2D HorizontalRegion() const override {
+      region HorizontalRegion() const override {
         return grid.CalculateGridRegion(
           sweep_cells.x + 1, 1,
           grid.MaxColumns(), 2
         );
       }
 
-      Region2D ReachRegion() const override {
-        Region2D horizontal = HorizontalRegion();
+      region ReachRegion() const override {
+        region horizontal = HorizontalRegion();
 
-        return Region2D{
+        return region{
             horizontal.origin(),
             geometry::vector{
               horizontal.W(),
@@ -1214,10 +1214,10 @@ namespace isolinear::ui {
           };
       }
 
-      Region2D HeaderRegion() const override {
-        Region2D horizontal = HorizontalRegion();
+      region HeaderRegion() const override {
+        region horizontal = HorizontalRegion();
 
-        return Region2D{
+        return region{
             Position2D{
               horizontal.origin().x,
               horizontal.origin().y
@@ -1233,21 +1233,21 @@ namespace isolinear::ui {
           };
       }
 
-      Region2D VerticalRegion() const override {
+      region VerticalRegion() const override {
         return grid.CalculateGridRegion(
             1, sweep_cells.y + 1 + buttons.size(),
             sweep_cells.x - 1, grid.MaxRows()
           );
       }
 
-      Region2D ContainerRegion() const override {
+      region ContainerRegion() const override {
         return grid.CalculateGridRegion(
             sweep_cells.x, sweep_cells.y + 1,
             grid.MaxColumns(), grid.MaxRows()
           );
       }
 
-      Region2D ButtonRegion(int i) const override {
+      region ButtonRegion(int i) const override {
         return grid.CalculateGridRegion(
             1, sweep_cells.y +  i,
             sweep_cells.x - 1, sweep_cells.y  + i
@@ -1255,8 +1255,8 @@ namespace isolinear::ui {
       }
 
       void DrawSweep(SDL_Renderer* renderer) const {
-        Region2D outer_radius = SweepOuterRadiusRegion();
-        Region2D inner_radius = SweepInnerRadiusRegion();
+        region outer_radius = SweepOuterRadiusRegion();
+        region inner_radius = SweepInnerRadiusRegion();
 
         elbo::DrawSweep(renderer);
 
@@ -1287,15 +1287,15 @@ namespace isolinear::ui {
       {}
 
     protected:
-      Region2D SweepRegion() const override {
+      region SweepRegion() const override {
         return grid.CalculateGridRegion(
           1, grid.MaxRows() - sweep_cells.y + 1,
           sweep_cells.x, grid.MaxRows()
         );
       }
 
-      Region2D SweepOuterRadiusRegion() const override {
-        Region2D sweep = SweepRegion();
+      region SweepOuterRadiusRegion() const override {
+        region sweep = SweepRegion();
 
         return sweep.align(
             compass::southwest,
@@ -1303,10 +1303,10 @@ namespace isolinear::ui {
           );
       }
 
-      Region2D SweepInnerCornerRegion() const override {
-        Region2D sweep = SweepRegion();
-        Region2D vertical = VerticalRegion();
-        Region2D header = HeaderRegion();
+      region SweepInnerCornerRegion() const override {
+        region sweep = SweepRegion();
+        region vertical = VerticalRegion();
+        region header = HeaderRegion();
 
         return sweep.align(
             compass::northeast,
@@ -1317,8 +1317,8 @@ namespace isolinear::ui {
           );
       }
 
-      Region2D SweepInnerRadiusRegion() const override {
-        Region2D sweep = SweepRegion();
+      region SweepInnerRadiusRegion() const override {
+        region sweep = SweepRegion();
 
         return SweepInnerCornerRegion().align(
             compass::southwest,
@@ -1326,17 +1326,17 @@ namespace isolinear::ui {
           );
       }
 
-      Region2D HorizontalRegion() const override {
+      region HorizontalRegion() const override {
         return grid.CalculateGridRegion(
           sweep_cells.x + 1, grid.MaxRows() - sweep_cells.y + 1,
           grid.MaxColumns(), grid.MaxRows()
         );
       }
 
-      Region2D ReachRegion() const override {
-        Region2D horizontal = HorizontalRegion();
+      region ReachRegion() const override {
+        region horizontal = HorizontalRegion();
 
-        return Region2D{
+        return region{
             Position2D{
               horizontal.X(),
               horizontal.Y() + horizontal.H() - reach_weight
@@ -1348,10 +1348,10 @@ namespace isolinear::ui {
           };
       }
 
-      Region2D HeaderRegion() const override {
-        Region2D horizontal = HorizontalRegion();
+      region HeaderRegion() const override {
+        region horizontal = HorizontalRegion();
 
-        return Region2D{
+        return region{
             Position2D{
               horizontal.X(),
               horizontal.Y()
@@ -1363,18 +1363,18 @@ namespace isolinear::ui {
           };
       }
 
-      Region2D VerticalRegion() const override {
+      region VerticalRegion() const override {
         return grid.CalculateGridRegion(
             1,1,
             sweep_cells.x -1, grid.MaxRows() - sweep_cells.y - buttons.size()
           );
       }
 
-      Region2D ContainerRegion() const override {
-        return Region2D{ };
+      region ContainerRegion() const override {
+        return region{ };
       }
 
-      Region2D ButtonRegion(int i) const override {
+      region ButtonRegion(int i) const override {
         return grid.CalculateGridRegion(
             sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size(),
             sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size()
@@ -1382,8 +1382,8 @@ namespace isolinear::ui {
       };
 
       void DrawSweep(SDL_Renderer* renderer) const override {
-        Region2D outer_radius = SweepOuterRadiusRegion();
-        Region2D inner_radius = SweepInnerRadiusRegion();
+        region outer_radius = SweepOuterRadiusRegion();
+        region inner_radius = SweepInnerRadiusRegion();
 
         elbo::DrawSweep(renderer);
 

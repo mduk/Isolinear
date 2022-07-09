@@ -85,29 +85,29 @@ namespace isolinear::geometry {
       }
   };
 
-  class Region2D {
+  class region {
     protected:
       Position2D _position;
       vector _size;
 
     public:
-      Region2D()
+      region()
           : _position{0,0}, _size{0,0}
         {};
 
-      Region2D(vector s)
+      region(vector s)
           : _position{0,0}, _size{s}
         {};
 
-      Region2D(SDL_Rect r)
+      region(SDL_Rect r)
           : _position{r.x, r.y}, _size{r.w, r.h}
         {};
 
-      Region2D(Position2D _p, vector _s)
+      region(Position2D _p, vector _s)
           : _position{_p}, _size{_s}
         {};
 
-      Region2D(Position2D a, Position2D b) {
+      region(Position2D a, Position2D b) {
           Position2D near{
               std::min(a.x, b.x),
               std::min(a.y, b.y)
@@ -125,7 +125,7 @@ namespace isolinear::geometry {
             };
         };
 
-      Region2D(int _x, int _y, int _w, int _h)
+      region(int _x, int _y, int _w, int _h)
           : _position{_x, _y}, _size{_w, _h}
         {};
 
@@ -211,32 +211,32 @@ namespace isolinear::geometry {
       }
 
       // compass Alignment
-      Region2D align(compass align, vector s) const {
+      region align(compass align, vector s) const {
         switch (align) {
-          case    compass::centre: return Region2D{    centre().subtract(s.centre()   ), s };
-          case     compass::north: return Region2D{     north().subtract(s.north()    ), s };
-          case compass::northeast: return Region2D{ northeast().subtract(s.northeast()), s };
-          case      compass::east: return Region2D{      east().subtract(s.east()     ), s };
-          case compass::southeast: return Region2D{ southeast().subtract(s.southeast()), s };
-          case     compass::south: return Region2D{     south().subtract(s.south()    ), s };
-          case compass::southwest: return Region2D{ southwest().subtract(s.southwest()), s };
-          case      compass::west: return Region2D{      west().subtract(s.west()     ), s };
-          case compass::northwest: return Region2D{ northwest().subtract(s.northwest()), s };
+          case    compass::centre: return region{    centre().subtract(s.centre()   ), s };
+          case     compass::north: return region{     north().subtract(s.north()    ), s };
+          case compass::northeast: return region{ northeast().subtract(s.northeast()), s };
+          case      compass::east: return region{      east().subtract(s.east()     ), s };
+          case compass::southeast: return region{ southeast().subtract(s.southeast()), s };
+          case     compass::south: return region{     south().subtract(s.south()    ), s };
+          case compass::southwest: return region{ southwest().subtract(s.southwest()), s };
+          case      compass::west: return region{      west().subtract(s.west()     ), s };
+          case compass::northwest: return region{ northwest().subtract(s.northwest()), s };
         }
-        return Region2D();
+        return region();
       }
 
       // compass Quadrants
-      Region2D northeast_quadrant() const { return Region2D{ north(),       east() }; }
-      Region2D southeast_quadrant() const { return Region2D{ centre(), southeast() }; }
-      Region2D southwest_quadrant() const { return Region2D{ west(),       south() }; }
-      Region2D northwest_quadrant() const { return Region2D{ northwest(), centre() }; }
+      region northeast_quadrant() const { return region{ north(),       east() }; }
+      region southeast_quadrant() const { return region{ centre(), southeast() }; }
+      region southwest_quadrant() const { return region{ west(),       south() }; }
+      region northwest_quadrant() const { return region{ northwest(), centre() }; }
 
       // Halfs
-      Region2D top_half()    const { return Region2D{ northwest(), east()      }; }
-      Region2D bottom_half() const { return Region2D{ west(),      southeast() }; }
-      Region2D left_half()   const { return Region2D{ northwest(), south()     }; }
-      Region2D right_half()  const { return Region2D{ north(),     southeast() }; }
+      region top_half()    const { return region{ northwest(), east()      }; }
+      region bottom_half() const { return region{ west(),      southeast() }; }
+      region left_half()   const { return region{ northwest(), south()     }; }
+      region right_half()  const { return region{ north(),     southeast() }; }
 
       bool encloses(vector point) const {
         return ( near_x() <= point.x )
@@ -245,7 +245,7 @@ namespace isolinear::geometry {
             && ( point.y <= far_y()  );
       }
 
-      bool encloses(Region2D r) const {
+      bool encloses(region r) const {
         return encloses(r.Near())
             && encloses(r.Far());
       }

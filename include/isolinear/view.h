@@ -23,7 +23,7 @@ namespace isolinear {
         return title;
       }
 
-      geometry::Region2D Bounds() const {
+      geometry::region Bounds() const {
         return grid.bounds;
       }
 

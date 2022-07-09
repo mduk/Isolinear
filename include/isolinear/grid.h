@@ -20,12 +20,12 @@ namespace isolinear {
 
     public:
       geometry::vector gutter{50, 50};
-      geometry::Region2D bounds;
+      geometry::region bounds;
 
       grid() {};
 
       grid(
-          geometry::Region2D b,
+          geometry::region b,
           int rh,
           geometry::vector g,
           geometry::vector s
@@ -120,14 +120,14 @@ namespace isolinear {
         return Rows(t + 1, MaxRows() - b);
       }
 
-      geometry::Region2D Cell(int col, int row) const {
+      geometry::region Cell(int col, int row) const {
         return CalculateGridRegion(col, row, col, row);
       }
 
-      geometry::Region2D CalculateGridRegion(int near_col, int near_row, int far_col, int far_row) const {
+      geometry::region CalculateGridRegion(int near_col, int near_row, int far_col, int far_row) const {
         geometry::Position2D origin = bounds.origin();
         auto cell_size = CellSize();
-        return geometry::Region2D{
+        return geometry::region{
           /* x */ origin.x + (cell_size.x * (near_col - 1)),
           /* y */ origin.y + (cell_size.y * (near_row - 1)),
           /* w */ cell_size.x * ((far_col - near_col) + 1) - gutter.x,
