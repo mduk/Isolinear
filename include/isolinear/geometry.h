@@ -211,7 +211,7 @@ namespace isolinear::geometry {
       }
 
       // compass Alignment
-      Region2D Align(compass align, vector s) const {
+      Region2D align(compass align, vector s) const {
         switch (align) {
           case    compass::centre: return Region2D{    centre().subtract(s.centre()   ), s };
           case     compass::north: return Region2D{     north().subtract(s.north()    ), s };
@@ -284,23 +284,23 @@ namespace isolinear::geometry {
       virtual void Bullnose(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
         switch (orientation) {
           case compass::north:
-            Align(compass::north, vector{W()}).Ellipse(renderer, colour);
-            Align(compass::south, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
+            align(compass::north, vector{W()}).Ellipse(renderer, colour);
+            align(compass::south, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
             break;
 
           case compass::east:
-            Align(compass::east, vector{H()}).Ellipse(renderer, colour);
-            Align(compass::west, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
+            align(compass::east, vector{H()}).Ellipse(renderer, colour);
+            align(compass::west, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
             break;
 
           case compass::south:
-            Align(compass::south, vector{W()}).Ellipse(renderer, colour);
-            Align(compass::north, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
+            align(compass::south, vector{W()}).Ellipse(renderer, colour);
+            align(compass::north, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
             break;
 
           case compass::west:
-            Align(compass::west, vector{H()}).Ellipse(renderer, colour);
-            Align(compass::east, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
+            align(compass::west, vector{H()}).Ellipse(renderer, colour);
+            align(compass::east, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
             break;
         }
       }

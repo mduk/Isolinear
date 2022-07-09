@@ -453,7 +453,7 @@ namespace isolinear::ui {
         if (header_text.length() > 0) {
           std::string padded = std::string(" ") + header_text + " ";
           text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
-          Region2D headerregion = centre_bar.Align(compass::east, headertext.size());
+          Region2D headerregion = centre_bar.align(compass::east, headertext.size());
 
           int near = grid.PositionColumnIndex(headerregion.Near());
           int  far = grid.PositionColumnIndex(headerregion.Far());
@@ -544,10 +544,10 @@ namespace isolinear::ui {
             Colours().active, paddedright
           );
 
-        Region2D lefttextregion = centre_bar.Align(
+        Region2D lefttextregion = centre_bar.align(
             compass::west, lefttext.size()
           );
-        Region2D righttextregion = centre_bar.Align(
+        Region2D righttextregion = centre_bar.align(
             compass::east, righttext.size()
           );
 
@@ -683,7 +683,7 @@ namespace isolinear::ui {
       }
 
       Region2D OuterRadiusRegion() const {
-        return grid.bounds.Align(alignment, geometry::vector{outer_radius});
+        return grid.bounds.align(alignment, geometry::vector{outer_radius});
       }
 
       void DrawOuterRadius(SDL_Renderer* renderer) const {
@@ -698,7 +698,7 @@ namespace isolinear::ui {
 
       void Draw(SDL_Renderer* renderer) const override {
         Region2D icorner = InnerCornerRegion();
-        Region2D iradius = icorner.Align(alignment, geometry::vector{inner_radius});
+        Region2D iradius = icorner.align(alignment, geometry::vector{inner_radius});
 
         grid.bounds.Fill(renderer, Colours().frame);
         icorner.Fill(renderer, Colours().background);
@@ -1179,7 +1179,7 @@ namespace isolinear::ui {
       Region2D SweepInnerCornerRegion() const override {
         Region2D sweep = SweepRegion();
 
-        return sweep.Align(
+        return sweep.align(
             compass::southeast,
             geometry::vector{
                 sweep.far_x() - VerticalRegion().far_x(),
@@ -1189,7 +1189,7 @@ namespace isolinear::ui {
       }
 
       Region2D SweepInnerRadiusRegion() const override {
-        return SweepInnerCornerRegion().Align(
+        return SweepInnerCornerRegion().align(
             compass::northwest,
             geometry::vector{SweepInnerRadius()}
           );
@@ -1297,7 +1297,7 @@ namespace isolinear::ui {
       Region2D SweepOuterRadiusRegion() const override {
         Region2D sweep = SweepRegion();
 
-        return sweep.Align(
+        return sweep.align(
             compass::southwest,
             geometry::vector{SweepOuterRadius()}
           );
@@ -1308,7 +1308,7 @@ namespace isolinear::ui {
         Region2D vertical = VerticalRegion();
         Region2D header = HeaderRegion();
 
-        return sweep.Align(
+        return sweep.align(
             compass::northeast,
             geometry::vector{
               sweep.far_x() - vertical.far_x(),
@@ -1320,7 +1320,7 @@ namespace isolinear::ui {
       Region2D SweepInnerRadiusRegion() const override {
         Region2D sweep = SweepRegion();
 
-        return SweepInnerCornerRegion().Align(
+        return SweepInnerCornerRegion().align(
             compass::southwest,
             geometry::vector{SweepInnerRadius()}
           );

@@ -44,7 +44,7 @@ namespace isolinear::text {
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, sdl_surface);
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-        Region2D label_region = bounds.Align(alignment, size());
+        Region2D label_region = bounds.align(alignment, size());
         SDL_Rect label_rect{
             label_region.X(),
             label_region.Y(),
@@ -99,7 +99,7 @@ namespace isolinear::text {
         );
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-        Region2D label_region = bounds.Align(align, geometry::vector{surface->w, surface->h});
+        Region2D label_region = bounds.align(align, geometry::vector{surface->w, surface->h});
         SDL_Rect label_rect{
             label_region.X(),
             label_region.Y(),
