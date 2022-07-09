@@ -238,16 +238,16 @@ namespace isolinear::geometry {
       Region2D left_half()   const { return Region2D{ northwest(), south()     }; }
       Region2D right_half()  const { return Region2D{ north(),     southeast() }; }
 
-      bool Encloses(vector point) const {
+      bool encloses(vector point) const {
         return ( near_x() <= point.x )
             && ( near_y() <= point.y )
             && ( point.x <= far_x()  )
             && ( point.y <= far_y()  );
       }
 
-      bool Encloses(Region2D r) const {
-        return Encloses(r.Near())
-            && Encloses(r.Far());
+      bool encloses(Region2D r) const {
+        return encloses(r.Near())
+            && encloses(r.Far());
       }
 
       virtual void Fill(SDL_Renderer* renderer, theme::colour colour) const {

@@ -43,7 +43,7 @@ namespace isolinear::ui {
         Position2D p = event.Position();
 
         for (auto& child : children) {
-          if (child->Bounds().Encloses(p)) {
+          if (child->Bounds().encloses(p)) {
             child->OnPointerEvent(event);
           }
         }
@@ -104,7 +104,7 @@ namespace isolinear::ui {
         Position2D p = event.Position();
 
         for (auto& elem : *this) {
-          if (elem.Bounds().Encloses(p)) {
+          if (elem.Bounds().encloses(p)) {
             elem.OnPointerEvent(event);
           }
         }

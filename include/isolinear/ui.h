@@ -194,7 +194,7 @@ namespace isolinear::ui {
 
       virtual void OnPointerEvent(pointer::event event) override {
         for (auto& [label, button] : buttons) {
-          if (button.Bounds().Encloses(event.Position())) {
+          if (button.Bounds().encloses(event.Position())) {
             button.OnPointerEvent(event);
             return;
           }
@@ -410,7 +410,7 @@ namespace isolinear::ui {
 
       virtual void OnPointerEvent(pointer::event event) override {
         for (auto& [label, button] : buttons) {
-          if (button.Bounds().Encloses(event.Position())) {
+          if (button.Bounds().encloses(event.Position())) {
             button.OnPointerEvent(event);
             return;
           }
@@ -1019,47 +1019,47 @@ namespace isolinear::ui {
         Position2D cursor = event.Position();
 
         auto const container_region = ContainerRegion();
-        if (container_region.Encloses(cursor)) {
+        if (container_region.encloses(cursor)) {
           printf("Container: ");
           container_region.Print();
           return;
         }
 
         auto const vertical_region = VerticalRegion();
-        if (vertical_region.Encloses(cursor)) {
+        if (vertical_region.encloses(cursor)) {
           printf("Vertical: ");
           vertical_region.Print();
           return;
         }
 
         for (auto& button : buttons) {
-          if (button.bounds.Encloses(cursor)) {
+          if (button.bounds.encloses(cursor)) {
             button.OnPointerEvent(event);
             return;
           }
         }
 
         auto const sweep_region = SweepRegion();
-        if (sweep_region.Encloses(cursor)) {
+        if (sweep_region.encloses(cursor)) {
           printf("Sweep: ");
           sweep_region.Print();
           return;
         }
 
         auto const horizontal_region = HorizontalRegion();
-        if (horizontal_region.Encloses(cursor)) {
+        if (horizontal_region.encloses(cursor)) {
           printf("Horizontal: ");
           horizontal_region.Print();
 
           auto const reach_region = ReachRegion();
-          if (reach_region.Encloses(cursor)) {
+          if (reach_region.encloses(cursor)) {
             printf("Reach: ");
             reach_region.Print();
             return;
           }
 
           auto const header_region = HeaderRegion();
-          if (header_region.Encloses(cursor)) {
+          if (header_region.encloses(cursor)) {
             printf("Header: ");
             header_region.Print();
             return;
