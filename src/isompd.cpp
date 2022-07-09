@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
+  SDL_ShowCursor(true);
   mpdc.RequestStatus();
 
   while (running) {

@@ -110,7 +110,7 @@ namespace isolinear::display {
             _position.x, _position.y,
             _size.x, _size.y,
             0 | SDL_WINDOW_ALLOW_HIGHDPI
-              //| SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
+              | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
               | SDL_WINDOW_BORDERLESS
           );
 
