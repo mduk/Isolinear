@@ -55,11 +55,11 @@ namespace isolinear::ui {
         auto bound_height = grid.bounds.H();
         auto offset_px = (bound_height - grid.gutter.y) / 2;
 
-        auto hrule_near_x = grid.bounds.NearX();
-        auto hrule_near_y = grid.bounds.NearY() + offset_px;
+        auto hrule_near_x = grid.bounds.near_x();
+        auto hrule_near_y = grid.bounds.near_y() + offset_px;
 
-        auto hrule_far_x = grid.bounds.FarX();
-        auto hrule_far_y = grid.bounds.FarY() - offset_px;
+        auto hrule_far_x = grid.bounds.far_x();
+        auto hrule_far_y = grid.bounds.far_y() - offset_px;
 
         Region2D hrule(
             Position2D(hrule_near_x, hrule_near_y),
@@ -122,8 +122,8 @@ namespace isolinear::ui {
 
 
         boxColor(renderer,
-            bounds.NearX(), bounds.NearY(),
-            bounds.FarX(),  bounds.FarY(),
+            bounds.near_x(), bounds.near_y(),
+            bounds.far_x(),  bounds.far_y(),
             drawcolour
           );
 
@@ -221,8 +221,8 @@ namespace isolinear::ui {
         Region2D bar = BarRegion();
 
         boxColor(renderer,
-            bar.NearX(), bar.NearY(),
-            bar.FarX(),  bar.FarY(),
+            bar.near_x(), bar.near_y(),
+            bar.far_x(),  bar.far_y(),
             Colours().frame
           );
       }
@@ -465,7 +465,7 @@ namespace isolinear::ui {
               cell.Origin(),
               Position2D{
                   headerregion.southwest_x(),
-                  cell.FarY()
+                  cell.far_y()
                 }
             };
           fillerregion.Fill(renderer, RightCapColour());
@@ -829,12 +829,12 @@ namespace isolinear::ui {
         : grid{_g}
         , bar_region(
             Position2D(
-              grid.bounds.NearX() + (gutter * 2),
-              grid.bounds.NearY() + (gutter * 2)
+              grid.bounds.near_x() + (gutter * 2),
+              grid.bounds.near_y() + (gutter * 2)
             ),
             Position2D(
-              grid.bounds.FarX() - (gutter * 2),
-              grid.bounds.FarY() - (gutter * 2)
+              grid.bounds.far_x() - (gutter * 2),
+              grid.bounds.far_y() - (gutter * 2)
             )
           )
         , segment_size{ (int) gutter, bar_region.H() }
@@ -919,13 +919,13 @@ namespace isolinear::ui {
 
       void Draw(SDL_Renderer* renderer) const override {
         boxColor(renderer,
-            grid.bounds.NearX(), grid.bounds.NearY(),
-            grid.bounds.FarX(),  grid.bounds.FarY(),
+            grid.bounds.near_x(), grid.bounds.near_y(),
+            grid.bounds.far_x(),  grid.bounds.far_y(),
             Colours().frame
           );
         boxColor(renderer,
-            grid.bounds.NearX() + gutter, grid.bounds.NearY() + gutter,
-            grid.bounds.FarX() - gutter,  grid.bounds.FarY() - gutter,
+            grid.bounds.near_x() + gutter, grid.bounds.near_y() + gutter,
+            grid.bounds.far_x() - gutter,  grid.bounds.far_y() - gutter,
             Colours().background
           );
 
@@ -1095,26 +1095,26 @@ namespace isolinear::ui {
         Region2D inner_radius = SweepInnerRadiusRegion();
 
         boxColor(renderer,
-            sweep.NearX(), sweep.NearY(),
-            sweep.FarX(), sweep.FarY(),
+            sweep.near_x(), sweep.near_y(),
+            sweep.far_x(), sweep.far_y(),
             Colours().frame
           );
 
         boxColor(renderer,
-            outer_radius.NearX(), outer_radius.NearY(),
-            outer_radius.FarX(), outer_radius.FarY(),
+            outer_radius.near_x(), outer_radius.near_y(),
+            outer_radius.far_x(), outer_radius.far_y(),
             Colours().background
           );
 
         boxColor(renderer,
-            inner_corner.NearX(), inner_corner.NearY(),
-            inner_corner.FarX(), inner_corner.FarY(),
+            inner_corner.near_x(), inner_corner.near_y(),
+            inner_corner.far_x(), inner_corner.far_y(),
             Colours().background
           );
 
         boxColor(renderer,
-            inner_radius.NearX(), inner_radius.NearY(),
-            inner_radius.FarX(), inner_radius.FarY(),
+            inner_radius.near_x(), inner_radius.near_y(),
+            inner_radius.far_x(), inner_radius.far_y(),
             Colours().frame
           );
 
@@ -1123,8 +1123,8 @@ namespace isolinear::ui {
       virtual void DrawReach(SDL_Renderer* renderer) const {
         Region2D reach = ReachRegion();
         boxColor(renderer,
-            reach.NearX(), reach.NearY(),
-            reach.FarX(), reach.FarY(),
+            reach.near_x(), reach.near_y(),
+            reach.far_x(), reach.far_y(),
             Colours().frame
           );
       }
@@ -1141,8 +1141,8 @@ namespace isolinear::ui {
       virtual void DrawVertical(SDL_Renderer* renderer) const {
         Region2D vertical = VerticalRegion();
         boxColor(renderer,
-            vertical.NearX(), vertical.NearY(),
-            vertical.FarX(), vertical.FarY(),
+            vertical.near_x(), vertical.near_y(),
+            vertical.far_x(), vertical.far_y(),
             Colours().frame
           );
       }
@@ -1182,7 +1182,7 @@ namespace isolinear::ui {
         return sweep.Align(
             compass::southeast,
             geometry::vector{
-                sweep.FarX() - VerticalRegion().FarX(),
+                sweep.far_x() - VerticalRegion().far_x(),
                 HeaderRegion().H() + gutter.y
               }
           );
@@ -1261,14 +1261,14 @@ namespace isolinear::ui {
         elbo::DrawSweep(renderer);
 
         filledPieColor(renderer,
-            outer_radius.FarX(), outer_radius.FarY(),
+            outer_radius.far_x(), outer_radius.far_y(),
             outer_radius.H(),
             180, 270,
             Colours().frame
           );
 
         filledPieColor(renderer,
-            inner_radius.FarX(), inner_radius.FarY(),
+            inner_radius.far_x(), inner_radius.far_y(),
             inner_radius.H(),
             180, 270,
             Colours().background
@@ -1311,7 +1311,7 @@ namespace isolinear::ui {
         return sweep.Align(
             compass::northeast,
             geometry::vector{
-              sweep.FarX() - vertical.FarX(),
+              sweep.far_x() - vertical.far_x(),
               header.H() + gutter.y
             }
           );

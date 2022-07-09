@@ -157,12 +157,12 @@ namespace isolinear::geometry {
 
       // Near and Far Point Positions
       Position2D Near() const { return Origin(); }
-            int NearX() const { return Origin().x; }
-            int NearY() const { return Origin().y; }
+            int near_x() const { return Origin().x; }
+            int near_y() const { return Origin().y; }
 
       Position2D Far() const { return Origin().add(Size()); }
-            int FarX() const { return Far().x; }
-            int FarY() const { return Far().y; }
+            int far_x() const { return Far().x; }
+            int far_y() const { return Far().y; }
 
       // compass points
       Position2D Centre()     const { return Point(compass::centre   ); }
@@ -239,10 +239,10 @@ namespace isolinear::geometry {
       Region2D RightHalf()  const { return Region2D{ North(),     SouthEast() }; }
 
       bool Encloses(vector point) const {
-        return ( NearX() <= point.x )
-            && ( NearY() <= point.y )
-            && ( point.x <= FarX()  )
-            && ( point.y <= FarY()  );
+        return ( near_x() <= point.x )
+            && ( near_y() <= point.y )
+            && ( point.x <= far_x()  )
+            && ( point.y <= far_y()  );
       }
 
       bool Encloses(Region2D r) const {
@@ -251,11 +251,11 @@ namespace isolinear::geometry {
       }
 
       virtual void Fill(SDL_Renderer* renderer, theme::colour colour) const {
-        boxColor(renderer, NearX(), NearY(), FarX(), FarY(), colour);
+        boxColor(renderer, near_x(), near_y(), far_x(), far_y(), colour);
       }
 
       virtual void RoundedFill(SDL_Renderer* renderer, int radius, theme::colour colour) const {
-        roundedBoxColor(renderer, NearX(), NearY(), FarX(), FarY(), radius, colour);
+        roundedBoxColor(renderer, near_x(), near_y(), far_x(), far_y(), radius, colour);
       }
 
       virtual void Ellipse(SDL_Renderer* renderer, theme::colour colour) const {
@@ -268,8 +268,8 @@ namespace isolinear::geometry {
 
       virtual void Stroke(SDL_Renderer* renderer, theme::colour colour) const {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-        boxColor(renderer, NearX()  , NearY()  , FarX()  , FarY()  , colour);
-        boxColor(renderer, NearX()+1, NearY()+1, FarX()-2, FarY()-2, 0xff000000);
+        boxColor(renderer, near_x()  , near_y()  , far_x()  , far_y()  , colour);
+        boxColor(renderer, near_x()+1, near_y()+1, far_x()-2, far_y()-2, 0xff000000);
       }
 
       virtual void QuadrantArc(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
