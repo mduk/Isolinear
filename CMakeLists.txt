@@ -25,9 +25,9 @@ target_link_libraries(LibFmt INTERFACE -lfmt)
 
 
 
-add_executable(IsoMPD src/isompd.cpp)
-target_link_libraries(IsoMPD LibSDL2 LibFmt LibMiso LibMPDXX LibIsoMPD)
-target_include_directories(IsoMPD PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
+add_executable(isompd src/isompd.cpp)
+target_link_libraries(isompd LibSDL2 LibFmt LibMiso LibMPDXX LibIsoMPD)
+target_include_directories(isompd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
 
 add_executable(mpdxx src/mpdxx.cpp)
 target_include_directories(mpdxx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
