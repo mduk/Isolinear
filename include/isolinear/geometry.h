@@ -41,34 +41,34 @@ namespace isolinear::geometry {
         return vector{ x - c.x, y - c.y };
       }
 
-      int CentreX()    const { return x / 2; }
-      int CentreY()    const { return y / 2; }
-      int NorthX()     const { return x / 2; }
-      int NorthY()     const { return 0;     }
-      int EastX()      const { return x;     }
-      int EastY()      const { return y / 2; }
-      int SouthX()     const { return x / 2; }
-      int SouthY()     const { return y;     }
-      int WestX()      const { return 0;     }
-      int WestY()      const { return y / 2; }
-      int NorthEastX() const { return x;     }
-      int NorthEastY() const { return 0;     }
-      int SouthEastX() const { return x;     }
-      int SouthEastY() const { return y;     }
-      int SouthWestX() const { return 0;     }
-      int SouthWestY() const { return y;     }
-      int NorthWestX() const { return 0;     }
-      int NorthWestY() const { return 0;     }
+      int centre_x()    const { return x / 2; }
+      int centre_y()    const { return y / 2; }
+      int north_x()     const { return x / 2; }
+      int north_y()     const { return 0;     }
+      int east_x()      const { return x;     }
+      int east_y()      const { return y / 2; }
+      int south_x()     const { return x / 2; }
+      int south_y()     const { return y;     }
+      int west_x()      const { return 0;     }
+      int west_y()      const { return y / 2; }
+      int northeast_x() const { return x;     }
+      int northeast_y() const { return 0;     }
+      int southeast_x() const { return x;     }
+      int southeast_y() const { return y;     }
+      int southwest_x() const { return 0;     }
+      int southwest_y() const { return y;     }
+      int northwest_x() const { return 0;     }
+      int northwest_y() const { return 0;     }
 
-      vector Centre()    const { return vector{ CentreX(),    CentreY()    }; }
-      vector North()     const { return vector{ NorthX(),     NorthY()     }; }
-      vector East()      const { return vector{ EastX(),      EastY()      }; }
-      vector South()     const { return vector{ SouthX(),     SouthY()     }; }
-      vector West()      const { return vector{ WestX(),      WestY()      }; }
-      vector NorthEast() const { return vector{ NorthEastX(), NorthEastY() }; }
-      vector SouthEast() const { return vector{ SouthEastX(), SouthEastY() }; }
-      vector SouthWest() const { return vector{ SouthWestX(), SouthWestY() }; }
-      vector NorthWest() const { return vector{ NorthWestX(), NorthWestY() }; }
+      vector Centre()    const { return vector{ centre_x(),    centre_y()    }; }
+      vector North()     const { return vector{ north_x(),     north_y()     }; }
+      vector East()      const { return vector{ east_x(),      east_y()      }; }
+      vector South()     const { return vector{ south_x(),     south_y()     }; }
+      vector West()      const { return vector{ west_x(),      west_y()      }; }
+      vector NorthEast() const { return vector{ northeast_x(), northeast_y() }; }
+      vector SouthEast() const { return vector{ southeast_x(), southeast_y() }; }
+      vector SouthWest() const { return vector{ southwest_x(), southwest_y() }; }
+      vector NorthWest() const { return vector{ northwest_x(), northwest_y() }; }
   };
 
 
@@ -175,24 +175,24 @@ namespace isolinear::geometry {
       Position2D West()       const { return Point(compass::west     ); }
       Position2D NorthWest()  const { return Point(compass::northwest); }
 
-      int CentreX()    const { return Centre().x;    }
-      int CentreY()    const { return Centre().y;    }
-      int NorthX()     const { return North().x;     }
-      int NorthY()     const { return North().y;     }
-      int EastX()      const { return East().x;      }
-      int EastY()      const { return East().y;      }
-      int SouthX()     const { return South().x;     }
-      int SouthY()     const { return South().y;     }
-      int WestX()      const { return West().x;      }
-      int WestY()      const { return West().y;      }
-      int NorthEastX() const { return NorthEast().x; }
-      int NorthEastY() const { return NorthEast().y; }
-      int SouthEastX() const { return SouthEast().x; }
-      int SouthEastY() const { return SouthEast().y; }
-      int SouthWestX() const { return SouthWest().x; }
-      int SouthWestY() const { return SouthWest().y; }
-      int NorthWestX() const { return NorthWest().x; }
-      int NorthWestY() const { return NorthWest().y; }
+      int centre_x()    const { return Centre().x;    }
+      int centre_y()    const { return Centre().y;    }
+      int north_x()     const { return North().x;     }
+      int north_y()     const { return North().y;     }
+      int east_x()      const { return East().x;      }
+      int east_y()      const { return East().y;      }
+      int south_x()     const { return South().x;     }
+      int south_y()     const { return South().y;     }
+      int west_x()      const { return West().x;      }
+      int west_y()      const { return West().y;      }
+      int northeast_x() const { return NorthEast().x; }
+      int northeast_y() const { return NorthEast().y; }
+      int southeast_x() const { return SouthEast().x; }
+      int southeast_y() const { return SouthEast().y; }
+      int southwest_x() const { return SouthWest().x; }
+      int southwest_y() const { return SouthWest().y; }
+      int northwest_x() const { return NorthWest().x; }
+      int northwest_y() const { return NorthWest().y; }
 
       // compass Points
       Position2D Point(compass align) const {
@@ -260,7 +260,7 @@ namespace isolinear::geometry {
 
       virtual void Ellipse(SDL_Renderer* renderer, theme::colour colour) const {
         filledEllipseColor(renderer,
-            CentreX(), CentreY(),
+            centre_x(), centre_y(),
             W()/2, H()/2,
             colour
           );
@@ -274,10 +274,10 @@ namespace isolinear::geometry {
 
       virtual void QuadrantArc(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
         switch (orientation) {
-          case compass::northeast: filledPieColor(renderer, SouthWestX(), SouthWestY(), W(), 270,   0, colour); break;
-          case compass::southeast: filledPieColor(renderer, NorthWestX(), NorthWestY(), W(),   0,  90, colour); break;
-          case compass::northwest: filledPieColor(renderer, SouthEastX(), SouthEastY(), W(), 180, 270, colour); break;
-          case compass::southwest: filledPieColor(renderer, NorthEastX(), NorthEastY(), W(),  90, 180, colour); break;
+          case compass::northeast: filledPieColor(renderer, southwest_x(), southwest_y(), W(), 270,   0, colour); break;
+          case compass::southeast: filledPieColor(renderer, northwest_x(), northwest_y(), W(),   0,  90, colour); break;
+          case compass::northwest: filledPieColor(renderer, southeast_x(), southeast_y(), W(), 180, 270, colour); break;
+          case compass::southwest: filledPieColor(renderer, northeast_x(), northeast_y(), W(),  90, 180, colour); break;
         }
       }
 
@@ -306,44 +306,44 @@ namespace isolinear::geometry {
       }
 
       virtual void Draw(SDL_Renderer* renderer) const {
-        filledCircleColor(renderer,    CentreX(),    CentreY(), 6, 0x99000000);
-        filledCircleColor(renderer,     NorthX(),     NorthY(), 4, 0x99ff0000);
-        filledCircleColor(renderer, NorthEastX(), NorthEastY(), 4, 0x9900ffff);
-        filledCircleColor(renderer,      EastX(),      EastY(), 4, 0x99ff0000);
-        filledCircleColor(renderer, SouthEastX(), SouthEastY(), 4, 0x99ffff00);
-        filledCircleColor(renderer,     SouthX(),     SouthY(), 4, 0x9900ff00);
-        filledCircleColor(renderer, SouthWestX(), SouthWestY(), 4, 0x9900ffff);
-        filledCircleColor(renderer,      WestX(),      WestY(), 4, 0x9900ff00);
-        filledCircleColor(renderer, NorthWestX(), NorthWestY(), 4, 0x99ffff00);
+        filledCircleColor(renderer,    centre_x(),    centre_y(), 6, 0x99000000);
+        filledCircleColor(renderer,     north_x(),     north_y(), 4, 0x99ff0000);
+        filledCircleColor(renderer, northeast_x(), northeast_y(), 4, 0x9900ffff);
+        filledCircleColor(renderer,      east_x(),      east_y(), 4, 0x99ff0000);
+        filledCircleColor(renderer, southeast_x(), southeast_y(), 4, 0x99ffff00);
+        filledCircleColor(renderer,     south_x(),     south_y(), 4, 0x9900ff00);
+        filledCircleColor(renderer, southwest_x(), southwest_y(), 4, 0x9900ffff);
+        filledCircleColor(renderer,      west_x(),      west_y(), 4, 0x9900ff00);
+        filledCircleColor(renderer, northwest_x(), northwest_y(), 4, 0x99ffff00);
 
         lineColor(renderer,
-            NorthWestX(), NorthWestY(),
-            NorthEastX(), NorthEastY(),
+            northwest_x(), northwest_y(),
+            northeast_x(), northeast_y(),
             0x99ffffff
           );
         lineColor(renderer,
-            SouthWestX(), SouthWestY(),
-            SouthEastX(), SouthEastY(),
+            southwest_x(), southwest_y(),
+            southeast_x(), southeast_y(),
             0x99ffffff
           );
         lineColor(renderer,
-            NorthEastX(), NorthEastY(),
-            SouthEastX(), SouthEastY(),
+            northeast_x(), northeast_y(),
+            southeast_x(), southeast_y(),
             0x99ffffff
           );
         lineColor(renderer,
-            NorthWestX(), NorthWestY(),
-            SouthWestX(), SouthWestY(),
+            northwest_x(), northwest_y(),
+            southwest_x(), southwest_y(),
             0x99ffffff
           );
         lineColor(renderer,
-            NorthWestX(), NorthWestY(),
-            SouthEastX(), SouthEastY(),
+            northwest_x(), northwest_y(),
+            southeast_x(), southeast_y(),
             0x99ffffff
           );
         lineColor(renderer,
-            NorthEastX(), NorthEastY(),
-            SouthWestX(), SouthWestY(),
+            northeast_x(), northeast_y(),
+            southwest_x(), southwest_y(),
             0x99ffffff
           );
       }

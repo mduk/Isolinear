@@ -464,7 +464,7 @@ namespace isolinear::ui {
           Region2D fillerregion{
               cell.Origin(),
               Position2D{
-                  headerregion.SouthWestX(),
+                  headerregion.southwest_x(),
                   cell.FarY()
                 }
             };
@@ -579,13 +579,13 @@ namespace isolinear::ui {
             );
 
         Region2D left_text_filler{
-            Position2D(leftlimit.x, left_text_end_cell.NorthWestY()),
+            Position2D(leftlimit.x, left_text_end_cell.northwest_y()),
             left_text_end_cell.SouthEast()
           };
 
         Region2D right_text_filler{
             right_text_end_cell.NorthWest(),
-            Position2D(rightlimit.x, right_text_end_cell.SouthEastY())
+            Position2D(rightlimit.x, right_text_end_cell.southeast_y())
           };
 
         if (right_text_filler.W() >= grid.Gutter().x) {
@@ -1388,8 +1388,8 @@ namespace isolinear::ui {
         elbo::DrawSweep(renderer);
 
         filledPieColor(renderer,
-            outer_radius.NorthEastX(),
-            outer_radius.NorthEastY(),
+            outer_radius.northeast_x(),
+            outer_radius.northeast_y(),
             outer_radius.H(),
             90, 180,
             Colours().frame
@@ -1397,8 +1397,8 @@ namespace isolinear::ui {
 
 
         filledPieColor(renderer,
-            inner_radius.NorthEastX(),
-            inner_radius.NorthEastY(),
+            inner_radius.northeast_x(),
+            inner_radius.northeast_y(),
             inner_radius.H(),
             90, 180,
             Colours().background
