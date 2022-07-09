@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
           int x = e.motion.x,
               y = e.motion.y;
 
-          isolinear::geometry::Position2D pos{x, y};
+          isolinear::geometry::position pos{x, y};
           int gx = grid.PositionColumnIndex(pos),
               gy = grid.PositionRowIndex(pos);
 

@@ -15,7 +15,7 @@
 namespace isolinear::ui {
 
 
-  using isolinear::geometry::Position2D;
+  using isolinear::geometry::position;
   using isolinear::geometry::region;
 
 
@@ -40,7 +40,7 @@ namespace isolinear::ui {
       }
 
       virtual void OnPointerEvent(pointer::event event) {
-        Position2D p = event.Position();
+        position p = event.Position();
 
         for (auto& child : children) {
           if (child->Bounds().encloses(p)) {
@@ -101,7 +101,7 @@ namespace isolinear::ui {
       }
 
       virtual void OnPointerEvent(pointer::event event) {
-        Position2D p = event.Position();
+        position p = event.Position();
 
         for (auto& elem : *this) {
           if (elem.Bounds().encloses(p)) {

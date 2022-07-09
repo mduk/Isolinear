@@ -72,13 +72,13 @@ namespace isolinear::geometry {
   };
 
 
-  class Position2D : public vector {
+  class position : public vector {
     public:
-      Position2D() : vector() {}
-      Position2D(vector c) : vector{c} {}
-      Position2D(int x, int y) : vector(x, y) {};
-      Position2D(SDL_MouseButtonEvent e) : vector(e) {};
-      Position2D(SDL_Rect r) : vector(r.x, r.y) {};
+      position() : vector() {}
+      position(vector c) : vector{c} {}
+      position(int x, int y) : vector(x, y) {};
+      position(SDL_MouseButtonEvent e) : vector(e) {};
+      position(SDL_Rect r) : vector(r.x, r.y) {};
 
       void Draw(SDL_Renderer* renderer) {
         filledEllipseColor(renderer, x, y,  5,  5, 0xff00ffff);
@@ -87,7 +87,7 @@ namespace isolinear::geometry {
 
   class region {
     protected:
-      Position2D _position;
+      position _position;
       vector _size;
 
     public:
@@ -103,17 +103,17 @@ namespace isolinear::geometry {
           : _position{r.x, r.y}, _size{r.w, r.h}
         {};
 
-      region(Position2D _p, vector _s)
+      region(position _p, vector _s)
           : _position{_p}, _size{_s}
         {};
 
-      region(Position2D a, Position2D b) {
-          Position2D near{
+      region(position a, position b) {
+          position near{
               std::min(a.x, b.x),
               std::min(a.y, b.y)
             };
 
-          Position2D far{
+          position far{
               std::max(a.x, b.x),
               std::max(a.y, b.y)
             };
@@ -144,7 +144,7 @@ namespace isolinear::geometry {
 
 
       // Sources of truth
-      virtual Position2D origin() const { return _position; };
+      virtual position origin() const { return _position; };
       virtual vector     size()   const { return _size; };
 
 
@@ -156,24 +156,24 @@ namespace isolinear::geometry {
 
 
       // Near and Far Point Positions
-      Position2D Near() const { return origin(); }
+      position Near() const { return origin(); }
             int near_x() const { return origin().x; }
             int near_y() const { return origin().y; }
 
-      Position2D Far() const { return origin().add(size()); }
+      position Far() const { return origin().add(size()); }
             int far_x() const { return Far().x; }
             int far_y() const { return Far().y; }
 
       // compass points
-      Position2D centre()     const { return point(compass::centre   ); }
-      Position2D north()      const { return point(compass::north    ); }
-      Position2D northeast()  const { return point(compass::northeast); }
-      Position2D east()       const { return point(compass::east     ); }
-      Position2D southeast()  const { return point(compass::southeast); }
-      Position2D south()      const { return point(compass::south    ); }
-      Position2D southwest()  const { return point(compass::southwest); }
-      Position2D west()       const { return point(compass::west     ); }
-      Position2D northwest()  const { return point(compass::northwest); }
+      position centre()     const { return point(compass::centre   ); }
+      position north()      const { return point(compass::north    ); }
+      position northeast()  const { return point(compass::northeast); }
+      position east()       const { return point(compass::east     ); }
+      position southeast()  const { return point(compass::southeast); }
+      position south()      const { return point(compass::south    ); }
+      position southwest()  const { return point(compass::southwest); }
+      position west()       const { return point(compass::west     ); }
+      position northwest()  const { return point(compass::northwest); }
 
       int centre_x()    const { return centre().x;    }
       int centre_y()    const { return centre().y;    }
@@ -195,7 +195,7 @@ namespace isolinear::geometry {
       int northwest_y() const { return northwest().y; }
 
       // compass Points
-      Position2D point(compass align) const {
+      position point(compass align) const {
         switch (align) {
           case    compass::centre: return origin().add(size().centre());
           case     compass::north: return origin().add(size().north());
@@ -207,7 +207,7 @@ namespace isolinear::geometry {
           case      compass::west: return origin().add(size().west());
           case compass::northwest: return origin().add(size().northwest());
         }
-        return Position2D();
+        return position();
       }
 
       // compass Alignment

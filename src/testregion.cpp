@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
   geometry::vector display_size{ display.w, display.h };
 
   isolinear::display::window window(
-      geometry::Position2D{ display },
+      geometry::position{ display },
       display_size
     );
 

@@ -6,7 +6,7 @@
 
 namespace isolinear::pointer {
 
-  using isolinear::geometry::Position2D;
+  using isolinear::geometry::position;
 
 
   enum type {
@@ -16,20 +16,20 @@ namespace isolinear::pointer {
 
   class event {
     protected:
-      Position2D position;
-      pointer::type type;
+      position m_position;
+      pointer::type m_type;
 
     public:
-      event(SDL_MouseButtonEvent e) : position{e.x, e.y}, type{MOUSE}  {};
+      event(SDL_MouseButtonEvent e) : m_position{e.x, e.y}, m_type{MOUSE}  {};
       event(SDL_TouchFingerEvent e, geometry::vector ws)
-        : position{
+        : m_position{
               static_cast<int>(ws.x * e.x),
               static_cast<int>(ws.y * e.y)
             },
-          type{FINGER} {};
+          m_type{FINGER} {};
 
-      Position2D Position() {
-        return position;
+      position Position() {
+        return m_position;
       }
   };
 

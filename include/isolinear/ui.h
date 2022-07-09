@@ -62,8 +62,8 @@ namespace isolinear::ui {
         auto hrule_far_y = grid.bounds.far_y() - offset_px;
 
         region hrule(
-            Position2D(hrule_near_x, hrule_near_y),
-            Position2D(hrule_far_x,  hrule_far_y)
+            position(hrule_near_x, hrule_near_y),
+            position(hrule_far_x,  hrule_far_y)
           );
 
         hrule.fill(renderer, Colours().frame);
@@ -463,7 +463,7 @@ namespace isolinear::ui {
           region cell = grid.CalculateGridRegion(col, y, col, y+1);
           region fillerregion{
               cell.origin(),
-              Position2D{
+              position{
                   headerregion.southwest_x(),
                   cell.far_y()
                 }
@@ -551,8 +551,8 @@ namespace isolinear::ui {
             compass::east, righttext.size()
           );
 
-        Position2D leftlimit = lefttextregion.southeast();
-        Position2D rightlimit = righttextregion.northwest();
+        position leftlimit = lefttextregion.southeast();
+        position rightlimit = righttextregion.northwest();
 
         int left_text_end_col_index = grid.PositionColumnIndex(
             lefttextregion.east()
@@ -579,13 +579,13 @@ namespace isolinear::ui {
             );
 
         region left_text_filler{
-            Position2D(leftlimit.x, left_text_end_cell.northwest_y()),
+            position(leftlimit.x, left_text_end_cell.northwest_y()),
             left_text_end_cell.southeast()
           };
 
         region right_text_filler{
             right_text_end_cell.northwest(),
-            Position2D(rightlimit.x, right_text_end_cell.southeast_y())
+            position(rightlimit.x, right_text_end_cell.southeast_y())
           };
 
         if (right_text_filler.W() >= grid.Gutter().x) {
@@ -828,11 +828,11 @@ namespace isolinear::ui {
       horizontal_progress_bar(isolinear::grid _g)
         : grid{_g}
         , bar_region(
-            Position2D(
+            position(
               grid.bounds.near_x() + (gutter * 2),
               grid.bounds.near_y() + (gutter * 2)
             ),
-            Position2D(
+            position(
               grid.bounds.far_x() - (gutter * 2),
               grid.bounds.far_y() - (gutter * 2)
             )
@@ -932,7 +932,7 @@ namespace isolinear::ui {
         if (draw_stripes) {
           for (int i=0; i<n_segments; i++) {
             region region{
-                Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
+                position{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
                 segment_size
               };
 
@@ -948,7 +948,7 @@ namespace isolinear::ui {
         theme::colour bar_colour = Colours().active;
 
         region filled_region{
-            Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
+            position{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
             segment_size
           };
         filled_region.fill(renderer, bar_colour);
@@ -956,7 +956,7 @@ namespace isolinear::ui {
         if (draw_tail) {
           for (int i=0; i<FilledSegments(); i++) {
             region region{
-                Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
+                position{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
                 segment_size
               };
             region.fill(renderer, bar_colour);
@@ -1016,7 +1016,7 @@ namespace isolinear::ui {
       }
 
       void OnPointerEvent(pointer::event event) override {
-        Position2D cursor = event.Position();
+        position cursor = event.Position();
 
         auto const container_region = ContainerRegion();
         if (container_region.encloses(cursor)) {
@@ -1218,7 +1218,7 @@ namespace isolinear::ui {
         region horizontal = HorizontalRegion();
 
         return region{
-            Position2D{
+            position{
               horizontal.origin().x,
               horizontal.origin().y
                 + reach_weight
@@ -1337,7 +1337,7 @@ namespace isolinear::ui {
         region horizontal = HorizontalRegion();
 
         return region{
-            Position2D{
+            position{
               horizontal.X(),
               horizontal.Y() + horizontal.H() - reach_weight
             },
@@ -1352,7 +1352,7 @@ namespace isolinear::ui {
         region horizontal = HorizontalRegion();
 
         return region{
-            Position2D{
+            position{
               horizontal.X(),
               horizontal.Y()
             },

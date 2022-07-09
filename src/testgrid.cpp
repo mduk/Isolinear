@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  geometry::Position2D pos{};
+  geometry::position pos{};
 
   printf("LOOP\n");
   while (running) {
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
           int x = e.motion.x,
               y = e.motion.y;
 
-          pos = geometry::Position2D{x, y};
+          pos = geometry::position{x, y};
           gx = grid.PositionColumnIndex(pos),
           gy = grid.PositionRowIndex(pos);
 
