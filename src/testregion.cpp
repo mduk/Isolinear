@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
   std::list<isolinear::window::region> squares;
   geometry::vector margin{10,10};
   geometry::vector outer_cell_size{250,250};
-  geometry::vector inner_cell_size = outer_cell_size.Subtract(margin).Subtract(margin);
+  geometry::vector inner_cell_size = outer_cell_size.subtract(margin).subtract(margin);
   geometry::vector grid_size{5,5};
 
   int ci = 1;
@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
   for (int x=1; x<=grid_size.x; x++) {
     for (int y=1; y<=grid_size.y; y++) {
       isolinear::window::position boundsfar( window, outer_cell_size.x * x, outer_cell_size.y * y );
-      isolinear::window::position boundsnear( window, boundsfar.Subtract(outer_cell_size) );
+      isolinear::window::position boundsnear( window, boundsfar.subtract(outer_cell_size) );
 
       squares.emplace_back(window, boundsnear, boundsfar);
       auto& outer_cell_region = squares.back();

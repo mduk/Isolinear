@@ -37,7 +37,7 @@ namespace isolinear::geometry {
         return vector{ x + c.x, y + c.y };
       }
 
-      vector Subtract(vector c) const {
+      vector subtract(vector c) const {
         return vector{ x - c.x, y - c.y };
       }
 
@@ -213,15 +213,15 @@ namespace isolinear::geometry {
       // compass Alignment
       Region2D Align(compass align, vector s) const {
         switch (align) {
-          case    compass::centre: return Region2D{    Centre().Subtract(s.Centre()   ), s };
-          case     compass::north: return Region2D{     North().Subtract(s.North()    ), s };
-          case compass::northeast: return Region2D{ NorthEast().Subtract(s.NorthEast()), s };
-          case      compass::east: return Region2D{      East().Subtract(s.East()     ), s };
-          case compass::southeast: return Region2D{ SouthEast().Subtract(s.SouthEast()), s };
-          case     compass::south: return Region2D{     South().Subtract(s.South()    ), s };
-          case compass::southwest: return Region2D{ SouthWest().Subtract(s.SouthWest()), s };
-          case      compass::west: return Region2D{      West().Subtract(s.West()     ), s };
-          case compass::northwest: return Region2D{ NorthWest().Subtract(s.NorthWest()), s };
+          case    compass::centre: return Region2D{    Centre().subtract(s.Centre()   ), s };
+          case     compass::north: return Region2D{     North().subtract(s.North()    ), s };
+          case compass::northeast: return Region2D{ NorthEast().subtract(s.NorthEast()), s };
+          case      compass::east: return Region2D{      East().subtract(s.East()     ), s };
+          case compass::southeast: return Region2D{ SouthEast().subtract(s.SouthEast()), s };
+          case     compass::south: return Region2D{     South().subtract(s.South()    ), s };
+          case compass::southwest: return Region2D{ SouthWest().subtract(s.SouthWest()), s };
+          case      compass::west: return Region2D{      West().subtract(s.West()     ), s };
+          case compass::northwest: return Region2D{ NorthWest().subtract(s.NorthWest()), s };
         }
         return Region2D();
       }
