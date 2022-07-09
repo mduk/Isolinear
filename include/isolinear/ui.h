@@ -66,7 +66,7 @@ namespace isolinear::ui {
             Position2D(hrule_far_x,  hrule_far_y)
           );
 
-        hrule.Fill(renderer, Colours().frame);
+        hrule.fill(renderer, Colours().frame);
       }
   };
 
@@ -323,7 +323,7 @@ namespace isolinear::ui {
 
       void Draw(SDL_Renderer* renderer) const override {
         if (text.length() == 0) {
-          grid.bounds.Fill(renderer, Colours().frame);
+          grid.bounds.fill(renderer, Colours().frame);
           return;
         }
 
@@ -438,9 +438,9 @@ namespace isolinear::ui {
         Region2D  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
         Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
-          left_cap.Fill    (renderer, LeftCapColour());
+          left_cap.fill(renderer, LeftCapColour());
          right_cap.Bullnose(renderer, compass::east, RightCapColour());
-        centre_bar.Fill    (renderer, Colours().background);
+        centre_bar.fill(renderer, Colours().background);
 
         if (buttons.size() > 0) {
           for (auto const& [label, button] : buttons) {
@@ -468,7 +468,7 @@ namespace isolinear::ui {
                   cell.far_y()
                 }
             };
-          fillerregion.Fill(renderer, RightCapColour());
+          fillerregion.fill(renderer, RightCapColour());
 
           headertext.Draw(renderer, compass::east, centre_bar);
         }
@@ -476,7 +476,7 @@ namespace isolinear::ui {
         grid.CalculateGridRegion(
             filler_start, y,
             filler_end, y+1
-          ).Fill(renderer, Colours().frame);
+          ).fill(renderer, Colours().frame);
       }
   };
 
@@ -589,14 +589,14 @@ namespace isolinear::ui {
           };
 
         if (right_text_filler.W() >= grid.Gutter().x) {
-          right_text_filler.Fill(renderer, Colours().light);
+          right_text_filler.fill(renderer, Colours().light);
         }
 
         if (left_text_filler.W() >= grid.Gutter().x) {
-          left_text_filler.Fill(renderer, Colours().light);
+          left_text_filler.fill(renderer, Colours().light);
         }
 
-        drawcentrebar.Fill(renderer, Colours().frame);
+        drawcentrebar.fill(renderer, Colours().frame);
         left_cap.Bullnose(renderer, compass::west, Colours().light);
         right_cap.Bullnose(renderer, compass::east, Colours().light);
 
@@ -688,7 +688,7 @@ namespace isolinear::ui {
 
       void DrawOuterRadius(SDL_Renderer* renderer) const {
         Region2D region = OuterRadiusRegion();
-        region.Fill(renderer, Colours().background);
+        region.fill(renderer, Colours().background);
         region.QuadrantArc(renderer, alignment, Colours().frame);
       }
 
@@ -700,10 +700,10 @@ namespace isolinear::ui {
         Region2D icorner = InnerCornerRegion();
         Region2D iradius = icorner.align(alignment, geometry::vector{inner_radius});
 
-        grid.bounds.Fill(renderer, Colours().frame);
-        icorner.Fill(renderer, Colours().background);
+        grid.bounds.fill(renderer, Colours().frame);
+        icorner.fill(renderer, Colours().background);
 
-        iradius.Fill(renderer, Colours().frame);
+        iradius.fill(renderer, Colours().frame);
         iradius.QuadrantArc(renderer, alignment, Colours().background);
         DrawOuterRadius(renderer);
 
@@ -937,10 +937,10 @@ namespace isolinear::ui {
               };
 
             if (i % 2 == 0) {
-              region.Fill(renderer, Colours().background);
+              region.fill(renderer, Colours().background);
             }
             else {
-              region.Fill(renderer, Colours().light_alternate);
+              region.fill(renderer, Colours().light_alternate);
             }
           }
         }
@@ -951,7 +951,7 @@ namespace isolinear::ui {
             Position2D{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
             segment_size
           };
-        filled_region.Fill(renderer, bar_colour);
+        filled_region.fill(renderer, bar_colour);
 
         if (draw_tail) {
           for (int i=0; i<FilledSegments(); i++) {
@@ -959,7 +959,7 @@ namespace isolinear::ui {
                 Position2D{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
                 segment_size
               };
-            region.Fill(renderer, bar_colour);
+            region.fill(renderer, bar_colour);
           }
         }
       }

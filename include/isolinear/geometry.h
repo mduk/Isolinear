@@ -250,15 +250,15 @@ namespace isolinear::geometry {
             && encloses(r.Far());
       }
 
-      virtual void Fill(SDL_Renderer* renderer, theme::colour colour) const {
+      virtual void fill(SDL_Renderer* renderer, theme::colour colour) const {
         boxColor(renderer, near_x(), near_y(), far_x(), far_y(), colour);
       }
 
-      virtual void RoundedFill(SDL_Renderer* renderer, int radius, theme::colour colour) const {
+      virtual void rounded_fill(SDL_Renderer* renderer, int radius, theme::colour colour) const {
         roundedBoxColor(renderer, near_x(), near_y(), far_x(), far_y(), radius, colour);
       }
 
-      virtual void Ellipse(SDL_Renderer* renderer, theme::colour colour) const {
+      virtual void ellipse(SDL_Renderer* renderer, theme::colour colour) const {
         filledEllipseColor(renderer,
             centre_x(), centre_y(),
             W()/2, H()/2,
@@ -284,23 +284,23 @@ namespace isolinear::geometry {
       virtual void Bullnose(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
         switch (orientation) {
           case compass::north:
-            align(compass::north, vector{W()}).Ellipse(renderer, colour);
-            align(compass::south, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
+            align(compass::north, vector{W()}).ellipse(renderer, colour);
+            align(compass::south, vector{W(), H() - (W() / 2)}).fill(renderer, colour);
             break;
 
           case compass::east:
-            align(compass::east, vector{H()}).Ellipse(renderer, colour);
-            align(compass::west, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
+            align(compass::east, vector{H()}).ellipse(renderer, colour);
+            align(compass::west, vector{W() - (H() / 2), H()}).fill(renderer, colour);
             break;
 
           case compass::south:
-            align(compass::south, vector{W()}).Ellipse(renderer, colour);
-            align(compass::north, vector{W(), H() - (W() / 2)}).Fill(renderer, colour);
+            align(compass::south, vector{W()}).ellipse(renderer, colour);
+            align(compass::north, vector{W(), H() - (W() / 2)}).fill(renderer, colour);
             break;
 
           case compass::west:
-            align(compass::west, vector{H()}).Ellipse(renderer, colour);
-            align(compass::east, vector{W() - (H() / 2), H()}).Fill(renderer, colour);
+            align(compass::west, vector{H()}).ellipse(renderer, colour);
+            align(compass::east, vector{W() - (H() / 2), H()}).fill(renderer, colour);
             break;
         }
       }

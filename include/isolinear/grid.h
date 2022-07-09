@@ -138,7 +138,7 @@ namespace isolinear {
       void Draw(SDL_Renderer* renderer) const {
         for (int i=1; i<=MaxColumns(); i++) {
           for (int j=1; j<=MaxRows(); j++) {
-            Cell(i, j).Fill(renderer, 0x33ffffff);
+            Cell(i, j).fill(renderer, 0x33ffffff);
           }
         }
       }

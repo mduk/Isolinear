@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 
     window.Draw();
     grid.Cell(gx, gy)
-      .Fill(window.renderer(), 0xff00ffff);
+      .fill(window.renderer(), 0xff00ffff);
 
     SDL_RenderPresent(window.renderer());
   }
