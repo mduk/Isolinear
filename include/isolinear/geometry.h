@@ -266,13 +266,13 @@ namespace isolinear::geometry {
           );
       }
 
-      virtual void Stroke(SDL_Renderer* renderer, theme::colour colour) const {
+      virtual void stroke(SDL_Renderer* renderer, theme::colour colour) const {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         boxColor(renderer, near_x()  , near_y()  , far_x()  , far_y()  , colour);
         boxColor(renderer, near_x()+1, near_y()+1, far_x()-2, far_y()-2, 0xff000000);
       }
 
-      virtual void QuadrantArc(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
+      virtual void quadrant_arc(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
         switch (orientation) {
           case compass::northeast: filledPieColor(renderer, southwest_x(), southwest_y(), W(), 270,   0, colour); break;
           case compass::southeast: filledPieColor(renderer, northwest_x(), northwest_y(), W(),   0,  90, colour); break;
@@ -281,7 +281,7 @@ namespace isolinear::geometry {
         }
       }
 
-      virtual void Bullnose(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
+      virtual void bullnose(SDL_Renderer* renderer, compass orientation, theme::colour colour) const {
         switch (orientation) {
           case compass::north:
             align(compass::north, vector{W()}).ellipse(renderer, colour);

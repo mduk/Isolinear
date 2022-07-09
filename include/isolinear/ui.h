@@ -439,7 +439,7 @@ namespace isolinear::ui {
         Region2D centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
 
           left_cap.fill(renderer, LeftCapColour());
-         right_cap.Bullnose(renderer, compass::east, RightCapColour());
+         right_cap.bullnose(renderer, compass::east, RightCapColour());
         centre_bar.fill(renderer, Colours().background);
 
         if (buttons.size() > 0) {
@@ -597,8 +597,8 @@ namespace isolinear::ui {
         }
 
         drawcentrebar.fill(renderer, Colours().frame);
-        left_cap.Bullnose(renderer, compass::west, Colours().light);
-        right_cap.Bullnose(renderer, compass::east, Colours().light);
+        left_cap.bullnose(renderer, compass::west, Colours().light);
+        right_cap.bullnose(renderer, compass::east, Colours().light);
 
         lefttext.Draw(renderer, compass::west, centre_bar);
         righttext.Draw(renderer, compass::east, centre_bar);
@@ -689,7 +689,7 @@ namespace isolinear::ui {
       void DrawOuterRadius(SDL_Renderer* renderer) const {
         Region2D region = OuterRadiusRegion();
         region.fill(renderer, Colours().background);
-        region.QuadrantArc(renderer, alignment, Colours().frame);
+        region.quadrant_arc(renderer, alignment, Colours().frame);
       }
 
       Region2D Bounds() const override {
@@ -704,7 +704,7 @@ namespace isolinear::ui {
         icorner.fill(renderer, Colours().background);
 
         iradius.fill(renderer, Colours().frame);
-        iradius.QuadrantArc(renderer, alignment, Colours().background);
+        iradius.quadrant_arc(renderer, alignment, Colours().background);
         DrawOuterRadius(renderer);
 
         if (drawdebug) {
