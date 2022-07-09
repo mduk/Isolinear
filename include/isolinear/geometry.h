@@ -233,10 +233,10 @@ namespace isolinear::geometry {
       Region2D northwest_quadrant() const { return Region2D{ northwest(), centre() }; }
 
       // Halfs
-      Region2D TopHalf()    const { return Region2D{ northwest(), east()      }; }
-      Region2D BottomHalf() const { return Region2D{ west(),      southeast() }; }
-      Region2D LeftHalf()   const { return Region2D{ northwest(), south()     }; }
-      Region2D RightHalf()  const { return Region2D{ north(),     southeast() }; }
+      Region2D top_half()    const { return Region2D{ northwest(), east()      }; }
+      Region2D bottom_half() const { return Region2D{ west(),      southeast() }; }
+      Region2D left_half()   const { return Region2D{ northwest(), south()     }; }
+      Region2D right_half()  const { return Region2D{ north(),     southeast() }; }
 
       bool Encloses(vector point) const {
         return ( near_x() <= point.x )
