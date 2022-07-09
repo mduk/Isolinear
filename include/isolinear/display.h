@@ -99,7 +99,7 @@ namespace isolinear::display {
         SDL_SetWindowTitle(_sdl_window, newtitle.c_str());
       }
 
-      void Add(ui::drawable* drawable) {
+      void add(ui::drawable* drawable) {
         drawables.push_back(drawable);
       }
 

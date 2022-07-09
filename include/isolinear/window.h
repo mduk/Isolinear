@@ -72,7 +72,7 @@ namespace isolinear::window {
           window::position p,
           geometry::vector s
         )
-        : region(w, p, window::position{w, p.Add(s) })
+        : region(w, p, window::position{w, p.add(s) })
       {}
 
       region(display::window& w) : region(w, {w, 0, 0}, {w, 0, 0}) {}
@@ -110,15 +110,15 @@ namespace isolinear::window {
     public: // Calculate position of a compass point on this region
       window::position point(compass align) const {
         switch (align) {
-          case compass::centre:    return position(near().Add(size().Centre()   ));
-          case compass::north:     return position(near().Add(size().North()    ));
-          case compass::northeast: return position(near().Add(size().NorthEast()));
-          case compass::east:      return position(near().Add(size().East()     ));
-          case compass::southeast: return position(near().Add(size().SouthEast()));
-          case compass::south:     return position(near().Add(size().South()    ));
-          case compass::southwest: return position(near().Add(size().SouthWest()));
-          case compass::west:      return position(near().Add(size().West()     ));
-          case compass::northwest: return position(near().Add(size().NorthWest()));
+          case compass::centre:    return position(near().add(size().Centre()   ));
+          case compass::north:     return position(near().add(size().North()    ));
+          case compass::northeast: return position(near().add(size().NorthEast()));
+          case compass::east:      return position(near().add(size().East()     ));
+          case compass::southeast: return position(near().add(size().SouthEast()));
+          case compass::south:     return position(near().add(size().South()    ));
+          case compass::southwest: return position(near().add(size().SouthWest()));
+          case compass::west:      return position(near().add(size().West()     ));
+          case compass::northwest: return position(near().add(size().NorthWest()));
         }
         return near();
       }

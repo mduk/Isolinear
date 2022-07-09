@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
       auto& outer_cell_region = squares.back();
       outer_cell_region.fill_colour(ci % 2 == 0 ? 0xffffaa66 : 0xff66aaff);
 
-      isolinear::window::position inner_cell_near(window, boundsnear.Add(margin));
+      isolinear::window::position inner_cell_near(window, boundsnear.add(margin));
       squares.emplace_back(window, inner_cell_near, inner_cell_size);
       auto& inner_cell_region = squares.back();
       inner_cell_region.fill_colour(ci % 2 == 0 ? 0xff99cccc : 0xffccccff);

@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
   });
 
   isompd::frame mpdframe(grid, window, mpdc);
-  window.Add(&mpdframe);
+  window.add(&mpdframe);
 
   miso::connect(mpdframe.signal_view_change, [&](std::string from_view, std::string to_view){
     cout << fmt::format("View changed from {} to {}\n", from_view, to_view);

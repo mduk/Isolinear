@@ -102,11 +102,11 @@ int main(int argc, char* argv[])
 
   isolinear::ui::horizontal_button_bar control_bar(window, grid.Rows(1,2));
   auto& five_second_button = control_bar.AddButton("5 SEC");
-  window.Add(&control_bar);
+  window.add(&control_bar);
 
   std::list<isolinear::timer> timers;
   isolinear::ui::layout_vertical<isolinear::timer_row, 2> timer_rows(grid.Rows(3, grid.MaxRows()));
-  window.Add(&timer_rows);
+  window.add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
     cout << "Click!\n";

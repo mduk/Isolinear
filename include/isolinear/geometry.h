@@ -33,7 +33,7 @@ namespace isolinear::geometry {
 
 
     public:
-      vector Add(vector c) const {
+      vector add(vector c) const {
         return vector{ x + c.x, y + c.y };
       }
 
@@ -160,7 +160,7 @@ namespace isolinear::geometry {
             int NearX() const { return Origin().x; }
             int NearY() const { return Origin().y; }
 
-      Position2D Far() const { return Origin().Add(Size()); }
+      Position2D Far() const { return Origin().add(Size()); }
             int FarX() const { return Far().x; }
             int FarY() const { return Far().y; }
 
@@ -197,15 +197,15 @@ namespace isolinear::geometry {
       // compass Points
       Position2D Point(compass align) const {
         switch (align) {
-          case    compass::centre: return Origin().Add(Size().Centre());
-          case     compass::north: return Origin().Add(Size().North());
-          case compass::northeast: return Origin().Add(Size().NorthEast());
-          case      compass::east: return Origin().Add(Size().East());
-          case compass::southeast: return Origin().Add(Size().SouthEast());
-          case     compass::south: return Origin().Add(Size().South());
-          case compass::southwest: return Origin().Add(Size().SouthWest());
-          case      compass::west: return Origin().Add(Size().West());
-          case compass::northwest: return Origin().Add(Size().NorthWest());
+          case    compass::centre: return Origin().add(Size().Centre());
+          case     compass::north: return Origin().add(Size().North());
+          case compass::northeast: return Origin().add(Size().NorthEast());
+          case      compass::east: return Origin().add(Size().East());
+          case compass::southeast: return Origin().add(Size().SouthEast());
+          case     compass::south: return Origin().add(Size().South());
+          case compass::southwest: return Origin().add(Size().SouthWest());
+          case      compass::west: return Origin().add(Size().West());
+          case compass::northwest: return Origin().add(Size().NorthWest());
         }
         return Position2D();
       }
