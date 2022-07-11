@@ -47,7 +47,7 @@ namespace isolinear::ui {
       {}
 
     public:
-      region Bounds() const {
+      region bounds() const {
         return m_grid.bounds();
       }
 
@@ -109,11 +109,7 @@ namespace isolinear::ui {
       std::string Label() { return m_label; }
       void Label(std::string newlabel) { m_label = newlabel + " "; }
 
-      virtual region Bounds() const override {
-        return m_bounds;
-      }
-
-      virtual region bounds() const {
+      virtual region bounds() const override {
         return m_bounds;
       }
 
@@ -198,7 +194,7 @@ namespace isolinear::ui {
 
       virtual void OnPointerEvent(pointer::event event) override {
         for (auto& [label, button] : m_buttons) {
-          if (button.Bounds().encloses(event.Position())) {
+          if (button.bounds().encloses(event.Position())) {
             button.OnPointerEvent(event);
             return;
           }
@@ -213,7 +209,7 @@ namespace isolinear::ui {
         return m_grid.max_columns();
       }
 
-      virtual region Bounds() const override {
+      virtual region bounds() const override {
         return m_grid.bounds();
       }
 
@@ -321,7 +317,7 @@ namespace isolinear::ui {
         drawable::Colours(cs);
       }
 
-      virtual region Bounds() const override {
+      virtual region bounds() const override {
         return m_grid.bounds();
       }
 
@@ -414,14 +410,14 @@ namespace isolinear::ui {
 
       virtual void OnPointerEvent(pointer::event event) override {
         for (auto& [label, button] : m_buttons) {
-          if (button.Bounds().encloses(event.Position())) {
+          if (button.bounds().encloses(event.Position())) {
             button.OnPointerEvent(event);
             return;
           }
         }
       };
 
-      virtual region Bounds() const override {
+      virtual region bounds() const override {
         return m_grid.bounds();
       }
 
@@ -517,7 +513,7 @@ namespace isolinear::ui {
         drawable::Colours(cs);
       }
 
-      virtual region Bounds() const override {
+      virtual region bounds() const override {
         return m_grid.bounds();
       }
 
@@ -613,13 +609,13 @@ namespace isolinear::ui {
   class label : public drawable {
     protected:
       display::window& m_window;
-      region bounds;
+      region m_bounds;
       std::string label_text;
 
     public:
       label(display::window& w, region b, std::string l)
         : m_window(w)
-        , bounds(b)
+        , m_bounds(b)
         , label_text(l)
       {}
 
@@ -628,14 +624,14 @@ namespace isolinear::ui {
       {}
 
     public:
-      region Bounds() const {
-        return bounds;
+      region bounds() const {
+        return m_bounds;
       }
 
       void Draw(SDL_Renderer* renderer) const {
         m_window.LabelFont().RenderText(
             renderer,
-            bounds,
+            m_bounds,
             compass::west,
             std::string{" "} + label_text + " "
           );
@@ -696,7 +692,7 @@ namespace isolinear::ui {
         region.quadrant_arc(renderer, alignment, Colours().frame);
       }
 
-      region Bounds() const override {
+      region bounds() const override {
         return m_grid.bounds();
       }
 
@@ -917,7 +913,7 @@ namespace isolinear::ui {
         draw_stripes = v;
       }
 
-      region Bounds() const override {
+      region bounds() const override {
         return m_grid.bounds();
       }
 

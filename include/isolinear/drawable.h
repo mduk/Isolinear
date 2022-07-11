@@ -26,7 +26,7 @@ namespace isolinear::ui {
       std::list<drawable*> m_children;
 
     public:
-      virtual region Bounds() const = 0;
+      virtual region bounds() const = 0;
 
       virtual void Draw(SDL_Renderer* renderer) const {
         for (auto& child : m_children) {
@@ -43,7 +43,7 @@ namespace isolinear::ui {
         position p = event.Position();
 
         for (auto& child : m_children) {
-          if (child->Bounds().encloses(p)) {
+          if (child->bounds().encloses(p)) {
             child->OnPointerEvent(event);
           }
         }
@@ -83,7 +83,7 @@ namespace isolinear::ui {
         return grid_for_index(std::list<T>::size() + 1);
       }
 
-      isolinear::geometry::region Bounds() const {
+      isolinear::geometry::region bounds() const {
         return grid.bounds();
       }
 
@@ -104,7 +104,7 @@ namespace isolinear::ui {
         position p = event.Position();
 
         for (auto& elem : *this) {
-          if (elem.Bounds().encloses(p)) {
+          if (elem.bounds().encloses(p)) {
             elem.OnPointerEvent(event);
           }
         }

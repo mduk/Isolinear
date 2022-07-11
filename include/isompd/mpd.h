@@ -175,7 +175,7 @@ class paginated_rows : public isolinear::ui::drawable {
       page(view_page - 1);
     }
 
-    isolinear::geometry::region Bounds() const override { return grid.bounds(); }
+    isolinear::geometry::region bounds() const override { return grid.bounds(); }
 
     void Draw(SDL_Renderer* renderer) const override {
       auto nrows = data_rows.size();
@@ -579,8 +579,8 @@ namespace isompd {
         emit signal_view_change(previousView, activeView);
       }
 
-      virtual isolinear::geometry::region Bounds() const override {
-        return layout.Bounds();
+      virtual isolinear::geometry::region bounds() const override {
+        return layout.bounds();
       }
 
       virtual void OnPointerEvent(isolinear::pointer::event event) {
