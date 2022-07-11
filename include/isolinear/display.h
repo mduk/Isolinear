@@ -61,12 +61,12 @@ namespace isolinear::display {
         }
       }
 
-      void Draw() {
+      void draw() {
         SDL_SetRenderDrawColor(_sdl_renderer, 0, 0, 0, 255);
         SDL_RenderClear(_sdl_renderer);
 
         for (auto* drawable : drawables) {
-          drawable->Draw(_sdl_renderer);
+          drawable->draw(_sdl_renderer);
         }
       }
 

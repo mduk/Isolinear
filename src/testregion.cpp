@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.Draw();
+    window.draw();
 
     for (auto& square : squares) {
       square.draw();

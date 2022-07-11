@@ -157,40 +157,40 @@ namespace isolinear::layout {
         return m_grid.bounds();
       }
 
-      virtual void Draw(SDL_Renderer* renderer) const override {
+      virtual void draw(SDL_Renderer* renderer) const override {
         if (m_north > 0) {
-          North().bounds().Draw(renderer);
+          North().bounds().draw(renderer);
         }
 
         if (m_northeast.x > 0 && m_northeast.y > 0) {
-          NorthEast().bounds().Draw(renderer);
+          NorthEast().bounds().draw(renderer);
         }
 
         if (m_east > 0) {
-          East().bounds().Draw(renderer);
+          East().bounds().draw(renderer);
         }
 
         if (m_southeast.x > 0 && m_southeast.y > 0) {
-          SouthEast().bounds().Draw(renderer);
+          SouthEast().bounds().draw(renderer);
         }
 
         if (m_south > 0) {
-          South().bounds().Draw(renderer);
+          South().bounds().draw(renderer);
         }
 
         if (m_southwest.x > 0 && m_southwest.y > 0) {
-          SouthWest().bounds().Draw(renderer);
+          SouthWest().bounds().draw(renderer);
         }
 
         if (m_west > 0) {
-          West().bounds().Draw(renderer);
+          West().bounds().draw(renderer);
         }
 
         if (m_northwest.x > 0 && m_northwest.y > 0) {
-          NorthWest().bounds().Draw(renderer);
+          NorthWest().bounds().draw(renderer);
         }
 
-        Centre().bounds().Draw(renderer);
+        Centre().bounds().draw(renderer);
       }
   };
 

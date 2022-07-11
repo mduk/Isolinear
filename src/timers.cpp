@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.Draw();
+    window.draw();
 
     SDL_RenderPresent(window.renderer());
   }

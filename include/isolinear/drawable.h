@@ -28,9 +28,9 @@ namespace isolinear::ui {
     public:
       virtual region bounds() const = 0;
 
-      virtual void Draw(SDL_Renderer* renderer) const {
+      virtual void draw(SDL_Renderer* renderer) const {
         for (auto& child : m_children) {
-          child->Draw(renderer);
+          child->draw(renderer);
         }
       }
 
@@ -87,9 +87,9 @@ namespace isolinear::ui {
         return grid.bounds();
       }
 
-      virtual void Draw(SDL_Renderer* renderer) const {
+      virtual void draw(SDL_Renderer* renderer) const {
         for (auto& elem : *this) {
-          elem.Draw(renderer);
+          elem.draw(renderer);
         }
       }
 

@@ -80,7 +80,7 @@ namespace isolinear::geometry {
       position(SDL_MouseButtonEvent e) : vector(e) {};
       position(SDL_Rect r) : vector(r.x, r.y) {};
 
-      void Draw(SDL_Renderer* renderer) {
+      void draw(SDL_Renderer* renderer) {
         filledEllipseColor(renderer, x, y,  5,  5, 0xff00ffff);
       }
   };
@@ -305,7 +305,7 @@ namespace isolinear::geometry {
         }
       }
 
-      virtual void Draw(SDL_Renderer* renderer) const {
+      virtual void draw(SDL_Renderer* renderer) const {
         filledCircleColor(renderer,    centre_x(),    centre_y(), 6, 0x99000000);
         filledCircleColor(renderer,     north_x(),     north_y(), 4, 0x99ff0000);
         filledCircleColor(renderer, northeast_x(), northeast_y(), 4, 0x9900ffff);

@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.Draw();
+    window.draw();
 
     grid.draw(window.renderer());
 

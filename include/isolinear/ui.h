@@ -51,7 +51,7 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void Draw(SDL_Renderer* renderer) const {
+      void draw(SDL_Renderer* renderer) const {
         auto bound_height = m_grid.bounds().H();
         auto offset_px = (bound_height - m_grid.gutter().y) / 2;
 
@@ -113,7 +113,7 @@ namespace isolinear::ui {
         return m_bounds;
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         theme::colour drawcolour = m_enabled == true
                           ? m_active == true
                             ? Colours().active
@@ -213,9 +213,9 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         for (auto const& [label, button] : m_buttons) {
-          button.Draw(renderer);
+          button.draw(renderer);
         }
 
         region bar = BarRegion();
@@ -321,7 +321,7 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         if (text.length() == 0) {
           m_grid.bounds().fill(renderer, Colours().frame);
           return;
@@ -330,7 +330,7 @@ namespace isolinear::ui {
         std::string padded = std::string(" ") + text + " ";
 
         text::rendered_text headertext = m_window.HeaderFont().RenderText(Colours().active, padded);
-        headertext.Draw(renderer, alignment, m_grid.bounds());
+        headertext.draw(renderer, alignment, m_grid.bounds());
       }
   };
 
@@ -421,7 +421,7 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         int x = 1,
             y = 1,
             w = m_grid.max_columns() - 1
@@ -444,7 +444,7 @@ namespace isolinear::ui {
 
         if (m_buttons.size() > 0) {
           for (auto const& [label, button] : m_buttons) {
-            button.Draw(renderer);
+            button.draw(renderer);
             filler_start += button_width;
           }
         }
@@ -470,7 +470,7 @@ namespace isolinear::ui {
             };
           fillerregion.fill(renderer, RightCapColour());
 
-          headertext.Draw(renderer, compass::east, centre_bar);
+          headertext.draw(renderer, compass::east, centre_bar);
         }
 
         m_grid.calculate_grid_region(
@@ -517,7 +517,7 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         region left_cap = m_grid.calculate_grid_region(
             1, 1,
             1, m_grid.max_rows()
@@ -600,8 +600,8 @@ namespace isolinear::ui {
         left_cap.bullnose(renderer, compass::west, Colours().light);
         right_cap.bullnose(renderer, compass::east, Colours().light);
 
-        lefttext.Draw(renderer, compass::west, centre_bar);
-        righttext.Draw(renderer, compass::east, centre_bar);
+        lefttext.draw(renderer, compass::west, centre_bar);
+        righttext.draw(renderer, compass::east, centre_bar);
       }
   };
 
@@ -628,7 +628,7 @@ namespace isolinear::ui {
         return m_bounds;
       }
 
-      void Draw(SDL_Renderer* renderer) const {
+      void draw(SDL_Renderer* renderer) const {
         m_window.LabelFont().RenderText(
             renderer,
             m_bounds,
@@ -696,7 +696,7 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         region icorner = InnerCornerRegion();
         region iradius = icorner.align(alignment, geometry::vector{inner_radius});
 
@@ -708,9 +708,9 @@ namespace isolinear::ui {
         DrawOuterRadius(renderer);
 
         if (drawdebug) {
-          HorizontalPort().Draw(renderer);
-          VerticalPort().Draw(renderer);
-          icorner.Draw(renderer);
+          HorizontalPort().draw(renderer);
+          VerticalPort().draw(renderer);
+          icorner.draw(renderer);
         }
       }
   };
@@ -917,7 +917,7 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         boxColor(renderer,
             m_grid.bounds().near_x(), m_grid.bounds().near_y(),
             m_grid.bounds().far_x(),  m_grid.bounds().far_y(),
@@ -1078,13 +1078,13 @@ namespace isolinear::ui {
           );
       }
 
-      virtual void Draw(SDL_Renderer* renderer) const override {
+      virtual void draw(SDL_Renderer* renderer) const override {
         DrawSweep(renderer);
         DrawReach(renderer);
         DrawVertical(renderer);
         DrawHeader(renderer);
         for (auto const& button : m_buttons) {
-          button.Draw(renderer);
+          button.draw(renderer);
         }
       }
 

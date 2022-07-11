@@ -81,11 +81,11 @@ namespace isompd::now_playing {
         });
       }
 
-      void Draw(SDL_Renderer* renderer) const override {
+      void draw(SDL_Renderer* renderer) const override {
         if (hide) {
           return;
         }
-        isompd::view::Draw(renderer);
+        isompd::view::draw(renderer);
       }
   };
 
@@ -177,7 +177,7 @@ class paginated_rows : public isolinear::ui::drawable {
 
     isolinear::geometry::region bounds() const override { return grid.bounds(); }
 
-    void Draw(SDL_Renderer* renderer) const override {
+    void draw(SDL_Renderer* renderer) const override {
       auto nrows = data_rows.size();
 
       if (nrows == 0) {
@@ -200,7 +200,7 @@ class paginated_rows : public isolinear::ui::drawable {
             data_rows.at(data_row_index)
           );
         row.Colours(Colours());
-        row.Draw(renderer);
+        row.draw(renderer);
       }
     }
 };
@@ -588,9 +588,9 @@ namespace isompd {
         views.at(activeView)->OnPointerEvent(event);
       }
 
-      virtual void Draw(SDL_Renderer* renderer) const {
-        drawable::Draw(renderer);
-        views.at(activeView)->Draw(renderer);
+      virtual void draw(SDL_Renderer* renderer) const {
+        drawable::draw(renderer);
+        views.at(activeView)->draw(renderer);
       }
 
       virtual void Colours(isolinear::theme::colour_scheme cs) {

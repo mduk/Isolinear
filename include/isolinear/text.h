@@ -40,7 +40,7 @@ namespace isolinear::text {
         return geometry::vector{sdl_surface};
       }
 
-      void Draw(SDL_Renderer* renderer, compass alignment, region bounds) const {
+      void draw(SDL_Renderer* renderer, compass alignment, region bounds) const {
         SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, sdl_surface);
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
