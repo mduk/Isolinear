@@ -84,7 +84,7 @@ namespace isolinear::ui {
       }
 
       isolinear::geometry::region Bounds() const {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       virtual void Draw(SDL_Renderer* renderer) const {

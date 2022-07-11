@@ -134,7 +134,7 @@ namespace isolinear::geometry {
         _size = newsize;
       }
 
-      virtual void Print() const {
+      virtual void print() const {
         printf("Region %d,%d (%d,%d) %d,%d\n",
             _position.x, _position.y,
             _size.x, _size.y,

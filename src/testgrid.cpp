@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 
     window.Draw();
 
-    grid.Draw(window.renderer());
+    grid.draw(window.renderer());
 
     isolinear::theme::colour cellcolour = 0xff00ffff;
     try {

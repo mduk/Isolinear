@@ -57,11 +57,11 @@ namespace isompd::now_playing {
     public:
       view(isolinear::grid g, display::window& w, mpdxx::client& _mpdc)
         : isompd::view("NOW PLAYING", g, w, _mpdc)
-        , title(g.Rows(3,4), w, "TITLE", "[title]")
-        , album(g.Rows(5,6), w, "ALBUM", "[album]")
-        , artist(g.Rows(7,8), w, "ARTIST", "[artist]")
-        , duration(g.Rows(9,10), w, "DURATION", "[duration]")
-        , progress(g.Rows(11,12))
+        , title(g.rows(3,4), w, "TITLE", "[title]")
+        , album(g.rows(5,6), w, "ALBUM", "[album]")
+        , artist(g.rows(7,8), w, "ARTIST", "[artist]")
+        , duration(g.rows(9,10), w, "DURATION", "[duration]")
+        , progress(g.rows(11,12))
       {
         RegisterChild(&title);
         RegisterChild(&album);
@@ -150,7 +150,7 @@ class paginated_rows : public isolinear::ui::drawable {
         }
 
         view_rows.emplace_back(
-            grid.Rows((i*2)-1, i*2),
+            grid.rows((i*2)-1, i*2),
             window,
             data_rows.at(data_row_index)
           );
@@ -175,7 +175,7 @@ class paginated_rows : public isolinear::ui::drawable {
       page(view_page - 1);
     }
 
-    isolinear::geometry::region Bounds() const override { return grid.bounds; }
+    isolinear::geometry::region Bounds() const override { return grid.bounds(); }
 
     void Draw(SDL_Renderer* renderer) const override {
       auto nrows = data_rows.size();
@@ -195,7 +195,7 @@ class paginated_rows : public isolinear::ui::drawable {
         }
 
         ViewT row(
-            grid.Rows((i*2)-1, i*2),
+            grid.rows((i*2)-1, i*2),
             window,
             data_rows.at(data_row_index)
           );
@@ -250,26 +250,26 @@ namespace isompd::player {
       view(isolinear::grid g, display::window& w, mpdxx::client& mpdc)
         : isompd::view("PLAYER", g, w,  mpdc)
 
-        , hdrQueue   (g.Columns( 1,  6).Rows( 1,  2), w, isolinear::compass::west, "QUEUE")
-        , queue_pager(g.Columns( 1,  6).Rows( 3, 10), w, 20)
+        , hdrQueue   (g.columns( 1,  6).rows( 1,  2), w, isolinear::compass::west, "QUEUE")
+        , queue_pager(g.columns( 1,  6).rows( 3, 10), w, 20)
 
-        , gc(g.Columns(16,21))
+        , gc(g.columns(16,21))
 
-        , btnPlay(    w, gc.Rows( 1, 4).Columns(1,4), "PLAY")
-        , btnPause(   w, gc.Rows( 1, 4).Columns(5,6), "PAUSE")
-        , btnStop(    w, gc.Rows( 5, 7).Columns(1,6), "STOP")
+        , btnPlay(    w, gc.rows( 1, 4).columns(1,4), "PLAY")
+        , btnPause(   w, gc.rows( 1, 4).columns(5,6), "PAUSE")
+        , btnStop(    w, gc.rows( 5, 7).columns(1,6), "STOP")
 
-        , hrule1(     w, gc.Rows( 8, 8))
+        , hrule1(     w, gc.rows( 8, 8))
 
-        , btnPrevious(w, gc.Rows( 9,10).Columns(1,3), "PREVIOUS")
-        , btnNext(    w, gc.Rows( 9,10).Columns(4,6), "NEXT")
+        , btnPrevious(w, gc.rows( 9,10).columns(1,3), "PREVIOUS")
+        , btnNext(    w, gc.rows( 9,10).columns(4,6), "NEXT")
 
-        , hrule2(     w, gc.Rows(11,11))
+        , hrule2(     w, gc.rows(11,11))
 
-        , btnRepeat(  w, gc.Rows(12,13).Columns(1,4), "REPEAT")
-        , btnSingle(  w, gc.Rows(12,13).Columns(5,6), "SINGLE")
-        , btnConsume( w, gc.Rows(14,15).Columns(1,2), "CONSUME")
-        , btnRandom(  w, gc.Rows(14,15).Columns(3,6), "RANDOM")
+        , btnRepeat(  w, gc.rows(12,13).columns(1,4), "REPEAT")
+        , btnSingle(  w, gc.rows(12,13).columns(5,6), "SINGLE")
+        , btnConsume( w, gc.rows(14,15).columns(1,2), "CONSUME")
+        , btnRandom(  w, gc.rows(14,15).columns(3,6), "RANDOM")
       {
         RegisterChild(&hdrQueue);
         RegisterChild(&queue_pager);
@@ -393,7 +393,7 @@ namespace isompd::queue {
       view(isolinear::grid g, display::window& w, mpdxx::client& mpdc)
         : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
-        , queue_pager_buttons(g.Rows(21, 22), w, "##")
+        , queue_pager_buttons(g.rows(21, 22), w, "##")
         , previous_page_button(queue_pager_buttons.AddButton("PREVIOUS"))
         , next_page_button(queue_pager_buttons.AddButton("NEXT"))
       {
@@ -471,7 +471,7 @@ namespace isompd::browse {
         : isompd::view("BROWSE", g, w, _mpdc)
         , artist_grid(g)
         , artist_pager(artist_grid, w, 10)
-        , artist_pager_buttons(w, g.Rows(21, 22))
+        , artist_pager_buttons(w, g.rows(21, 22))
       {
         RegisterChild(&artist_pager);
 

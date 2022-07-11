@@ -24,7 +24,7 @@ namespace isolinear {
       }
 
       geometry::region Bounds() const {
-        return grid.bounds;
+        return grid.bounds();
       }
 
   };

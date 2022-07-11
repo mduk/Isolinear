@@ -48,18 +48,18 @@ namespace isolinear::ui {
 
     public:
       region Bounds() const {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       void Draw(SDL_Renderer* renderer) const {
-        auto bound_height = grid.bounds.H();
-        auto offset_px = (bound_height - grid.gutter.y) / 2;
+        auto bound_height = grid.bounds().H();
+        auto offset_px = (bound_height - grid.gutter().y) / 2;
 
-        auto hrule_near_x = grid.bounds.near_x();
-        auto hrule_near_y = grid.bounds.near_y() + offset_px;
+        auto hrule_near_x = grid.bounds().near_x();
+        auto hrule_near_y = grid.bounds().near_y() + offset_px;
 
-        auto hrule_far_x = grid.bounds.far_x();
-        auto hrule_far_y = grid.bounds.far_y() - offset_px;
+        auto hrule_far_x = grid.bounds().far_x();
+        auto hrule_far_y = grid.bounds().far_y() - offset_px;
 
         region hrule(
             position(hrule_near_x, hrule_near_y),
@@ -83,7 +83,7 @@ namespace isolinear::ui {
       region bounds;
 
       button( display::window& w, isolinear::grid g, std::string l)
-        : button(w, g.bounds, l)
+        : button(w, g.bounds(), l)
       {}
 
       button(
@@ -210,7 +210,7 @@ namespace isolinear::ui {
       }
 
       virtual region Bounds() const override {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       void Draw(SDL_Renderer* renderer) const override {
@@ -318,19 +318,19 @@ namespace isolinear::ui {
       }
 
       virtual region Bounds() const override {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       void Draw(SDL_Renderer* renderer) const override {
         if (text.length() == 0) {
-          grid.bounds.fill(renderer, Colours().frame);
+          grid.bounds().fill(renderer, Colours().frame);
           return;
         }
 
         std::string padded = std::string(" ") + text + " ";
 
         text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
-        headertext.Draw(renderer, alignment, grid.bounds);
+        headertext.Draw(renderer, alignment, grid.bounds());
       }
   };
 
@@ -418,7 +418,7 @@ namespace isolinear::ui {
       };
 
       virtual region Bounds() const override {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       void Draw(SDL_Renderer* renderer) const override {
@@ -514,7 +514,7 @@ namespace isolinear::ui {
       }
 
       virtual region Bounds() const override {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       void Draw(SDL_Renderer* renderer) const override {
@@ -588,11 +588,11 @@ namespace isolinear::ui {
             position(rightlimit.x, right_text_end_cell.southeast_y())
           };
 
-        if (right_text_filler.W() >= grid.Gutter().x) {
+        if (right_text_filler.W() >= grid.gutter().x) {
           right_text_filler.fill(renderer, Colours().light);
         }
 
-        if (left_text_filler.W() >= grid.Gutter().x) {
+        if (left_text_filler.W() >= grid.gutter().x) {
           left_text_filler.fill(renderer, Colours().light);
         }
 
@@ -620,7 +620,7 @@ namespace isolinear::ui {
       {}
 
       label(display::window& w, isolinear::grid g, std::string l)
-        : label(w, g.bounds, l)
+        : label(w, g.bounds(), l)
       {}
 
     public:
@@ -683,7 +683,7 @@ namespace isolinear::ui {
       }
 
       region OuterRadiusRegion() const {
-        return grid.bounds.align(alignment, geometry::vector{outer_radius});
+        return grid.bounds().align(alignment, geometry::vector{outer_radius});
       }
 
       void DrawOuterRadius(SDL_Renderer* renderer) const {
@@ -693,14 +693,14 @@ namespace isolinear::ui {
       }
 
       region Bounds() const override {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       void Draw(SDL_Renderer* renderer) const override {
         region icorner = InnerCornerRegion();
         region iradius = icorner.align(alignment, geometry::vector{inner_radius});
 
-        grid.bounds.fill(renderer, Colours().frame);
+        grid.bounds().fill(renderer, Colours().frame);
         icorner.fill(renderer, Colours().background);
 
         iradius.fill(renderer, Colours().frame);
@@ -829,12 +829,12 @@ namespace isolinear::ui {
         : grid{_g}
         , bar_region(
             position(
-              grid.bounds.near_x() + (gutter * 2),
-              grid.bounds.near_y() + (gutter * 2)
+              grid.bounds().near_x() + (gutter * 2),
+              grid.bounds().near_y() + (gutter * 2)
             ),
             position(
-              grid.bounds.far_x() - (gutter * 2),
-              grid.bounds.far_y() - (gutter * 2)
+              grid.bounds().far_x() - (gutter * 2),
+              grid.bounds().far_y() - (gutter * 2)
             )
           )
         , segment_size{ (int) gutter, bar_region.H() }
@@ -914,18 +914,18 @@ namespace isolinear::ui {
       }
 
       region Bounds() const override {
-        return grid.bounds;
+        return grid.bounds();
       }
 
       void Draw(SDL_Renderer* renderer) const override {
         boxColor(renderer,
-            grid.bounds.near_x(), grid.bounds.near_y(),
-            grid.bounds.far_x(),  grid.bounds.far_y(),
+            grid.bounds().near_x(), grid.bounds().near_y(),
+            grid.bounds().far_x(),  grid.bounds().far_y(),
             Colours().frame
           );
         boxColor(renderer,
-            grid.bounds.near_x() + gutter, grid.bounds.near_y() + gutter,
-            grid.bounds.far_x() - gutter,  grid.bounds.far_y() - gutter,
+            grid.bounds().near_x() + gutter, grid.bounds().near_y() + gutter,
+            grid.bounds().far_x() - gutter,  grid.bounds().far_y() - gutter,
             Colours().background
           );
 
@@ -1021,14 +1021,14 @@ namespace isolinear::ui {
         auto const container_region = ContainerRegion();
         if (container_region.encloses(cursor)) {
           printf("Container: ");
-          container_region.Print();
+          container_region.print();
           return;
         }
 
         auto const vertical_region = VerticalRegion();
         if (vertical_region.encloses(cursor)) {
           printf("Vertical: ");
-          vertical_region.Print();
+          vertical_region.print();
           return;
         }
 
@@ -1042,26 +1042,26 @@ namespace isolinear::ui {
         auto const sweep_region = SweepRegion();
         if (sweep_region.encloses(cursor)) {
           printf("Sweep: ");
-          sweep_region.Print();
+          sweep_region.print();
           return;
         }
 
         auto const horizontal_region = HorizontalRegion();
         if (horizontal_region.encloses(cursor)) {
           printf("Horizontal: ");
-          horizontal_region.Print();
+          horizontal_region.print();
 
           auto const reach_region = ReachRegion();
           if (reach_region.encloses(cursor)) {
             printf("Reach: ");
-            reach_region.Print();
+            reach_region.print();
             return;
           }
 
           auto const header_region = HeaderRegion();
           if (header_region.encloses(cursor)) {
             printf("Header: ");
-            header_region.Print();
+            header_region.print();
             return;
           }
 
@@ -1417,7 +1417,7 @@ namespace isolinear::ui {
     protected:
       isolinear::grid grid_for_index(int index) override {
         int far_row = index * H;
-        return isolinear::ui::drawable_list<T>::grid.Rows(far_row-(H-1), far_row);
+        return isolinear::ui::drawable_list<T>::grid.rows(far_row-(H-1), far_row);
       }
   };
 

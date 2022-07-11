@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 
   while (running) {
     if (drawdebug) {
-      grid.Draw(window.renderer());
+      grid.draw(window.renderer());
     }
 
     SDL_Event e;
