@@ -88,11 +88,15 @@ int main(int argc, char* argv[])
     }
 
     window.Draw();
-    grid.Cell(gx, gy)
-      .fill(window.renderer(), 0xff00ffff);
 
-    SDL_RenderPresent(window.renderer());
-  }
+    isolinear::theme::colour cellcolour = 0xff00ffff;
+    auto cell = grid.Cell(gx, gy);
+    if (window.region().encloses(cell)) {
+      cellcolour = 0xffffff00;
+    }
+    cell.fill(window.renderer(), cellcolour);
+    grid.Draw(window.renderer());
 
-  return 0;
-}
+    SDL_RenderPresent(window.renderer()); }
+
+  return 0; }
