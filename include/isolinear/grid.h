@@ -125,6 +125,15 @@ namespace isolinear {
       }
 
       geometry::region calculate_grid_region(int near_col, int near_row, int far_col, int far_row) const {
+        auto mc = max_columns();
+        auto mr = max_rows();
+
+        if (near_col > mc || far_col > mc || near_row > mr || far_row > mr) {
+          throw std::out_of_range(fmt::format(
+              "Grid region {},{} x {},{} falls outside of the grid bounds, {} x {}",
+              near_col, near_row, far_col, far_row, mc, mr));
+        }
+
         geometry::position origin = bounds.origin();
         auto cs = cell_size();
         return geometry::region{

@@ -19,7 +19,6 @@
 #include "display.h"
 #include "window.h"
 
-int gx, gy;
 
 int main(int argc, char* argv[])
 {
@@ -41,7 +40,7 @@ int main(int argc, char* argv[])
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  geometry::position pos{};
+  geometry::position pointer_position{};
 
   printf("LOOP\n");
   while (running) {
@@ -74,12 +73,13 @@ int main(int argc, char* argv[])
           int x = e.motion.x,
               y = e.motion.y;
 
-          pos = geometry::position{x, y};
-          gx = grid.position_column_index(pos),
-          gy = grid.position_row_index(pos);
+          pointer_position = geometry::position{x, y};
 
           std::stringstream ss;
-          ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
+          ss << "Mouse X=" << x
+             << " Y=" << y
+             << " Grid Col=" << grid.position_column_index(pointer_position)
+             << " Row=" << grid.position_row_index(pointer_position);
 
           window.Title(ss.str());
 
@@ -95,13 +95,24 @@ int main(int argc, char* argv[])
 
     window.Draw();
 
-    isolinear::theme::colour cellcolour = 0xff00ffff;
-    auto cell = grid.cell(gx, gy);
-    if (window.region().encloses(cell)) {
-      cellcolour = 0xffffff00;
-    }
-    cell.fill(window.renderer(), cellcolour);
     grid.Draw(window.renderer());
+
+    isolinear::theme::colour cellcolour = 0xff00ffff;
+    try {
+      auto cell = grid.cell(
+        grid.position_column_index(pointer_position),
+        grid.position_row_index(pointer_position)
+      );
+
+      if (window.region().encloses(cell)) {
+        cellcolour = 0xffffff00;
+      }
+
+      cell.fill(window.renderer(), cellcolour);
+    }
+    catch (const std::out_of_range& e) {
+      // Do nothing, it's fine.
+    }
 
     SDL_RenderPresent(window.renderer()); }
 
