@@ -147,7 +147,7 @@ namespace isolinear::ui {
       isolinear::grid m_grid;
       display::window& m_window;
       std::map<std::string, isolinear::ui::button> m_buttons;
-      geometry::vector button_size{2,2};
+      geometry::vector m_button_size{2,2};
 
     public:
       button_bar(display::window& w, isolinear::grid g)
@@ -234,9 +234,9 @@ namespace isolinear::ui {
       horizontal_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
       region ButtonRegion(int i) const override {
-        int near_col = button_size.x * (i-1) + 1;
+        int near_col = m_button_size.x * (i-1) + 1;
         int near_row = 1;
-        int  far_col = button_size.x * i;
+        int  far_col = m_button_size.x * i;
         int  far_row = m_grid.max_rows();
 
         return m_grid.calculate_grid_region(
@@ -246,7 +246,7 @@ namespace isolinear::ui {
       }
 
       region BarRegion() const override {
-        int near_col = button_size.x * m_buttons.size() + 1;
+        int near_col = m_button_size.x * m_buttons.size() + 1;
         int near_row = 1;
         int  far_col = m_grid.max_columns();
         int  far_row = m_grid.max_rows();
@@ -265,9 +265,9 @@ namespace isolinear::ui {
 
       region ButtonRegion(int i) const override {
         int near_col = 1;
-        int near_row = button_size.y * (i-1) + 1;
+        int near_row = m_button_size.y * (i-1) + 1;
         int  far_col = m_grid.max_columns();
-        int  far_row = button_size.y * i;
+        int  far_row = m_button_size.y * i;
 
         return m_grid.calculate_grid_region(
             near_col, near_row,
@@ -277,7 +277,7 @@ namespace isolinear::ui {
 
       region BarRegion() const override {
         int near_col = 1;
-        int near_row = button_size.y * m_buttons.size() + 1;
+        int near_row = m_button_size.y * m_buttons.size() + 1;
         int  far_col = m_grid.max_columns();
         int  far_row = m_grid.max_rows();
 
