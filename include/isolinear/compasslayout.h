@@ -48,7 +48,7 @@ namespace isolinear::layout {
       isolinear::grid North() const {
         int near_col = northwest.x + 1;
         int near_row = 1;
-        int  far_col = grid.MaxColumns() - northeast.x;
+        int  far_col = grid.max_columns() - northeast.x;
         int  far_row = north;
 
         return grid.SubGrid(
@@ -58,9 +58,9 @@ namespace isolinear::layout {
       }
 
       isolinear::grid NorthEast() const {
-        int near_col = grid.MaxColumns() - (northeast.x - 1);
+        int near_col = grid.max_columns() - (northeast.x - 1);
         int near_row = 1;
-        int  far_col = grid.MaxColumns();
+        int  far_col = grid.max_columns();
         int  far_row = northeast.x;
 
         return grid.SubGrid(
@@ -70,10 +70,10 @@ namespace isolinear::layout {
       }
 
       isolinear::grid East() const {
-        int near_col = grid.MaxColumns() - (east - 1);
+        int near_col = grid.max_columns() - (east - 1);
         int near_row = northeast.y + 1;
-        int  far_col = grid.MaxColumns();
-        int  far_row = grid.MaxRows() - southeast.y;
+        int  far_col = grid.max_columns();
+        int  far_row = grid.max_rows() - southeast.y;
 
         return grid.SubGrid(
             near_col, near_row,
@@ -82,10 +82,10 @@ namespace isolinear::layout {
       }
 
       isolinear::grid SouthEast() const {
-        int near_col = grid.MaxColumns() - (southeast.x - 1);
-        int near_row = grid.MaxRows() - (southeast.y - 1);
-        int  far_col = grid.MaxColumns();;
-        int  far_row = grid.MaxRows();
+        int near_col = grid.max_columns() - (southeast.x - 1);
+        int near_row = grid.max_rows() - (southeast.y - 1);
+        int  far_col = grid.max_columns();;
+        int  far_row = grid.max_rows();
 
         return grid.SubGrid(
             near_col, near_row,
@@ -95,9 +95,9 @@ namespace isolinear::layout {
 
       isolinear::grid South() const {
         int near_col = southwest.x + 1;
-        int near_row = grid.MaxRows() - (south - 1);
-        int  far_col = grid.MaxColumns() - southeast.x;
-        int  far_row = grid.MaxRows();
+        int near_row = grid.max_rows() - (south - 1);
+        int  far_col = grid.max_columns() - southeast.x;
+        int  far_row = grid.max_rows();
 
         return grid.SubGrid(
             near_col, near_row,
@@ -107,9 +107,9 @@ namespace isolinear::layout {
 
       isolinear::grid SouthWest() const {
         int near_col = 1;
-        int near_row = grid.MaxRows() - (southwest.y - 1);
+        int near_row = grid.max_rows() - (southwest.y - 1);
         int  far_col = southwest.x;
-        int  far_row = grid.MaxRows();
+        int  far_row = grid.max_rows();
 
         return grid.SubGrid(
             near_col, near_row,
@@ -121,7 +121,7 @@ namespace isolinear::layout {
         int near_col = 1;
         int near_row = northwest.y + 1;
         int  far_col = west;
-        int  far_row = grid.MaxRows() - southwest.y;
+        int  far_row = grid.max_rows() - southwest.y;
 
         return grid.SubGrid(
             near_col, near_row,
@@ -144,8 +144,8 @@ namespace isolinear::layout {
       isolinear::grid Centre() const {
         int near_col = northwest.x + 1;
         int near_row = northwest.y + 1;
-        int  far_col = grid.MaxColumns() - southeast.x;
-        int  far_row = grid.MaxRows() - southeast.y;
+        int  far_col = grid.max_columns() - southeast.x;
+        int  far_row = grid.max_rows() - southeast.y;
 
         return grid.SubGrid(
             near_col, near_row,

@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
   window.add(&control_bar);
 
   std::list<isolinear::timer> timers;
-  isolinear::ui::layout_vertical<isolinear::timer_row, 2> timer_rows(grid.Rows(3, grid.MaxRows()));
+  isolinear::ui::layout_vertical<isolinear::timer_row, 2> timer_rows(grid.Rows(3, grid.max_rows()));
   window.add(&timer_rows);
 
   miso::connect(five_second_button.signal_press, [&](){
@@ -170,28 +170,6 @@ int main(int argc, char* argv[])
 
           }
           break;
-
-        case SDL_MOUSEMOTION: {
-          int x = e.motion.x,
-              y = e.motion.y;
-
-          geometry::position pos{x, y};
-          int gx = grid.PositionColumnIndex(pos),
-              gy = grid.PositionRowIndex(pos);
-
-          std::stringstream ss;
-          ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
-
-          window.Title(ss.str());
-          break;
-        }
-
-/*
-      case SDL_FINGERDOWN:
-        printf("TAP\n");
-        window.OnPointerEvent(pointer::event{ e.tfinger, window.size() });
-        break;
-*/
 
       case SDL_MOUSEBUTTONDOWN:
         window.OnPointerEvent(pointer::event{ e.button });

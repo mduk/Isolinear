@@ -114,8 +114,8 @@ int main(int argc, char* argv[])
               y = e.motion.y;
 
           isolinear::geometry::position pos{x, y};
-          int gx = grid.PositionColumnIndex(pos),
-              gy = grid.PositionRowIndex(pos);
+          int gx = grid.position_column_index(pos),
+              gy = grid.position_row_index(pos);
 
           std::stringstream ss;
           ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;

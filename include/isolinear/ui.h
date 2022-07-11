@@ -202,11 +202,11 @@ namespace isolinear::ui {
       };
 
       virtual int Height() const {
-        return grid.MaxRows();
+        return grid.max_rows();
       }
 
       virtual int Width() const {
-        return grid.MaxColumns();
+        return grid.max_columns();
       }
 
       virtual region Bounds() const override {
@@ -237,9 +237,9 @@ namespace isolinear::ui {
         int near_col = button_size.x * (i-1) + 1;
         int near_row = 1;
         int  far_col = button_size.x * i;
-        int  far_row = grid.MaxRows();
+        int  far_row = grid.max_rows();
 
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             near_col, near_row,
              far_col, far_row
           );
@@ -248,10 +248,10 @@ namespace isolinear::ui {
       region BarRegion() const override {
         int near_col = button_size.x * buttons.size() + 1;
         int near_row = 1;
-        int  far_col = grid.MaxColumns();
-        int  far_row = grid.MaxRows();
+        int  far_col = grid.max_columns();
+        int  far_row = grid.max_rows();
 
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             near_col, near_row,
              far_col, far_row
           );
@@ -266,10 +266,10 @@ namespace isolinear::ui {
       region ButtonRegion(int i) const override {
         int near_col = 1;
         int near_row = button_size.y * (i-1) + 1;
-        int  far_col = grid.MaxColumns();
+        int  far_col = grid.max_columns();
         int  far_row = button_size.y * i;
 
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             near_col, near_row,
              far_col, far_row
           );
@@ -278,10 +278,10 @@ namespace isolinear::ui {
       region BarRegion() const override {
         int near_col = 1;
         int near_row = button_size.y * buttons.size() + 1;
-        int  far_col = grid.MaxColumns();
-        int  far_row = grid.MaxRows();
+        int  far_col = grid.max_columns();
+        int  far_row = grid.max_rows();
 
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             near_col, near_row,
              far_col, far_row
           );
@@ -402,7 +402,7 @@ namespace isolinear::ui {
 
       region ButtonRegion(int i) const  {
         i = (i-1) * button_width;
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             2+i,   1,
             2+i+1, 2
           );
@@ -424,7 +424,7 @@ namespace isolinear::ui {
       void Draw(SDL_Renderer* renderer) const override {
         int x = 1,
             y = 1,
-            w = grid.MaxColumns() - 1
+            w = grid.max_columns() - 1
           ;
 
         int westcap_width = 1,
@@ -434,9 +434,9 @@ namespace isolinear::ui {
         int filler_start = westcap_width + 1;
         int filler_end = w;
 
-        region   left_cap = grid.CalculateGridRegion(  x  , y,   x  , y+1);
-        region  right_cap = grid.CalculateGridRegion(w+x  , y, w+x  , y+1);
-        region centre_bar = grid.CalculateGridRegion(  x+1, y, w+x-1, y+1);
+        region   left_cap = grid.calculate_grid_region(  x  , y,   x  , y+1);
+        region  right_cap = grid.calculate_grid_region(w+x  , y, w+x  , y+1);
+        region centre_bar = grid.calculate_grid_region(  x+1, y, w+x-1, y+1);
 
           left_cap.fill(renderer, LeftCapColour());
          right_cap.bullnose(renderer, compass::east, RightCapColour());
@@ -455,12 +455,12 @@ namespace isolinear::ui {
           text::rendered_text headertext = window.HeaderFont().RenderText(Colours().active, padded);
           region headerregion = centre_bar.align(compass::east, headertext.size());
 
-          int near = grid.PositionColumnIndex(headerregion.Near());
-          int  far = grid.PositionColumnIndex(headerregion.Far());
+          int near = grid.position_column_index(headerregion.Near());
+          int  far = grid.position_column_index(headerregion.Far());
           filler_end -= (far - near) + 1;
 
-          int col = grid.PositionColumnIndex(headerregion.Near());
-          region cell = grid.CalculateGridRegion(col, y, col, y+1);
+          int col = grid.position_column_index(headerregion.Near());
+          region cell = grid.calculate_grid_region(col, y, col, y+1);
           region fillerregion{
               cell.origin(),
               position{
@@ -473,7 +473,7 @@ namespace isolinear::ui {
           headertext.Draw(renderer, compass::east, centre_bar);
         }
 
-        grid.CalculateGridRegion(
+        grid.calculate_grid_region(
             filler_start, y,
             filler_end, y+1
           ).fill(renderer, Colours().frame);
@@ -518,19 +518,19 @@ namespace isolinear::ui {
       }
 
       void Draw(SDL_Renderer* renderer) const override {
-        region left_cap = grid.CalculateGridRegion(
+        region left_cap = grid.calculate_grid_region(
             1, 1,
-            1, grid.MaxRows()
+            1, grid.max_rows()
           );
 
-        region centre_bar = grid.CalculateGridRegion(
+        region centre_bar = grid.calculate_grid_region(
             2, 1,
-            grid.MaxColumns() - 1, grid.MaxRows()
+            grid.max_columns() - 1, grid.max_rows()
           );
 
-        region right_cap = grid.CalculateGridRegion(
-            grid.MaxColumns(), 1,
-            grid.MaxColumns(), grid.MaxRows()
+        region right_cap = grid.calculate_grid_region(
+            grid.max_columns(), 1,
+            grid.max_columns(), grid.max_rows()
           );
 
         std::string paddedleft = " " + left + " ";
@@ -554,28 +554,28 @@ namespace isolinear::ui {
         position leftlimit = lefttextregion.southeast();
         position rightlimit = righttextregion.northwest();
 
-        int left_text_end_col_index = grid.PositionColumnIndex(
+        int left_text_end_col_index = grid.position_column_index(
             lefttextregion.east()
           );
-        int right_text_end_col_index = grid.PositionColumnIndex(
+        int right_text_end_col_index = grid.position_column_index(
             righttextregion.west()
           );
 
-        region drawcentrebar = grid.CalculateGridRegion(
+        region drawcentrebar = grid.calculate_grid_region(
             left_text_end_col_index + 1, 1,
-            right_text_end_col_index - 1, grid.MaxRows()
+            right_text_end_col_index - 1, grid.max_rows()
           );
 
         region left_text_end_cell =
-          grid.CalculateGridRegion(
+          grid.calculate_grid_region(
               left_text_end_col_index, 1,
-              left_text_end_col_index, grid.MaxRows()
+              left_text_end_col_index, grid.max_rows()
             );
 
         region right_text_end_cell =
-          grid.CalculateGridRegion(
+          grid.calculate_grid_region(
               right_text_end_col_index, 1,
-              right_text_end_col_index, grid.MaxRows()
+              right_text_end_col_index, grid.max_rows()
             );
 
         region left_text_filler{
@@ -722,16 +722,16 @@ namespace isolinear::ui {
       {}
 
       region HorizontalPort() const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             1, 1,
             1, ports.y
           );
       }
 
       region VerticalPort() const override {
-        return grid.CalculateGridRegion(
-            grid.MaxColumns() - ports.x + 1, grid.MaxRows(),
-                          grid.MaxColumns(), grid.MaxRows()
+        return grid.calculate_grid_region(
+            grid.max_columns() - ports.x + 1, grid.max_rows(),
+                          grid.max_columns(), grid.max_rows()
           );
       }
 
@@ -744,16 +744,16 @@ namespace isolinear::ui {
       {}
 
       region HorizontalPort() const override {
-        return grid.CalculateGridRegion(
-            1, grid.MaxRows() - ports.y + 1,
-            1, grid.MaxRows()
+        return grid.calculate_grid_region(
+            1, grid.max_rows() - ports.y + 1,
+            1, grid.max_rows()
           );
       }
 
       region VerticalPort() const override {
-        return grid.CalculateGridRegion(
-            grid.MaxColumns() - ports.x + 1, 1,
-            grid.MaxColumns(), 1
+        return grid.calculate_grid_region(
+            grid.max_columns() - ports.x + 1, 1,
+            grid.max_columns(), 1
           );
       }
 
@@ -766,16 +766,16 @@ namespace isolinear::ui {
       {}
 
       region VerticalPort() const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             1, 1,
             ports.x, 1
           );
       }
 
       region HorizontalPort() const override {
-        return grid.CalculateGridRegion(
-            grid.MaxColumns(), grid.MaxRows() - ports.y + 1,
-                          grid.MaxColumns(), grid.MaxRows()
+        return grid.calculate_grid_region(
+            grid.max_columns(), grid.max_rows() - ports.y + 1,
+                          grid.max_columns(), grid.max_rows()
           );
       }
 
@@ -788,16 +788,16 @@ namespace isolinear::ui {
       {}
 
       region HorizontalPort() const override {
-        return grid.CalculateGridRegion(
-            grid.MaxColumns(), 1,
-            grid.MaxColumns(), ports.y
+        return grid.calculate_grid_region(
+            grid.max_columns(), 1,
+            grid.max_columns(), ports.y
           );
       }
 
       region VerticalPort() const override {
-        return grid.CalculateGridRegion(
-            1, grid.MaxRows(),
-            ports.x, grid.MaxRows()
+        return grid.calculate_grid_region(
+            1, grid.max_rows(),
+            ports.x, grid.max_rows()
           );
       }
 
@@ -1161,7 +1161,7 @@ namespace isolinear::ui {
 
     protected:
       region SweepRegion() const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
           1,1,
           sweep_cells.x, sweep_cells.y
         );
@@ -1196,9 +1196,9 @@ namespace isolinear::ui {
       }
 
       region HorizontalRegion() const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
           sweep_cells.x + 1, 1,
-          grid.MaxColumns(), 2
+          grid.max_columns(), 2
         );
       }
 
@@ -1234,21 +1234,21 @@ namespace isolinear::ui {
       }
 
       region VerticalRegion() const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             1, sweep_cells.y + 1 + buttons.size(),
-            sweep_cells.x - 1, grid.MaxRows()
+            sweep_cells.x - 1, grid.max_rows()
           );
       }
 
       region ContainerRegion() const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             sweep_cells.x, sweep_cells.y + 1,
-            grid.MaxColumns(), grid.MaxRows()
+            grid.max_columns(), grid.max_rows()
           );
       }
 
       region ButtonRegion(int i) const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             1, sweep_cells.y +  i,
             sweep_cells.x - 1, sweep_cells.y  + i
           );
@@ -1288,9 +1288,9 @@ namespace isolinear::ui {
 
     protected:
       region SweepRegion() const override {
-        return grid.CalculateGridRegion(
-          1, grid.MaxRows() - sweep_cells.y + 1,
-          sweep_cells.x, grid.MaxRows()
+        return grid.calculate_grid_region(
+          1, grid.max_rows() - sweep_cells.y + 1,
+          sweep_cells.x, grid.max_rows()
         );
       }
 
@@ -1327,9 +1327,9 @@ namespace isolinear::ui {
       }
 
       region HorizontalRegion() const override {
-        return grid.CalculateGridRegion(
-          sweep_cells.x + 1, grid.MaxRows() - sweep_cells.y + 1,
-          grid.MaxColumns(), grid.MaxRows()
+        return grid.calculate_grid_region(
+          sweep_cells.x + 1, grid.max_rows() - sweep_cells.y + 1,
+          grid.max_columns(), grid.max_rows()
         );
       }
 
@@ -1364,9 +1364,9 @@ namespace isolinear::ui {
       }
 
       region VerticalRegion() const override {
-        return grid.CalculateGridRegion(
+        return grid.calculate_grid_region(
             1,1,
-            sweep_cells.x -1, grid.MaxRows() - sweep_cells.y - buttons.size()
+            sweep_cells.x -1, grid.max_rows() - sweep_cells.y - buttons.size()
           );
       }
 
@@ -1375,9 +1375,9 @@ namespace isolinear::ui {
       }
 
       region ButtonRegion(int i) const override {
-        return grid.CalculateGridRegion(
-            sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size(),
-            sweep_cells.x - 1, grid.MaxRows() - sweep_cells.y - buttons.size()
+        return grid.calculate_grid_region(
+            sweep_cells.x - 1, grid.max_rows() - sweep_cells.y - buttons.size(),
+            sweep_cells.x - 1, grid.max_rows() - sweep_cells.y - buttons.size()
           );
       };
 

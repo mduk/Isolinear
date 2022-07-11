@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
               y = e.motion.y;
 
           pos = geometry::position{x, y};
-          gx = grid.PositionColumnIndex(pos),
-          gy = grid.PositionRowIndex(pos);
+          gx = grid.position_column_index(pos),
+          gy = grid.position_row_index(pos);
 
           std::stringstream ss;
           ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
     window.Draw();
 
     isolinear::theme::colour cellcolour = 0xff00ffff;
-    auto cell = grid.Cell(gx, gy);
+    auto cell = grid.cell(gx, gy);
     if (window.region().encloses(cell)) {
       cellcolour = 0xffffff00;
     }
