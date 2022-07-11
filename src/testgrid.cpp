@@ -34,13 +34,7 @@ int main(int argc, char* argv[])
   geometry::vector display_size{ display.w, display.h };
   isolinear::display::window window(display_position, display_size);
 
-  isolinear::grid grid(
-      isolinear::geometry::region(0, 0, display_size.x, display_size.y),
-      window.ButtonFont().Height(), // Row height
-      geometry::vector(10,10),
-      geometry::vector(25,28)
-    );
-
+  int ncols = 15, nrows = 10;
 
   window.Colours(isolinear::theme::nightgazer_colours);
 
@@ -51,15 +45,27 @@ int main(int argc, char* argv[])
 
   printf("LOOP\n");
   while (running) {
+
+    isolinear::grid grid(
+        isolinear::geometry::region(0, 0, display_size.x, display_size.y),
+        window.ButtonFont().Height(), // Row height
+        geometry::vector(10,10),
+        geometry::vector(ncols,nrows)
+      );
+
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
 
         case SDL_KEYDOWN: {
           switch (e.key.keysym.sym) {
-          case SDLK_ESCAPE:
-            running = false;
-            break;
+            case SDLK_ESCAPE:
+              running = false;
+              break;
+            case SDLK_UP: nrows--; break;
+            case SDLK_DOWN: nrows++; break;
+            case SDLK_LEFT: ncols--; break;
+            case SDLK_RIGHT: ncols++; break;
           }
           break;
         }
