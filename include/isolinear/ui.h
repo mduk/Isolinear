@@ -74,9 +74,9 @@ namespace isolinear::ui {
   class button : public drawable {
     protected:
       display::window& m_window;
-      bool enabled = true;
-      bool active = false;
-      std::string label;
+      bool m_enabled = true;
+      bool m_active = false;
+      std::string m_label;
 
     public:
       miso::signal<> signal_press;
@@ -93,29 +93,29 @@ namespace isolinear::ui {
         ) :
           bounds{b},
           m_window{w},
-          label{l}
+          m_label{l}
       {}
 
-      void Enable() { enabled = true; }
-      void Disable() { enabled = false; }
-      bool Enabled() { return enabled; }
-      bool Disabled() { return !enabled; }
+      void Enable() { m_enabled = true; }
+      void Disable() { m_enabled = false; }
+      bool Enabled() { return m_enabled; }
+      bool Disabled() { return !m_enabled; }
 
-      void Activate() { active = true; }
-      void Deactivate() { active = false; }
-      void Active(bool state) { active = state; }
-      bool Active() { return active; }
+      void Activate() { m_active = true; }
+      void Deactivate() { m_active = false; }
+      void Active(bool state) { m_active = state; }
+      bool Active() { return m_active; }
 
-      std::string Label() { return label; }
-      void Label(std::string newlabel) { label = newlabel + " "; }
+      std::string Label() { return m_label; }
+      void Label(std::string newlabel) { m_label = newlabel + " "; }
 
       virtual region Bounds() const override {
         return bounds;
       }
 
       void Draw(SDL_Renderer* renderer) const override {
-        theme::colour drawcolour = enabled == true
-                          ? active == true
+        theme::colour drawcolour = m_enabled == true
+                          ? m_active == true
                             ? Colours().active
                             : Colours().light_alternate
                           : Colours().disabled;
@@ -131,7 +131,7 @@ namespace isolinear::ui {
             renderer,
             bounds,
             compass::southeast,
-            std::string{" "} + label + " "
+            std::string{" "} + m_label + " "
           );
       }
 
