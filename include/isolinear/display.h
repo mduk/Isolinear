@@ -87,6 +87,8 @@ namespace isolinear::display {
 
       geometry::vector const size() const { return _size; }
 
+      geometry::region const region() const { return geometry::region{_position, _size}; }
+
       SDL_Renderer* renderer() const { return _sdl_renderer; }
 
     protected: // Protected window properties
