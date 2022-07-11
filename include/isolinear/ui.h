@@ -80,7 +80,7 @@ namespace isolinear::ui {
 
     public:
       miso::signal<> signal_press;
-      region bounds;
+      region m_bounds;
 
       button( display::window& w, isolinear::grid g, std::string l)
         : button(w, g.bounds(), l)
@@ -91,7 +91,7 @@ namespace isolinear::ui {
           region b,
           std::string l
         ) :
-          bounds{b},
+          m_bounds{b},
           m_window{w},
           m_label{l}
       {}
@@ -110,7 +110,11 @@ namespace isolinear::ui {
       void Label(std::string newlabel) { m_label = newlabel + " "; }
 
       virtual region Bounds() const override {
-        return bounds;
+        return m_bounds;
+      }
+
+      virtual region bounds() const {
+        return m_bounds;
       }
 
       void Draw(SDL_Renderer* renderer) const override {
@@ -122,14 +126,14 @@ namespace isolinear::ui {
 
 
         boxColor(renderer,
-            bounds.near_x(), bounds.near_y(),
-            bounds.far_x(),  bounds.far_y(),
+            m_bounds.near_x(), m_bounds.near_y(),
+            m_bounds.far_x(),  m_bounds.far_y(),
             drawcolour
           );
 
         m_window.ButtonFont().RenderText(
             renderer,
-            bounds,
+            m_bounds,
             compass::southeast,
             std::string{" "} + m_label + " "
           );
@@ -1033,7 +1037,7 @@ namespace isolinear::ui {
         }
 
         for (auto& button : m_buttons) {
-          if (button.bounds.encloses(cursor)) {
+          if (button.bounds().encloses(cursor)) {
             button.OnPointerEvent(event);
             return;
           }
