@@ -20,17 +20,17 @@ namespace isolinear::layout {
 
   class compass : public ui::drawable {
     protected:
-      isolinear::grid grid;
-      display::window& window;
+      isolinear::grid m_grid;
+      display::window& m_window;
 
-      int north;
-      int east;
-      int south;
-      int west;
-      geometry::vector northeast;
-      geometry::vector southeast;
-      geometry::vector southwest;
-      geometry::vector northwest;
+      int m_north;
+      int m_east;
+      int m_south;
+      int m_west;
+      geometry::vector m_northeast;
+      geometry::vector m_southeast;
+      geometry::vector m_southwest;
+      geometry::vector m_northwest;
 
     public:
       compass(
@@ -39,67 +39,67 @@ namespace isolinear::layout {
           geometry::vector ne, geometry::vector se,
           geometry::vector sw, geometry::vector nw
         ) :
-          grid(g), window(win),
-          north(n), east(e), south(s), west(w),
-          northeast(ne), southeast(se),
-          southwest(sw), northwest(nw)
+          m_grid(g), m_window(win),
+          m_north(n), m_east(e), m_south(s), m_west(w),
+          m_northeast(ne), m_southeast(se),
+          m_southwest(sw), m_northwest(nw)
       {}
 
       isolinear::grid North() const {
-        int near_col = northwest.x + 1;
+        int near_col = m_northwest.x + 1;
         int near_row = 1;
-        int  far_col = grid.max_columns() - northeast.x;
-        int  far_row = north;
+        int  far_col = m_grid.max_columns() - m_northeast.x;
+        int  far_row = m_north;
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
       }
 
       isolinear::grid NorthEast() const {
-        int near_col = grid.max_columns() - (northeast.x - 1);
+        int near_col = m_grid.max_columns() - (m_northeast.x - 1);
         int near_row = 1;
-        int  far_col = grid.max_columns();
-        int  far_row = northeast.x;
+        int  far_col = m_grid.max_columns();
+        int  far_row = m_northeast.x;
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
       }
 
       isolinear::grid East() const {
-        int near_col = grid.max_columns() - (east - 1);
-        int near_row = northeast.y + 1;
-        int  far_col = grid.max_columns();
-        int  far_row = grid.max_rows() - southeast.y;
+        int near_col = m_grid.max_columns() - (m_east - 1);
+        int near_row = m_northeast.y + 1;
+        int  far_col = m_grid.max_columns();
+        int  far_row = m_grid.max_rows() - m_southeast.y;
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
       }
 
       isolinear::grid SouthEast() const {
-        int near_col = grid.max_columns() - (southeast.x - 1);
-        int near_row = grid.max_rows() - (southeast.y - 1);
-        int  far_col = grid.max_columns();;
-        int  far_row = grid.max_rows();
+        int near_col = m_grid.max_columns() - (m_southeast.x - 1);
+        int near_row = m_grid.max_rows() - (m_southeast.y - 1);
+        int  far_col = m_grid.max_columns();;
+        int  far_row = m_grid.max_rows();
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
       }
 
       isolinear::grid South() const {
-        int near_col = southwest.x + 1;
-        int near_row = grid.max_rows() - (south - 1);
-        int  far_col = grid.max_columns() - southeast.x;
-        int  far_row = grid.max_rows();
+        int near_col = m_southwest.x + 1;
+        int near_row = m_grid.max_rows() - (m_south - 1);
+        int  far_col = m_grid.max_columns() - m_southeast.x;
+        int  far_row = m_grid.max_rows();
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
@@ -107,11 +107,11 @@ namespace isolinear::layout {
 
       isolinear::grid SouthWest() const {
         int near_col = 1;
-        int near_row = grid.max_rows() - (southwest.y - 1);
-        int  far_col = southwest.x;
-        int  far_row = grid.max_rows();
+        int near_row = m_grid.max_rows() - (m_southwest.y - 1);
+        int  far_col = m_southwest.x;
+        int  far_row = m_grid.max_rows();
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
@@ -119,11 +119,11 @@ namespace isolinear::layout {
 
       isolinear::grid West() const {
         int near_col = 1;
-        int near_row = northwest.y + 1;
-        int  far_col = west;
-        int  far_row = grid.max_rows() - southwest.y;
+        int near_row = m_northwest.y + 1;
+        int  far_col = m_west;
+        int  far_row = m_grid.max_rows() - m_southwest.y;
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
@@ -132,61 +132,61 @@ namespace isolinear::layout {
       isolinear::grid NorthWest() const {
         int near_col = 1;
         int near_row = 1;
-        int  far_col = northwest.x;
-        int  far_row = northwest.y;
+        int  far_col = m_northwest.x;
+        int  far_row = m_northwest.y;
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
       }
 
       isolinear::grid Centre() const {
-        int near_col = northwest.x + 1;
-        int near_row = northwest.y + 1;
-        int  far_col = grid.max_columns() - southeast.x;
-        int  far_row = grid.max_rows() - southeast.y;
+        int near_col = m_northwest.x + 1;
+        int near_row = m_northwest.y + 1;
+        int  far_col = m_grid.max_columns() - m_southeast.x;
+        int  far_row = m_grid.max_rows() - m_southeast.y;
 
-        return grid.subgrid(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
       }
 
       geometry::region Bounds() const {
-        return grid.bounds();
+        return m_grid.bounds();
       }
 
       virtual void Draw(SDL_Renderer* renderer) const override {
-        if (north > 0) {
+        if (m_north > 0) {
           North().bounds().Draw(renderer);
         }
 
-        if (northeast.x > 0 && northeast.y > 0) {
+        if (m_northeast.x > 0 && m_northeast.y > 0) {
           NorthEast().bounds().Draw(renderer);
         }
 
-        if (east > 0) {
+        if (m_east > 0) {
           East().bounds().Draw(renderer);
         }
 
-        if (southeast.x > 0 && southeast.y > 0) {
+        if (m_southeast.x > 0 && m_southeast.y > 0) {
           SouthEast().bounds().Draw(renderer);
         }
 
-        if (south > 0) {
+        if (m_south > 0) {
           South().bounds().Draw(renderer);
         }
 
-        if (southwest.x > 0 && southwest.y > 0) {
+        if (m_southwest.x > 0 && m_southwest.y > 0) {
           SouthWest().bounds().Draw(renderer);
         }
 
-        if (west > 0) {
+        if (m_west > 0) {
           West().bounds().Draw(renderer);
         }
 
-        if (northwest.x > 0 && northwest.y > 0) {
+        if (m_northwest.x > 0 && m_northwest.y > 0) {
           NorthWest().bounds().Draw(renderer);
         }
 
