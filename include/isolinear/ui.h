@@ -484,13 +484,13 @@ namespace isolinear::ui {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;
-      std::string left{""};
-      std::string right{""};
+      std::string m_left{""};
+      std::string m_right{""};
 
     public:
       header_pair_bar(isolinear::grid g, display::window& w,
           std::string l, std::string r)
-        : m_grid{g}, m_window{w}, left{l}, right{r}
+        : m_grid{g}, m_window{w}, m_left{l}, m_right{r}
       {};
 
       header_pair_bar(isolinear::grid g, display::window& w, compass a)
@@ -498,11 +498,11 @@ namespace isolinear::ui {
       {};
 
       void Left(std::string newlabel) {
-          left = newlabel;
+          m_left = newlabel;
       }
 
       void Right(std::string newlabel) {
-          right = newlabel;
+          m_right = newlabel;
       }
 
       virtual theme::colour_scheme Colours() const {
@@ -533,8 +533,8 @@ namespace isolinear::ui {
             m_grid.max_columns(), m_grid.max_rows()
           );
 
-        std::string paddedleft = " " + left + " ";
-        std::string paddedright = " " + right + " ";
+        std::string paddedleft = " " + m_left + " ";
+        std::string paddedright = " " + m_right + " ";
 
         auto const& headerfont = m_window.HeaderFont();
         text::rendered_text  lefttext = headerfont.RenderText(
@@ -610,13 +610,13 @@ namespace isolinear::ui {
     protected:
       display::window& m_window;
       region m_bounds;
-      std::string label_text;
+      std::string m_text;
 
     public:
       label(display::window& w, region b, std::string l)
         : m_window(w)
         , m_bounds(b)
-        , label_text(l)
+        , m_text(l)
       {}
 
       label(display::window& w, isolinear::grid g, std::string l)
@@ -633,7 +633,7 @@ namespace isolinear::ui {
             renderer,
             m_bounds,
             compass::west,
-            std::string{" "} + label_text + " "
+            std::string{" "} + m_text + " "
           );
       }
 
