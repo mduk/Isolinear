@@ -583,9 +583,9 @@ namespace isompd {
         return layout.bounds();
       }
 
-      virtual void OnPointerEvent(isolinear::pointer::event event) {
-        drawable::OnPointerEvent(event);
-        views.at(activeView)->OnPointerEvent(event);
+      virtual void on_pointer_event(isolinear::pointer::event event) {
+        drawable::on_pointer_event(event);
+        views.at(activeView)->on_pointer_event(event);
       }
 
       virtual void draw(SDL_Renderer* renderer) const {

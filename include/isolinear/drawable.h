@@ -39,12 +39,12 @@ namespace isolinear::ui {
         child->Colours(Colours());
       }
 
-      virtual void OnPointerEvent(pointer::event event) {
+      virtual void on_pointer_event(pointer::event event) {
         position p = event.Position();
 
         for (auto& child : m_children) {
           if (child->bounds().encloses(p)) {
-            child->OnPointerEvent(event);
+            child->on_pointer_event(event);
           }
         }
       }
@@ -100,12 +100,12 @@ namespace isolinear::ui {
         }
       }
 
-      virtual void OnPointerEvent(pointer::event event) {
+      virtual void on_pointer_event(pointer::event event) {
         position p = event.Position();
 
         for (auto& elem : *this) {
           if (elem.bounds().encloses(p)) {
-            elem.OnPointerEvent(event);
+            elem.on_pointer_event(event);
           }
         }
       }

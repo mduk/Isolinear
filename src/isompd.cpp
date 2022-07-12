@@ -127,13 +127,13 @@ int main(int argc, char* argv[])
 /*
       case SDL_FINGERDOWN:
         printf("TAP\n");
-        window.OnPointerEvent(pointer::event{ e.tfinger, window.size() });
+        window.on_pointer_event(pointer::event{ e.tfinger, window.size() });
         break;
 */
 
       case SDL_MOUSEBUTTONDOWN:
         printf("CLICK\n");
-        window.OnPointerEvent(pointer::event{ e.button });
+        window.on_pointer_event(pointer::event{ e.button });
         break;
 
       case SDL_QUIT:

@@ -136,7 +136,7 @@ namespace isolinear::ui {
       }
 
 
-      void OnPointerEvent(pointer::event event) {
+      void on_pointer_event(pointer::event event) {
         emit signal_press();
       }
   };
@@ -192,10 +192,10 @@ namespace isolinear::ui {
         m_buttons.at(label).activate();
       }
 
-      virtual void OnPointerEvent(pointer::event event) override {
+      virtual void on_pointer_event(pointer::event event) override {
         for (auto& [label, button] : m_buttons) {
           if (button.bounds().encloses(event.Position())) {
-            button.OnPointerEvent(event);
+            button.on_pointer_event(event);
             return;
           }
         }
@@ -408,10 +408,10 @@ namespace isolinear::ui {
           );
       }
 
-      virtual void OnPointerEvent(pointer::event event) override {
+      virtual void on_pointer_event(pointer::event event) override {
         for (auto& [label, button] : m_buttons) {
           if (button.bounds().encloses(event.Position())) {
-            button.OnPointerEvent(event);
+            button.on_pointer_event(event);
             return;
           }
         }
@@ -1015,7 +1015,7 @@ namespace isolinear::ui {
         return SweepRegion().H() / 2;
       }
 
-      void OnPointerEvent(pointer::event event) override {
+      void on_pointer_event(pointer::event event) override {
         position cursor = event.Position();
 
         auto const container_region = ContainerRegion();
@@ -1034,7 +1034,7 @@ namespace isolinear::ui {
 
         for (auto& button : m_buttons) {
           if (button.bounds().encloses(cursor)) {
-            button.OnPointerEvent(event);
+            button.on_pointer_event(event);
             return;
           }
         }

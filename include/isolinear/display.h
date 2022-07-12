@@ -70,11 +70,11 @@ namespace isolinear::display {
         }
       }
 
-      void OnPointerEvent(pointer::event event) {
+      void on_pointer_event(pointer::event event) {
         for (auto* drawable : drawables) {
           geometry::region bounds = drawable->bounds();
           if (bounds.encloses(event.Position())) {
-            drawable->OnPointerEvent(event);
+            drawable->on_pointer_event(event);
             continue;
           }
         }

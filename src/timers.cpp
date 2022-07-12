@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
           break;
 
       case SDL_MOUSEBUTTONDOWN:
-        window.OnPointerEvent(pointer::event{ e.button });
+        window.on_pointer_event(pointer::event{ e.button });
         break;
 
       case SDL_QUIT:
