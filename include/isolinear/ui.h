@@ -96,13 +96,13 @@ namespace isolinear::ui {
           m_label{l}
       {}
 
-      void Enable() { m_enabled = true; }
-      void Disable() { m_enabled = false; }
-      bool Enabled() { return m_enabled; }
-      bool Disabled() { return !m_enabled; }
+      void enable() { m_enabled = true; }
+      void disable() { m_enabled = false; }
+      bool enabled() { return m_enabled; }
+      bool disabled() { return !m_enabled; }
 
-      void Activate() { m_active = true; }
-      void Deactivate() { m_active = false; }
+      void activate() { m_active = true; }
+      void deactivate() { m_active = false; }
       void Active(bool state) { m_active = state; }
       bool Active() { return m_active; }
 
@@ -182,14 +182,14 @@ namespace isolinear::ui {
         return m_buttons.at(label);
       }
 
-      virtual void DeactivateAll() {
+      virtual void deactivateAll() {
         for (auto& [label, button] : m_buttons) {
-          button.Deactivate();
+          button.deactivate();
         }
       }
 
-      virtual void ActivateOne(std::string label) {
-        m_buttons.at(label).Activate();
+      virtual void activate_one(std::string label) {
+        m_buttons.at(label).activate();
       }
 
       virtual void OnPointerEvent(pointer::event event) override {

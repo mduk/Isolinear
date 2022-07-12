@@ -48,44 +48,44 @@ class PlayerControlBar : public horizontal_button_bar {
         if (status.IsPlaying()) {
           cout << " => Playing\n";
 
-          btnPlay.Enable();
-          btnPlay.Activate();
+          btnPlay.enable();
+          btnPlay.activate();
 
-          btnPause.Enable();
-          btnPause.Deactivate();
+          btnPause.enable();
+          btnPause.deactivate();
 
-          btnStop.Enable();
-          btnStop.Deactivate();
+          btnStop.enable();
+          btnStop.deactivate();
         }
 
         if (status.IsPaused()) {
           cout << " => Paused\n";
 
-          btnPlay.Enable();
-          btnPlay.Enable();
-          btnPlay.Activate();
+          btnPlay.enable();
+          btnPlay.enable();
+          btnPlay.activate();
 
-          btnPause.Enable();
-          btnPause.Activate();
+          btnPause.enable();
+          btnPause.activate();
 
-          btnStop.Enable();
-          btnStop.Deactivate();
+          btnStop.enable();
+          btnStop.deactivate();
         }
 
         if (status.IsStopped()) {
           cout << " => Stopped\n";
 
-          btnPlay.Enable();
-          btnStop.Enable();
-          btnStop.Activate();
+          btnPlay.enable();
+          btnStop.enable();
+          btnStop.activate();
 
-          btnPause.Disable();
+          btnPause.disable();
 
-          btnPlay.Deactivate();
+          btnPlay.deactivate();
           if (queue_length > 0) {
-            btnPlay.Disable();
+            btnPlay.disable();
           } else {
-            btnPlay.Enable();
+            btnPlay.enable();
           }
         }
 

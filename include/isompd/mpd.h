@@ -303,44 +303,44 @@ namespace isompd::player {
           if (status.IsPlaying()) {
             cout << " => Playing\n";
 
-            btnPlay.Enable();
-            btnPlay.Activate();
+            btnPlay.enable();
+            btnPlay.activate();
 
-            btnPause.Enable();
-            btnPause.Deactivate();
+            btnPause.enable();
+            btnPause.deactivate();
 
-            btnStop.Enable();
-            btnStop.Deactivate();
+            btnStop.enable();
+            btnStop.deactivate();
           }
 
           if (status.IsPaused()) {
             cout << " => Paused\n";
 
-            btnPlay.Enable();
-            btnPlay.Enable();
-            btnPlay.Activate();
+            btnPlay.enable();
+            btnPlay.enable();
+            btnPlay.activate();
 
-            btnPause.Enable();
-            btnPause.Activate();
+            btnPause.enable();
+            btnPause.activate();
 
-            btnStop.Enable();
-            btnStop.Deactivate();
+            btnStop.enable();
+            btnStop.deactivate();
           }
 
           if (status.IsStopped()) {
             cout << " => Stopped\n";
 
-            btnPlay.Enable();
-            btnStop.Enable();
-            btnStop.Activate();
+            btnPlay.enable();
+            btnStop.enable();
+            btnStop.activate();
 
-            btnPause.Disable();
+            btnPause.disable();
 
-            btnPlay.Deactivate();
+            btnPlay.deactivate();
             if (queue_length > 0) {
-              btnPlay.Disable();
+              btnPlay.disable();
             } else {
-              btnPlay.Enable();
+              btnPlay.enable();
             }
           }
 
@@ -400,28 +400,28 @@ namespace isompd::queue {
         RegisterChild(&queue_pager);
 
         miso::connect(previous_page_button.signal_press, [this](){
-            if (next_page_button.Disabled()) {
-              next_page_button.Enable();
+            if (next_page_button.disabled()) {
+              next_page_button.enable();
             }
 
             queue_pager.previous_page();
 
-            if (queue_pager.on_first_page()) { previous_page_button.Disable(); }
-            if (queue_pager.on_final_page()) { next_page_button.Disable(); }
+            if (queue_pager.on_first_page()) { previous_page_button.disable(); }
+            if (queue_pager.on_final_page()) { next_page_button.disable(); }
 
             queue_pager_buttons.Label(fmt::format("Page {} of {}",
                 queue_pager.current_page(), queue_pager.page_count()));
           });
 
         miso::connect(next_page_button.signal_press, [this](){
-            if (previous_page_button.Disabled()) {
-              previous_page_button.Enable();
+            if (previous_page_button.disabled()) {
+              previous_page_button.enable();
             }
 
             queue_pager.next_page();
 
-            if (queue_pager.on_first_page()) { previous_page_button.Disable(); }
-            if (queue_pager.on_final_page()) { next_page_button.Disable(); }
+            if (queue_pager.on_first_page()) { previous_page_button.disable(); }
+            if (queue_pager.on_final_page()) { next_page_button.disable(); }
 
             queue_pager_buttons.Label(fmt::format("Page {} of {}",
                 queue_pager.current_page(), queue_pager.page_count()));
@@ -563,7 +563,7 @@ namespace isompd {
           miso::connect(view_btn.signal_press, switch_view);
         }
 
-        barView.GetButton(activeView).Activate();
+        barView.GetButton(activeView).activate();
         emit signal_view_change("", activeView);
       }
 
@@ -571,8 +571,8 @@ namespace isompd {
         auto previousView = activeView;
         activeView = view;
 
-        barView.DeactivateAll();
-        barView.ActivateOne(activeView);
+        barView.deactivateAll();
+        barView.activate_one(activeView);
 
         hdrFrame.Label(fmt::format("MPD : {}", activeView));
 

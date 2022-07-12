@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
   miso::connect(five_second_button.signal_press, [&](){
     cout << "Click!\n";
 
-    five_second_button.Activate();
+    five_second_button.activate();
 
     timers.emplace_back(isolinear::io_context, 5);
     auto& timer = timers.back();
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
     timer_row.Colours(window.Colours());
 
     miso::connect(timer.signal_expired, [&](){
-      five_second_button.Deactivate();
+      five_second_button.deactivate();
     });
   });
 
