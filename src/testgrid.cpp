@@ -121,7 +121,9 @@ int main(int argc, char* argv[])
     }
 
     SDL_RenderPresent(window.renderer());
-  }
+  } // while (running)
 
+  work_guard.reset();
+  isolinear::shutdown();
   return 0;
 }
