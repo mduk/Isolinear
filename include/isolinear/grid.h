@@ -141,7 +141,7 @@ namespace isolinear {
         auto mc = max_columns();
         auto mr = max_rows();
 
-        if (false) if (near_col > mc || far_col > mc || near_row > mr || far_row > mr) {
+        if (near_col > mc || far_col > mc || near_row > mr || far_row > mr) {
           throw std::out_of_range(fmt::format(
               "Grid region {},{} x {},{} falls outside of the grid bounds, {} x {}",
               near_col, near_row, far_col, far_row, mc, mr));

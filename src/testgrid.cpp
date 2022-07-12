@@ -96,6 +96,12 @@ int main(int argc, char* argv[])
     window.draw();
 
     grid.draw(window.renderer());
+    grid.left_columns(2).draw(window.renderer());
+    grid.right_columns(2).draw(window.renderer());
+    grid.centre_columns(8,8).draw(window.renderer());
+    grid.top_rows(1).draw(window.renderer());
+    grid.bottom_rows(1).draw(window.renderer());
+    grid.centre_rows(8,8).draw(window.renderer());
 
     isolinear::theme::colour cellcolour = 0xff00ffff;
     try {
