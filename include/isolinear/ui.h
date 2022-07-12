@@ -103,11 +103,11 @@ namespace isolinear::ui {
 
       void activate() { m_active = true; }
       void deactivate() { m_active = false; }
-      void Active(bool state) { m_active = state; }
-      bool Active() { return m_active; }
+      void active(bool state) { m_active = state; }
+      bool active() { return m_active; }
 
-      std::string Label() { return m_label; }
-      void Label(std::string newlabel) { m_label = newlabel + " "; }
+      std::string label() { return m_label; }
+      void label(std::string newlabel) { m_label = newlabel + " "; }
 
       virtual region bounds() const override {
         return m_bounds;
@@ -306,7 +306,7 @@ namespace isolinear::ui {
       {}
 
 
-      void Label(std::string newlabel) {
+      void label(std::string newlabel) {
           m_text = newlabel;
       }
       virtual theme::colour_scheme Colours() const {
@@ -361,10 +361,10 @@ namespace isolinear::ui {
         : m_grid{g}, m_window{w}
       {};
 
-      void Label(std::string newlabel) {
+      void label(std::string newlabel) {
           m_text = newlabel;
       }
-      virtual std::string Label() const {
+      virtual std::string label() const {
           return m_text;
       }
 
@@ -449,7 +449,7 @@ namespace isolinear::ui {
           }
         }
 
-        auto header_text = Label();
+        auto header_text = label();
         if (header_text.length() > 0) {
           std::string padded = std::string(" ") + header_text + " ";
           text::rendered_text headertext = m_window.HeaderFont().RenderText(Colours().active, padded);

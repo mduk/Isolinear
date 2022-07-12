@@ -295,10 +295,10 @@ namespace isompd::player {
 
         miso::connect(mpdc.signal_status, [this](mpdxx::status status){
           cout << fmt::format("PlayerView signal_status begin\n");
-          btnConsume.Active(status.Consume());
-          btnRandom.Active(status.Random());
-          btnSingle.Active(status.Single());
-          btnRepeat.Active(status.Repeat());
+          btnConsume.active(status.Consume());
+          btnRandom.active(status.Random());
+          btnSingle.active(status.Single());
+          btnRepeat.active(status.Repeat());
 
           if (status.IsPlaying()) {
             cout << " => Playing\n";
@@ -409,7 +409,7 @@ namespace isompd::queue {
             if (queue_pager.on_first_page()) { previous_page_button.disable(); }
             if (queue_pager.on_final_page()) { next_page_button.disable(); }
 
-            queue_pager_buttons.Label(fmt::format("Page {} of {}",
+            queue_pager_buttons.label(fmt::format("Page {} of {}",
                 queue_pager.current_page(), queue_pager.page_count()));
           });
 
@@ -423,11 +423,11 @@ namespace isompd::queue {
             if (queue_pager.on_first_page()) { previous_page_button.disable(); }
             if (queue_pager.on_final_page()) { next_page_button.disable(); }
 
-            queue_pager_buttons.Label(fmt::format("Page {} of {}",
+            queue_pager_buttons.label(fmt::format("Page {} of {}",
                 queue_pager.current_page(), queue_pager.page_count()));
           });
 
-        queue_pager_buttons.Label(fmt::format("Page {} of {}", queue_pager.current_page(), queue_pager.page_count()));
+        queue_pager_buttons.label(fmt::format("Page {} of {}", queue_pager.current_page(), queue_pager.page_count()));
 
         RegisterChild(&queue_pager_buttons);
 
@@ -555,7 +555,7 @@ namespace isompd {
 
         auto switch_view = [this]() {
           auto button = miso::sender<ui::button>();
-          SwitchView(button->Label());
+          SwitchView(button->label());
         };
 
         for (auto const& [view_name, view_ptr] : views) {
@@ -574,7 +574,7 @@ namespace isompd {
         barView.deactivateAll();
         barView.activate_one(activeView);
 
-        hdrFrame.Label(fmt::format("MPD : {}", activeView));
+        hdrFrame.label(fmt::format("MPD : {}", activeView));
 
         emit signal_view_change(previousView, activeView);
       }

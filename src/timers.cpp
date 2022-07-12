@@ -54,7 +54,7 @@ namespace isolinear {
         });
       }
 
-      virtual std::string Label() const override {
+      virtual std::string label() const override {
         return fmt::format(
             "{:%H:%M:%S} {}/{}",
             m_timer.started,
