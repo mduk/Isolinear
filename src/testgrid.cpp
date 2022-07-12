@@ -41,15 +41,15 @@ int main(int argc, char* argv[])
 
   bool running = true;
   geometry::position pointer_position{};
+  int font_height = window.ButtonFont().Height();
 
   printf("LOOP\n");
   while (running) {
 
     isolinear::grid grid(
-        isolinear::geometry::region(0, 0, display_size.x, display_size.y),
-        window.ButtonFont().Height(), // Row height
-        geometry::vector(10,10),
-        geometry::vector(ncols,nrows)
+        { 0, 0, display_size.x, display_size.y }, // Display Region
+        { font_height*2, font_height }, // Cell Size
+        { 0, 0 }, // Cell Gutter
       );
 
     SDL_Event e;
@@ -114,6 +114,8 @@ int main(int argc, char* argv[])
       // Do nothing, it's fine.
     }
 
-    SDL_RenderPresent(window.renderer()); }
+    SDL_RenderPresent(window.renderer());
+  }
 
-  return 0; }
+  return 0;
+}

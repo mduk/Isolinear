@@ -26,18 +26,18 @@ namespace isolinear {
 
       grid(
           geometry::region b,
-          int rh,
+          geometry::vector cs,
           geometry::vector g
-        ) : grid(b, rh, g, {10,10}) {}
+        ) : grid(b, cs, g, {10,10}) {}
 
       grid(
           geometry::region b,
-          int rh,
+          geometry::vector cs,
           geometry::vector g,
           geometry::vector s
         ) :
           m_bounds{b},
-          m_cell_size{rh*2, rh},
+          m_cell_size{cs},
           m_gutter{g},
           m_size{s}
       {
