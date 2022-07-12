@@ -17,9 +17,9 @@ namespace isolinear {
     protected:
       geometry::vector m_cell_size{100, 50};
       geometry::vector m_size{3,3};
-      geometry::vector m_gutter{50, 50};
+      geometry::vector m_gutter{0};
       geometry::region m_bounds;
-      geometry::vector m_offset{50,50};
+      geometry::vector m_offset{0};
 
     public:
 
@@ -67,7 +67,7 @@ namespace isolinear {
                 far_col - near_col + 1,
                 far_row - near_row + 1
               ),
-            m_offset
+            {0}
           };
       }
 
