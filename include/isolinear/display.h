@@ -50,14 +50,14 @@ namespace isolinear::display {
       }
 
     public: // ui::drawable interface
-      theme::colour_scheme Colours() {
-        return colours;
+      theme::colour_scheme colours() {
+        return m_colours;
       }
 
-      void Colours(theme::colour_scheme cs) {
-        colours = cs;
+      void colours(theme::colour_scheme cs) {
+        m_colours = cs;
         for (auto* drawable : drawables) {
-          drawable->Colours(cs);
+          drawable->colours(cs);
         }
       }
 
@@ -94,7 +94,7 @@ namespace isolinear::display {
     protected: // Protected window properties
       std::string title{"Isolinear"};
       std::list<ui::drawable*> drawables;
-      theme::colour_scheme colours;
+      theme::colour_scheme m_colours;
 
     public: // Public window methods
       void Title(std::string newtitle) {

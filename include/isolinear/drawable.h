@@ -36,7 +36,7 @@ namespace isolinear::ui {
 
       virtual void RegisterChild(drawable* child) {
         m_children.push_back(child);
-        child->Colours(Colours());
+        child->colours(colours());
       }
 
       virtual void on_pointer_event(pointer::event event) {
@@ -49,14 +49,14 @@ namespace isolinear::ui {
         }
       }
 
-      virtual theme::colour_scheme Colours() const {
+      virtual theme::colour_scheme colours() const {
         return m_colours;
       }
 
-      virtual void Colours(theme::colour_scheme cs) {
+      virtual void colours(theme::colour_scheme cs) {
         m_colours = cs;
         for (auto& child : m_children) {
-          child->Colours(cs);
+          child->colours(cs);
         }
       }
   };
@@ -93,10 +93,10 @@ namespace isolinear::ui {
         }
       }
 
-      virtual void Colours(theme::colour_scheme cs) {
-        drawable::Colours(cs);
+      virtual void colours(theme::colour_scheme cs) {
+        drawable::colours(cs);
         for (auto& elem : *this) {
-          elem.Colours(cs);
+          elem.colours(cs);
         }
       }
 

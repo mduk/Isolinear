@@ -66,7 +66,7 @@ namespace isolinear::ui {
             position(hrule_far_x,  hrule_far_y)
           );
 
-        hrule.fill(renderer, Colours().frame);
+        hrule.fill(renderer, colours().frame);
       }
   };
 
@@ -116,9 +116,9 @@ namespace isolinear::ui {
       void draw(SDL_Renderer* renderer) const override {
         theme::colour drawcolour = m_enabled == true
                           ? m_active == true
-                            ? Colours().active
-                            : Colours().light_alternate
-                          : Colours().disabled;
+                            ? colours().active
+                            : colours().light_alternate
+                          : colours().disabled;
 
 
         boxColor(renderer,
@@ -157,15 +157,15 @@ namespace isolinear::ui {
       virtual region ButtonRegion(int i) const = 0;
       virtual region BarRegion() const = 0;
 
-      virtual theme::colour_scheme Colours() const {
-        return drawable::Colours();
+      virtual theme::colour_scheme colours() const {
+        return drawable::colours();
       }
 
-      virtual void Colours(theme::colour_scheme cs) {
+      virtual void colours(theme::colour_scheme cs) {
         for (auto& [label, button] : m_buttons) {
-          button.Colours(cs);
+          button.colours(cs);
         }
-        drawable::Colours(cs);
+        drawable::colours(cs);
       }
 
       virtual isolinear::ui::button& AddButton(std::string label) {
@@ -223,7 +223,7 @@ namespace isolinear::ui {
         boxColor(renderer,
             bar.near_x(), bar.near_y(),
             bar.far_x(),  bar.far_y(),
-            Colours().frame
+            colours().frame
           );
       }
   };
@@ -309,12 +309,12 @@ namespace isolinear::ui {
       void label(std::string newlabel) {
           m_text = newlabel;
       }
-      virtual theme::colour_scheme Colours() const {
-        return drawable::Colours();
+      virtual theme::colour_scheme colours() const {
+        return drawable::colours();
       }
 
-      virtual void Colours(theme::colour_scheme cs) {
-        drawable::Colours(cs);
+      virtual void colours(theme::colour_scheme cs) {
+        drawable::colours(cs);
       }
 
       virtual region bounds() const override {
@@ -323,13 +323,13 @@ namespace isolinear::ui {
 
       void draw(SDL_Renderer* renderer) const override {
         if (m_text.length() == 0) {
-          m_grid.bounds().fill(renderer, Colours().frame);
+          m_grid.bounds().fill(renderer, colours().frame);
           return;
         }
 
         std::string padded = std::string(" ") + m_text + " ";
 
-        text::rendered_text headertext = m_window.HeaderFont().RenderText(Colours().active, padded);
+        text::rendered_text headertext = m_window.HeaderFont().RenderText(colours().active, padded);
         headertext.draw(renderer, m_alignment, m_grid.bounds());
       }
   };
@@ -368,19 +368,19 @@ namespace isolinear::ui {
           return m_text;
       }
 
-      virtual theme::colour_scheme Colours() const {
-        return drawable::Colours();
+      virtual theme::colour_scheme colours() const {
+        return drawable::colours();
       }
 
-      virtual void Colours(theme::colour_scheme cs) {
+      virtual void colours(theme::colour_scheme cs) {
         m_left_cap_colour = cs.light;
         m_right_cap_colour = cs.light;
 
         for (auto& [label, button] : m_buttons) {
-          button.Colours(cs);
+          button.colours(cs);
         }
 
-        drawable::Colours(cs);
+        drawable::colours(cs);
       }
 
       virtual theme::colour LeftCapColour() const {
@@ -440,7 +440,7 @@ namespace isolinear::ui {
 
           left_cap.fill(renderer, LeftCapColour());
          right_cap.bullnose(renderer, compass::east, RightCapColour());
-        centre_bar.fill(renderer, Colours().background);
+        centre_bar.fill(renderer, colours().background);
 
         if (m_buttons.size() > 0) {
           for (auto const& [label, button] : m_buttons) {
@@ -452,7 +452,7 @@ namespace isolinear::ui {
         auto header_text = label();
         if (header_text.length() > 0) {
           std::string padded = std::string(" ") + header_text + " ";
-          text::rendered_text headertext = m_window.HeaderFont().RenderText(Colours().active, padded);
+          text::rendered_text headertext = m_window.HeaderFont().RenderText(colours().active, padded);
           region headerregion = centre_bar.align(compass::east, headertext.size());
 
           int near = m_grid.position_column_index(headerregion.Near());
@@ -476,7 +476,7 @@ namespace isolinear::ui {
         m_grid.calculate_grid_region(
             filler_start, y,
             filler_end, y+1
-          ).fill(renderer, Colours().frame);
+          ).fill(renderer, colours().frame);
       }
   };
 
@@ -505,12 +505,12 @@ namespace isolinear::ui {
           m_right = newlabel;
       }
 
-      virtual theme::colour_scheme Colours() const {
-        return drawable::Colours();
+      virtual theme::colour_scheme colours() const {
+        return drawable::colours();
       }
 
-      virtual void Colours(theme::colour_scheme cs) {
-        drawable::Colours(cs);
+      virtual void colours(theme::colour_scheme cs) {
+        drawable::colours(cs);
       }
 
       virtual region bounds() const override {
@@ -538,10 +538,10 @@ namespace isolinear::ui {
 
         auto const& headerfont = m_window.HeaderFont();
         text::rendered_text  lefttext = headerfont.RenderText(
-            Colours().active, paddedleft
+            colours().active, paddedleft
           );
         text::rendered_text righttext = headerfont.RenderText(
-            Colours().active, paddedright
+            colours().active, paddedright
           );
 
         region lefttextregion = centre_bar.align(
@@ -589,16 +589,16 @@ namespace isolinear::ui {
           };
 
         if (right_text_filler.W() >= m_grid.gutter().x) {
-          right_text_filler.fill(renderer, Colours().light);
+          right_text_filler.fill(renderer, colours().light);
         }
 
         if (left_text_filler.W() >= m_grid.gutter().x) {
-          left_text_filler.fill(renderer, Colours().light);
+          left_text_filler.fill(renderer, colours().light);
         }
 
-        drawcentrebar.fill(renderer, Colours().frame);
-        left_cap.bullnose(renderer, compass::west, Colours().light);
-        right_cap.bullnose(renderer, compass::east, Colours().light);
+        drawcentrebar.fill(renderer, colours().frame);
+        left_cap.bullnose(renderer, compass::west, colours().light);
+        right_cap.bullnose(renderer, compass::east, colours().light);
 
         lefttext.draw(renderer, compass::west, centre_bar);
         righttext.draw(renderer, compass::east, centre_bar);
@@ -688,8 +688,8 @@ namespace isolinear::ui {
 
       void DrawOuterRadius(SDL_Renderer* renderer) const {
         region region = OuterRadiusRegion();
-        region.fill(renderer, Colours().background);
-        region.quadrant_arc(renderer, m_alignment, Colours().frame);
+        region.fill(renderer, colours().background);
+        region.quadrant_arc(renderer, m_alignment, colours().frame);
       }
 
       region bounds() const override {
@@ -700,11 +700,11 @@ namespace isolinear::ui {
         region icorner = InnerCornerRegion();
         region iradius = icorner.align(m_alignment, geometry::vector{m_inner_radius});
 
-        m_grid.bounds().fill(renderer, Colours().frame);
-        icorner.fill(renderer, Colours().background);
+        m_grid.bounds().fill(renderer, colours().frame);
+        icorner.fill(renderer, colours().background);
 
-        iradius.fill(renderer, Colours().frame);
-        iradius.quadrant_arc(renderer, m_alignment, Colours().background);
+        iradius.fill(renderer, colours().frame);
+        iradius.quadrant_arc(renderer, m_alignment, colours().background);
         DrawOuterRadius(renderer);
 
         if (drawdebug) {
@@ -921,12 +921,12 @@ namespace isolinear::ui {
         boxColor(renderer,
             m_grid.bounds().near_x(), m_grid.bounds().near_y(),
             m_grid.bounds().far_x(),  m_grid.bounds().far_y(),
-            Colours().frame
+            colours().frame
           );
         boxColor(renderer,
             m_grid.bounds().near_x() + m_gutter, m_grid.bounds().near_y() + m_gutter,
             m_grid.bounds().far_x() - m_gutter,  m_grid.bounds().far_y() - m_gutter,
-            Colours().background
+            colours().background
           );
 
         if (m_draw_stripes) {
@@ -937,15 +937,15 @@ namespace isolinear::ui {
               };
 
             if (i % 2 == 0) {
-              region.fill(renderer, Colours().background);
+              region.fill(renderer, colours().background);
             }
             else {
-              region.fill(renderer, Colours().light_alternate);
+              region.fill(renderer, colours().light_alternate);
             }
           }
         }
 
-        theme::colour m_bar_colour = Colours().active;
+        theme::colour m_bar_colour = colours().active;
 
         region filled_region{
             position{ m_bar_region.Near().x + (m_segment_size.x * FilledSegments()), m_bar_region.Near().y },
@@ -1097,25 +1097,25 @@ namespace isolinear::ui {
         boxColor(renderer,
             sweep.near_x(), sweep.near_y(),
             sweep.far_x(), sweep.far_y(),
-            Colours().frame
+            colours().frame
           );
 
         boxColor(renderer,
             m_outer_radius.near_x(), m_outer_radius.near_y(),
             m_outer_radius.far_x(), m_outer_radius.far_y(),
-            Colours().background
+            colours().background
           );
 
         boxColor(renderer,
             inner_corner.near_x(), inner_corner.near_y(),
             inner_corner.far_x(), inner_corner.far_y(),
-            Colours().background
+            colours().background
           );
 
         boxColor(renderer,
             m_inner_radius.near_x(), m_inner_radius.near_y(),
             m_inner_radius.far_x(), m_inner_radius.far_y(),
-            Colours().frame
+            colours().frame
           );
 
       };
@@ -1125,7 +1125,7 @@ namespace isolinear::ui {
         boxColor(renderer,
             reach.near_x(), reach.near_y(),
             reach.far_x(), reach.far_y(),
-            Colours().frame
+            colours().frame
           );
       }
 
@@ -1143,7 +1143,7 @@ namespace isolinear::ui {
         boxColor(renderer,
             vertical.near_x(), vertical.near_y(),
             vertical.far_x(), vertical.far_y(),
-            Colours().frame
+            colours().frame
           );
       }
   };
@@ -1264,14 +1264,14 @@ namespace isolinear::ui {
             m_outer_radius.far_x(), m_outer_radius.far_y(),
             m_outer_radius.H(),
             180, 270,
-            Colours().frame
+            colours().frame
           );
 
         filledPieColor(renderer,
             m_inner_radius.far_x(), m_inner_radius.far_y(),
             m_inner_radius.H(),
             180, 270,
-            Colours().background
+            colours().background
           );
       }
 
@@ -1392,7 +1392,7 @@ namespace isolinear::ui {
             m_outer_radius.northeast_y(),
             m_outer_radius.H(),
             90, 180,
-            Colours().frame
+            colours().frame
           );
 
 
@@ -1401,7 +1401,7 @@ namespace isolinear::ui {
             m_inner_radius.northeast_y(),
             m_inner_radius.H(),
             90, 180,
-            Colours().background
+            colours().background
           );
       }
   };

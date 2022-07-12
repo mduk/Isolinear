@@ -47,7 +47,7 @@ namespace isolinear {
         , m_timer(t)
         , add_time(AddButton("ADD 10 SEC"))
       {
-        Colours(w.Colours());
+        colours(w.colours());
 
         miso::connect(add_time.signal_press, [&](){
           m_timer.add_ticks(10);
@@ -65,8 +65,8 @@ namespace isolinear {
 
       virtual theme::colour LeftCapColour() const override {
         return (m_timer.ticks_remaining == 0)
-          ? Colours().disabled
-          : Colours().light;
+          ? colours().disabled
+          : colours().light;
       }
 
       virtual theme::colour RightCapColour() const override {
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
         timer
       );
     auto& timer_row = timer_rows.back();
-    timer_row.Colours(window.Colours());
+    timer_row.colours(window.colours());
 
     miso::connect(timer.signal_expired, [&](){
       five_second_button.deactivate();
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
-  window.Colours(isolinear::theme::nightgazer_colours);
+  window.colours(isolinear::theme::nightgazer_colours);
 
   bool running = true;
   //SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
@@ -162,11 +162,11 @@ int main(int argc, char* argv[])
 
             case 'g': drawdebug = !drawdebug; break;
 
-            case 'd': window.Colours(isolinear::theme::debug_colours       ); break;
-            case 'r': window.Colours(isolinear::theme::red_alert_colours   ); break;
-            case 'y': window.Colours(isolinear::theme::yellow_alert_colours); break;
-            case 'b': window.Colours(isolinear::theme::blue_alert_colours  ); break;
-            case 'n': window.Colours(isolinear::theme::nightgazer_colours  ); break;
+            case 'd': window.colours(isolinear::theme::debug_colours       ); break;
+            case 'r': window.colours(isolinear::theme::red_alert_colours   ); break;
+            case 'y': window.colours(isolinear::theme::yellow_alert_colours); break;
+            case 'b': window.colours(isolinear::theme::blue_alert_colours  ); break;
+            case 'n': window.colours(isolinear::theme::nightgazer_colours  ); break;
 
           }
           break;

@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
   int ncols = 15, nrows = 10;
 
-  window.Colours(isolinear::theme::nightgazer_colours);
+  window.colours(isolinear::theme::nightgazer_colours);
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 

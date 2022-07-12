@@ -199,7 +199,7 @@ class paginated_rows : public isolinear::ui::drawable {
             window,
             data_rows.at(data_row_index)
           );
-        row.Colours(Colours());
+        row.colours(colours());
         row.draw(renderer);
       }
     }
@@ -593,10 +593,10 @@ namespace isompd {
         views.at(activeView)->draw(renderer);
       }
 
-      virtual void Colours(isolinear::theme::colour_scheme cs) {
-        drawable::Colours(cs);
+      virtual void colours(isolinear::theme::colour_scheme cs) {
+        drawable::colours(cs);
         for (auto const& [view_name, view_ptr] : views) {
-          view_ptr->Colours(cs);
+          view_ptr->colours(cs);
         }
       }
 
