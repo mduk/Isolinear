@@ -972,11 +972,11 @@ namespace isolinear::ui {
       display::window& m_window;
       isolinear::grid& m_grid;
 
-      int reach_weight{30};
-      geometry::vector sweep_cells{4,2};
+      int m_reach_weight{30};
+      geometry::vector m_sweep_cells{4,2};
       geometry::vector m_gutter{10,10};
-      std::string header_string{""};
-      isolinear::compass header_alignment = isolinear::compass::centre;
+      std::string m_header_string{""};
+      isolinear::compass m_header_alignment = isolinear::compass::centre;
       std::list<isolinear::ui::button> m_buttons{};
 
     public:
@@ -988,8 +988,8 @@ namespace isolinear::ui {
         ) :
           m_window{w},
           m_grid{g},
-          header_string{h},
-          header_alignment{ha}
+          m_header_string{h},
+          m_header_alignment{ha}
       {};
 
       virtual region ContainerRegion() const = 0;
@@ -1133,8 +1133,8 @@ namespace isolinear::ui {
         m_window.HeaderFont().RenderText(
             renderer,
             HeaderRegion(),
-            header_alignment,
-            header_string
+            m_header_alignment,
+            m_header_string
           );
       }
 
@@ -1163,7 +1163,7 @@ namespace isolinear::ui {
       region SweepRegion() const override {
         return m_grid.calculate_grid_region(
           1,1,
-          sweep_cells.x, sweep_cells.y
+          m_sweep_cells.x, m_sweep_cells.y
         );
       }
 
@@ -1197,7 +1197,7 @@ namespace isolinear::ui {
 
       region HorizontalRegion() const override {
         return m_grid.calculate_grid_region(
-          sweep_cells.x + 1, 1,
+          m_sweep_cells.x + 1, 1,
           m_grid.max_columns(), 2
         );
       }
@@ -1209,7 +1209,7 @@ namespace isolinear::ui {
             horizontal.origin(),
             geometry::vector{
               horizontal.W(),
-              reach_weight
+              m_reach_weight
             }
           };
       }
@@ -1221,13 +1221,13 @@ namespace isolinear::ui {
             position{
               horizontal.origin().x,
               horizontal.origin().y
-                + reach_weight
+                + m_reach_weight
                 + m_gutter.y
             },
             geometry::vector{
               horizontal.size().x,
               horizontal.size().y
-                - reach_weight
+                - m_reach_weight
                 - m_gutter.y
             }
           };
@@ -1235,22 +1235,22 @@ namespace isolinear::ui {
 
       region VerticalRegion() const override {
         return m_grid.calculate_grid_region(
-            1, sweep_cells.y + 1 + m_buttons.size(),
-            sweep_cells.x - 1, m_grid.max_rows()
+            1, m_sweep_cells.y + 1 + m_buttons.size(),
+            m_sweep_cells.x - 1, m_grid.max_rows()
           );
       }
 
       region ContainerRegion() const override {
         return m_grid.calculate_grid_region(
-            sweep_cells.x, sweep_cells.y + 1,
+            m_sweep_cells.x, m_sweep_cells.y + 1,
             m_grid.max_columns(), m_grid.max_rows()
           );
       }
 
       region ButtonRegion(int i) const override {
         return m_grid.calculate_grid_region(
-            1, sweep_cells.y +  i,
-            sweep_cells.x - 1, sweep_cells.y  + i
+            1, m_sweep_cells.y +  i,
+            m_sweep_cells.x - 1, m_sweep_cells.y  + i
           );
       }
 
@@ -1289,8 +1289,8 @@ namespace isolinear::ui {
     protected:
       region SweepRegion() const override {
         return m_grid.calculate_grid_region(
-          1, m_grid.max_rows() - sweep_cells.y + 1,
-          sweep_cells.x, m_grid.max_rows()
+          1, m_grid.max_rows() - m_sweep_cells.y + 1,
+          m_sweep_cells.x, m_grid.max_rows()
         );
       }
 
@@ -1328,7 +1328,7 @@ namespace isolinear::ui {
 
       region HorizontalRegion() const override {
         return m_grid.calculate_grid_region(
-          sweep_cells.x + 1, m_grid.max_rows() - sweep_cells.y + 1,
+          m_sweep_cells.x + 1, m_grid.max_rows() - m_sweep_cells.y + 1,
           m_grid.max_columns(), m_grid.max_rows()
         );
       }
@@ -1339,11 +1339,11 @@ namespace isolinear::ui {
         return region{
             position{
               horizontal.X(),
-              horizontal.Y() + horizontal.H() - reach_weight
+              horizontal.Y() + horizontal.H() - m_reach_weight
             },
             geometry::vector{
               horizontal.W(),
-              reach_weight
+              m_reach_weight
             }
           };
       }
@@ -1358,7 +1358,7 @@ namespace isolinear::ui {
             },
             geometry::vector{
               horizontal.W(),
-              horizontal.H() - reach_weight - m_gutter.y
+              horizontal.H() - m_reach_weight - m_gutter.y
             }
           };
       }
@@ -1366,7 +1366,7 @@ namespace isolinear::ui {
       region VerticalRegion() const override {
         return m_grid.calculate_grid_region(
             1,1,
-            sweep_cells.x -1, m_grid.max_rows() - sweep_cells.y - m_buttons.size()
+            m_sweep_cells.x -1, m_grid.max_rows() - m_sweep_cells.y - m_buttons.size()
           );
       }
 
@@ -1376,8 +1376,8 @@ namespace isolinear::ui {
 
       region ButtonRegion(int i) const override {
         return m_grid.calculate_grid_region(
-            sweep_cells.x - 1, m_grid.max_rows() - sweep_cells.y - m_buttons.size(),
-            sweep_cells.x - 1, m_grid.max_rows() - sweep_cells.y - m_buttons.size()
+            m_sweep_cells.x - 1, m_grid.max_rows() - m_sweep_cells.y - m_buttons.size(),
+            m_sweep_cells.x - 1, m_grid.max_rows() - m_sweep_cells.y - m_buttons.size()
           );
       };
 
