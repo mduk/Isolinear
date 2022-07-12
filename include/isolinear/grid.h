@@ -15,7 +15,7 @@ namespace isolinear {
   class grid {
 
     protected:
-      int m_row_height{100};
+      geometry::vector m_cell_size{100, 50};
       geometry::vector m_size{3,3};
       geometry::vector m_gutter{50, 50};
       geometry::region m_bounds;
@@ -37,12 +37,12 @@ namespace isolinear {
           geometry::vector s
         ) :
           m_bounds{b},
-          m_row_height{rh},
+          m_cell_size{rh*2, rh},
           m_gutter{g},
           m_size{s}
       {
-        if (m_row_height % 2 == 1) {
-          m_row_height++;
+        if (m_cell_size.y % 2 == 1) {
+          m_cell_size.y++;
         }
       };
 
@@ -55,7 +55,7 @@ namespace isolinear {
                 near_col, near_row,
                 far_col, far_row
               ),
-            m_row_height,
+            m_cell_size.y,
             m_gutter,
             geometry::vector(
                 far_col - near_col + 1,
@@ -159,7 +159,7 @@ namespace isolinear {
       }
 
       geometry::vector cell_size() const {
-        return geometry::vector{ m_row_height*2, m_row_height };
+        return m_cell_size;
       }
 
       int position_column_index(geometry::position p) const {
@@ -168,7 +168,7 @@ namespace isolinear {
       }
 
       int position_row_index(geometry::position p) const {
-        return floor((p.y - m_bounds.Y()) / m_row_height) + 1;
+        return floor((p.y - m_bounds.Y()) / m_cell_size.y) + 1;
       }
 
       int max_columns() const {
