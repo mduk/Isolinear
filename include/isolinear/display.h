@@ -56,7 +56,7 @@ namespace isolinear::display {
 
       void colours(theme::colour_scheme cs) {
         m_colours = cs;
-        for (auto* drawable : drawables) {
+        for (auto* drawable : m_drawables) {
           drawable->colours(cs);
         }
       }
@@ -65,13 +65,13 @@ namespace isolinear::display {
         SDL_SetRenderDrawColor(_sdl_renderer, 0, 0, 0, 255);
         SDL_RenderClear(_sdl_renderer);
 
-        for (auto* drawable : drawables) {
+        for (auto* drawable : m_drawables) {
           drawable->draw(_sdl_renderer);
         }
       }
 
       void on_pointer_event(pointer::event event) {
-        for (auto* drawable : drawables) {
+        for (auto* drawable : m_drawables) {
           geometry::region bounds = drawable->bounds();
           if (bounds.encloses(event.Position())) {
             drawable->on_pointer_event(event);
@@ -92,8 +92,8 @@ namespace isolinear::display {
       SDL_Renderer* renderer() const { return _sdl_renderer; }
 
     protected: // Protected window properties
-      std::string title{"Isolinear"};
-      std::list<ui::drawable*> drawables;
+      std::string m_title{"Isolinear"};
+      std::list<ui::drawable*> m_drawables;
       theme::colour_scheme m_colours;
 
     public: // Public window methods
@@ -102,13 +102,13 @@ namespace isolinear::display {
       }
 
       void add(ui::drawable* drawable) {
-        drawables.push_back(drawable);
+        m_drawables.push_back(drawable);
       }
 
     protected: // Protected window methods
       void init_sdl() {
         _sdl_window = SDL_CreateWindow(
-            title.c_str(),
+            m_title.c_str(),
             _position.x, _position.y,
             _size.x, _size.y,
             0 | SDL_WINDOW_ALLOW_HIGHDPI
