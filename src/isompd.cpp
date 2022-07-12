@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
       isolinear::geometry::region(0, 0, display_size.x, display_size.y),
       window.ButtonFont().Height(), // Row height
       geometry::vector(10,10),
-      geometry::vector(19,21)
+      geometry::vector(15,18)
     );
 
 

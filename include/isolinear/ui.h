@@ -293,8 +293,8 @@ namespace isolinear::ui {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;
-      compass alignment = compass::centre;
-      std::string text{""};
+      compass m_alignment = compass::centre;
+      std::string m_text{""};
 
     public:
       header_basic(isolinear::grid g, display::window& w, compass a)
@@ -302,12 +302,12 @@ namespace isolinear::ui {
       {}
 
       header_basic(isolinear::grid g, display::window& w, compass a, std::string t)
-        : m_grid{g}, m_window{w}, alignment{a}, text{t}
+        : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t}
       {}
 
 
       void Label(std::string newlabel) {
-          text = newlabel;
+          m_text = newlabel;
       }
       virtual theme::colour_scheme Colours() const {
         return drawable::Colours();
@@ -322,15 +322,15 @@ namespace isolinear::ui {
       }
 
       void draw(SDL_Renderer* renderer) const override {
-        if (text.length() == 0) {
+        if (m_text.length() == 0) {
           m_grid.bounds().fill(renderer, Colours().frame);
           return;
         }
 
-        std::string padded = std::string(" ") + text + " ";
+        std::string padded = std::string(" ") + m_text + " ";
 
         text::rendered_text headertext = m_window.HeaderFont().RenderText(Colours().active, padded);
-        headertext.draw(renderer, alignment, m_grid.bounds());
+        headertext.draw(renderer, m_alignment, m_grid.bounds());
       }
   };
 
@@ -338,23 +338,23 @@ namespace isolinear::ui {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;
-      std::string text{""};
+      std::string m_text{""};
       std::map<std::string, isolinear::ui::button> m_buttons;
-      int button_width{2};
-      theme::colour left_cap_colour;
-      theme::colour right_cap_colour;
+      int m_button_width{2};
+      theme::colour m_left_cap_colour;
+      theme::colour m_right_cap_colour;
 
     public:
       header_east_bar(display::window& w, isolinear::grid g, std::string t)
-        : m_grid{g}, m_window{w}, text{t}
+        : m_grid{g}, m_window{w}, m_text{t}
       {};
 
       header_east_bar(isolinear::grid g, display::window& w, std::string t)
-        : m_grid{g}, m_window{w}, text{t}
+        : m_grid{g}, m_window{w}, m_text{t}
       {};
 
       header_east_bar(isolinear::grid g, display::window& w, compass a, std::string t)
-        : m_grid{g}, m_window{w}, text{t}
+        : m_grid{g}, m_window{w}, m_text{t}
       {};
 
       header_east_bar(isolinear::grid g, display::window& w, compass a)
@@ -362,10 +362,10 @@ namespace isolinear::ui {
       {};
 
       void Label(std::string newlabel) {
-          text = newlabel;
+          m_text = newlabel;
       }
       virtual std::string Label() const {
-          return text;
+          return m_text;
       }
 
       virtual theme::colour_scheme Colours() const {
@@ -373,8 +373,8 @@ namespace isolinear::ui {
       }
 
       virtual void Colours(theme::colour_scheme cs) {
-        left_cap_colour = cs.light;
-        right_cap_colour = cs.light;
+        m_left_cap_colour = cs.light;
+        m_right_cap_colour = cs.light;
 
         for (auto& [label, button] : m_buttons) {
           button.Colours(cs);
@@ -384,10 +384,10 @@ namespace isolinear::ui {
       }
 
       virtual theme::colour LeftCapColour() const {
-        return left_cap_colour;
+        return m_left_cap_colour;
       }
       virtual theme::colour RightCapColour() const {
-        return right_cap_colour;
+        return m_right_cap_colour;
       }
 
       isolinear::ui::button& AddButton(std::string label) {
@@ -401,7 +401,7 @@ namespace isolinear::ui {
       }
 
       region ButtonRegion(int i) const  {
-        i = (i-1) * button_width;
+        i = (i-1) * m_button_width;
         return m_grid.calculate_grid_region(
             2+i,   1,
             2+i+1, 2
@@ -445,7 +445,7 @@ namespace isolinear::ui {
         if (m_buttons.size() > 0) {
           for (auto const& [label, button] : m_buttons) {
             button.draw(renderer);
-            filler_start += button_width;
+            filler_start += m_button_width;
           }
         }
 
@@ -646,30 +646,30 @@ namespace isolinear::ui {
     protected:
       display::window& m_window;
       isolinear::grid m_grid;
-      geometry::vector ports;
-      int outer_radius;
-      int inner_radius;
-      compass alignment;
-      compass opposite;
+      geometry::vector m_ports;
+      int m_outer_radius;
+      int m_inner_radius;
+      compass m_alignment;
+      compass m_opposite;
 
     public:
       sweep(display::window& w, isolinear::grid g, geometry::vector p, int oradius, int iradius, compass ali)
-        : m_window{w}, m_grid{g}, ports{p}, outer_radius{oradius}, inner_radius{iradius}, alignment{ali}
+        : m_window{w}, m_grid{g}, m_ports{p}, m_outer_radius{oradius}, m_inner_radius{iradius}, m_alignment{ali}
       {
-        switch (alignment) {
-          case compass::northeast: opposite = compass::southwest; break;
-          case compass::southeast: opposite = compass::northwest; break;
-          case compass::southwest: opposite = compass::northeast; break;
-          case compass::northwest: opposite = compass::southeast; break;
+        switch (m_alignment) {
+          case compass::northeast: m_opposite = compass::southwest; break;
+          case compass::southeast: m_opposite = compass::northwest; break;
+          case compass::southwest: m_opposite = compass::northeast; break;
+          case compass::northwest: m_opposite = compass::southeast; break;
         }
       }
 
       int VerticalPortSize() const {
-        return ports.x;
+        return m_ports.x;
       }
 
       int HorizontalPortSize() const {
-        return ports.y;
+        return m_ports.y;
       }
 
       virtual region HorizontalPort() const = 0;
@@ -677,19 +677,19 @@ namespace isolinear::ui {
 
       virtual region InnerCornerRegion() const {
         return region{
-            HorizontalPort().point(opposite),
-            VerticalPort().point(opposite)
+            HorizontalPort().point(m_opposite),
+            VerticalPort().point(m_opposite)
           };
       }
 
       region OuterRadiusRegion() const {
-        return m_grid.bounds().align(alignment, geometry::vector{outer_radius});
+        return m_grid.bounds().align(m_alignment, geometry::vector{m_outer_radius});
       }
 
       void DrawOuterRadius(SDL_Renderer* renderer) const {
         region region = OuterRadiusRegion();
         region.fill(renderer, Colours().background);
-        region.quadrant_arc(renderer, alignment, Colours().frame);
+        region.quadrant_arc(renderer, m_alignment, Colours().frame);
       }
 
       region bounds() const override {
@@ -698,13 +698,13 @@ namespace isolinear::ui {
 
       void draw(SDL_Renderer* renderer) const override {
         region icorner = InnerCornerRegion();
-        region iradius = icorner.align(alignment, geometry::vector{inner_radius});
+        region iradius = icorner.align(m_alignment, geometry::vector{m_inner_radius});
 
         m_grid.bounds().fill(renderer, Colours().frame);
         icorner.fill(renderer, Colours().background);
 
         iradius.fill(renderer, Colours().frame);
-        iradius.quadrant_arc(renderer, alignment, Colours().background);
+        iradius.quadrant_arc(renderer, m_alignment, Colours().background);
         DrawOuterRadius(renderer);
 
         if (drawdebug) {
@@ -724,13 +724,13 @@ namespace isolinear::ui {
       region HorizontalPort() const override {
         return m_grid.calculate_grid_region(
             1, 1,
-            1, ports.y
+            1, m_ports.y
           );
       }
 
       region VerticalPort() const override {
         return m_grid.calculate_grid_region(
-            m_grid.max_columns() - ports.x + 1, m_grid.max_rows(),
+            m_grid.max_columns() - m_ports.x + 1, m_grid.max_rows(),
                           m_grid.max_columns(), m_grid.max_rows()
           );
       }
@@ -745,14 +745,14 @@ namespace isolinear::ui {
 
       region HorizontalPort() const override {
         return m_grid.calculate_grid_region(
-            1, m_grid.max_rows() - ports.y + 1,
+            1, m_grid.max_rows() - m_ports.y + 1,
             1, m_grid.max_rows()
           );
       }
 
       region VerticalPort() const override {
         return m_grid.calculate_grid_region(
-            m_grid.max_columns() - ports.x + 1, 1,
+            m_grid.max_columns() - m_ports.x + 1, 1,
             m_grid.max_columns(), 1
           );
       }
@@ -768,13 +768,13 @@ namespace isolinear::ui {
       region VerticalPort() const override {
         return m_grid.calculate_grid_region(
             1, 1,
-            ports.x, 1
+            m_ports.x, 1
           );
       }
 
       region HorizontalPort() const override {
         return m_grid.calculate_grid_region(
-            m_grid.max_columns(), m_grid.max_rows() - ports.y + 1,
+            m_grid.max_columns(), m_grid.max_rows() - m_ports.y + 1,
                           m_grid.max_columns(), m_grid.max_rows()
           );
       }
@@ -790,14 +790,14 @@ namespace isolinear::ui {
       region HorizontalPort() const override {
         return m_grid.calculate_grid_region(
             m_grid.max_columns(), 1,
-            m_grid.max_columns(), ports.y
+            m_grid.max_columns(), m_ports.y
           );
       }
 
       region VerticalPort() const override {
         return m_grid.calculate_grid_region(
             1, m_grid.max_rows(),
-            ports.x, m_grid.max_rows()
+            m_ports.x, m_grid.max_rows()
           );
       }
 
@@ -1090,9 +1090,9 @@ namespace isolinear::ui {
 
       virtual void DrawSweep(SDL_Renderer* renderer) const {
         region sweep = SweepRegion();
-        region outer_radius = SweepOuterRadiusRegion();
+        region m_outer_radius = SweepOuterRadiusRegion();
         region inner_corner = SweepInnerCornerRegion();
-        region inner_radius = SweepInnerRadiusRegion();
+        region m_inner_radius = SweepInnerRadiusRegion();
 
         boxColor(renderer,
             sweep.near_x(), sweep.near_y(),
@@ -1101,8 +1101,8 @@ namespace isolinear::ui {
           );
 
         boxColor(renderer,
-            outer_radius.near_x(), outer_radius.near_y(),
-            outer_radius.far_x(), outer_radius.far_y(),
+            m_outer_radius.near_x(), m_outer_radius.near_y(),
+            m_outer_radius.far_x(), m_outer_radius.far_y(),
             Colours().background
           );
 
@@ -1113,8 +1113,8 @@ namespace isolinear::ui {
           );
 
         boxColor(renderer,
-            inner_radius.near_x(), inner_radius.near_y(),
-            inner_radius.far_x(), inner_radius.far_y(),
+            m_inner_radius.near_x(), m_inner_radius.near_y(),
+            m_inner_radius.far_x(), m_inner_radius.far_y(),
             Colours().frame
           );
 
@@ -1255,21 +1255,21 @@ namespace isolinear::ui {
       }
 
       void DrawSweep(SDL_Renderer* renderer) const {
-        region outer_radius = SweepOuterRadiusRegion();
-        region inner_radius = SweepInnerRadiusRegion();
+        region m_outer_radius = SweepOuterRadiusRegion();
+        region m_inner_radius = SweepInnerRadiusRegion();
 
         elbo::DrawSweep(renderer);
 
         filledPieColor(renderer,
-            outer_radius.far_x(), outer_radius.far_y(),
-            outer_radius.H(),
+            m_outer_radius.far_x(), m_outer_radius.far_y(),
+            m_outer_radius.H(),
             180, 270,
             Colours().frame
           );
 
         filledPieColor(renderer,
-            inner_radius.far_x(), inner_radius.far_y(),
-            inner_radius.H(),
+            m_inner_radius.far_x(), m_inner_radius.far_y(),
+            m_inner_radius.H(),
             180, 270,
             Colours().background
           );
@@ -1382,24 +1382,24 @@ namespace isolinear::ui {
       };
 
       void DrawSweep(SDL_Renderer* renderer) const override {
-        region outer_radius = SweepOuterRadiusRegion();
-        region inner_radius = SweepInnerRadiusRegion();
+        region m_outer_radius = SweepOuterRadiusRegion();
+        region m_inner_radius = SweepInnerRadiusRegion();
 
         elbo::DrawSweep(renderer);
 
         filledPieColor(renderer,
-            outer_radius.northeast_x(),
-            outer_radius.northeast_y(),
-            outer_radius.H(),
+            m_outer_radius.northeast_x(),
+            m_outer_radius.northeast_y(),
+            m_outer_radius.H(),
             90, 180,
             Colours().frame
           );
 
 
         filledPieColor(renderer,
-            inner_radius.northeast_x(),
-            inner_radius.northeast_y(),
-            inner_radius.H(),
+            m_inner_radius.northeast_x(),
+            m_inner_radius.northeast_y(),
+            m_inner_radius.H(),
             90, 180,
             Colours().background
           );
