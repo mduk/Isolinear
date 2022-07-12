@@ -24,29 +24,29 @@ namespace isolinear::display {
   class window {
 
     protected: // Geometry
-      geometry::vector _position;
-      geometry::vector _size;
+      geometry::vector m_position;
+      geometry::vector m_size;
 
     protected: // SDL
-      SDL_Renderer* _sdl_renderer;
-      SDL_Window* _sdl_window;
+      SDL_Renderer* m_sdl_renderer;
+      SDL_Window* m_sdl_window;
 
     protected: // Fonts
-      const text::font _header_font{ FONT, 96, 0xff0099ff };
-      const text::font _button_font{ FONT, 44, 0xff000000 };
-      const text::font  _label_font{ FONT, 44, 0xff0099ff };
+      const text::font m_header_font{ FONT, 96, 0xff0099ff };
+      const text::font m_button_font{ FONT, 44, 0xff000000 };
+      const text::font  m_label_font{ FONT, 44, 0xff0099ff };
 
 
     public: // Constructors & Destructors
       window(geometry::vector p, geometry::vector s)
-        : _position{p}, _size{s}
+        : m_position{p}, m_size{s}
       {
         init_sdl();
       };
 
       ~window() {
-        SDL_DestroyRenderer(_sdl_renderer);
-        SDL_DestroyWindow(_sdl_window);
+        SDL_DestroyRenderer(m_sdl_renderer);
+        SDL_DestroyWindow(m_sdl_window);
       }
 
     public: // ui::drawable interface
@@ -62,11 +62,11 @@ namespace isolinear::display {
       }
 
       void draw() {
-        SDL_SetRenderDrawColor(_sdl_renderer, 0, 0, 0, 255);
-        SDL_RenderClear(_sdl_renderer);
+        SDL_SetRenderDrawColor(m_sdl_renderer, 0, 0, 0, 255);
+        SDL_RenderClear(m_sdl_renderer);
 
         for (auto* drawable : m_drawables) {
-          drawable->draw(_sdl_renderer);
+          drawable->draw(m_sdl_renderer);
         }
       }
 
@@ -81,15 +81,15 @@ namespace isolinear::display {
       }
 
     public: // Accessors
-      text::font const& HeaderFont() const { return _header_font; }
-      text::font const& ButtonFont() const { return _button_font; }
-      text::font const& LabelFont()  const { return _label_font; }
+      text::font const& HeaderFont() const { return m_header_font; }
+      text::font const& ButtonFont() const { return m_button_font; }
+      text::font const& LabelFont()  const { return m_label_font; }
 
-      geometry::vector const size() const { return _size; }
+      geometry::vector const size() const { return m_size; }
 
-      geometry::region const region() const { return geometry::region{_position, _size}; }
+      geometry::region const region() const { return geometry::region{m_position, m_size}; }
 
-      SDL_Renderer* renderer() const { return _sdl_renderer; }
+      SDL_Renderer* renderer() const { return m_sdl_renderer; }
 
     protected: // Protected window properties
       std::string m_title{"Isolinear"};
@@ -98,7 +98,7 @@ namespace isolinear::display {
 
     public: // Public window methods
       void Title(std::string newtitle) {
-        SDL_SetWindowTitle(_sdl_window, newtitle.c_str());
+        SDL_SetWindowTitle(m_sdl_window, newtitle.c_str());
       }
 
       void add(ui::drawable* drawable) {
@@ -107,39 +107,39 @@ namespace isolinear::display {
 
     protected: // Protected window methods
       void init_sdl() {
-        _sdl_window = SDL_CreateWindow(
+        m_sdl_window = SDL_CreateWindow(
             m_title.c_str(),
-            _position.x, _position.y,
-            _size.x, _size.y,
+            m_position.x, m_position.y,
+            m_size.x, m_size.y,
             0 | SDL_WINDOW_ALLOW_HIGHDPI
               | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
               | SDL_WINDOW_BORDERLESS
           );
 
-        if (!_sdl_window) {
+        if (!m_sdl_window) {
           throw std::runtime_error(
             "Failed to create SDL window"
           );
         }
 
-        _sdl_renderer = SDL_CreateRenderer(
-            _sdl_window, -1, SDL_RENDERER_SOFTWARE
+        m_sdl_renderer = SDL_CreateRenderer(
+            m_sdl_window, -1, SDL_RENDERER_SOFTWARE
           );
 
-        if (!_sdl_renderer) {
+        if (!m_sdl_renderer) {
           throw std::runtime_error(
             "Failed to create SDL renderer"
           );
         }
 
         SDL_SetRenderDrawBlendMode(
-            _sdl_renderer, SDL_BLENDMODE_BLEND
+            m_sdl_renderer, SDL_BLENDMODE_BLEND
           );
 
         SDL_GetWindowSize(
-            _sdl_window,
-            &_size.x,
-            &_size.y
+            m_sdl_window,
+            &m_size.x,
+            &m_size.y
           );
       }
 
