@@ -18,11 +18,17 @@ namespace isolinear {
       int m_row_height{100};
       geometry::vector m_size{3,3};
       geometry::vector m_gutter{50, 50};
-
-    public:
       geometry::region m_bounds;
 
+    public:
+
       grid() {};
+
+      grid(
+          geometry::region b,
+          int rh,
+          geometry::vector g
+        ) : grid(b, rh, g, {10,10}) {}
 
       grid(
           geometry::region b,
