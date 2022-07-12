@@ -808,18 +808,18 @@ namespace isolinear::ui {
   class horizontal_progress_bar : public drawable {
     protected:
       isolinear::grid m_grid;
-      unsigned max = 100;
-      unsigned val = 50;
-      unsigned gutter = 6;
+      unsigned m_max = 100;
+      unsigned m_val = 50;
+      unsigned m_gutter = 6;
 
-      bool draw_stripes = true;
-      bool draw_tail = true;
+      bool m_draw_stripes = true;
+      bool m_draw_tail = true;
 
-      theme::colour bar_colour;
-      region bar_region;
-      geometry::vector segment_size;
-      unsigned remainder_px = 0;
-      unsigned n_segments = 0;
+      theme::colour m_bar_colour;
+      region m_bar_region;
+      geometry::vector m_segment_size;
+      unsigned m_remainder_px = 0;
+      unsigned m_n_segments = 0;
 
 
     public:
@@ -827,90 +827,90 @@ namespace isolinear::ui {
 
       horizontal_progress_bar(isolinear::grid _g)
         : m_grid{_g}
-        , bar_region(
+        , m_bar_region(
             position(
-              m_grid.bounds().near_x() + (gutter * 2),
-              m_grid.bounds().near_y() + (gutter * 2)
+              m_grid.bounds().near_x() + (m_gutter * 2),
+              m_grid.bounds().near_y() + (m_gutter * 2)
             ),
             position(
-              m_grid.bounds().far_x() - (gutter * 2),
-              m_grid.bounds().far_y() - (gutter * 2)
+              m_grid.bounds().far_x() - (m_gutter * 2),
+              m_grid.bounds().far_y() - (m_gutter * 2)
             )
           )
-        , segment_size{ (int) gutter, bar_region.H() }
-        , n_segments{ (unsigned) (bar_region.W() / segment_size.x) }
-        , remainder_px{ bar_region.W() % segment_size.x }
+        , m_segment_size{ (int) m_gutter, m_bar_region.H() }
+        , m_n_segments{ (unsigned) (m_bar_region.W() / m_segment_size.x) }
+        , m_remainder_px{ m_bar_region.W() % m_segment_size.x }
       { };
 
       unsigned Max() {
-        return max;
+        return m_max;
       }
 
       void Max(unsigned m) {
-        if (m > val) {
+        if (m > m_val) {
           Val(m);
         }
 
-        max = m;
+        m_max = m;
       }
 
       unsigned Val() {
-        return val;
+        return m_val;
       }
 
       void Val(unsigned v) {
-        if (v == val) {
+        if (v == m_val) {
           return;
         }
 
-        if (v > max) {
-          val = max;
+        if (v > m_max) {
+          m_val = m_max;
         }
         else {
-          val = v;
+          m_val = v;
         }
 
         emit signal_valuechanged();
       }
 
       void Inc(unsigned v) {
-        if (val + v > max) {
-          Val(max);
+        if (m_val + v > m_max) {
+          Val(m_max);
         }
         else {
-          Val(val + v);
+          Val(m_val + v);
         }
       }
 
       void Dec(unsigned v) {
-        if (v > val) {
+        if (v > m_val) {
           Val(0);
         }
         else {
-          Val(val - v);
+          Val(m_val - v);
         }
       }
 
       unsigned Segments() const {
-        return n_segments;
+        return m_n_segments;
       }
 
       unsigned FilledSegments() const {
-        return (val * n_segments) / max;
+        return (m_val * m_n_segments) / m_max;
       }
 
       bool DrawTail() const {
-        return draw_tail;
+        return m_draw_tail;
       }
       void DrawTail(bool v) {
-        draw_tail = v;
+        m_draw_tail = v;
       }
 
       bool DrawStripes() const {
-        return draw_stripes;
+        return m_draw_stripes;
       }
       void DrawStripes(bool v) {
-        draw_stripes = v;
+        m_draw_stripes = v;
       }
 
       region bounds() const override {
@@ -924,16 +924,16 @@ namespace isolinear::ui {
             Colours().frame
           );
         boxColor(renderer,
-            m_grid.bounds().near_x() + gutter, m_grid.bounds().near_y() + gutter,
-            m_grid.bounds().far_x() - gutter,  m_grid.bounds().far_y() - gutter,
+            m_grid.bounds().near_x() + m_gutter, m_grid.bounds().near_y() + m_gutter,
+            m_grid.bounds().far_x() - m_gutter,  m_grid.bounds().far_y() - m_gutter,
             Colours().background
           );
 
-        if (draw_stripes) {
-          for (int i=0; i<n_segments; i++) {
+        if (m_draw_stripes) {
+          for (int i=0; i<m_n_segments; i++) {
             region region{
-                position{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
-                segment_size
+                position{ m_bar_region.Near().x + (m_segment_size.x * i), m_bar_region.Near().y },
+                m_segment_size
               };
 
             if (i % 2 == 0) {
@@ -945,21 +945,21 @@ namespace isolinear::ui {
           }
         }
 
-        theme::colour bar_colour = Colours().active;
+        theme::colour m_bar_colour = Colours().active;
 
         region filled_region{
-            position{ bar_region.Near().x + (segment_size.x * FilledSegments()), bar_region.Near().y },
-            segment_size
+            position{ m_bar_region.Near().x + (m_segment_size.x * FilledSegments()), m_bar_region.Near().y },
+            m_segment_size
           };
-        filled_region.fill(renderer, bar_colour);
+        filled_region.fill(renderer, m_bar_colour);
 
-        if (draw_tail) {
+        if (m_draw_tail) {
           for (int i=0; i<FilledSegments(); i++) {
             region region{
-                position{ bar_region.Near().x + (segment_size.x * i), bar_region.Near().y },
-                segment_size
+                position{ m_bar_region.Near().x + (m_segment_size.x * i), m_bar_region.Near().y },
+                m_segment_size
               };
-            region.fill(renderer, bar_colour);
+            region.fill(renderer, m_bar_colour);
           }
         }
       }
@@ -974,7 +974,7 @@ namespace isolinear::ui {
 
       int reach_weight{30};
       geometry::vector sweep_cells{4,2};
-      geometry::vector gutter{10,10};
+      geometry::vector m_gutter{10,10};
       std::string header_string{""};
       isolinear::compass header_alignment = isolinear::compass::centre;
       std::list<isolinear::ui::button> m_buttons{};
@@ -1183,7 +1183,7 @@ namespace isolinear::ui {
             compass::southeast,
             geometry::vector{
                 sweep.far_x() - VerticalRegion().far_x(),
-                HeaderRegion().H() + gutter.y
+                HeaderRegion().H() + m_gutter.y
               }
           );
       }
@@ -1222,13 +1222,13 @@ namespace isolinear::ui {
               horizontal.origin().x,
               horizontal.origin().y
                 + reach_weight
-                + gutter.y
+                + m_gutter.y
             },
             geometry::vector{
               horizontal.size().x,
               horizontal.size().y
                 - reach_weight
-                - gutter.y
+                - m_gutter.y
             }
           };
       }
@@ -1312,7 +1312,7 @@ namespace isolinear::ui {
             compass::northeast,
             geometry::vector{
               sweep.far_x() - vertical.far_x(),
-              header.H() + gutter.y
+              header.H() + m_gutter.y
             }
           );
       }
@@ -1358,7 +1358,7 @@ namespace isolinear::ui {
             },
             geometry::vector{
               horizontal.W(),
-              horizontal.H() - reach_weight - gutter.y
+              horizontal.H() - reach_weight - m_gutter.y
             }
           };
       }
