@@ -19,32 +19,38 @@ namespace isolinear {
       geometry::vector m_size{3,3};
       geometry::vector m_gutter{50, 50};
       geometry::region m_bounds;
+      geometry::vector m_offset{50,50};
 
     public:
 
-      grid() {};
-
-      grid(
-          geometry::region b,
-          geometry::vector cs,
-          geometry::vector g
-        ) : grid(b, cs, g, {b.W() / cs.x, b.H() / cs.y }) {}
+      grid() {}
 
       grid(
           geometry::region b,
           geometry::vector cs,
           geometry::vector g,
-          geometry::vector s
+          geometry::vector s,
+          geometry::vector o
         ) :
           m_bounds{b},
           m_cell_size{cs},
           m_gutter{g},
-          m_size{s}
-      {
-        if (m_cell_size.y % 2 == 1) {
-          m_cell_size.y++;
-        }
-      };
+          m_size{s},
+          m_offset{o}
+      { };
+
+      grid(
+          geometry::region b,
+          geometry::vector cs,
+          geometry::vector g
+        ) : grid(
+          b,
+          cs,
+          g,
+          {b.W() / cs.x, b.H() / cs.y },
+          {(b.W() % cs.x)/2, (b.H() % cs.y)/2 }
+        ) {};
+
 
       grid subgrid(
         int near_col, int near_row,
@@ -55,12 +61,13 @@ namespace isolinear {
                 near_col, near_row,
                 far_col, far_row
               ),
-            m_cell_size.y,
+            m_cell_size,
             m_gutter,
             geometry::vector(
                 far_col - near_col + 1,
                 far_row - near_row + 1
-              )
+              ),
+            m_offset
           };
       }
 
@@ -140,13 +147,12 @@ namespace isolinear {
               near_col, near_row, far_col, far_row, mc, mr));
         }
 
-        geometry::position origin = m_bounds.origin();
-        auto cs = cell_size();
+        geometry::position origin = m_bounds.origin().add(m_offset);
         return geometry::region{
-          /* x */ origin.x + (cs.x * (near_col - 1)),
-          /* y */ origin.y + (cs.y * (near_row - 1)),
-          /* w */ cs.x * ((far_col - near_col) + 1) - m_gutter.x,
-          /* h */ cs.y * ((far_row - near_row) + 1) - m_gutter.y
+          /* x */ origin.x + (m_cell_size.x * (near_col - 1)),
+          /* y */ origin.y + (m_cell_size.y * (near_row - 1)),
+          /* w */ m_cell_size.x * ((far_col - near_col) + 1) - m_gutter.x,
+          /* h */ m_cell_size.y * ((far_row - near_row) + 1) - m_gutter.y
         };
       }
 
@@ -158,17 +164,12 @@ namespace isolinear {
         }
       }
 
-      geometry::vector cell_size() const {
-        return m_cell_size;
-      }
-
       int position_column_index(geometry::position p) const {
-        auto s = cell_size();
-        return floor((p.x - m_bounds.X()) / s.x) + 1;
+        return floor((p.x - (m_bounds.X() + m_offset.x)) / m_cell_size.x) + 1;
       }
 
       int position_row_index(geometry::position p) const {
-        return floor((p.y - m_bounds.Y()) / m_cell_size.y) + 1;
+        return floor((p.y - (m_bounds.Y() + m_offset.y)) / m_cell_size.y) + 1;
       }
 
       int max_columns() const {
