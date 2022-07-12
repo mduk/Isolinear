@@ -28,7 +28,7 @@ namespace isolinear {
           geometry::region b,
           geometry::vector cs,
           geometry::vector g
-        ) : grid(b, cs, g, {10,10}) {}
+        ) : grid(b, cs, g, {b.W() / cs.x, b.H() / cs.y }) {}
 
       grid(
           geometry::region b,

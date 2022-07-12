@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     isolinear::grid grid(
         { 0, 0, display_size.x, display_size.y }, // Display Region
         { font_height*2, font_height }, // Cell Size
-        { 0, 0 }, // Cell Gutter
+        { 2, 2 } // Cell Gutter
       );
 
     SDL_Event e;
