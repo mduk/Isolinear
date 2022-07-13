@@ -253,7 +253,7 @@ namespace isompd::player {
         , hdrQueue   (g.columns( 1,  6).rows( 1,  2), w, isolinear::compass::west, "QUEUE")
         , queue_pager(g.columns( 1,  6).rows( 3, 10), w, 20)
 
-        , gc(g.columns(16,21))
+        , gc(g.right_columns(6))
 
         , btnPlay(    w, gc.rows( 1, 4).columns(1,4), "PLAY")
         , btnPause(   w, gc.rows( 1, 4).columns(5,6), "PAUSE")
@@ -393,7 +393,7 @@ namespace isompd::queue {
       view(isolinear::grid g, display::window& w, mpdxx::client& mpdc)
         : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
-        , queue_pager_buttons(g.rows(21, 22), w, "##")
+        , queue_pager_buttons(g.bottom_rows(4).top_rows(2), w, "##")
         , previous_page_button(queue_pager_buttons.AddButton("PREVIOUS"))
         , next_page_button(queue_pager_buttons.AddButton("NEXT"))
       {
@@ -471,7 +471,7 @@ namespace isompd::browse {
         : isompd::view("BROWSE", g, w, _mpdc)
         , artist_grid(g)
         , artist_pager(artist_grid, w, 10)
-        , artist_pager_buttons(w, g.rows(21, 22))
+        , artist_pager_buttons(w, g.bottom_rows(4).top_rows(2))
       {
         RegisterChild(&artist_pager);
 
