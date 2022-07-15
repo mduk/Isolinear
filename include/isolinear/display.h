@@ -32,9 +32,9 @@ namespace isolinear::display {
       SDL_Window* m_sdl_window;
 
     protected: // Fonts
-      const text::font m_header_font{ FONT, 96, 0xff0099ff };
-      const text::font m_button_font{ FONT, 44, 0xff000000 };
-      const text::font  m_label_font{ FONT, 44, 0xff0099ff };
+      const text::font m_header_font{ FONT, 60, 0xff0099ff };
+      const text::font m_button_font{ FONT, 30, 0xff000000 };
+      const text::font  m_label_font{ FONT, 30, 0xff0099ff };
 
 
     public: // Constructors & Destructors
