@@ -142,6 +142,7 @@ int main(int argc, char* argv[])
     }
 
     window.draw();
+    if (drawdebug) grid.draw(window.renderer());
 
     SDL_RenderPresent(window.renderer());
   }
