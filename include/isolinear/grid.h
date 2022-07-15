@@ -52,6 +52,10 @@ namespace isolinear {
         ) {};
 
 
+      void set_cell_size(geometry::vector new_size) {
+        m_cell_size = new_size;
+      }
+
       grid subgrid(
         int near_col, int near_row,
         int  far_col, int  far_row

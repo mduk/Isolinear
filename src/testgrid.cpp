@@ -33,9 +33,7 @@ int main(int argc, char* argv[])
   geometry::vector display_size{ display.w, display.h };
   isolinear::display::window window(display_position, display_size);
 
-  int ncols = 15, nrows = 10;
-
-  window.colours(isolinear::theme::nightgazer_colours);
+  int cell_scale  = 30;
 
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
@@ -43,14 +41,22 @@ int main(int argc, char* argv[])
   geometry::position pointer_position{};
   int font_height = window.ButtonFont().Height();
 
+    isolinear::grid grid(
+        { 0, 0, display_size.x, display_size.y }, // Display Region
+        { cell_scale*2, cell_scale }, // Cell Size
+        { 6, 6 } // Cell Gutter
+      );
+
+
   printf("LOOP\n");
   while (running) {
 
-    isolinear::grid grid(
-        { 0, 0, display_size.x, display_size.y }, // Display Region
-        { font_height*2, font_height }, // Cell Size
-        { 6, 6 } // Cell Gutter
-      );
+    isolinear::ui::northwest_elbo elbo{
+      window, grid, "Hello"
+    };
+    window.add(&elbo);
+
+    window.colours(isolinear::theme::nightgazer_colours);
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
@@ -61,10 +67,16 @@ int main(int argc, char* argv[])
             case SDLK_ESCAPE:
               running = false;
               break;
-            case SDLK_UP: nrows--; break;
-            case SDLK_DOWN: nrows++; break;
-            case SDLK_LEFT: ncols--; break;
-            case SDLK_RIGHT: ncols++; break;
+
+            case SDLK_UP:
+              cell_scale--;
+              grid.set_cell_size({ cell_scale*2, cell_scale });
+             break;
+
+            case SDLK_DOWN:
+              cell_scale++;
+              grid.set_cell_size({cell_scale*2, cell_scale});
+              break;
           }
           break;
         }
@@ -93,7 +105,6 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.draw();
 
     grid.draw(window.renderer());
     grid.left_columns(2).draw(window.renderer());
@@ -102,6 +113,8 @@ int main(int argc, char* argv[])
     grid.top_rows(1).draw(window.renderer());
     grid.bottom_rows(1).draw(window.renderer());
     grid.centre_rows(8,8).draw(window.renderer());
+
+    window.draw();
 
     isolinear::theme::colour cellcolour = 0xff00ffff;
     try {

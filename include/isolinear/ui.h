@@ -1004,6 +1004,10 @@ namespace isolinear::ui {
       virtual region ReachRegion() const = 0;
       virtual region HeaderRegion() const = 0;
 
+      virtual geometry::region bounds() const override {
+        return m_grid.bounds();
+      }
+
       virtual int SweepOuterRadius() const {
         return std::min(
             SweepRegion().W() / 2,
