@@ -12,7 +12,6 @@
 #include "miso.h"
 
 #include "init.h"
-#include "elbo.h"
 #include "geometry.h"
 #include "grid.h"
 #include "pointerevent.h"
@@ -50,11 +49,6 @@ int main(int argc, char* argv[])
 
   printf("LOOP\n");
   while (running) {
-
-    isolinear::ui::northwest_elbo elbo{
-      window, grid, "Hello"
-    };
-    window.add(&elbo);
 
     window.colours(isolinear::theme::nightgazer_colours);
 
