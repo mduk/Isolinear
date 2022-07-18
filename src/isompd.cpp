@@ -29,9 +29,6 @@
 #include "display.h"
 
 
-bool drawdebug = false;
-
-
 int main(int argc, char* argv[])
 {
   namespace geometry = isolinear::geometry;
@@ -78,9 +75,6 @@ int main(int argc, char* argv[])
   mpdc.RequestStatus();
 
   while (running) {
-    if (drawdebug) {
-      grid.draw(window.renderer());
-    }
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
@@ -92,7 +86,6 @@ int main(int argc, char* argv[])
               running = false;
               break;
 
-            case 'g': drawdebug = !drawdebug; break;
             case 's': mpdc.RequestStatus(); break;
 
             case 'd': window.colours(isolinear::theme::debug_colours       ); break;
@@ -142,8 +135,6 @@ int main(int argc, char* argv[])
     }
 
     window.draw();
-    if (drawdebug) grid.draw(window.renderer());
-
     SDL_RenderPresent(window.renderer());
   }
 

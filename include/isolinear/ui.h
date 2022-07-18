@@ -23,9 +23,6 @@
 
 
 
-extern bool drawdebug;
-
-
 namespace isolinear::ui {
 
 

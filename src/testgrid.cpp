@@ -7,8 +7,6 @@
 #include "geometry.h"
 #include "grid.h"
 #include "display.h"
-
-bool drawdebug = false;
 #include "ui.h"
 
 

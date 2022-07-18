@@ -29,9 +29,6 @@
 using std::cout;
 
 
-bool drawdebug = false;
-
-
 namespace isolinear {
 
   class timer_row : public isolinear::ui::header_east_bar {
@@ -145,9 +142,6 @@ int main(int argc, char* argv[])
   //SDL_ShowCursor(!SDL_ShowCursor(SDL_QUERY));
 
   while (running) {
-    if (drawdebug) {
-      grid.draw(window.renderer());
-    }
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
@@ -158,8 +152,6 @@ int main(int argc, char* argv[])
             case SDLK_ESCAPE:
               running = false;
               break;
-
-            case 'g': drawdebug = !drawdebug; break;
 
             case 'd': window.colours(isolinear::theme::debug_colours       ); break;
             case 'r': window.colours(isolinear::theme::red_alert_colours   ); break;

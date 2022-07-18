@@ -13,9 +13,6 @@
 #include "display.h"
 
 
-extern bool drawdebug;
-
-
 namespace isolinear::layout {
 
   class compass : public ui::drawable {
