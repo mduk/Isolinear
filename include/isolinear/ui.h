@@ -133,10 +133,15 @@ namespace isolinear::ui {
             compass::southeast,
             std::string{" "} + m_label + " "
           );
+
+        if (pointer_is_hovering()) {
+            m_bounds.draw(renderer);
+        }
       }
 
 
       void on_pointer_event(pointer::event event) {
+          drawable::on_pointer_event(event);
         emit signal_press();
       }
   };
@@ -195,10 +200,7 @@ namespace isolinear::ui {
       virtual void on_pointer_event(pointer::event event) override {
         drawable::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
-          if (button.bounds().encloses(event.Position())) {
             button.on_pointer_event(event);
-            return;
-          }
         }
       };
 
