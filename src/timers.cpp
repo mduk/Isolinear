@@ -45,7 +45,7 @@ namespace isolinear {
       timer_row(display::window& w, isolinear::grid g, timer& t)
         : header_east_bar(w, g, "")
         , m_timer(t)
-        , add_time(AddButton("ADD 10 SEC"))
+        , add_time(add_button("ADD 10 SEC"))
       {
         colours(w.colours());
 
@@ -63,14 +63,14 @@ namespace isolinear {
           );
       }
 
-      virtual theme::colour LeftCapColour() const override {
+      virtual theme::colour left_cap_colour() const override {
         return (m_timer.ticks_remaining == 0)
           ? colours().disabled
           : colours().light;
       }
 
-      virtual theme::colour RightCapColour() const override {
-        return LeftCapColour();
+      virtual theme::colour right_cap_colour() const override {
+        return left_cap_colour();
       }
   };
 

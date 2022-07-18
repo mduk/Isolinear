@@ -57,6 +57,14 @@ int main(int argc, char* argv[])
     vbbar.add_button("Fork");
   window.add(&vbbar);
 
+  auto toprow = grid.top_rows(2);
+  auto hbbgrid = toprow.right_columns(toprow.max_columns() - 4);
+  isolinear::ui::horizontal_button_bar hbbar(window, hbbgrid);
+    hbbar.add_button("Spoon");
+    hbbar.add_button("Knife");
+    hbbar.add_button("Fork");
+    window.add(&hbbar);
+
   printf("LOOP\n");
   while (running) {
 

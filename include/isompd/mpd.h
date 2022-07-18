@@ -374,7 +374,7 @@ namespace isompd::queue {
       row(isolinear::grid g, display::window& w, mpdxx::song s)
         : ui::header_east_bar(g, w, s.Header())
         , song(s)
-        , playbtn(AddButton("PLAY"))
+        , playbtn(add_button("PLAY"))
       {
         miso::connect(playbtn.signal_press, [this](){
           cout << fmt::format("Play {}\n", song.Title());
@@ -394,8 +394,8 @@ namespace isompd::queue {
         : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
         , queue_pager_buttons(g.bottom_rows(4).top_rows(2), w, "##")
-        , previous_page_button(queue_pager_buttons.AddButton("PREVIOUS"))
-        , next_page_button(queue_pager_buttons.AddButton("NEXT"))
+        , previous_page_button(queue_pager_buttons.add_button("PREVIOUS"))
+        , next_page_button(queue_pager_buttons.add_button("NEXT"))
       {
         RegisterChild(&queue_pager);
 

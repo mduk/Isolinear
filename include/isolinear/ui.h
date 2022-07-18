@@ -98,13 +98,13 @@ namespace isolinear::ui {
 
       void enable() { m_enabled = true; }
       void disable() { m_enabled = false; }
-      bool enabled() { return m_enabled; }
-      bool disabled() { return !m_enabled; }
+      bool enabled() const { return m_enabled; }
+      bool disabled() const { return !m_enabled; }
 
       void activate() { m_active = true; }
       void deactivate() { m_active = false; }
       void active(bool state) { m_active = state; }
-      bool active() { return m_active; }
+      bool active() const { return m_active; }
 
       std::string label() { return m_label; }
       void label(std::string newlabel) { m_label = newlabel + " "; }
@@ -113,18 +113,18 @@ namespace isolinear::ui {
         return m_bounds;
       }
 
+      theme::colour const calculate_colour() const {
+          if (disabled()) return colours().disabled;
+          if (active()) return colours().active;
+          if (pointer_is_hovering()) return colours().light;
+          return colours().light_alternate;
+      }
+
       void draw(SDL_Renderer* renderer) const override {
-        theme::colour drawcolour = m_enabled == true
-                          ? m_active == true
-                            ? colours().active
-                            : colours().light_alternate
-                          : colours().disabled;
-
-
         boxColor(renderer,
             m_bounds.near_x(), m_bounds.near_y(),
             m_bounds.far_x(),  m_bounds.far_y(),
-            drawcolour
+            calculate_colour()
           );
 
         m_window.ButtonFont().RenderText(
@@ -382,24 +382,24 @@ namespace isolinear::ui {
         drawable::colours(cs);
       }
 
-      virtual theme::colour LeftCapColour() const {
+      virtual theme::colour left_cap_colour() const {
         return m_left_cap_colour;
       }
-      virtual theme::colour RightCapColour() const {
+      virtual theme::colour right_cap_colour() const {
         return m_right_cap_colour;
       }
 
-      isolinear::ui::button& AddButton(std::string label) {
+      isolinear::ui::button& add_button(std::string label) {
         m_buttons.try_emplace(
-            label,
-            m_window,
-            ButtonRegion(m_buttons.size() + 1),
-            label
+                label,
+                m_window,
+                calculate_button_region(m_buttons.size() + 1),
+                label
           );
         return m_buttons.at(label);
       }
 
-      region ButtonRegion(int i) const  {
+      region calculate_button_region(int i) const  {
         i = (i-1) * m_button_width;
         return m_grid.calculate_grid_region(
             2+i,   1,
@@ -407,16 +407,14 @@ namespace isolinear::ui {
           );
       }
 
-      virtual void on_pointer_event(pointer::event event) override {
+      void on_pointer_event(pointer::event event) override {
+        drawable::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
-          if (button.bounds().encloses(event.Position())) {
             button.on_pointer_event(event);
-            return;
-          }
         }
       };
 
-      virtual region bounds() const override {
+      region bounds() const override {
         return m_grid.bounds();
       }
 
@@ -437,8 +435,8 @@ namespace isolinear::ui {
         region  right_cap = m_grid.calculate_grid_region(w+x  , y, w+x  , y+1);
         region centre_bar = m_grid.calculate_grid_region(  x+1, y, w+x-1, y+1);
 
-          left_cap.fill(renderer, LeftCapColour());
-         right_cap.bullnose(renderer, compass::east, RightCapColour());
+          left_cap.fill(renderer, left_cap_colour());
+         right_cap.bullnose(renderer, compass::east, right_cap_colour());
         centre_bar.fill(renderer, colours().background);
 
         if (m_buttons.size() > 0) {
@@ -467,7 +465,7 @@ namespace isolinear::ui {
                   cell.far_y()
                 }
             };
-          fillerregion.fill(renderer, RightCapColour());
+          fillerregion.fill(renderer, right_cap_colour());
 
           headertext.draw(renderer, compass::east, centre_bar);
         }
