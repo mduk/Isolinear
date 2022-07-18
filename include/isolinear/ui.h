@@ -35,7 +35,7 @@ namespace isolinear::ui {
   class horizontal_rule : public drawable {
 
     protected:
-      [[maybe_unused]] display::window& m_window;
+      display::window& m_window;
       isolinear::grid m_grid;
 
     public:

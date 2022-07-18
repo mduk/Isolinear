@@ -82,11 +82,8 @@ namespace isolinear::display {
       [[nodiscard]] text::font const& header_font() const { return m_header_font; }
       [[nodiscard]] text::font const& button_font() const { return m_button_font; }
       [[nodiscard]] text::font const& label_font()  const { return m_label_font; }
-
       [[nodiscard]] geometry::vector size() const { return m_size; }
-
       [[nodiscard]] geometry::region region() const { return geometry::region{m_position, m_size}; }
-
       [[nodiscard]] SDL_Renderer* renderer() const { return m_sdl_renderer; }
 
     protected: // Protected window properties
