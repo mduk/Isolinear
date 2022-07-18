@@ -51,7 +51,7 @@ namespace isolinear::ui {
         return m_grid.bounds();
       }
 
-      void draw(SDL_Renderer* renderer) const {
+      void draw(SDL_Renderer* renderer) const override {
         auto bound_height = m_grid.bounds().H();
         auto offset_px = (bound_height - m_grid.gutter().y) / 2;
 
@@ -653,7 +653,9 @@ namespace isolinear::ui {
       compass m_opposite;
 
     public:
-      sweep(display::window& w, isolinear::grid g, geometry::vector p, int oradius, int iradius, compass ali)
+      sweep(display::window& w, isolinear::grid g,
+          geometry::vector p,
+          int oradius, int iradius, compass ali)
         : m_window{w}, m_grid{g}, m_ports{p}, m_outer_radius{oradius}, m_inner_radius{iradius}, m_alignment{ali}
       {
         switch (m_alignment) {
@@ -662,14 +664,6 @@ namespace isolinear::ui {
           case compass::southwest: m_opposite = compass::northeast; break;
           case compass::northwest: m_opposite = compass::southeast; break;
         }
-      }
-
-      int VerticalPortSize() const {
-        return m_ports.x;
-      }
-
-      int HorizontalPortSize() const {
-        return m_ports.y;
       }
 
       virtual region HorizontalPort() const = 0;
@@ -711,6 +705,11 @@ namespace isolinear::ui {
           HorizontalPort().draw(renderer);
           VerticalPort().draw(renderer);
           icorner.draw(renderer);
+        }
+
+        if (pointer_is_hovering()) {
+          m_grid.bounds().draw(renderer);
+          m_grid.draw(renderer);
         }
       }
   };

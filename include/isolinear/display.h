@@ -71,12 +71,10 @@ namespace isolinear::display {
       }
 
       void on_pointer_event(pointer::event event) {
+        set_title(fmt::format("Mouse X={} Y={}", event.Position().x, event.Position().y));
+
         for (auto* drawable : m_drawables) {
-          geometry::region bounds = drawable->bounds();
-          if (bounds.encloses(event.Position())) {
-            drawable->on_pointer_event(event);
-            continue;
-          }
+          drawable->on_pointer_event(event);
         }
       }
 
@@ -97,7 +95,7 @@ namespace isolinear::display {
       theme::colour_scheme m_colours;
 
     public: // Public window methods
-      void Title(std::string newtitle) {
+      void set_title(std::string newtitle) {
         SDL_SetWindowTitle(m_sdl_window, newtitle.c_str());
       }
 
@@ -112,8 +110,8 @@ namespace isolinear::display {
             m_position.x, m_position.y,
             m_size.x, m_size.y,
             0 | SDL_WINDOW_ALLOW_HIGHDPI
-              | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
-              | SDL_WINDOW_BORDERLESS
+            //  | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
+              //| SDL_WINDOW_BORDERLESS
           );
 
         if (!m_sdl_window) {

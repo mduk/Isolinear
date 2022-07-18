@@ -24,6 +24,7 @@ namespace isolinear::ui {
       region m_bounds;
       theme::colour_scheme m_colours;
       std::list<drawable*> m_children;
+      bool m_pointer_within{false};
 
     public:
       virtual region bounds() const = 0;
@@ -34,18 +35,20 @@ namespace isolinear::ui {
         }
       }
 
+      virtual bool pointer_is_hovering() const {
+          return m_pointer_within;
+      }
+
       virtual void RegisterChild(drawable* child) {
         m_children.push_back(child);
         child->colours(colours());
       }
 
       virtual void on_pointer_event(pointer::event event) {
-        position p = event.Position();
+        m_pointer_within = bounds().encloses(event.Position());
 
         for (auto& child : m_children) {
-          if (child->bounds().encloses(p)) {
-            child->on_pointer_event(event);
-          }
+          child->on_pointer_event(event);
         }
       }
 

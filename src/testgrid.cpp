@@ -1,22 +1,15 @@
-#include <cstdlib>
 #include <sstream>
 #include <stdio.h>
-#include <time.h>
-#include <assert.h>
-#include <vector>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
-#include <SDL2/SDL_ttf.h>
-
-#include "miso.h"
 
 #include "init.h"
 #include "geometry.h"
 #include "grid.h"
-#include "pointerevent.h"
 #include "display.h"
-#include "window.h"
+
+bool drawdebug = false;
+#include "ui.h"
 
 
 int main(int argc, char* argv[])
@@ -38,14 +31,23 @@ int main(int argc, char* argv[])
 
   bool running = true;
   geometry::position pointer_position{};
-  int font_height = window.ButtonFont().Height();
 
-    isolinear::grid grid(
-        { 0, 0, display_size.x, display_size.y }, // Display Region
-        { cell_scale*2, cell_scale }, // Cell Size
-        { 6, 6 } // Cell Gutter
-      );
+  isolinear::grid grid(
+      { 0, 0, display_size.x, display_size.y }, // Display Region
+      { cell_scale*2, cell_scale }, // Cell Size
+      { 6, 6 } // Cell Gutter
+    );
 
+  auto sweepgrid = grid.left_columns(4).top_rows(3);
+
+  isolinear::ui::north_west_sweep nwsweep(
+      window,
+      sweepgrid,
+      {3, 2},
+      50,
+      20
+    );
+  window.add(&nwsweep);
 
   printf("LOOP\n");
   while (running) {
@@ -56,7 +58,7 @@ int main(int argc, char* argv[])
     while (SDL_PollEvent(&e) != 0) {
       switch (e.type) {
 
-        case SDL_KEYDOWN: {
+        case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE:
               running = false;
@@ -73,29 +75,14 @@ int main(int argc, char* argv[])
               break;
           }
           break;
-        }
 
-        case SDL_MOUSEMOTION: {
-          int x = e.motion.x,
-              y = e.motion.y;
-
-          pointer_position = geometry::position{x, y};
-
-          std::stringstream ss;
-          ss << "Mouse X=" << x
-             << " Y=" << y
-             << " Grid Col=" << grid.position_column_index(pointer_position)
-             << " Row=" << grid.position_row_index(pointer_position);
-
-          window.Title(ss.str());
-
+        case SDL_MOUSEMOTION:
+          window.on_pointer_event(pointer::event(e.motion));
           break;
-        }
 
-        case SDL_QUIT: {
+        case SDL_QUIT:
           running = false;
           break;
-        }
       }
     }
 
@@ -109,23 +96,6 @@ int main(int argc, char* argv[])
     grid.centre_rows(8,8).draw(window.renderer());
 
     window.draw();
-
-    isolinear::theme::colour cellcolour = 0xff00ffff;
-    try {
-      auto cell = grid.cell(
-        grid.position_column_index(pointer_position),
-        grid.position_row_index(pointer_position)
-      );
-
-      if (window.region().encloses(cell)) {
-        cellcolour = 0xffffff00;
-      }
-
-      cell.fill(window.renderer(), cellcolour);
-    }
-    catch (const std::out_of_range& e) {
-      // Do nothing, it's fine.
-    }
 
     SDL_RenderPresent(window.renderer());
   } // while (running)

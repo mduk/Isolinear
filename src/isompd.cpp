@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
           std::stringstream ss;
           ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
 
-          window.Title(ss.str());
+          window.set_title(ss.str());
           break;
         }
 
