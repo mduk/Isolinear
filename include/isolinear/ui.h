@@ -118,7 +118,7 @@ namespace isolinear::ui {
             calculate_colour()
           );
 
-        m_window.ButtonFont().RenderText(
+          m_window.button_font().RenderText(
             renderer,
             m_bounds,
             compass::southeast,
@@ -327,7 +327,7 @@ namespace isolinear::ui {
 
         std::string padded = std::string(" ") + m_text + " ";
 
-        text::rendered_text headertext = m_window.HeaderFont().RenderText(colours().active, padded);
+        text::rendered_text headertext = m_window.header_font().RenderText(colours().active, padded);
         headertext.draw(renderer, m_alignment, m_grid.bounds());
       }
   };
@@ -448,7 +448,7 @@ namespace isolinear::ui {
         auto header_text = label();
         if (header_text.length() > 0) {
           std::string padded = std::string(" ") + header_text + " ";
-          text::rendered_text headertext = m_window.HeaderFont().RenderText(colours().active, padded);
+          text::rendered_text headertext = m_window.header_font().RenderText(colours().active, padded);
           region headerregion = centre_bar.align(compass::east, headertext.size());
 
           int near = m_grid.position_column_index(headerregion.Near());
@@ -532,7 +532,7 @@ namespace isolinear::ui {
         std::string paddedleft = " " + m_left + " ";
         std::string paddedright = " " + m_right + " ";
 
-        auto const& headerfont = m_window.HeaderFont();
+        auto const& headerfont = m_window.header_font();
         text::rendered_text  lefttext = headerfont.RenderText(
             colours().active, paddedleft
           );
@@ -625,7 +625,7 @@ namespace isolinear::ui {
       }
 
       void draw(SDL_Renderer* renderer) const {
-        m_window.LabelFont().RenderText(
+          m_window.label_font().RenderText(
             renderer,
             m_bounds,
             compass::west,

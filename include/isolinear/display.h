@@ -28,8 +28,8 @@ namespace isolinear::display {
       geometry::vector m_size;
 
     protected: // SDL
-      SDL_Renderer* m_sdl_renderer;
-      SDL_Window* m_sdl_window;
+      SDL_Renderer* m_sdl_renderer{nullptr};
+      SDL_Window* m_sdl_window{nullptr};
 
     protected: // Fonts
       const text::font m_header_font{ FONT, 60, 0xff0099ff };
@@ -79,15 +79,15 @@ namespace isolinear::display {
       }
 
     public: // Accessors
-      text::font const& HeaderFont() const { return m_header_font; }
-      text::font const& ButtonFont() const { return m_button_font; }
-      text::font const& LabelFont()  const { return m_label_font; }
+      [[nodiscard]] text::font const& header_font() const { return m_header_font; }
+      [[nodiscard]] text::font const& button_font() const { return m_button_font; }
+      [[nodiscard]] text::font const& label_font()  const { return m_label_font; }
 
-      geometry::vector const size() const { return m_size; }
+      [[nodiscard]] geometry::vector size() const { return m_size; }
 
-      geometry::region const region() const { return geometry::region{m_position, m_size}; }
+      [[nodiscard]] geometry::region region() const { return geometry::region{m_position, m_size}; }
 
-      SDL_Renderer* renderer() const { return m_sdl_renderer; }
+      [[nodiscard]] SDL_Renderer* renderer() const { return m_sdl_renderer; }
 
     protected: // Protected window properties
       std::string m_title{"Isolinear"};
@@ -95,8 +95,8 @@ namespace isolinear::display {
       theme::colour_scheme m_colours;
 
     public: // Public window methods
-      void set_title(std::string newtitle) {
-        SDL_SetWindowTitle(m_sdl_window, newtitle.c_str());
+      void set_title(const std::string& new_title) {
+        SDL_SetWindowTitle(m_sdl_window, new_title.c_str());
       }
 
       void add(ui::drawable* drawable) {

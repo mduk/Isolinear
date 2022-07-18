@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 
   isolinear::grid grid(
       { 0, 0, display_size.x, display_size.y },
-      { window.ButtonFont().Height() },
+      {window.button_font().Height() },
       { 10, 10 }
     );
 

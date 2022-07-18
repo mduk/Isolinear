@@ -28,7 +28,6 @@ int main(int argc, char* argv[])
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   bool running = true;
-  geometry::position pointer_position{};
 
   isolinear::grid grid(
       { 0, 0, display_size.x, display_size.y }, // Display Region
