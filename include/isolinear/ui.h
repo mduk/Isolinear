@@ -193,6 +193,7 @@ namespace isolinear::ui {
       }
 
       virtual void on_pointer_event(pointer::event event) override {
+        drawable::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
           if (button.bounds().encloses(event.Position())) {
             button.on_pointer_event(event);
@@ -225,6 +226,10 @@ namespace isolinear::ui {
             bar.far_x(),  bar.far_y(),
             colours().frame
           );
+
+        if (pointer_is_hovering()) {
+            m_grid.draw(renderer);
+        }
       }
   };
 
@@ -701,15 +706,11 @@ namespace isolinear::ui {
         iradius.quadrant_arc(renderer, m_alignment, colours().background);
         DrawOuterRadius(renderer);
 
-        if (drawdebug) {
+        if (pointer_is_hovering()) {
+          m_grid.draw(renderer);
           HorizontalPort().draw(renderer);
           VerticalPort().draw(renderer);
           icorner.draw(renderer);
-        }
-
-        if (pointer_is_hovering()) {
-          m_grid.bounds().draw(renderer);
-          m_grid.draw(renderer);
         }
       }
   };

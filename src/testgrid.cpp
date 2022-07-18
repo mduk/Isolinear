@@ -49,6 +49,14 @@ int main(int argc, char* argv[])
     );
   window.add(&nwsweep);
 
+  auto leftcol = grid.left_columns(3);
+  auto vbbgrid = leftcol.bottom_rows(leftcol.max_rows() - 4);
+  isolinear::ui::vertical_button_bar vbbar(window, vbbgrid);
+  vbbar.AddButton("Spoon");
+  vbbar.AddButton("Knife");
+  vbbar.AddButton("Fork");
+  window.add(&vbbar);
+
   printf("LOOP\n");
   while (running) {
 
