@@ -113,13 +113,6 @@ namespace isolinear::ui {
         return m_bounds;
       }
 
-      theme::colour const calculate_colour() const {
-          if (disabled()) return colours().disabled;
-          if (active()) return colours().active;
-          if (pointer_is_hovering()) return colours().light;
-          return colours().light_alternate;
-      }
-
       void draw(SDL_Renderer* renderer) const override {
         boxColor(renderer,
             m_bounds.near_x(), m_bounds.near_y(),
@@ -140,9 +133,17 @@ namespace isolinear::ui {
       }
 
 
-      void on_pointer_event(pointer::event event) {
+      void on_pointer_event(pointer::event event) override {
           drawable::on_pointer_event(event);
         emit signal_press();
+      }
+
+  protected:
+      [[nodiscard]] theme::colour calculate_colour() const {
+          if (disabled()) return colours().disabled;
+          if (active()) return colours().active;
+          if (pointer_is_hovering()) return colours().light;
+          return colours().light_alternate;
       }
   };
 
