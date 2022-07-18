@@ -475,10 +475,10 @@ namespace isompd::browse {
       {
         RegisterChild(&artist_pager);
 
-        miso::connect(artist_pager_buttons.AddButton("PREVIOUS").signal_press, [this](){
+        miso::connect(artist_pager_buttons.add_button("PREVIOUS").signal_press, [this](){
           artist_pager.previous_page();
         });
-        miso::connect(artist_pager_buttons.AddButton("NEXT").signal_press, [this](){
+        miso::connect(artist_pager_buttons.add_button("NEXT").signal_press, [this](){
           artist_pager.next_page();
         });
         RegisterChild(&artist_pager_buttons);
@@ -559,11 +559,11 @@ namespace isompd {
         };
 
         for (auto const& [view_name, view_ptr] : views) {
-          ui::button& view_btn = barView.AddButton(view_name);
+          ui::button& view_btn = barView.add_button(view_name);
           miso::connect(view_btn.signal_press, switch_view);
         }
 
-        barView.GetButton(activeView).activate();
+          barView.get_button(activeView).activate();
         emit signal_view_change("", activeView);
       }
 
@@ -571,7 +571,7 @@ namespace isompd {
         auto previousView = activeView;
         activeView = view;
 
-        barView.deactivateAll();
+          barView.deactivate_all();
         barView.activate_one(activeView);
 
         hdrFrame.label(fmt::format("MPD : {}", activeView));

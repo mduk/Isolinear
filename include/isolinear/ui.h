@@ -159,8 +159,8 @@ namespace isolinear::ui {
         : m_window{w}, m_grid{g}
       {};
 
-      virtual region ButtonRegion(int i) const = 0;
-      virtual region BarRegion() const = 0;
+      virtual region calculate_button_region(int i) const = 0;
+      virtual region calculate_bar_region() const = 0;
 
       virtual theme::colour_scheme colours() const {
         return drawable::colours();
@@ -173,46 +173,38 @@ namespace isolinear::ui {
         drawable::colours(cs);
       }
 
-      virtual isolinear::ui::button& AddButton(std::string label) {
+      virtual isolinear::ui::button& add_button(std::string label) {
         m_buttons.try_emplace(
-            label,
-              m_window,
-              ButtonRegion(m_buttons.size() + 1),
-              label
+                label,
+                m_window,
+                calculate_button_region(m_buttons.size() + 1),
+                label
           );
         return m_buttons.at(label);
       }
 
-      virtual isolinear::ui::button& GetButton(std::string label) {
+      virtual isolinear::ui::button& get_button(std::string label) {
         return m_buttons.at(label);
       }
 
-      virtual void deactivateAll() {
+      virtual void deactivate_all() {
         for (auto& [label, button] : m_buttons) {
           button.deactivate();
         }
       }
 
-      virtual void activate_one(std::string label) {
+      virtual void activate_one(std::string &label) {
         m_buttons.at(label).activate();
       }
 
-      virtual void on_pointer_event(pointer::event event) override {
+      void on_pointer_event(pointer::event event) override {
         drawable::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
             button.on_pointer_event(event);
         }
       };
 
-      virtual int Height() const {
-        return m_grid.max_rows();
-      }
-
-      virtual int Width() const {
-        return m_grid.max_columns();
-      }
-
-      virtual region bounds() const override {
+      region bounds() const override {
         return m_grid.bounds();
       }
 
@@ -221,7 +213,7 @@ namespace isolinear::ui {
           button.draw(renderer);
         }
 
-        region bar = BarRegion();
+        region bar = calculate_bar_region();
 
         boxColor(renderer,
             bar.near_x(), bar.near_y(),
@@ -240,7 +232,7 @@ namespace isolinear::ui {
     public:
       horizontal_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
-      region ButtonRegion(int i) const override {
+      region calculate_button_region(int i) const override {
         int near_col = m_button_size.x * (i-1) + 1;
         int near_row = 1;
         int  far_col = m_button_size.x * i;
@@ -252,7 +244,7 @@ namespace isolinear::ui {
           );
       }
 
-      region BarRegion() const override {
+      region calculate_bar_region() const override {
         int near_col = m_button_size.x * m_buttons.size() + 1;
         int near_row = 1;
         int  far_col = m_grid.max_columns();
@@ -270,7 +262,7 @@ namespace isolinear::ui {
     public:
       vertical_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
-      region ButtonRegion(int i) const override {
+      region calculate_button_region(int i) const override {
         int near_col = 1;
         int near_row = m_button_size.y * (i-1) + 1;
         int  far_col = m_grid.max_columns();
@@ -282,7 +274,7 @@ namespace isolinear::ui {
           );
       }
 
-      region BarRegion() const override {
+      region calculate_bar_region() const override {
         int near_col = 1;
         int near_row = m_button_size.y * m_buttons.size() + 1;
         int  far_col = m_grid.max_columns();

@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
     );
 
   isolinear::ui::horizontal_button_bar control_bar(window, grid.rows(1,2));
-  auto& five_second_button = control_bar.AddButton("5 SEC");
+  auto& five_second_button = control_bar.add_button("5 SEC");
   window.add(&control_bar);
 
   std::list<isolinear::timer> timers;

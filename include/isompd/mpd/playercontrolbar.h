@@ -36,11 +36,11 @@ class PlayerControlBar : public horizontal_button_bar {
     PlayerControlBar(display::window& w, isolinear::grid g, mpdxx::client& _mpd)
       : horizontal_button_bar(w, g)
       , mpd{_mpd}
-      , btnPlay(AddButton("PLAY"))
-      , btnPause(AddButton("PAUSE"))
-      , btnStop(AddButton("STOP"))
-      , btnPrevious(AddButton("PREVIOUS"))
-      , btnNext(AddButton("NEXT"))
+      , btnPlay(add_button("PLAY"))
+      , btnPause(add_button("PAUSE"))
+      , btnStop(add_button("STOP"))
+      , btnPrevious(add_button("PREVIOUS"))
+      , btnNext(add_button("NEXT"))
     {
       miso::connect(mpd.signal_status, [this](mpdxx::status status){
         cout << fmt::format("PlayerControlBar signal_status begin\n");

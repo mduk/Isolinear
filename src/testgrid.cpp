@@ -52,9 +52,9 @@ int main(int argc, char* argv[])
   auto leftcol = grid.left_columns(3);
   auto vbbgrid = leftcol.bottom_rows(leftcol.max_rows() - 4);
   isolinear::ui::vertical_button_bar vbbar(window, vbbgrid);
-  vbbar.AddButton("Spoon");
-  vbbar.AddButton("Knife");
-  vbbar.AddButton("Fork");
+    vbbar.add_button("Spoon");
+    vbbar.add_button("Knife");
+    vbbar.add_button("Fork");
   window.add(&vbbar);
 
   printf("LOOP\n");
