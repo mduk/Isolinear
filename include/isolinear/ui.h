@@ -5,6 +5,7 @@
 #include <string>
 
 #include <iostream>
+#include <utility>
 #include <fmt/core.h>
 
 #include <SDL2/SDL.h>
@@ -37,17 +38,17 @@ namespace isolinear::ui {
   class horizontal_rule : public drawable {
 
     protected:
-      display::window& m_window;
+      [[maybe_unused]] display::window& m_window;
       isolinear::grid m_grid;
 
     public:
       horizontal_rule(display::window& w, isolinear::grid g)
         : m_window(w)
-        , m_grid(g)
+        , m_grid(std::move(g))
       {}
 
     public:
-      region bounds() const {
+      [[nodiscard]] region bounds() const {
         return m_grid.bounds();
       }
 
@@ -832,7 +833,7 @@ namespace isolinear::ui {
           )
         , m_segment_size{ (int) m_gutter, m_bar_region.H() }
         , m_n_segments{ (unsigned) (m_bar_region.W() / m_segment_size.x) }
-        , m_remainder_px{ m_bar_region.W() % m_segment_size.x }
+        , m_remainder_px{ static_cast<unsigned int>(m_bar_region.W() % m_segment_size.x) }
       { };
 
       unsigned Max() {
@@ -941,7 +942,7 @@ namespace isolinear::ui {
         theme::colour m_bar_colour = colours().active;
 
         region filled_region{
-            position{ m_bar_region.Near().x + (m_segment_size.x * FilledSegments()), m_bar_region.Near().y },
+            position{ static_cast<int>(m_bar_region.Near().x + (m_segment_size.x * FilledSegments())), m_bar_region.Near().y },
             m_segment_size
           };
         filled_region.fill(renderer, m_bar_colour);
@@ -963,7 +964,7 @@ namespace isolinear::ui {
   class layout_vertical : public isolinear::ui::drawable_list<T> {
 
     public:
-      layout_vertical(isolinear::grid g)
+      explicit layout_vertical(isolinear::grid g)
         : isolinear::ui::drawable_list<T>(g)
       {}
 
