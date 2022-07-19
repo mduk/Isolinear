@@ -46,21 +46,34 @@ int main(int argc, char* argv[])
     );
   window.add(&nwsweep);
 
-  auto leftcol = grid.left_columns(3);
-  auto vbbgrid = leftcol.bottom_rows(leftcol.max_rows() - 4);
-  isolinear::ui::vertical_button_bar vbbar(window, vbbgrid);
+  auto leftcol = grid.left_columns(3).bottom_rows(grid.max_rows() - 4);
+  auto toprow = grid.top_rows(2).right_columns(grid.max_columns() - 4);
+  auto content_area = grid.subgrid(5,4, grid.max_columns(), grid.max_rows());
+
+  isolinear::ui::vertical_button_bar vbbar(window, leftcol);
     vbbar.add_button("Spoon");
     vbbar.add_button("Knife");
     vbbar.add_button("Fork");
   window.add(&vbbar);
 
-  auto toprow = grid.top_rows(2);
-  auto hbbgrid = toprow.right_columns(toprow.max_columns() - 4);
-  isolinear::ui::horizontal_button_bar hbbar(window, hbbgrid);
+  isolinear::ui::horizontal_button_bar hbbar(window, toprow);
     hbbar.add_button("Spoon");
     hbbar.add_button("Knife");
     hbbar.add_button("Fork");
-    window.add(&hbbar);
+  window.add(&hbbar);
+
+
+  auto progressrow = content_area.rows(1,2);
+  isolinear::ui::horizontal_progress_bar pbar(progressrow);
+  pbar.val(50);
+  window.add(&pbar);
+
+  isolinear::ui::horizontal_progress_bar volbar_left(content_area.row(3));
+  isolinear::ui::horizontal_progress_bar volbar_right(content_area.row(4));
+  volbar_left.val(50);
+  volbar_right.val(50);
+  window.add(&volbar_left);
+  window.add(&volbar_right);
 
   printf("LOOP\n");
   while (running) {

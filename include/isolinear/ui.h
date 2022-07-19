@@ -833,23 +833,23 @@ namespace isolinear::ui {
         , m_remainder_px{ static_cast<unsigned int>(m_bar_region.W() % m_segment_size.x) }
       { };
 
-      unsigned Max() {
+      unsigned max() const {
         return m_max;
       }
 
-      void Max(unsigned m) {
+      void max(unsigned m) {
         if (m > m_val) {
-          Val(m);
+          val(m);
         }
 
         m_max = m;
       }
 
-      unsigned Val() {
+      unsigned val() {
         return m_val;
       }
 
-      void Val(unsigned v) {
+      void val(unsigned v) {
         if (v == m_val) {
           return;
         }
@@ -864,43 +864,43 @@ namespace isolinear::ui {
         emit signal_valuechanged();
       }
 
-      void Inc(unsigned v) {
+      void increment(unsigned v) {
         if (m_val + v > m_max) {
-          Val(m_max);
+          val(m_max);
         }
         else {
-          Val(m_val + v);
+          val(m_val + v);
         }
       }
 
-      void Dec(unsigned v) {
+      void decrement(unsigned v) {
         if (v > m_val) {
-          Val(0);
+          val(0);
         }
         else {
-          Val(m_val - v);
+          val(m_val - v);
         }
       }
 
-      unsigned Segments() const {
+      unsigned total_segments() const {
         return m_n_segments;
       }
 
-      unsigned FilledSegments() const {
+      unsigned filled_segments() const {
         return (m_val * m_n_segments) / m_max;
       }
 
-      bool DrawTail() const {
+      bool draw_tail() const {
         return m_draw_tail;
       }
-      void DrawTail(bool v) {
+      void draw_tail(bool v) {
         m_draw_tail = v;
       }
 
-      bool DrawStripes() const {
+      bool draw_stripes() const {
         return m_draw_stripes;
       }
-      void DrawStripes(bool v) {
+      void draw_stripes(bool v) {
         m_draw_stripes = v;
       }
 
@@ -939,13 +939,13 @@ namespace isolinear::ui {
         theme::colour m_bar_colour = colours().active;
 
         region filled_region{
-            position{ static_cast<int>(m_bar_region.Near().x + (m_segment_size.x * FilledSegments())), m_bar_region.Near().y },
+            position{static_cast<int>(m_bar_region.Near().x + (m_segment_size.x * filled_segments())), m_bar_region.Near().y },
             m_segment_size
           };
         filled_region.fill(renderer, m_bar_colour);
 
         if (m_draw_tail) {
-          for (int i=0; i<FilledSegments(); i++) {
+          for (int i=0; i < filled_segments(); i++) {
             region region{
                 position{ m_bar_region.Near().x + (m_segment_size.x * i), m_bar_region.Near().y },
                 m_segment_size
