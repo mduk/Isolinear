@@ -82,17 +82,12 @@ int main(int argc, char* argv[])
 
         case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
-            case SDLK_ESCAPE:
-              running = false;
-              break;
+            case SDLK_ESCAPE: running = false; break;
 
             case 's': mpdc.RequestStatus(); break;
 
-            case 'd': window.colours(isolinear::theme::debug_colours       ); break;
-            case 'r': window.colours(isolinear::theme::red_alert_colours   ); break;
-            case 'y': window.colours(isolinear::theme::yellow_alert_colours); break;
-            case 'b': window.colours(isolinear::theme::blue_alert_colours  ); break;
-            case 'n': window.colours(isolinear::theme::nightgazer_colours  ); break;
+            case 'd': window.colours(isolinear::theme::debug_colours     ); break;
+            case 'n': window.colours(isolinear::theme::nightgazer_colours); break;
 
             case 'a': mpdframe.SwitchView(mpdframe.V_BROWSE    ); break;
             case 'c': mpdframe.SwitchView(mpdframe.V_NOWPLAYING); break;
@@ -101,36 +96,17 @@ int main(int argc, char* argv[])
           }
           break;
 
-        case SDL_MOUSEMOTION: {
-          int x = e.motion.x,
-              y = e.motion.y;
-
-          isolinear::geometry::position pos{x, y};
-          int gx = grid.position_column_index(pos),
-              gy = grid.position_row_index(pos);
-
-          std::stringstream ss;
-          ss << "Mouse X=" << x << " Y=" << y << " Grid Col=" << gx << " Row=" << gy;
-
-          window.set_title(ss.str());
+        case SDL_MOUSEMOTION:
+          window.on_pointer_event(pointer::event(e.motion));
           break;
-        }
 
-/*
-      case SDL_FINGERDOWN:
-        printf("TAP\n");
-        window.on_pointer_event(pointer::event{ e.tfinger, window.size() });
-        break;
-*/
+        case SDL_MOUSEBUTTONDOWN:
+          window.on_pointer_event(pointer::event(e.button));
+          break;
 
-      case SDL_MOUSEBUTTONDOWN:
-        printf("CLICK\n");
-        window.on_pointer_event(pointer::event{ e.button });
-        break;
-
-      case SDL_QUIT:
-        running = false;
-        break;
+        case SDL_QUIT:
+          running = false;
+          break;
       }
     }
 
