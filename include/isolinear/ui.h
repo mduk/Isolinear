@@ -451,11 +451,11 @@ namespace isolinear::ui {
           text::rendered_text headertext = m_window.header_font().RenderText(colours().active, padded);
           region headerregion = centre_bar.align(compass::east, headertext.size());
 
-          int near = m_grid.position_column_index(headerregion.Near());
-          int  far = m_grid.position_column_index(headerregion.Far());
+          int near = m_grid.position_column_index(headerregion.near());
+          int  far = m_grid.position_column_index(headerregion.far());
           filler_end -= (far - near) + 1;
 
-          int col = m_grid.position_column_index(headerregion.Near());
+          int col = m_grid.position_column_index(headerregion.near());
           region cell = m_grid.calculate_grid_region(col, y, col, y+1);
           region fillerregion{
               cell.origin(),
@@ -923,7 +923,7 @@ namespace isolinear::ui {
         if (m_draw_stripes) {
           for (int i=0; i<m_n_segments; i++) {
             region region{
-                position{ m_bar_region.Near().x + (m_segment_size.x * i), m_bar_region.Near().y },
+                position{m_bar_region.near().x + (m_segment_size.x * i), m_bar_region.near().y },
                 m_segment_size
               };
 
@@ -939,7 +939,8 @@ namespace isolinear::ui {
         theme::colour m_bar_colour = colours().active;
 
         region filled_region{
-            position{static_cast<int>(m_bar_region.Near().x + (m_segment_size.x * filled_segments())), m_bar_region.Near().y },
+            position{static_cast<int>(m_bar_region.near().x + (m_segment_size.x * filled_segments())),
+                     m_bar_region.near().y },
             m_segment_size
           };
         filled_region.fill(renderer, m_bar_colour);
@@ -947,7 +948,7 @@ namespace isolinear::ui {
         if (m_draw_tail) {
           for (int i=0; i < filled_segments(); i++) {
             region region{
-                position{ m_bar_region.Near().x + (m_segment_size.x * i), m_bar_region.Near().y },
+                position{m_bar_region.near().x + (m_segment_size.x * i), m_bar_region.near().y },
                 m_segment_size
               };
             region.fill(renderer, m_bar_colour);

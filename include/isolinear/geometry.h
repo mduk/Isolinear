@@ -155,14 +155,14 @@ namespace isolinear::geometry {
       int H() const { return size().y; }
 
 
-      // Near and Far Point Positions
-      position Near() const { return origin(); }
-            int near_x() const { return origin().x; }
-            int near_y() const { return origin().y; }
+      // near and far Point Positions
+      position near()   const { return origin(); }
+           int near_x() const { return origin().x; }
+           int near_y() const { return origin().y; }
 
-      position Far() const { return origin().add(size()); }
-            int far_x() const { return Far().x; }
-            int far_y() const { return Far().y; }
+      position far()   const { return origin().add(size()); }
+           int far_x() const { return far().x; }
+           int far_y() const { return far().y; }
 
       // compass points
       position centre()     const { return point(compass::centre   ); }
@@ -246,8 +246,8 @@ namespace isolinear::geometry {
       }
 
       bool encloses(region r) const {
-        return encloses(r.Near())
-            && encloses(r.Far());
+        return encloses(r.near())
+            && encloses(r.far());
       }
 
       virtual void fill(SDL_Renderer* renderer, theme::colour colour) const {
