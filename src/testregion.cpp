@@ -30,20 +30,11 @@ using std::cout;
 int main(int argc, char* argv[])
 {
   namespace geometry = isolinear::geometry;
-  namespace pointer = isolinear::pointer;
-
-
-  isolinear::init();
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
-  auto display = isolinear::display::detect_displays().back();
 
-  geometry::vector display_size{ display.w, display.h };
-
-  isolinear::display::window window(
-      geometry::position{ display },
-      display_size
-    );
+  isolinear::init();
+  auto window = isolinear::new_window();
 
   std::list<isolinear::window::region> squares;
   geometry::vector margin{10,10};

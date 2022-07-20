@@ -34,17 +34,14 @@ int main(int argc, char* argv[])
   namespace geometry = isolinear::geometry;
   namespace pointer = isolinear::pointer;
 
+  auto work_guard = asio::make_work_guard(isolinear::io_context);
 
   isolinear::init();
-  auto work_guard = asio::make_work_guard(isolinear::io_context);
-  auto display = isolinear::display::detect_displays().back();
-  geometry::vector display_size{ display.w, display.h };
-  geometry::vector display_position{ display.x, display.y };
-  isolinear::display::window window(display_position, display_size);
+  auto window = isolinear::new_window();
 
   isolinear::grid grid(
-      { 0, 0, display_size.x, display_size.y },
-      {window.button_font().Height() * 2, window.button_font().Height() },
+      { 0, 0, window.size().x, window.size().y },
+      { window.button_font().Height() * 2, window.button_font().Height() },
       { 10, 10 }
     );
 
