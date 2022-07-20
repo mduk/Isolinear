@@ -42,7 +42,7 @@ namespace isolinear {
       };
 
     public:
-      unsigned add_ticks(unsigned ticks) {
+      void add_ticks(unsigned ticks) {
         ticks_remaining += ticks;
       }
   };
