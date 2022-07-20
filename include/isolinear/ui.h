@@ -662,22 +662,22 @@ namespace isolinear::ui {
         }
       }
 
-      virtual region HorizontalPort() const = 0;
-      virtual region VerticalPort() const = 0;
+      virtual region horizontal_port() const = 0;
+      virtual region vertical_port() const = 0;
 
-      virtual region InnerCornerRegion() const {
+      virtual region inner_corner_region() const {
         return region{
-            HorizontalPort().point(m_opposite),
-            VerticalPort().point(m_opposite)
+            horizontal_port().point(m_opposite),
+            vertical_port().point(m_opposite)
           };
       }
 
-      region OuterRadiusRegion() const {
+      region outer_radius_region() const {
         return m_grid.bounds().align(m_alignment, geometry::vector{m_outer_radius});
       }
 
-      void DrawOuterRadius(SDL_Renderer* renderer) const {
-        region region = OuterRadiusRegion();
+      void draw_outer_radius(SDL_Renderer* renderer) const {
+        region region = outer_radius_region();
         region.fill(renderer, colours().background);
         region.quadrant_arc(renderer, m_alignment, colours().frame);
       }
@@ -687,7 +687,7 @@ namespace isolinear::ui {
       }
 
       void draw(SDL_Renderer* renderer) const override {
-        region icorner = InnerCornerRegion();
+        region icorner = inner_corner_region();
         region iradius = icorner.align(m_alignment, geometry::vector{m_inner_radius});
 
         m_grid.bounds().fill(renderer, colours().frame);
@@ -695,12 +695,12 @@ namespace isolinear::ui {
 
         iradius.fill(renderer, colours().frame);
         iradius.quadrant_arc(renderer, m_alignment, colours().background);
-        DrawOuterRadius(renderer);
+        draw_outer_radius(renderer);
 
         if (pointer_is_hovering()) {
           m_grid.draw(renderer);
-          HorizontalPort().draw(renderer);
-          VerticalPort().draw(renderer);
+          horizontal_port().draw(renderer);
+          vertical_port().draw(renderer);
           icorner.draw(renderer);
         }
       }
@@ -712,14 +712,14 @@ namespace isolinear::ui {
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::northeast}
       {}
 
-      region HorizontalPort() const override {
+      region horizontal_port() const override {
         return m_grid.calculate_grid_region(
             1, 1,
             1, m_ports.y
           );
       }
 
-      region VerticalPort() const override {
+      region vertical_port() const override {
         return m_grid.calculate_grid_region(
             m_grid.max_columns() - m_ports.x + 1, m_grid.max_rows(),
                           m_grid.max_columns(), m_grid.max_rows()
@@ -734,14 +734,14 @@ namespace isolinear::ui {
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::southeast}
       {}
 
-      region HorizontalPort() const override {
+      region horizontal_port() const override {
         return m_grid.calculate_grid_region(
             1, m_grid.max_rows() - m_ports.y + 1,
             1, m_grid.max_rows()
           );
       }
 
-      region VerticalPort() const override {
+      region vertical_port() const override {
         return m_grid.calculate_grid_region(
             m_grid.max_columns() - m_ports.x + 1, 1,
             m_grid.max_columns(), 1
@@ -756,14 +756,14 @@ namespace isolinear::ui {
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::southwest}
       {}
 
-      region VerticalPort() const override {
+      region vertical_port() const override {
         return m_grid.calculate_grid_region(
             1, 1,
             m_ports.x, 1
           );
       }
 
-      region HorizontalPort() const override {
+      region horizontal_port() const override {
         return m_grid.calculate_grid_region(
             m_grid.max_columns(), m_grid.max_rows() - m_ports.y + 1,
                           m_grid.max_columns(), m_grid.max_rows()
@@ -778,14 +778,14 @@ namespace isolinear::ui {
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::northwest}
       {}
 
-      region HorizontalPort() const override {
+      region horizontal_port() const override {
         return m_grid.calculate_grid_region(
             m_grid.max_columns(), 1,
             m_grid.max_columns(), m_ports.y
           );
       }
 
-      region VerticalPort() const override {
+      region vertical_port() const override {
         return m_grid.calculate_grid_region(
             1, m_grid.max_rows(),
             m_ports.x, m_grid.max_rows()
