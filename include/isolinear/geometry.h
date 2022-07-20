@@ -41,24 +41,24 @@ namespace isolinear::geometry {
         return vector{ x - c.x, y - c.y };
       }
 
-      int centre_x()    const { return x / 2; }
-      int centre_y()    const { return y / 2; }
-      int north_x()     const { return x / 2; }
-      int north_y()     const { return 0;     }
-      int east_x()      const { return x;     }
-      int east_y()      const { return y / 2; }
-      int south_x()     const { return x / 2; }
-      int south_y()     const { return y;     }
-      int west_x()      const { return 0;     }
-      int west_y()      const { return y / 2; }
-      int northeast_x() const { return x;     }
-      int northeast_y() const { return 0;     }
-      int southeast_x() const { return x;     }
-      int southeast_y() const { return y;     }
-      int southwest_x() const { return 0;     }
-      int southwest_y() const { return y;     }
-      int northwest_x() const { return 0;     }
-      int northwest_y() const { return 0;     }
+      Sint16 centre_x()    const { return x / 2; }
+      Sint16 centre_y()    const { return y / 2; }
+      Sint16 north_x()     const { return x / 2; }
+      Sint16 north_y()     const { return 0;     }
+      Sint16 east_x()      const { return x;     }
+      Sint16 east_y()      const { return y / 2; }
+      Sint16 south_x()     const { return x / 2; }
+      Sint16 south_y()     const { return y;     }
+      Sint16 west_x()      const { return 0;     }
+      Sint16 west_y()      const { return y / 2; }
+      Sint16 northeast_x() const { return x;     }
+      Sint16 northeast_y() const { return 0;     }
+      Sint16 southeast_x() const { return x;     }
+      Sint16 southeast_y() const { return y;     }
+      Sint16 southwest_x() const { return 0;     }
+      Sint16 southwest_y() const { return y;     }
+      Sint16 northwest_x() const { return 0;     }
+      Sint16 northwest_y() const { return 0;     }
 
       vector centre()    const { return vector{ centre_x(),    centre_y()    }; }
       vector north()     const { return vector{ north_x(),     north_y()     }; }
@@ -149,20 +149,20 @@ namespace isolinear::geometry {
 
 
       // X, Y, W, H shortcuts
-      int X() const { return origin().x; }
-      int Y() const { return origin().y; }
-      int W() const { return size().x; }
-      int H() const { return size().y; }
+      Sint16 X() const { return origin().x; }
+      Sint16 Y() const { return origin().y; }
+      Sint16 W() const { return size().x; }
+      Sint16 H() const { return size().y; }
 
 
       // near and far Point Positions
       position near()   const { return origin(); }
-           int near_x() const { return origin().x; }
-           int near_y() const { return origin().y; }
+           Sint16 near_x() const { return origin().x; }
+           Sint16 near_y() const { return origin().y; }
 
       position far()   const { return origin().add(size()); }
-           int far_x() const { return far().x; }
-           int far_y() const { return far().y; }
+           Sint16 far_x() const { return far().x; }
+           Sint16 far_y() const { return far().y; }
 
       // compass points
       position centre()     const { return point(compass::centre   ); }
@@ -175,24 +175,24 @@ namespace isolinear::geometry {
       position west()       const { return point(compass::west     ); }
       position northwest()  const { return point(compass::northwest); }
 
-      int centre_x()    const { return centre().x;    }
-      int centre_y()    const { return centre().y;    }
-      int north_x()     const { return north().x;     }
-      int north_y()     const { return north().y;     }
-      int east_x()      const { return east().x;      }
-      int east_y()      const { return east().y;      }
-      int south_x()     const { return south().x;     }
-      int south_y()     const { return south().y;     }
-      int west_x()      const { return west().x;      }
-      int west_y()      const { return west().y;      }
-      int northeast_x() const { return northeast().x; }
-      int northeast_y() const { return northeast().y; }
-      int southeast_x() const { return southeast().x; }
-      int southeast_y() const { return southeast().y; }
-      int southwest_x() const { return southwest().x; }
-      int southwest_y() const { return southwest().y; }
-      int northwest_x() const { return northwest().x; }
-      int northwest_y() const { return northwest().y; }
+      Sint16 centre_x()    const { return centre().x;    }
+      Sint16 centre_y()    const { return centre().y;    }
+      Sint16 north_x()     const { return north().x;     }
+      Sint16 north_y()     const { return north().y;     }
+      Sint16 east_x()      const { return east().x;      }
+      Sint16 east_y()      const { return east().y;      }
+      Sint16 south_x()     const { return south().x;     }
+      Sint16 south_y()     const { return south().y;     }
+      Sint16 west_x()      const { return west().x;      }
+      Sint16 west_y()      const { return west().y;      }
+      Sint16 northeast_x() const { return northeast().x; }
+      Sint16 northeast_y() const { return northeast().y; }
+      Sint16 southeast_x() const { return southeast().x; }
+      Sint16 southeast_y() const { return southeast().y; }
+      Sint16 southwest_x() const { return southwest().x; }
+      Sint16 southwest_y() const { return southwest().y; }
+      Sint16 northwest_x() const { return northwest().x; }
+      Sint16 northwest_y() const { return northwest().y; }
 
       // compass Points
       position point(compass align) const {
@@ -254,7 +254,7 @@ namespace isolinear::geometry {
         boxColor(renderer, near_x(), near_y(), far_x(), far_y(), colour);
       }
 
-      virtual void rounded_fill(SDL_Renderer* renderer, int radius, theme::colour colour) const {
+      virtual void rounded_fill(SDL_Renderer* renderer, Sint16 radius, theme::colour colour) const {
         roundedBoxColor(renderer, near_x(), near_y(), far_x(), far_y(), radius, colour);
       }
 
