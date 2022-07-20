@@ -62,13 +62,13 @@ int main(int argc, char* argv[])
 
   auto progressrow = content_area.rows(1,2);
   isolinear::ui::horizontal_progress_bar pbar(progressrow);
-  pbar.val(50);
+  pbar.value(50);
   window.add(&pbar);
 
   isolinear::ui::horizontal_progress_bar volbar_left(content_area.row(3));
   isolinear::ui::horizontal_progress_bar volbar_right(content_area.row(4));
-  volbar_left.val(50);
-  volbar_right.val(50);
+  volbar_left.value(50);
+  volbar_right.value(50);
   window.add(&volbar_left);
   window.add(&volbar_right);
 

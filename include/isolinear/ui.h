@@ -800,7 +800,7 @@ namespace isolinear::ui {
     protected:
       isolinear::grid m_grid;
       unsigned m_max = 100;
-      unsigned m_val = 50;
+      unsigned m_value = 50;
       unsigned m_gutter = 6;
 
       bool m_draw_stripes = true;
@@ -838,47 +838,47 @@ namespace isolinear::ui {
       }
 
       void max(unsigned m) {
-        if (m > m_val) {
-          val(m);
+        if (m > m_value) {
+          value(m);
         }
 
         m_max = m;
       }
 
-      unsigned val() {
-        return m_val;
+      unsigned value() {
+        return m_value;
       }
 
-      void val(unsigned v) {
-        if (v == m_val) {
+      void value(unsigned v) {
+        if (v == m_value) {
           return;
         }
 
         if (v > m_max) {
-          m_val = m_max;
+          m_value = m_max;
         }
         else {
-          m_val = v;
+          m_value = v;
         }
 
         emit signal_valuechanged();
       }
 
       void increment(unsigned v) {
-        if (m_val + v > m_max) {
-          val(m_max);
+        if (m_value + v > m_max) {
+          value(m_max);
         }
         else {
-          val(m_val + v);
+          value(m_value + v);
         }
       }
 
       void decrement(unsigned v) {
-        if (v > m_val) {
-          val(0);
+        if (v > m_value) {
+          value(0);
         }
         else {
-          val(m_val - v);
+          value(m_value - v);
         }
       }
 
@@ -887,7 +887,7 @@ namespace isolinear::ui {
       }
 
       unsigned filled_segments() const {
-        return (m_val * m_n_segments) / m_max;
+        return (m_value * m_n_segments) / m_max;
       }
 
       bool draw_tail() const {
