@@ -9,11 +9,14 @@
 
 #include <asio.hpp>
 
+#include "display.h"
+
 
 namespace isolinear {
 
   asio::io_context io_context;
   std::thread io_thread;
+  std::list<display::window> windows{};
 
   void init() {
     srand(time(NULL));
@@ -28,5 +31,16 @@ namespace isolinear {
     io_context.stop();
     io_thread.join();
   }
+
+  display::window& new_window(geometry::vector position, geometry::vector size) {
+    windows.emplace_back(position, size);
+    return windows.back();
+  }
+
+  display::window& new_window() {
+    auto display = display::detect_displays().back();
+    return new_window( {display.x, display.y}, {display.w, display.h} );
+  }
+
 
 }

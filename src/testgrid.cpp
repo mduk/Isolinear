@@ -15,13 +15,10 @@ int main(int argc, char* argv[])
   namespace geometry = isolinear::geometry;
   namespace pointer = isolinear::pointer;
 
+  auto work_guard = asio::make_work_guard(isolinear::io_context);
 
   isolinear::init();
-  auto work_guard = asio::make_work_guard(isolinear::io_context);
-  auto display = isolinear::display::detect_displays().back();
-  geometry::vector display_position{ display.x, display.y };
-  geometry::vector display_size{ display.w, display.h };
-  isolinear::display::window window(display_position, display_size);
+  auto window = isolinear::new_window();
 
   int cell_scale  = 30;
 
@@ -30,7 +27,7 @@ int main(int argc, char* argv[])
   bool running = true;
 
   isolinear::grid grid(
-      { 0, 0, display_size.x, display_size.y }, // Display Region
+      { 0, 0, window.size().x, window.size().y }, // Display Region
       { cell_scale*2, cell_scale }, // Cell Size
       { 6, 6 } // Cell Gutter
     );
