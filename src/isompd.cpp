@@ -107,8 +107,7 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.draw();
-    SDL_RenderPresent(window.renderer());
+    window.render();
   }
 
   work_guard.reset();

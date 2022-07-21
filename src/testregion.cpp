@@ -85,8 +85,6 @@ int main(int argc, char* argv[])
       }
     }
 
-    window.draw();
-
     for (auto& square : squares) {
       square.draw();
     }

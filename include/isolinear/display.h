@@ -70,6 +70,12 @@ namespace isolinear::display {
         }
       }
 
+      void render() {
+        draw();
+
+        SDL_RenderPresent(m_sdl_renderer);
+      }
+
       void on_pointer_event(pointer::event event) {
         set_title(fmt::format("Mouse X={} Y={}", event.Position().x, event.Position().y));
 

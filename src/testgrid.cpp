@@ -72,10 +72,10 @@ int main(int argc, char* argv[])
   window.add(&volbar_left);
   window.add(&volbar_right);
 
+  window.colours(isolinear::theme::nightgazer_colours);
+
   printf("LOOP\n");
   while (running) {
-
-    window.colours(isolinear::theme::nightgazer_colours);
 
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0) {
@@ -109,18 +109,7 @@ int main(int argc, char* argv[])
       }
     }
 
-
-    grid.draw(window.renderer());
-    grid.left_columns(2).draw(window.renderer());
-    grid.right_columns(2).draw(window.renderer());
-    grid.centre_columns(8,8).draw(window.renderer());
-    grid.top_rows(1).draw(window.renderer());
-    grid.bottom_rows(1).draw(window.renderer());
-    grid.centre_rows(8,8).draw(window.renderer());
-
-    window.draw();
-
-    SDL_RenderPresent(window.renderer());
+    window.render();
   } // while (running)
 
   work_guard.reset();
