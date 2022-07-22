@@ -42,6 +42,7 @@ namespace isolinear::display {
         : m_position{p}, m_size{s}
       {
         init_sdl();
+        set_title("Isolinear");
       };
 
       ~window() {
