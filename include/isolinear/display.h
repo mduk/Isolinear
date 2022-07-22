@@ -11,6 +11,7 @@
 #include "pointerevent.h"
 #include "drawable.h"
 #include "pointerevent.h"
+#include "keyboardevent.h"
 #include "theme.h"
 #include "geometry.h"
 #include "text.h"
@@ -83,6 +84,10 @@ namespace isolinear::display {
         for (auto* drawable : m_drawables) {
           drawable->on_pointer_event(event);
         }
+      }
+
+      void on_keyboard_event(keyboard::event event) {
+
       }
 
     public: // Accessors

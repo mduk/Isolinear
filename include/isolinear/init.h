@@ -10,6 +10,7 @@
 #include <asio.hpp>
 
 #include "display.h"
+#include "keyboardevent.h"
 
 
 namespace isolinear {
@@ -35,12 +36,23 @@ namespace isolinear {
         case SDL_KEYDOWN:
           switch (e.key.keysym.sym) {
             case SDLK_ESCAPE: return false;
+            default:
+              for (auto& window : windows) {
+                window.on_keyboard_event(keyboard::event(e.key));
+              }
           }
           break;
 
         case SDL_MOUSEMOTION:
-          for (display::window& window : windows) {
+          for (auto& window : windows) {
             window.on_pointer_event(pointer::event(e.motion));
+          }
+          break;
+
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+          for (auto& window : windows) {
+            window.on_pointer_event(pointer::event(e.button));
           }
           break;
 

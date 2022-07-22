@@ -3,7 +3,6 @@
 #include "geometry.h"
 
 
-
 namespace isolinear::pointer {
 
   using isolinear::geometry::position;
