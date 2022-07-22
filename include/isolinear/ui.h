@@ -839,7 +839,7 @@ namespace isolinear::ui {
     public:
       miso::signal<> signal_valuechanged;
 
-      horizontal_progress_bar(isolinear::grid _g)
+      horizontal_progress_bar(isolinear::grid _g, unsigned _v)
         : m_grid{_g}
         , m_bar_region(
             position(
@@ -854,6 +854,8 @@ namespace isolinear::ui {
         , m_segment_size{ (int) m_gutter, m_bar_region.H() }
         , m_n_segments{ (unsigned) (m_bar_region.W() / m_segment_size.x) }
         , m_remainder_px{ static_cast<unsigned int>(m_bar_region.W() % m_segment_size.x) }
+        , m_value{_v}
+        , m_bar_colour{theme::nightgazer_colours.active}
       { };
 
       unsigned max() const {
