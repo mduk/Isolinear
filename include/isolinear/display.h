@@ -127,6 +127,7 @@ namespace isolinear::display {
 
       void add(ui::drawable* drawable) {
         m_drawables.push_back(drawable);
+        drawable->colours(colours());
       }
 
       uint32_t window_id() const {
