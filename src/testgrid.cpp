@@ -18,99 +18,50 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
 
   isolinear::init();
-  auto window = isolinear::new_window();
-
-  int cell_scale  = 30;
-
-  // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
-
-  bool running = true;
+  auto& window = isolinear::new_window();
 
   isolinear::grid grid(
       { 0, 0, window.size().x, window.size().y }, // Display Region
-      { cell_scale*2, cell_scale }, // Cell Size
+      { 60, 30 }, // Cell Size
       { 6, 6 } // Cell Gutter
     );
 
-  auto sweepgrid = grid.left_columns(4).top_rows(3);
+  auto elbo_corner_region = grid.left_columns(4).top_rows(3);
+  auto elbo_vertical_region = grid.left_columns(3).bottom_rows(grid.max_rows() - 4);
+  auto elbo_horizontal_region = grid.top_rows(2).right_columns(grid.max_columns() - 4);
+  auto elbo_content_region = grid.subgrid(5, 4, grid.max_columns(), grid.max_rows());
 
   isolinear::ui::north_west_sweep nwsweep(
-      window,
-      sweepgrid,
-      {3, 2},
-      50,
-      20
-    );
+      window, elbo_corner_region, {3, 2}, 50, 20
+  );
   window.add(&nwsweep);
 
-  auto leftcol = grid.left_columns(3).bottom_rows(grid.max_rows() - 4);
-  auto toprow = grid.top_rows(2).right_columns(grid.max_columns() - 4);
-  auto content_area = grid.subgrid(5,4, grid.max_columns(), grid.max_rows());
-
-  isolinear::ui::vertical_button_bar vbbar(window, leftcol);
+  isolinear::ui::vertical_button_bar vbbar(window, elbo_vertical_region);
     vbbar.add_button("Spoon");
     vbbar.add_button("Knife");
     vbbar.add_button("Fork");
   window.add(&vbbar);
 
-  isolinear::ui::horizontal_button_bar hbbar(window, toprow);
+  isolinear::ui::horizontal_button_bar hbbar(window, elbo_horizontal_region);
     hbbar.add_button("Spoon");
     hbbar.add_button("Knife");
     hbbar.add_button("Fork");
   window.add(&hbbar);
 
 
-  auto progressrow = content_area.rows(1,2);
+  auto progressrow = elbo_content_region.rows(1, 2);
   isolinear::ui::horizontal_progress_bar pbar(progressrow);
   pbar.value(50);
   window.add(&pbar);
 
-  isolinear::ui::horizontal_progress_bar volbar_left(content_area.row(3));
-  isolinear::ui::horizontal_progress_bar volbar_right(content_area.row(4));
+  isolinear::ui::horizontal_progress_bar volbar_left(elbo_content_region.row(3));
+  isolinear::ui::horizontal_progress_bar volbar_right(elbo_content_region.row(4));
   volbar_left.value(50);
   volbar_right.value(50);
   window.add(&volbar_left);
   window.add(&volbar_right);
 
-  window.colours(isolinear::theme::nightgazer_colours);
-
-  printf("LOOP\n");
-  while (running) {
-
-    SDL_Event e;
-    while (SDL_PollEvent(&e) != 0) {
-      switch (e.type) {
-
-        case SDL_KEYDOWN:
-          switch (e.key.keysym.sym) {
-            case SDLK_ESCAPE:
-              running = false;
-              break;
-
-            case SDLK_UP:
-              cell_scale--;
-              grid.set_cell_size({ cell_scale*2, cell_scale });
-             break;
-
-            case SDLK_DOWN:
-              cell_scale++;
-              grid.set_cell_size({cell_scale*2, cell_scale});
-              break;
-          }
-          break;
-
-        case SDL_MOUSEMOTION:
-          window.on_pointer_event(pointer::event(e.motion));
-          break;
-
-        case SDL_QUIT:
-          running = false;
-          break;
-      }
-    }
-
-    window.render();
-  } // while (running)
+  while (isolinear::loop());
 
   work_guard.reset();
   isolinear::shutdown();

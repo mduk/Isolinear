@@ -21,11 +21,9 @@ int main(int argc, char *argv[]) {
   // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // // //
 
   isolinear::ui::rect rect1{{ 10, 10, 150, 50 }};
-  rect1.colours(isolinear::theme::nightgazer_colours);
   window1.add(&rect1);
 
   isolinear::ui::rect rect2{{ 50, 50, 150, 50 }};
-  rect2.colours(isolinear::theme::red_alert_colours);
   window2.add(&rect2);
 
   while (isolinear::loop());
