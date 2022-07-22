@@ -63,11 +63,11 @@ namespace isompd::now_playing {
         , duration(g.rows(9,10), w, "DURATION", "[duration]")
         , progress(g.rows(11,12))
       {
-        RegisterChild(&title);
-        RegisterChild(&album);
-        RegisterChild(&artist);
-        RegisterChild(&duration);
-        RegisterChild(&progress);
+        register_child(&title);
+        register_child(&album);
+        register_child(&artist);
+        register_child(&duration);
+        register_child(&progress);
 
         miso::connect(mpdc.signal_status, [this](mpdxx::status status){
           hide = status.IsStopped();
@@ -156,7 +156,7 @@ class paginated_rows : public isolinear::ui::drawable {
           );
 
         ViewT& row = view_rows.back();
-        RegisterChild(&row);
+        register_child(&row);
       }
     }
 
@@ -271,19 +271,19 @@ namespace isompd::player {
         , btnConsume( w, gc.rows(14,15).columns(1,2), "CONSUME")
         , btnRandom(  w, gc.rows(14,15).columns(3,6), "RANDOM")
       {
-        RegisterChild(&hdrQueue);
-        RegisterChild(&queue_pager);
-        RegisterChild(&btnPlay);
-        RegisterChild(&btnPause);
-        RegisterChild(&btnStop);
-        RegisterChild(&btnPrevious);
-        RegisterChild(&btnNext);
-        RegisterChild(&btnConsume);
-        RegisterChild(&btnRandom);
-        RegisterChild(&btnSingle);
-        RegisterChild(&btnRepeat);
-        RegisterChild(&hrule1);
-        RegisterChild(&hrule2);
+        register_child(&hdrQueue);
+        register_child(&queue_pager);
+        register_child(&btnPlay);
+        register_child(&btnPause);
+        register_child(&btnStop);
+        register_child(&btnPrevious);
+        register_child(&btnNext);
+        register_child(&btnConsume);
+        register_child(&btnRandom);
+        register_child(&btnSingle);
+        register_child(&btnRepeat);
+        register_child(&hrule1);
+        register_child(&hrule2);
 
         miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
           queue_pager.clear();
@@ -397,7 +397,7 @@ namespace isompd::queue {
         , previous_page_button(queue_pager_buttons.add_button("PREVIOUS"))
         , next_page_button(queue_pager_buttons.add_button("NEXT"))
       {
-        RegisterChild(&queue_pager);
+        register_child(&queue_pager);
 
         miso::connect(previous_page_button.signal_press, [this](){
             if (next_page_button.disabled()) {
@@ -429,7 +429,7 @@ namespace isompd::queue {
 
         queue_pager_buttons.label(fmt::format("Page {} of {}", queue_pager.current_page(), queue_pager.page_count()));
 
-        RegisterChild(&queue_pager_buttons);
+        register_child(&queue_pager_buttons);
 
         miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
           queue_pager.clear();
@@ -473,7 +473,7 @@ namespace isompd::browse {
         , artist_pager(artist_grid, w, 10)
         , artist_pager_buttons(w, g.bottom_rows(4).top_rows(2))
       {
-        RegisterChild(&artist_pager);
+        register_child(&artist_pager);
 
         miso::connect(artist_pager_buttons.add_button("PREVIOUS").signal_press, [this](){
           artist_pager.previous_page();
@@ -481,7 +481,7 @@ namespace isompd::browse {
         miso::connect(artist_pager_buttons.add_button("NEXT").signal_press, [this](){
           artist_pager.next_page();
         });
-        RegisterChild(&artist_pager_buttons);
+        register_child(&artist_pager_buttons);
 
         miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
           artist_pager.clear();
@@ -542,11 +542,11 @@ namespace isompd {
           , viewBrowse    (layout.Centre(), w, mpdc)
           , viewPlayer    (layout.Centre(), w, mpdc)
       {
-        RegisterChild(&hdrFrame);
-        RegisterChild(&barView);
-        RegisterChild(&playerControlBar);
-        RegisterChild(&sweepNorthWest);
-        RegisterChild(&sweepSouthWest);
+        register_child(&hdrFrame);
+        register_child(&barView);
+        register_child(&playerControlBar);
+        register_child(&sweepNorthWest);
+        register_child(&sweepSouthWest);
 
         RegisterView(&viewNowPlaying);
         RegisterView(&viewQueue);

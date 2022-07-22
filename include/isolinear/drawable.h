@@ -39,7 +39,7 @@ namespace isolinear::ui {
           return m_pointer_within;
       }
 
-      virtual void RegisterChild(drawable* child) {
+      virtual void register_child(drawable* child) {
         m_children.push_back(child);
         child->colours(colours());
       }
