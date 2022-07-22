@@ -72,6 +72,7 @@ namespace isolinear {
   display::window& new_window(geometry::vector position, geometry::vector size) {
     window_list.emplace_back(position, size);
     auto& window = window_list.back();
+    window.colours(isolinear::theme::nightgazer_colours);
     window_map.emplace(window.window_id(), window);
     return window;
   }
