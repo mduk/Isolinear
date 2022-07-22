@@ -71,5 +71,4 @@ namespace isolinear {
     return new_window( {display.x, display.y}, {display.w, display.h} );
   }
 
-
 }
