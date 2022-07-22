@@ -70,7 +70,16 @@ namespace isolinear::display {
       }
 
       void render() const {
-        SDL_SetRenderDrawColor(m_sdl_renderer, 0, 0, 0, 255);
+        theme::colour unpack_colour = (m_override_background > 0)
+                                    ? m_override_background
+                                    : m_colours.background;
+
+        uint8_t blue = unpack_colour;
+        uint8_t green = unpack_colour >> 8;
+        uint8_t red = unpack_colour >> 16;
+        uint8_t alpha = unpack_colour >> 24;
+
+        SDL_SetRenderDrawColor(m_sdl_renderer, red, green, blue, alpha);
         SDL_RenderClear(m_sdl_renderer);
 
         draw();
@@ -87,7 +96,7 @@ namespace isolinear::display {
       }
 
       void on_keyboard_event(keyboard::event event) {
-
+        m_override_background = 0xffffffff;
       }
 
     public: // Accessors
@@ -102,14 +111,19 @@ namespace isolinear::display {
       std::string m_title{"Isolinear"};
       std::list<ui::drawable*> m_drawables;
       theme::colour_scheme m_colours;
+      theme::colour m_override_background = 0x00000000;
 
-    public: // Public window methods
+  public: // Public window methods
       void set_title(const std::string& new_title) {
         SDL_SetWindowTitle(m_sdl_window, new_title.c_str());
       }
 
       void add(ui::drawable* drawable) {
         m_drawables.push_back(drawable);
+      }
+
+      Uint32 window_id() const {
+        return SDL_GetWindowID(m_sdl_window);
       }
 
     protected: // Protected window methods

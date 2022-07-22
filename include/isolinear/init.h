@@ -38,7 +38,9 @@ namespace isolinear {
             case SDLK_ESCAPE: return false;
             default:
               for (auto& window : windows) {
-                window.on_keyboard_event(keyboard::event(e.key));
+                if (window.window_id() == e.key.windowID) {
+                  window.on_keyboard_event(keyboard::event(e.key));
+                }
               }
           }
           break;
