@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
   auto work_guard = asio::make_work_guard(isolinear::io_context);
 
   isolinear::init();
-  auto window = isolinear::new_window();
+  auto& window = isolinear::new_window();
 
   isolinear::grid grid(
       { 0, 0, window.size().x, window.size().y },
