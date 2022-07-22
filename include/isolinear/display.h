@@ -129,7 +129,7 @@ namespace isolinear::display {
         m_drawables.push_back(drawable);
       }
 
-      Uint32 window_id() const {
+      uint32_t window_id() const {
         return SDL_GetWindowID(m_sdl_window);
       }
 

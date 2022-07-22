@@ -8,6 +8,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <asio.hpp>
+#include <map>
 
 #include "display.h"
 #include "keyboardevent.h"
@@ -17,7 +18,8 @@ namespace isolinear {
 
   asio::io_context io_context;
   std::thread io_thread;
-  std::list<display::window> windows{};
+  std::list<display::window> window_list{};
+  std::map<uint32_t, display::window&> window_map{};
 
   void init() {
     srand(time(NULL));
@@ -38,24 +40,16 @@ namespace isolinear {
           if (e.key.keysym.sym == SDLK_ESCAPE) {
             return false;
           }
-          for (auto& window : windows) {
-            if (window.window_id() == e.key.windowID) {
-              window.on_keyboard_event(keyboard::event(e.key));
-            }
-          }
+          window_map.at(e.key.windowID).on_keyboard_event(keyboard::event(e.key));
           break;
 
         case SDL_MOUSEMOTION:
-          for (auto& window : windows) {
-            window.on_pointer_event(pointer::event(e.motion));
-          }
+          window_map.at(e.key.windowID).on_pointer_event(pointer::event(e.motion));
           break;
 
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
-          for (auto& window : windows) {
-            window.on_pointer_event(pointer::event(e.button));
-          }
+          window_map.at(e.button.windowID).on_pointer_event(pointer::event(e.button));
           break;
 
         case SDL_QUIT:
@@ -63,7 +57,7 @@ namespace isolinear {
       }
     }
 
-    for (display::window& window : windows) {
+    for (auto& window : window_list) {
       window.render();
     }
 
@@ -76,8 +70,10 @@ namespace isolinear {
   }
 
   display::window& new_window(geometry::vector position, geometry::vector size) {
-    windows.emplace_back(position, size);
-    return windows.back();
+    window_list.emplace_back(position, size);
+    auto& window = window_list.back();
+    window_map.emplace(window.window_id(), window);
+    return window;
   }
 
   display::window& new_window() {
