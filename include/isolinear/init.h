@@ -34,14 +34,14 @@ namespace isolinear {
       switch (e.type) {
 
         case SDL_KEYDOWN:
-          switch (e.key.keysym.sym) {
-            case SDLK_ESCAPE: return false;
-            default:
-              for (auto& window : windows) {
-                if (window.window_id() == e.key.windowID) {
-                  window.on_keyboard_event(keyboard::event(e.key));
-                }
-              }
+        case SDL_KEYUP:
+          if (e.key.keysym.sym == SDLK_ESCAPE) {
+            return false;
+          }
+          for (auto& window : windows) {
+            if (window.window_id() == e.key.windowID) {
+              window.on_keyboard_event(keyboard::event(e.key));
+            }
           }
           break;
 

@@ -96,7 +96,14 @@ namespace isolinear::display {
       }
 
       void on_keyboard_event(keyboard::event event) {
-        m_override_background = 0xffffffff;
+        if (event.is_key_down()) {
+          m_override_background = 0xffffffff;
+          return;
+        }
+        if (event.is_key_up()) {
+          m_override_background = 0x00000000;
+          return;
+        }
       }
 
     public: // Accessors

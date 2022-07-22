@@ -17,6 +17,14 @@ namespace isolinear::keyboard {
         explicit event(SDL_KeyboardEvent e)
           : m_sdl_keyboardevent{e} {};
 
+        bool is_key_up() const {
+          return m_sdl_keyboardevent.type == SDL_KEYUP;
+        }
+
+        bool is_key_down() const {
+          return m_sdl_keyboardevent.type == SDL_KEYDOWN;
+        }
+
     };
 
 }
