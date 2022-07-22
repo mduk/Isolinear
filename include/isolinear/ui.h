@@ -858,6 +858,9 @@ namespace isolinear::ui {
         , m_bar_colour{theme::nightgazer_colours.active}
       { };
 
+      horizontal_progress_bar(isolinear::grid _g)
+        : horizontal_progress_bar(_g, 0) {};
+
       unsigned max() const {
         return m_max;
       }
