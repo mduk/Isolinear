@@ -32,39 +32,25 @@ namespace isolinear::ui {
 
   // Widgets
 
-  class horizontal_rule : public drawable {
+
+
+  class rect : public drawable {
 
     protected:
-      display::window& m_window;
-      isolinear::grid m_grid;
+      geometry::region m_bounds;
 
     public:
-      horizontal_rule(display::window& w, isolinear::grid g)
-        : m_window(w)
-        , m_grid(std::move(g))
+      rect(geometry::region r)
+        : m_bounds{std::move(r)}
       {}
 
     public:
-      [[nodiscard]] region bounds() const {
-        return m_grid.bounds();
+      geometry::region bounds() const {
+        return m_bounds;
       }
 
       void draw(SDL_Renderer* renderer) const override {
-        auto bound_height = m_grid.bounds().H();
-        auto offset_px = (bound_height - m_grid.gutter().y) / 2;
-
-        auto hrule_near_x = m_grid.bounds().near_x();
-        auto hrule_near_y = m_grid.bounds().near_y() + offset_px;
-
-        auto hrule_far_x = m_grid.bounds().far_x();
-        auto hrule_far_y = m_grid.bounds().far_y() - offset_px;
-
-        region hrule(
-            position(hrule_near_x, hrule_near_y),
-            position(hrule_far_x,  hrule_far_y)
-          );
-
-        hrule.fill(renderer, colours().frame);
+        m_bounds.fill(renderer, colours().frame);
       }
   };
 

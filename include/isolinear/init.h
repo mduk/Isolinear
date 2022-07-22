@@ -27,6 +27,35 @@ namespace isolinear {
     io_thread = std::thread([](){ io_context.run(); });
   }
 
+  bool loop() {
+    SDL_Event e;
+    while (SDL_PollEvent(&e) != 0) {
+      switch (e.type) {
+
+        case SDL_KEYDOWN:
+          switch (e.key.keysym.sym) {
+            case SDLK_ESCAPE: return false;
+          }
+          break;
+
+        case SDL_MOUSEMOTION:
+          for (display::window& window : windows) {
+            window.on_pointer_event(pointer::event(e.motion));
+          }
+          break;
+
+        case SDL_QUIT:
+          return false;
+      }
+    }
+
+    for (display::window& window : windows) {
+      window.render();
+    }
+
+    return true;
+  }
+
   void shutdown() {
     io_context.stop();
     io_thread.join();
