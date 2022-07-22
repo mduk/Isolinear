@@ -49,8 +49,7 @@ int main(int argc, char* argv[])
   window.add(&hbbar);
 
 
-  auto progressrow = elbo_content_region.rows(1, 2);
-  isolinear::ui::horizontal_progress_bar pbar(progressrow, 40);
+  isolinear::ui::horizontal_progress_bar pbar(elbo_content_region.rows(1, 2), 40);
   window.add(&pbar);
 
   isolinear::ui::horizontal_progress_bar volbar_left(elbo_content_region.row(3), 50);
