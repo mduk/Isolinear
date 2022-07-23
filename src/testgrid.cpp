@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
   auto& window = isolinear::new_window();
 
   isolinear::grid grid(
-      { 0, 0, window.size().x, window.size().y }, // Display Region
+      { 50, 50, window.size().x-100, window.size().y-100 }, // Display Region
       { 60, 30 }, // Cell Size
       { 6, 6 } // Cell Gutter
     );

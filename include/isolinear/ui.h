@@ -45,7 +45,7 @@ namespace isolinear::ui {
       {}
 
     public:
-      geometry::region bounds() const {
+      geometry::region bounds() const override {
         return m_bounds;
       }
 

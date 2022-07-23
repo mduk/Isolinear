@@ -11,6 +11,7 @@
 #include <map>
 
 #include "display.h"
+#include "window.h"
 #include "keyboardevent.h"
 
 
@@ -50,6 +51,14 @@ namespace isolinear {
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
           window_map.at(e.button.windowID).on_pointer_event(pointer::event(e.button));
+          break;
+
+        case SDL_WINDOWEVENT:
+          switch (e.window.event) {
+            case SDL_WINDOWEVENT_RESIZED:
+              window_map.at(e.window.windowID).on_window_event(window::event(e.window));
+              break;
+          }
           break;
 
         case SDL_QUIT:

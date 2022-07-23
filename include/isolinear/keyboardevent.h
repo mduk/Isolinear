@@ -28,3 +28,15 @@ namespace isolinear::keyboard {
     };
 
 }
+
+namespace isolinear::window {
+    class event {
+    protected:
+        SDL_WindowEvent m_sdl_windowevent;
+
+    public:
+        event(SDL_WindowEvent e)
+            : m_sdl_windowevent{e}
+        {}
+    };
+}

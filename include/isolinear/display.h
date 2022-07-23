@@ -106,6 +106,10 @@ namespace isolinear::display {
         }
       }
 
+      void on_window_event(isolinear::window::event e) {
+        std::cout << fmt::format("Window {} resized.\n", window_id());
+      }
+
     public: // Accessors
       [[nodiscard]] text::font const& header_font() const { return m_header_font; }
       [[nodiscard]] text::font const& button_font() const { return m_button_font; }

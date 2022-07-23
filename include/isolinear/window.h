@@ -7,10 +7,7 @@
 
 namespace isolinear::window {
 
-
-
   using isolinear::compass;
-
   using std::min;
   using std::max;
 
@@ -41,6 +38,7 @@ namespace isolinear::window {
         filledEllipseColor(window.renderer(), x, y,  5,  5, 0xff00ffff);
       }
   };
+
 
   class region {
     protected:
@@ -198,5 +196,6 @@ namespace isolinear::window {
         northwest().draw();
       }
   };
+
 
 }
