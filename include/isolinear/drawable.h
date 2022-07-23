@@ -7,7 +7,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "theme.h"
-#include "pointerevent.h"
+#include "event.h"
 #include "grid.h"
 
 
@@ -44,7 +44,7 @@ namespace isolinear::ui {
         child->colours(colours());
       }
 
-      virtual void on_pointer_event(pointer::event event) {
+      virtual void on_pointer_event(event::pointer event) {
         m_pointer_within = bounds().encloses(event.Position());
 
         for (auto& child : m_children) {
@@ -103,7 +103,7 @@ namespace isolinear::ui {
         }
       }
 
-      virtual void on_pointer_event(pointer::event event) {
+      virtual void on_pointer_event(event::pointer event) {
         position p = event.Position();
 
         for (auto& elem : *this) {

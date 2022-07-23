@@ -1,28 +1,18 @@
-#include <sstream>
-#include <vector>
-
 #include <asio.hpp>
 #include <thread>
-
 #include <iostream>
 #include <fmt/core.h>
 #include <fmt/chrono.h>
-
 #include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
-#include <SDL2/SDL_ttf.h>
 
 #include "miso.h"
 
 #include "init.h"
 #include "theme.h"
-#include "drawable.h"
-#include "geometry.h"
 #include "grid.h"
-#include "pointerevent.h"
+#include "event.h"
 #include "ui.h"
 #include "display.h"
-#include "window.h"
 #include "timer.h"
 
 
@@ -77,7 +67,6 @@ namespace isolinear {
 int main(int argc, char* argv[])
 {
   namespace geometry = isolinear::geometry;
-  namespace pointer = isolinear::pointer;
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
 
@@ -157,7 +146,7 @@ int main(int argc, char* argv[])
           break;
 
       case SDL_MOUSEBUTTONDOWN:
-        window.on_pointer_event(pointer::event{ e.button });
+        window.on_pointer_event(isolinear::event::pointer{ e.button });
         break;
 
       case SDL_QUIT:

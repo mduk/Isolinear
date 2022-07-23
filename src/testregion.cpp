@@ -1,26 +1,10 @@
-#include <sstream>
-#include <vector>
-
 #include <asio.hpp>
-#include <thread>
-
 #include <iostream>
-#include <fmt/core.h>
-#include <fmt/chrono.h>
-
 #include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
-#include <SDL2/SDL_ttf.h>
-
-#include "miso.h"
 
 #include "init.h"
-#include "theme.h"
 #include "drawable.h"
 #include "geometry.h"
-#include "pointerevent.h"
-#include "ui.h"
-#include "display.h"
 #include "window.h"
 
 

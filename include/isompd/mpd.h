@@ -583,7 +583,7 @@ namespace isompd {
         return layout.bounds();
       }
 
-      virtual void on_pointer_event(isolinear::pointer::event event) {
+      virtual void on_pointer_event(isolinear::event::pointer event) {
         drawable::on_pointer_event(event);
         views.at(activeView)->on_pointer_event(event);
       }

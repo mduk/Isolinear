@@ -12,7 +12,7 @@
 
 #include "display.h"
 #include "window.h"
-#include "keyboardevent.h"
+#include "event.h"
 
 
 namespace isolinear {
@@ -41,22 +41,22 @@ namespace isolinear {
           if (e.key.keysym.sym == SDLK_ESCAPE) {
             return false;
           }
-          window_map.at(e.key.windowID).on_keyboard_event(keyboard::event(e.key));
+          window_map.at(e.key.windowID).on_keyboard_event(event::keyboard(e.key));
           break;
 
         case SDL_MOUSEMOTION:
-          window_map.at(e.key.windowID).on_pointer_event(pointer::event(e.motion));
+          window_map.at(e.key.windowID).on_pointer_event(event::pointer(e.motion));
           break;
 
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
-          window_map.at(e.button.windowID).on_pointer_event(pointer::event(e.button));
+          window_map.at(e.button.windowID).on_pointer_event(event::pointer(e.button));
           break;
 
         case SDL_WINDOWEVENT:
           switch (e.window.event) {
             case SDL_WINDOWEVENT_RESIZED:
-              window_map.at(e.window.windowID).on_window_event(window::event(e.window));
+              window_map.at(e.window.windowID).on_window_event(event::window(e.window));
               break;
           }
           break;

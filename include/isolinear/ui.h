@@ -19,7 +19,7 @@
 #include "drawable.h"
 #include "geometry.h"
 #include "grid.h"
-#include "pointerevent.h"
+#include "event.h"
 
 
 
@@ -154,7 +154,7 @@ namespace isolinear::ui {
       }
 
 
-      void on_pointer_event(pointer::event event) override {
+      void on_pointer_event(event::pointer event) override {
           drawable::on_pointer_event(event);
         emit signal_press();
       }
@@ -219,7 +219,7 @@ namespace isolinear::ui {
         m_buttons.at(label).activate();
       }
 
-      void on_pointer_event(pointer::event event) override {
+      void on_pointer_event(event::pointer event) override {
         drawable::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
             button.on_pointer_event(event);
@@ -429,7 +429,7 @@ namespace isolinear::ui {
           );
       }
 
-      void on_pointer_event(pointer::event event) override {
+      void on_pointer_event(event::pointer event) override {
         drawable::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
             button.on_pointer_event(event);

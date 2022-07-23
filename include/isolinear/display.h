@@ -8,10 +8,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-#include "pointerevent.h"
+#include "event.h"
 #include "drawable.h"
-#include "pointerevent.h"
-#include "keyboardevent.h"
 #include "theme.h"
 #include "geometry.h"
 #include "text.h"
@@ -87,7 +85,7 @@ namespace isolinear::display {
         SDL_RenderPresent(m_sdl_renderer);
       }
 
-      void on_pointer_event(pointer::event event) {
+      void on_pointer_event(event::pointer event) {
         set_title(fmt::format("Mouse X={} Y={}", event.Position().x, event.Position().y));
 
         for (auto* drawable : m_drawables) {
@@ -95,7 +93,7 @@ namespace isolinear::display {
         }
       }
 
-      void on_keyboard_event(keyboard::event event) {
+      void on_keyboard_event(event::keyboard event) {
         if (event.is_key_down()) {
           m_override_background = 0xffffffff;
           return;
@@ -106,7 +104,7 @@ namespace isolinear::display {
         }
       }
 
-      void on_window_event(isolinear::window::event e) {
+      void on_window_event(event::window event) {
         std::cout << fmt::format("Window {} resized.\n", window_id());
       }
 

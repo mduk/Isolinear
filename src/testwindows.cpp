@@ -10,7 +10,6 @@
 
 int main(int argc, char *argv[]) {
   namespace geometry = isolinear::geometry;
-  namespace pointer = isolinear::pointer;
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
 

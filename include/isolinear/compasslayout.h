@@ -8,7 +8,7 @@
 
 #include "geometry.h"
 #include "drawable.h"
-#include "pointerevent.h"
+#include "event.h"
 #include "grid.h"
 #include "display.h"
 

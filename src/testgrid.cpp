@@ -1,19 +1,10 @@
-#include <sstream>
-#include <stdio.h>
-
-#include <SDL2/SDL.h>
-
 #include "init.h"
-#include "geometry.h"
 #include "grid.h"
-#include "display.h"
 #include "ui.h"
 
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   namespace geometry = isolinear::geometry;
-  namespace pointer = isolinear::pointer;
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
 
@@ -21,7 +12,7 @@ int main(int argc, char* argv[])
   auto& window = isolinear::new_window();
 
   isolinear::grid grid(
-      { 50, 50, window.size().x-100, window.size().y-100 }, // Display Region
+      { 0, 0, window.size().x, window.size().y }, // Display Region
       { 60, 30 }, // Cell Size
       { 6, 6 } // Cell Gutter
     );
