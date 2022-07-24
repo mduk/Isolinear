@@ -181,7 +181,7 @@ namespace isolinear::ui {
       virtual region calculate_button_region(int i) const = 0;
       virtual region calculate_bar_region() const = 0;
 
-      virtual theme::colour_scheme colours() const {
+      theme::colour_scheme colours() const override {
         return drawable::colours();
       }
 
