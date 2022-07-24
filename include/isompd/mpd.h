@@ -259,12 +259,12 @@ namespace isompd::player {
         , btnPause(   w, gc.rows( 1, 4).columns(5,6), "PAUSE")
         , btnStop(    w, gc.rows( 5, 7).columns(1,6), "STOP")
 
-        , hrule1(     w, gc.rows( 8, 8))
+        , hrule1(        gc.rows( 8, 8))
 
         , btnPrevious(w, gc.rows( 9,10).columns(1,3), "PREVIOUS")
         , btnNext(    w, gc.rows( 9,10).columns(4,6), "NEXT")
 
-        , hrule2(     w, gc.rows(11,11))
+        , hrule2(        gc.rows(11,11))
 
         , btnRepeat(  w, gc.rows(12,13).columns(1,4), "REPEAT")
         , btnSingle(  w, gc.rows(12,13).columns(5,6), "SINGLE")

@@ -58,13 +58,11 @@ namespace isolinear::ui {
     class horizontal_rule : public drawable {
 
     protected:
-        display::window& m_window;
         isolinear::grid m_grid;
 
     public:
-        horizontal_rule(display::window& w, isolinear::grid g)
-            : m_window(w)
-            , m_grid(std::move(g))
+        explicit horizontal_rule(isolinear::grid g)
+            : m_grid(std::move(g))
         {}
 
     public:
@@ -153,9 +151,8 @@ namespace isolinear::ui {
         }
       }
 
-
       void on_pointer_event(event::pointer event) override {
-          drawable::on_pointer_event(event);
+        drawable::on_pointer_event(event);
         emit signal_press();
       }
 
@@ -178,7 +175,7 @@ namespace isolinear::ui {
 
     public:
       button_bar(display::window& w, isolinear::grid g)
-        : m_window{w}, m_grid{g}
+        : m_window{w}, m_grid{std::move(g)}
       {};
 
       virtual region calculate_button_region(int i) const = 0;
@@ -188,7 +185,7 @@ namespace isolinear::ui {
         return drawable::colours();
       }
 
-      virtual void colours(theme::colour_scheme cs) {
+      void colours(theme::colour_scheme cs) override {
         for (auto& [label, button] : m_buttons) {
           button.colours(cs);
         }

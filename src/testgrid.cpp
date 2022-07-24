@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   isolinear::ui::rect vrect(elbo_vertical_indicator_region.bounds());
   window.add(&vrect);
 
-  isolinear::ui::rect hrect(elbo_horizontal_indicator_region.bounds());
+  isolinear::ui::horizontal_rule hrect(elbo_horizontal_indicator_region);
   window.add(&hrect);
 
   isolinear::ui::north_west_sweep nwsweep(
