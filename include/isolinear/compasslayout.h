@@ -7,7 +7,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "geometry.h"
-#include "drawable.h"
+#include "control.h"
 #include "event.h"
 #include "grid.h"
 #include "display.h"
@@ -15,7 +15,7 @@
 
 namespace isolinear::layout {
 
-  class compass : public ui::drawable {
+  class compass : public ui::control {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;

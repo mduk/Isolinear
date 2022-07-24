@@ -9,7 +9,7 @@
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 #include "event.h"
-#include "drawable.h"
+#include "control.h"
 #include "theme.h"
 #include "geometry.h"
 #include "text.h"
@@ -49,7 +49,7 @@ namespace isolinear::display {
         SDL_DestroyWindow(m_sdl_window);
       }
 
-    public: // ui::drawable interface
+    public: // ui::control interface
       theme::colour_scheme colours() {
         return m_colours;
       }
@@ -118,7 +118,7 @@ namespace isolinear::display {
 
     protected: // Protected window properties
       std::string m_title{"Isolinear"};
-      std::list<ui::drawable*> m_drawables;
+      std::list<ui::control*> m_drawables;
       theme::colour_scheme m_colours;
       theme::colour m_override_background = 0x00000000;
 
@@ -127,7 +127,7 @@ namespace isolinear::display {
         SDL_SetWindowTitle(m_sdl_window, new_title.c_str());
       }
 
-      void add(ui::drawable* drawable) {
+      void add(ui::control* drawable) {
         m_drawables.push_back(drawable);
         drawable->colours(colours());
       }

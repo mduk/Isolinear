@@ -19,11 +19,10 @@ namespace isolinear::ui {
   using isolinear::geometry::region;
 
 
-  class drawable {
+  class control {
     protected:
-      region m_bounds;
       theme::colour_scheme m_colours;
-      std::list<drawable*> m_children;
+      std::list<control*> m_children;
       bool m_pointer_within{false};
 
     public:
@@ -39,7 +38,7 @@ namespace isolinear::ui {
           return m_pointer_within;
       }
 
-      virtual void register_child(drawable* child) {
+      virtual void register_child(control* child) {
         m_children.push_back(child);
         child->colours(colours());
       }
@@ -68,7 +67,7 @@ namespace isolinear::ui {
 
   template <class T>
   class drawable_list : public std::list<T>,
-                        public isolinear::ui::drawable {
+                        public isolinear::ui::control {
 
     protected:
       isolinear::grid grid;
@@ -97,7 +96,7 @@ namespace isolinear::ui {
       }
 
       virtual void colours(theme::colour_scheme cs) {
-        drawable::colours(cs);
+        control::colours(cs);
         for (auto& elem : *this) {
           elem.colours(cs);
         }

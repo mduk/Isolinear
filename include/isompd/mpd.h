@@ -94,7 +94,7 @@ namespace isompd::now_playing {
 
 
 template <class DataT, class ViewT>
-class paginated_rows : public isolinear::ui::drawable {
+class paginated_rows : public isolinear::ui::control {
 
   protected:
     isolinear::grid grid;
@@ -497,7 +497,7 @@ namespace isompd {
   namespace ui = isolinear::ui;
 
 
-  class frame : public ui::drawable {
+  class frame : public ui::control {
     public:
       const std::string V_NOWPLAYING = "NOW PLAYING";
       const std::string V_QUEUE = "QUEUE";
@@ -584,17 +584,17 @@ namespace isompd {
       }
 
       virtual void on_pointer_event(isolinear::event::pointer event) {
-        drawable::on_pointer_event(event);
+        control::on_pointer_event(event);
         views.at(activeView)->on_pointer_event(event);
       }
 
       virtual void draw(SDL_Renderer* renderer) const {
-        drawable::draw(renderer);
+        control::draw(renderer);
         views.at(activeView)->draw(renderer);
       }
 
       virtual void colours(isolinear::theme::colour_scheme cs) {
-        drawable::colours(cs);
+        control::colours(cs);
         for (auto const& [view_name, view_ptr] : views) {
           view_ptr->colours(cs);
         }

@@ -16,7 +16,7 @@
 
 #include "theme.h"
 #include "display.h"
-#include "drawable.h"
+#include "control.h"
 #include "geometry.h"
 #include "grid.h"
 #include "event.h"
@@ -34,7 +34,7 @@ namespace isolinear::ui {
 
 
 
-  class rect : public drawable {
+  class rect : public control {
 
     protected:
       geometry::region m_bounds;
@@ -55,7 +55,7 @@ namespace isolinear::ui {
   };
 
 
-    class horizontal_rule : public drawable {
+    class horizontal_rule : public control {
 
     protected:
         isolinear::grid m_grid;
@@ -90,7 +90,7 @@ namespace isolinear::ui {
     };
 
 
-  class button : public drawable {
+  class button : public control {
     protected:
       display::window& m_window;
       bool m_enabled = true;
@@ -152,7 +152,7 @@ namespace isolinear::ui {
       }
 
       void on_pointer_event(event::pointer event) override {
-        drawable::on_pointer_event(event);
+        control::on_pointer_event(event);
         emit signal_press();
       }
 
@@ -166,7 +166,7 @@ namespace isolinear::ui {
   };
 
 
-  class button_bar : public drawable {
+  class button_bar : public control {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;
@@ -182,14 +182,14 @@ namespace isolinear::ui {
       virtual region calculate_bar_region() const = 0;
 
       theme::colour_scheme colours() const override {
-        return drawable::colours();
+        return control::colours();
       }
 
       void colours(theme::colour_scheme cs) override {
         for (auto& [label, button] : m_buttons) {
           button.colours(cs);
         }
-        drawable::colours(cs);
+        control::colours(cs);
       }
 
       virtual isolinear::ui::button& add_button(std::string label) {
@@ -217,7 +217,7 @@ namespace isolinear::ui {
       }
 
       void on_pointer_event(event::pointer event) override {
-        drawable::on_pointer_event(event);
+        control::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
             button.on_pointer_event(event);
         }
@@ -307,7 +307,7 @@ namespace isolinear::ui {
   };
 
 
-  class header_basic : public drawable {
+  class header_basic : public control {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;
@@ -328,11 +328,11 @@ namespace isolinear::ui {
           m_text = newlabel;
       }
       virtual theme::colour_scheme colours() const {
-        return drawable::colours();
+        return control::colours();
       }
 
       virtual void colours(theme::colour_scheme cs) {
-        drawable::colours(cs);
+        control::colours(cs);
       }
 
       virtual region bounds() const override {
@@ -352,7 +352,7 @@ namespace isolinear::ui {
       }
   };
 
-  class header_east_bar : public drawable {
+  class header_east_bar : public control {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;
@@ -387,7 +387,7 @@ namespace isolinear::ui {
       }
 
       virtual theme::colour_scheme colours() const {
-        return drawable::colours();
+        return control::colours();
       }
 
       virtual void colours(theme::colour_scheme cs) {
@@ -398,7 +398,7 @@ namespace isolinear::ui {
           button.colours(cs);
         }
 
-        drawable::colours(cs);
+        control::colours(cs);
       }
 
       virtual theme::colour left_cap_colour() const {
@@ -427,7 +427,7 @@ namespace isolinear::ui {
       }
 
       void on_pointer_event(event::pointer event) override {
-        drawable::on_pointer_event(event);
+        control::on_pointer_event(event);
         for (auto& [label, button] : m_buttons) {
             button.on_pointer_event(event);
         }
@@ -496,7 +496,7 @@ namespace isolinear::ui {
       }
   };
 
-  class header_pair_bar : public drawable {
+  class header_pair_bar : public control {
     protected:
       isolinear::grid m_grid;
       display::window& m_window;
@@ -522,11 +522,11 @@ namespace isolinear::ui {
       }
 
       virtual theme::colour_scheme colours() const {
-        return drawable::colours();
+        return control::colours();
       }
 
       virtual void colours(theme::colour_scheme cs) {
-        drawable::colours(cs);
+        control::colours(cs);
       }
 
       virtual region bounds() const override {
@@ -622,7 +622,7 @@ namespace isolinear::ui {
   };
 
 
-  class label : public drawable {
+  class label : public control {
     protected:
       display::window& m_window;
       region m_bounds;
@@ -658,7 +658,7 @@ namespace isolinear::ui {
 
 
 
-  class sweep : public drawable {
+  class sweep : public control {
     protected:
       display::window& m_window;
       isolinear::grid m_grid;
@@ -816,7 +816,7 @@ namespace isolinear::ui {
   };
 
 
-  class horizontal_progress_bar : public drawable {
+  class horizontal_progress_bar : public control {
     protected:
       isolinear::grid m_grid;
       unsigned m_max = 100;

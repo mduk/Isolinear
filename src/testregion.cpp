@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 
 #include "init.h"
-#include "drawable.h"
+#include "control.h"
 #include "geometry.h"
 #include "window.h"
 

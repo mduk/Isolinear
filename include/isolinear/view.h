@@ -3,7 +3,7 @@
 #include <string>
 
 #include "grid.h"
-#include "drawable.h"
+#include "control.h"
 #include "geometry.h"
 
 
@@ -11,7 +11,7 @@
 
 namespace isolinear {
 
-  class view : public ui::drawable {
+  class view : public ui::control {
     protected:
       std::string title;
       isolinear::grid grid;
