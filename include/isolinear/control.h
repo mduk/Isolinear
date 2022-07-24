@@ -72,14 +72,14 @@ namespace isolinear::ui {
 
 
   template <class T>
-  class drawable_list : public std::list<T>,
-                        public isolinear::ui::control {
+  class control_list : public std::list<T>,
+                       public isolinear::ui::control {
 
     protected:
       isolinear::grid grid;
 
     public:
-      drawable_list(isolinear::grid g)
+      control_list(isolinear::grid g)
         : grid(g)
       {}
 
