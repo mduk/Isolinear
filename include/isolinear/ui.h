@@ -145,10 +145,6 @@ namespace isolinear::ui {
             compass::southeast,
             std::string{" "} + m_label + " "
           );
-
-        if (pointer_is_hovering()) {
-            m_bounds.draw(renderer);
-        }
       }
 
       void on_pointer_event(event::pointer event) override {
@@ -156,8 +152,30 @@ namespace isolinear::ui {
         emit signal_press();
       }
 
+      void on_keyboard_event(event::keyboard event) {
+        if (event.is_key_up()) {
+          m_lit = false;
+          return;
+        }
+
+        if (event.is_repeat()) {
+          return;
+        }
+
+        if (!pointer_is_hovering()) {
+          return;
+        }
+
+        if (event.is_key_down()) {
+          m_lit = true;
+          return;
+        }
+      }
+
   protected:
+      bool m_lit{false};
       [[nodiscard]] theme::colour calculate_colour() const {
+          if (m_lit) return 0xffffffff;
           if (disabled()) return colours().disabled;
           if (active()) return colours().active;
           if (pointer_is_hovering()) return colours().light;
@@ -199,7 +217,9 @@ namespace isolinear::ui {
                 calculate_button_region(m_buttons.size() + 1),
                 label
           );
-        return m_buttons.at(label);
+        auto& button = m_buttons.at(label);
+        register_child(&button);
+        return button;
       }
 
       virtual isolinear::ui::button& get_button(std::string label) {

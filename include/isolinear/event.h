@@ -22,6 +22,10 @@ namespace isolinear::event {
           return m_sdl_keyboardevent.type == SDL_KEYDOWN;
         }
 
+        bool is_repeat() const {
+          return m_sdl_keyboardevent.repeat;
+        }
+
     };
 
 

@@ -51,6 +51,12 @@ namespace isolinear::ui {
         }
       }
 
+      virtual void on_keyboard_event(event::keyboard event) {
+        for (auto& child : m_children) {
+          child->on_keyboard_event(event);
+        }
+      }
+
       virtual theme::colour_scheme colours() const {
         return m_colours;
       }

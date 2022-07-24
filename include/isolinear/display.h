@@ -94,13 +94,8 @@ namespace isolinear::display {
       }
 
       void on_keyboard_event(event::keyboard event) {
-        if (event.is_key_down()) {
-          m_override_background = 0xffffffff;
-          return;
-        }
-        if (event.is_key_up()) {
-          m_override_background = 0x00000000;
-          return;
+        for (auto* drawable : m_drawables) {
+          drawable->on_keyboard_event(event);
         }
       }
 
