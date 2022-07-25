@@ -79,7 +79,7 @@ namespace isolinear::ui {
       isolinear::grid m_grid;
 
     public:
-      control_list(isolinear::grid g)
+      explicit control_list(isolinear::grid g)
         : m_grid(g)
       {}
 
