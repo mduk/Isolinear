@@ -44,7 +44,7 @@ namespace isolinear::ui {
       }
 
       virtual void on_pointer_event(event::pointer event) {
-        m_pointer_within = bounds().encloses(event.Position());
+        m_pointer_within = bounds().encloses(event.position());
 
         for (auto& child : m_children) {
           child->on_pointer_event(event);
@@ -109,7 +109,7 @@ namespace isolinear::ui {
       }
 
       virtual void on_pointer_event(event::pointer event) {
-        position p = event.Position();
+        position p = event.position();
 
         for (auto& elem : *this) {
           if (elem.bounds().encloses(p)) {

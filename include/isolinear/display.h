@@ -86,7 +86,7 @@ namespace isolinear::display {
       }
 
       void on_pointer_event(event::pointer event) {
-        set_title(fmt::format("Mouse X={} Y={}", event.Position().x, event.Position().y));
+        set_title(fmt::format("Mouse X={} Y={}", event.position().x, event.position().y));
 
         for (auto* drawable : m_drawables) {
           drawable->on_pointer_event(event);

@@ -61,7 +61,7 @@ namespace isolinear::event {
               },
               m_type{FINGER} {};
 
-        geometry::position Position() {
+        geometry::position position() {
           return m_position;
         }
     };
