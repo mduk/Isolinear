@@ -52,7 +52,7 @@ namespace isolinear::event {
 
     public:
         explicit pointer(SDL_MouseMotionEvent e) : m_position{e.x, e.y}, m_type{MOUSE} {};
-        explicit pointer(SDL_MouseButtonEvent e) : m_position{e.x, e.y}, m_type{MOUSE}  {};
+        explicit pointer(SDL_MouseButtonEvent e) : m_position{e.x, e.y}, m_type{MOUSE} {};
 
         pointer(SDL_TouchFingerEvent e, geometry::vector ws)
             : m_position{
