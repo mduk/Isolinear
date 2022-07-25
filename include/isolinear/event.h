@@ -35,7 +35,7 @@ namespace isolinear::event {
         SDL_WindowEvent m_sdl_windowevent;
 
     public:
-        window(SDL_WindowEvent e)
+        explicit window(SDL_WindowEvent e)
             : m_sdl_windowevent{e}
         {}
     };
