@@ -76,11 +76,11 @@ namespace isolinear::ui {
                        public isolinear::ui::control {
 
     protected:
-      isolinear::grid grid;
+      isolinear::grid m_grid;
 
     public:
       control_list(isolinear::grid g)
-        : grid(g)
+        : m_grid(g)
       {}
 
     protected:
@@ -92,7 +92,7 @@ namespace isolinear::ui {
       }
 
       isolinear::geometry::region bounds() const {
-        return grid.bounds();
+        return m_grid.bounds();
       }
 
       virtual void draw(SDL_Renderer* renderer) const {
