@@ -96,10 +96,10 @@ namespace isolinear::ui {
       bool m_enabled = true;
       bool m_active = false;
       std::string m_label;
+      region m_bounds;
 
     public:
       miso::signal<> signal_press;
-      region m_bounds;
 
       button( display::window& w, isolinear::grid g, std::string l)
         : button(w, g.bounds(), l)
