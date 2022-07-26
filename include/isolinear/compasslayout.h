@@ -42,7 +42,7 @@ namespace isolinear::layout {
           m_southwest(sw), m_northwest(nw)
       {}
 
-      isolinear::grid North() const {
+      isolinear::grid north() const {
         int near_col = m_northwest.x + 1;
         int near_row = 1;
         int  far_col = m_grid.max_columns() - m_northeast.x;
@@ -54,7 +54,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid NorthEast() const {
+      isolinear::grid northeast() const {
         int near_col = m_grid.max_columns() - (m_northeast.x - 1);
         int near_row = 1;
         int  far_col = m_grid.max_columns();
@@ -66,7 +66,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid East() const {
+      isolinear::grid east() const {
         int near_col = m_grid.max_columns() - (m_east - 1);
         int near_row = m_northeast.y + 1;
         int  far_col = m_grid.max_columns();
@@ -78,7 +78,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid SouthEast() const {
+      isolinear::grid southeast() const {
         int near_col = m_grid.max_columns() - (m_southeast.x - 1);
         int near_row = m_grid.max_rows() - (m_southeast.y - 1);
         int  far_col = m_grid.max_columns();;
@@ -90,7 +90,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid South() const {
+      isolinear::grid south() const {
         int near_col = m_southwest.x + 1;
         int near_row = m_grid.max_rows() - (m_south - 1);
         int  far_col = m_grid.max_columns() - m_southeast.x;
@@ -102,7 +102,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid SouthWest() const {
+      isolinear::grid southwest() const {
         int near_col = 1;
         int near_row = m_grid.max_rows() - (m_southwest.y - 1);
         int  far_col = m_southwest.x;
@@ -114,7 +114,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid West() const {
+      isolinear::grid west() const {
         int near_col = 1;
         int near_row = m_northwest.y + 1;
         int  far_col = m_west;
@@ -126,7 +126,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid NorthWest() const {
+      isolinear::grid northwest() const {
         int near_col = 1;
         int near_row = 1;
         int  far_col = m_northwest.x;
@@ -138,7 +138,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid Centre() const {
+      isolinear::grid centre() const {
         int near_col = m_northwest.x + 1;
         int near_row = m_northwest.y + 1;
         int  far_col = m_grid.max_columns() - m_southeast.x;
@@ -156,38 +156,38 @@ namespace isolinear::layout {
 
       virtual void draw(SDL_Renderer* renderer) const override {
         if (m_north > 0) {
-          North().bounds().draw(renderer);
+          north().bounds().draw(renderer);
         }
 
         if (m_northeast.x > 0 && m_northeast.y > 0) {
-          NorthEast().bounds().draw(renderer);
+          northeast().bounds().draw(renderer);
         }
 
         if (m_east > 0) {
-          East().bounds().draw(renderer);
+          east().bounds().draw(renderer);
         }
 
         if (m_southeast.x > 0 && m_southeast.y > 0) {
-          SouthEast().bounds().draw(renderer);
+          southeast().bounds().draw(renderer);
         }
 
         if (m_south > 0) {
-          South().bounds().draw(renderer);
+          south().bounds().draw(renderer);
         }
 
         if (m_southwest.x > 0 && m_southwest.y > 0) {
-          SouthWest().bounds().draw(renderer);
+          southwest().bounds().draw(renderer);
         }
 
         if (m_west > 0) {
-          West().bounds().draw(renderer);
+          west().bounds().draw(renderer);
         }
 
         if (m_northwest.x > 0 && m_northwest.y > 0) {
-          NorthWest().bounds().draw(renderer);
+          northwest().bounds().draw(renderer);
         }
 
-        Centre().bounds().draw(renderer);
+        centre().bounds().draw(renderer);
       }
   };
 

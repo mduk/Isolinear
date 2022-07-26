@@ -529,18 +529,18 @@ namespace isompd {
     public:
       frame(isolinear::grid g, display::window& w, mpdxx::client& _mpdc)
           : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-          , hdrFrame{layout.North(), w, isolinear::compass::east, "MPD CONTROL"}
-          , barView{w, layout.West()}
-          , playerControlBar{w, layout.South(), mpdc}
-          , sweepNorthWest{w, layout.NorthWest(), {3,2}, 100, 50}
-          , sweepSouthWest{w, layout.SouthWest(), {3,2}, 100, 50}
+          , hdrFrame{layout.north(), w, isolinear::compass::east, "MPD CONTROL"}
+          , barView{w, layout.west()}
+          , playerControlBar{w, layout.south(), mpdc}
+          , sweepNorthWest{w, layout.northwest(), {3, 2}, 100, 50}
+          , sweepSouthWest{w, layout.southwest(), {3, 2}, 100, 50}
 
           , mpdc(_mpdc)
 
-          , viewNowPlaying(layout.Centre(), w, mpdc)
-          , viewQueue     (layout.Centre(), w, mpdc)
-          , viewBrowse    (layout.Centre(), w, mpdc)
-          , viewPlayer    (layout.Centre(), w, mpdc)
+          , viewNowPlaying(layout.centre(), w, mpdc)
+          , viewQueue     (layout.centre(), w, mpdc)
+          , viewBrowse    (layout.centre(), w, mpdc)
+          , viewPlayer    (layout.centre(), w, mpdc)
       {
         register_child(&hdrFrame);
         register_child(&barView);
