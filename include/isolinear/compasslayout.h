@@ -17,7 +17,7 @@ namespace isolinear::layout {
 
   class compass : public ui::control {
     protected:
-      isolinear::grid m_grid;
+      isolinear::grid& m_grid;
       display::window& m_window;
 
       int m_north;
@@ -31,7 +31,7 @@ namespace isolinear::layout {
 
     public:
       compass(
-          isolinear::grid g, display::window& win,
+          isolinear::grid& g, display::window& win,
           int n, int e, int s, int w,
           geometry::vector ne, geometry::vector se,
           geometry::vector sw, geometry::vector nw
@@ -41,6 +41,10 @@ namespace isolinear::layout {
           m_northeast(ne), m_southeast(se),
           m_southwest(sw), m_northwest(nw)
       {}
+
+      compass( isolinear::grid& g, display::window& win, int n, int e, int s, int w )
+        : compass(g, win, n, e, s, w, {e, n}, {e, s}, {w, s}, {w, n})
+        {};
 
       isolinear::grid north() const {
         int near_col = m_northwest.x + 1;
@@ -191,5 +195,11 @@ namespace isolinear::layout {
       }
   };
 
+  class northwest_elbo : public isolinear::layout::compass {
+    public:
+      northwest_elbo(isolinear::grid& g, display::window& w)
+        : isolinear::layout::compass( g, w, 3, 0, 0, 4 )
+        {};
+  };
 
 }

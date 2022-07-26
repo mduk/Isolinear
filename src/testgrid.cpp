@@ -1,6 +1,7 @@
 #include "init.h"
 #include "grid.h"
 #include "ui.h"
+#include "compasslayout.h"
 
 
 int main(int argc, char* argv[]) {
@@ -17,7 +18,9 @@ int main(int argc, char* argv[]) {
       { 6, 6 } // Cell Gutter
     );
 
-  auto elbo_corner_region = grid.left_columns(4).top_rows(3);
+  isolinear::layout::northwest_elbo nwelbo(grid, window);
+
+  auto elbo_corner_region = nwelbo.northwest(); //grid.left_columns(4).top_rows(3);
   auto elbo_vertical_control_region = grid.left_columns(3).bottom_rows(grid.max_rows() - 4);
   auto elbo_vertical_indicator_region = grid.left_columns(4).right_columns(1).bottom_rows(grid.max_rows() - 4);
   auto elbo_horizontal_control_region = grid.top_rows(2).right_columns(grid.max_columns() - 4);
