@@ -434,17 +434,17 @@ namespace isolinear::ui {
 
       isolinear::ui::button& add_button(std::string label) {
         m_buttons.try_emplace(
-                label,
-                m_window,
-                calculate_button_region(m_buttons.size() + 1),
-                label
+            label,
+            m_window,
+            calculate_button_grid(m_buttons.size() + 1).bounds(),
+            label
           );
         return m_buttons.at(label);
       }
 
-      region calculate_button_region(int i) const  {
+      isolinear::grid calculate_button_grid(int i) const  {
         i = (i-1) * m_button_width;
-        return m_grid.calculate_grid_region(
+        return m_grid.subgrid(
             2+i,   1,
             2+i+1, 2
           );
