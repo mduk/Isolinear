@@ -134,6 +134,4 @@ namespace isolinear::ui {
 
   };
 
-
-
 }
