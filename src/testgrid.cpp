@@ -20,37 +20,30 @@ int main(int argc, char* argv[]) {
 
   isolinear::layout::northwest_elbo nwelbo(grid, window);
 
-  auto elbo_corner_region = nwelbo.sweep();
-  auto elbo_vertical_control_region = nwelbo.vertical_control();
-  auto elbo_vertical_indicator_region = nwelbo.vertical_gutter();
-  auto elbo_horizontal_control_region = nwelbo.horizontal_control();
-  auto elbo_horizontal_indicator_region = nwelbo.horizontal_gutter();
-  auto elbo_content_region = nwelbo.content();
-
-  isolinear::ui::rect vrect(elbo_vertical_indicator_region.bounds());
+  isolinear::ui::rect vrect(nwelbo.vertical_gutter().bounds());
   window.add(&vrect);
 
-  isolinear::ui::horizontal_rule hrect(elbo_horizontal_indicator_region, isolinear::compass::north);
+  isolinear::ui::horizontal_rule hrect(nwelbo.horizontal_gutter(), isolinear::compass::north);
   window.add(&hrect);
 
   isolinear::ui::north_west_sweep nwsweep(
-      window, elbo_corner_region, {3, 2}, 50, 20
+      window, nwelbo.sweep(), {3, 2}, 50, 20
   );
   window.add(&nwsweep);
 
-  isolinear::ui::vertical_button_bar vbbar(window, elbo_vertical_control_region);
+  isolinear::ui::vertical_button_bar vbbar(window, nwelbo.vertical_control());
     vbbar.add_button("Spoon");
     vbbar.add_button("Knife");
     vbbar.add_button("Fork");
   window.add(&vbbar);
 
-  isolinear::ui::horizontal_button_bar hbbar(window, elbo_horizontal_control_region);
+  isolinear::ui::horizontal_button_bar hbbar(window, nwelbo.horizontal_control());
     hbbar.add_button("Spoon");
     hbbar.add_button("Knife");
     hbbar.add_button("Fork");
   window.add(&hbbar);
 
-  isolinear::ui::horizontal_progress_bar pbar(elbo_content_region.rows(1, 2), 40);
+  isolinear::ui::horizontal_progress_bar pbar(nwelbo.content().rows(1, 2), 40);
   window.add(&pbar);
 
   while (isolinear::loop());
