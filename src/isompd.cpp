@@ -8,7 +8,7 @@
 
 #include "init.h"
 #include "theme.h"
-#include "compasslayout.h"
+#include "layout.h"
 #include "grid.h"
 #include "mpd.h"
 #include "event.h"

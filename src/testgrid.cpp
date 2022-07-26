@@ -1,7 +1,7 @@
 #include "init.h"
 #include "grid.h"
 #include "ui.h"
-#include "compasslayout.h"
+#include "layout.h"
 
 
 int main(int argc, char* argv[]) {
