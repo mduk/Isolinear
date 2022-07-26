@@ -200,7 +200,7 @@ namespace isolinear::ui {
         : m_window{w}, m_grid{std::move(g)}
       {};
 
-      virtual region calculate_button_region(int i) const = 0;
+      virtual isolinear::grid calculate_button_grid(int i) const = 0;
       virtual region calculate_bar_region() const = 0;
 
       theme::colour_scheme colours() const override {
@@ -216,10 +216,10 @@ namespace isolinear::ui {
 
       virtual isolinear::ui::button& add_button(std::string label) {
         m_buttons.try_emplace(
-                label,
-                m_window,
-                calculate_button_region(m_buttons.size() + 1),
-                label
+            label,
+            m_window,
+            calculate_button_grid(m_buttons.size() + 1).bounds(),
+            label
           );
         auto& button = m_buttons.at(label);
         register_child(&button);
@@ -275,13 +275,13 @@ namespace isolinear::ui {
     public:
       horizontal_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
-      region calculate_button_region(int i) const override {
+      isolinear::grid calculate_button_grid(int i) const override {
         int near_col = m_button_size.x * (i-1) + 1;
         int near_row = 1;
         int  far_col = m_button_size.x * i;
         int  far_row = m_grid.max_rows();
 
-        return m_grid.calculate_grid_region(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
@@ -305,13 +305,13 @@ namespace isolinear::ui {
     public:
       vertical_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
 
-      region calculate_button_region(int i) const override {
+      isolinear::grid calculate_button_grid(int i) const override {
         int near_col = 1;
         int near_row = m_button_size.y * (i-1) + 1;
         int  far_col = m_grid.max_columns();
         int  far_row = m_button_size.y * i;
 
-        return m_grid.calculate_grid_region(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
