@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   isolinear::ui::rect vrect(elbo_vertical_indicator_region.bounds());
   window.add(&vrect);
 
-  isolinear::ui::horizontal_rule hrect(elbo_horizontal_indicator_region);
+  isolinear::ui::horizontal_rule hrect(elbo_horizontal_indicator_region, isolinear::compass::north);
   window.add(&hrect);
 
   isolinear::ui::north_west_sweep nwsweep(
@@ -47,14 +47,8 @@ int main(int argc, char* argv[]) {
     hbbar.add_button("Fork");
   window.add(&hbbar);
 
-
   isolinear::ui::horizontal_progress_bar pbar(elbo_content_region.rows(1, 2), 40);
   window.add(&pbar);
-
-  isolinear::ui::horizontal_progress_bar volbar_left(elbo_content_region.row(3), 50);
-  isolinear::ui::horizontal_progress_bar volbar_right(elbo_content_region.row(4), 60);
-  window.add(&volbar_left);
-  window.add(&volbar_right);
 
   while (isolinear::loop());
 
