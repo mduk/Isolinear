@@ -201,7 +201,7 @@ namespace isolinear::ui {
       {};
 
       virtual isolinear::grid calculate_button_grid(int i) const = 0;
-      virtual region calculate_bar_region() const = 0;
+      virtual isolinear::grid calculate_bar_grid() const = 0;
 
       theme::colour_scheme colours() const override {
         return control::colours();
@@ -256,7 +256,7 @@ namespace isolinear::ui {
           button.draw(renderer);
         }
 
-        region bar = calculate_bar_region();
+        region bar = calculate_bar_grid().bounds();
 
         boxColor(renderer,
             bar.near_x(), bar.near_y(),
@@ -287,13 +287,13 @@ namespace isolinear::ui {
           );
       }
 
-      region calculate_bar_region() const override {
+      isolinear::grid calculate_bar_grid() const override {
         int near_col = m_button_size.x * m_buttons.size() + 1;
         int near_row = 1;
         int  far_col = m_grid.max_columns();
         int  far_row = m_grid.max_rows();
 
-        return m_grid.calculate_grid_region(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
@@ -317,13 +317,13 @@ namespace isolinear::ui {
           );
       }
 
-      region calculate_bar_region() const override {
+      isolinear::grid calculate_bar_grid() const override {
         int near_col = 1;
         int near_row = m_button_size.y * m_buttons.size() + 1;
         int  far_col = m_grid.max_columns();
         int  far_row = m_grid.max_rows();
 
-        return m_grid.calculate_grid_region(
+        return m_grid.subgrid(
             near_col, near_row,
              far_col, far_row
           );
