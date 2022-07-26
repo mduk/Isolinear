@@ -123,10 +123,8 @@ namespace isolinear::ui {
       }
 
       virtual void on_pointer_event(event::pointer event) {
-        position p = event.position();
-
         for (auto& elem : *this) {
-          if (elem.bounds().encloses(p)) {
+          if (elem.bounds().encloses(event.position())) {
             elem.on_pointer_event(event);
           }
         }
