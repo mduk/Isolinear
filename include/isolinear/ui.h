@@ -152,6 +152,10 @@ namespace isolinear::ui {
         emit signal_press();
       }
 
+      void on_mouse_leave(event::pointer event) {
+        m_lit = false;
+      }
+
       void on_keyboard_event(event::keyboard event) {
         if (event.is_key_up()) {
           m_lit = false;

@@ -23,7 +23,7 @@ namespace isolinear::ui {
     protected:
       theme::colour_scheme m_colours;
       std::list<control*> m_children;
-      bool m_pointer_within{false};
+      bool m_mouse_within_bounds{false};
 
     public:
       virtual region bounds() const = 0;
@@ -35,7 +35,7 @@ namespace isolinear::ui {
       }
 
       virtual bool pointer_is_hovering() const {
-          return m_pointer_within;
+          return m_mouse_within_bounds;
       }
 
       virtual void register_child(control* child) {
@@ -44,7 +44,17 @@ namespace isolinear::ui {
       }
 
       virtual void on_pointer_event(event::pointer event) {
-        m_pointer_within = bounds().encloses(event.position());
+        bool within_bounds = bounds().encloses(event.position());
+
+        if (within_bounds && !m_mouse_within_bounds) {
+          on_mouse_enter(event);
+        }
+
+        if (!within_bounds && m_mouse_within_bounds) {
+          on_mouse_leave(event);
+        }
+
+        m_mouse_within_bounds = within_bounds;
 
         for (auto& child : m_children) {
           child->on_pointer_event(event);
@@ -56,6 +66,9 @@ namespace isolinear::ui {
           child->on_keyboard_event(event);
         }
       }
+
+      virtual void on_mouse_enter(event::pointer event) { }
+      virtual void on_mouse_leave(event::pointer event) { }
 
       virtual theme::colour_scheme colours() const {
         return m_colours;
