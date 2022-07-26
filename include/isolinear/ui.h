@@ -59,10 +59,16 @@ namespace isolinear::ui {
 
     protected:
         isolinear::grid m_grid;
+        isolinear::compass m_alignment;
 
     public:
-        explicit horizontal_rule(isolinear::grid g)
-            : m_grid(std::move(g))
+        horizontal_rule(isolinear::grid g, isolinear::compass a)
+          : m_grid{g}
+          , m_alignment{a}
+        {}
+
+        horizontal_rule(isolinear::grid g)
+            : horizontal_rule(g, isolinear::compass::centre)
         {}
 
     public:
@@ -72,13 +78,22 @@ namespace isolinear::ui {
 
         void draw(SDL_Renderer* renderer) const override {
           auto bound_height = m_grid.bounds().H();
-          auto offset_px = (bound_height - m_grid.gutter().y) / 2;
+
+          auto offset_px = 0;
+          switch (m_alignment) {
+            case compass::north: offset_px = 0; break;
+            case compass::centre: offset_px = (bound_height - m_grid.gutter().y) / 2; break;
+            case compass::south: offset_px = (bound_height - m_grid.gutter().y) ; break;
+            default:
+              std::cout << fmt::format("Invalid alignment for horizontal_rule. alignment={}", m_alignment);
+              break;
+          }
 
           auto hrule_near_x = m_grid.bounds().near_x();
           auto hrule_near_y = m_grid.bounds().near_y() + offset_px;
 
           auto hrule_far_x = m_grid.bounds().far_x();
-          auto hrule_far_y = m_grid.bounds().far_y() - offset_px;
+          auto hrule_far_y = hrule_near_y + m_grid.gutter().y;
 
           region hrule(
               position(hrule_near_x, hrule_near_y),
