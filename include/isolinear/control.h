@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <utility>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -93,7 +94,7 @@ namespace isolinear::ui {
 
     public:
       explicit control_list(isolinear::grid g)
-        : m_grid(g)
+        : m_grid(std::move(g))
       {}
 
     protected:
