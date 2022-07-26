@@ -18,32 +18,26 @@ int main(int argc, char* argv[]) {
       { 6, 6 } // Cell Gutter
     );
 
-  isolinear::layout::northwest_elbo nwelbo(grid, window);
-
-  isolinear::ui::rect vrect(nwelbo.vertical_gutter().bounds());
-  window.add(&vrect);
-
-  isolinear::ui::horizontal_rule hrect(nwelbo.horizontal_gutter(), isolinear::compass::north);
-  window.add(&hrect);
+  isolinear::layout::northwest_elbo elbo_layout(grid, window);
 
   isolinear::ui::north_west_sweep nwsweep(
-      window, nwelbo.sweep(), {3, 2}, 50, 20
+      window, elbo_layout.sweep(), {3, 2}, 50, 20
   );
   window.add(&nwsweep);
 
-  isolinear::ui::vertical_button_bar vbbar(window, nwelbo.vertical_control());
+  isolinear::ui::vertical_button_bar vbbar(window, elbo_layout.vertical_control());
     vbbar.add_button("Spoon");
     vbbar.add_button("Knife");
     vbbar.add_button("Fork");
   window.add(&vbbar);
 
-  isolinear::ui::horizontal_button_bar hbbar(window, nwelbo.horizontal_control());
+  isolinear::ui::horizontal_button_bar hbbar(window, elbo_layout.horizontal_control());
     hbbar.add_button("Spoon");
     hbbar.add_button("Knife");
     hbbar.add_button("Fork");
   window.add(&hbbar);
 
-  isolinear::ui::horizontal_progress_bar pbar(nwelbo.content().rows(1, 2), 40);
+  isolinear::ui::horizontal_progress_bar pbar(elbo_layout.content().rows(1, 2), 40);
   window.add(&pbar);
 
   while (isolinear::loop());
