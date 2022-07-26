@@ -18,7 +18,6 @@ namespace isolinear::layout {
   class compass : public ui::control {
     protected:
       grid& m_grid;
-      display::window& m_window;
 
       int m_north;
       int m_east;
@@ -31,19 +30,19 @@ namespace isolinear::layout {
 
     public:
       compass(
-          grid& g, display::window& win,
+          grid& g,
           int n, int e, int s, int w,
           geometry::vector ne, geometry::vector se,
           geometry::vector sw, geometry::vector nw
         ) :
-          m_grid(g), m_window(win),
+          m_grid(g),
           m_north(n), m_east(e), m_south(s), m_west(w),
           m_northeast(ne), m_southeast(se),
           m_southwest(sw), m_northwest(nw)
       {}
 
-      compass( grid& g, display::window& win, int n, int e, int s, int w )
-        : compass(g, win, n, e, s, w, {e, n}, {e, s}, {w, s}, {w, n})
+      compass( grid& g, int n, int e, int s, int w )
+        : compass(g, n, e, s, w, {e, n}, {e, s}, {w, s}, {w, n})
         {};
 
       grid north() const {
@@ -197,34 +196,33 @@ namespace isolinear::layout {
 
   class northwest_elbo : public isolinear::layout::compass {
     public:
-      northwest_elbo(grid& g, display::window& w)
-        : isolinear::layout::compass( g, w, 3, 0, 0, 4 )
+      explicit northwest_elbo(grid& g, int h, int v)
+        : isolinear::layout::compass( g, h, 0, 0, v )
         {};
 
-      grid sweep() const {
+      grid sweep() {
         return northwest();
       }
 
-      grid vertical_control() const {
+      grid vertical_control() {
         return west().left_columns(west().max_columns() - 1);
       }
 
-      grid vertical_gutter() const {
+      grid vertical_gutter() {
         return west().right_columns(1);
       }
 
-      grid horizontal_control() const {
+      grid horizontal_control() {
         return north().top_rows(2);
       }
 
-      grid horizontal_gutter() const {
+      grid horizontal_gutter() {
         return north().bottom_rows(1);
       }
 
-      grid content() const {
+      grid content() {
         return centre();
       }
   };
-
 
 }

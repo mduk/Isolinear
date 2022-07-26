@@ -528,7 +528,7 @@ namespace isompd {
 
     public:
       frame(isolinear::grid g, display::window& w, mpdxx::client& _mpdc)
-          : layout{ g, w, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
+          : layout{ g, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
           , hdrFrame{layout.north(), w, isolinear::compass::east, "MPD CONTROL"}
           , barView{w, layout.west()}
           , playerControlBar{w, layout.south(), mpdc}
