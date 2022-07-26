@@ -17,7 +17,7 @@ namespace isolinear::layout {
 
   class compass : public ui::control {
     protected:
-      isolinear::grid& m_grid;
+      grid& m_grid;
       display::window& m_window;
 
       int m_north;
@@ -31,7 +31,7 @@ namespace isolinear::layout {
 
     public:
       compass(
-          isolinear::grid& g, display::window& win,
+          grid& g, display::window& win,
           int n, int e, int s, int w,
           geometry::vector ne, geometry::vector se,
           geometry::vector sw, geometry::vector nw
@@ -42,11 +42,11 @@ namespace isolinear::layout {
           m_southwest(sw), m_northwest(nw)
       {}
 
-      compass( isolinear::grid& g, display::window& win, int n, int e, int s, int w )
+      compass( grid& g, display::window& win, int n, int e, int s, int w )
         : compass(g, win, n, e, s, w, {e, n}, {e, s}, {w, s}, {w, n})
         {};
 
-      isolinear::grid north() const {
+      grid north() const {
         int near_col = m_northwest.x + 1;
         int near_row = 1;
         int  far_col = m_grid.max_columns() - m_northeast.x;
@@ -58,7 +58,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid northeast() const {
+      grid northeast() const {
         int near_col = m_grid.max_columns() - (m_northeast.x - 1);
         int near_row = 1;
         int  far_col = m_grid.max_columns();
@@ -70,7 +70,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid east() const {
+      grid east() const {
         int near_col = m_grid.max_columns() - (m_east - 1);
         int near_row = m_northeast.y + 1;
         int  far_col = m_grid.max_columns();
@@ -82,7 +82,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid southeast() const {
+      grid southeast() const {
         int near_col = m_grid.max_columns() - (m_southeast.x - 1);
         int near_row = m_grid.max_rows() - (m_southeast.y - 1);
         int  far_col = m_grid.max_columns();;
@@ -94,7 +94,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid south() const {
+      grid south() const {
         int near_col = m_southwest.x + 1;
         int near_row = m_grid.max_rows() - (m_south - 1);
         int  far_col = m_grid.max_columns() - m_southeast.x;
@@ -106,7 +106,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid southwest() const {
+      grid southwest() const {
         int near_col = 1;
         int near_row = m_grid.max_rows() - (m_southwest.y - 1);
         int  far_col = m_southwest.x;
@@ -118,7 +118,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid west() const {
+      grid west() const {
         int near_col = 1;
         int near_row = m_northwest.y + 1;
         int  far_col = m_west;
@@ -130,7 +130,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid northwest() const {
+      grid northwest() const {
         int near_col = 1;
         int near_row = 1;
         int  far_col = m_northwest.x;
@@ -142,7 +142,7 @@ namespace isolinear::layout {
           );
       }
 
-      isolinear::grid centre() const {
+      grid centre() const {
         int near_col = m_northwest.x + 1;
         int near_row = m_northwest.y + 1;
         int  far_col = m_grid.max_columns() - m_southeast.x;
@@ -197,9 +197,34 @@ namespace isolinear::layout {
 
   class northwest_elbo : public isolinear::layout::compass {
     public:
-      northwest_elbo(isolinear::grid& g, display::window& w)
+      northwest_elbo(grid& g, display::window& w)
         : isolinear::layout::compass( g, w, 3, 0, 0, 4 )
         {};
+
+      grid sweep() const {
+        return northwest();
+      }
+
+      grid vertical_control() const {
+        return west().left_columns(west().max_columns() - 1);
+      }
+
+      grid vertical_gutter() const {
+        return west().right_columns(1);
+      }
+
+      grid horizontal_control() const {
+        return north().top_rows(2);
+      }
+
+      grid horizontal_gutter() const {
+        return north().bottom_rows(1);
+      }
+
+      grid content() const {
+        return centre();
+      }
   };
+
 
 }

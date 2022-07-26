@@ -130,7 +130,7 @@ namespace isolinear {
       }
 
       grid bottom_rows(int n) const {
-        return rows(max_rows() - n, max_rows());
+        return rows(max_rows() - (n-1), max_rows());
       }
 
       grid centre_rows(int t, int b) const {

@@ -20,12 +20,12 @@ int main(int argc, char* argv[]) {
 
   isolinear::layout::northwest_elbo nwelbo(grid, window);
 
-  auto elbo_corner_region = nwelbo.northwest(); //grid.left_columns(4).top_rows(3);
-  auto elbo_vertical_control_region = grid.left_columns(3).bottom_rows(grid.max_rows() - 4);
-  auto elbo_vertical_indicator_region = grid.left_columns(4).right_columns(1).bottom_rows(grid.max_rows() - 4);
-  auto elbo_horizontal_control_region = grid.top_rows(2).right_columns(grid.max_columns() - 4);
-  auto elbo_horizontal_indicator_region = grid.top_rows(3).bottom_rows(0).right_columns(grid.max_columns() - 4);
-  auto elbo_content_region = grid.subgrid(5, 4, grid.max_columns(), grid.max_rows());
+  auto elbo_corner_region = nwelbo.sweep();
+  auto elbo_vertical_control_region = nwelbo.vertical_control();
+  auto elbo_vertical_indicator_region = nwelbo.vertical_gutter();
+  auto elbo_horizontal_control_region = nwelbo.horizontal_control();
+  auto elbo_horizontal_indicator_region = nwelbo.horizontal_gutter();
+  auto elbo_content_region = nwelbo.content();
 
   isolinear::ui::rect vrect(elbo_vertical_indicator_region.bounds());
   window.add(&vrect);
