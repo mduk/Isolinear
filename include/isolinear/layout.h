@@ -15,6 +15,65 @@
 
 namespace isolinear::layout {
 
+    class gridfactory {
+    protected:
+        geometry::vector m_cell_size{100, 50};
+        geometry::vector m_size{3,3};
+        geometry::vector m_gutter{0};
+        geometry::region m_bounds;
+        geometry::vector m_offset{0};
+        std::list<isolinear::grid> m_grids{};
+
+    public:
+        gridfactory(
+            geometry::region b,
+            geometry::vector cs,
+            geometry::vector g
+        )
+            : m_bounds(b)
+            , m_cell_size(cs)
+            , m_gutter(g)
+            , m_size( b.W() / cs.x, b.H() / cs.y )
+            , m_offset( (b.W() % cs.x) / 2, (b.H() % cs.y) / 2 )
+        {};
+
+        geometry::vector size() const {
+          return m_size;
+        }
+
+        grid& root() {
+          return subgrid(1,1, m_size.x, m_size.y);
+        }
+
+        grid& subgrid(
+            int near_col, int near_row,
+            int  far_col, int  far_row
+        ) {
+          auto region = calculate_grid_region(
+              near_col, near_row,
+              far_col, far_row
+          );
+          geometry::vector size(
+              far_col - near_col + 1,
+              far_row - near_row + 1
+          );
+          geometry::vector offset(0,0);
+          m_grids.emplace_back(region, m_cell_size, m_gutter, size, offset);
+          return m_grids.back();
+        }
+
+        geometry::region calculate_grid_region(int near_col, int near_row, int far_col, int far_row) const {
+          geometry::position origin = m_bounds.origin().add(m_offset);
+          return geometry::region{
+              /* x */ origin.x + (m_cell_size.x * (near_col - 1)),
+              /* y */ origin.y + (m_cell_size.y * (near_row - 1)),
+              /* w */ m_cell_size.x * ((far_col - near_col) + 1) - m_gutter.x,
+              /* h */ m_cell_size.y * ((far_row - near_row) + 1) - m_gutter.y
+          };
+        }
+
+    };
+
   class compass {
     protected:
       grid& m_grid;

@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
   isolinear::init();
   auto& window = isolinear::new_window();
 
-  isolinear::gridfactory gridfactory(
+  isolinear::layout::gridfactory gridfactory(
       { 0, 0, window.size().x, window.size().y }, // Display Region
       { 60, 30 }, // Cell Size
       { 6, 6 } // Cell Gutter
