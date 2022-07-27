@@ -354,13 +354,14 @@ namespace isolinear::ui {
       std::string m_text{""};
 
     public:
+      header_basic(isolinear::grid g, display::window& w, std::string t)
+        : header_basic(g, w, isolinear::compass::west, t) {};
+
       header_basic(isolinear::grid g, display::window& w, compass a)
-        : header_basic(g, w, a, "")
-      {}
+        : header_basic(g, w, a, "") {}
 
       header_basic(isolinear::grid g, display::window& w, compass a, std::string t)
-        : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t}
-      {}
+        : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t} {}
 
 
       void label(std::string newlabel) {
