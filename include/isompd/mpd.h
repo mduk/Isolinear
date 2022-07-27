@@ -509,101 +509,101 @@ namespace isompd {
       miso::signal<std::string, std::string> signal_view_change;
 
     protected:
-      mpdxx::client& mpdc;
+      mpdxx::client& m_mpdc;
 
-      isolinear::layout::compass layout;
+      isolinear::layout::compass m_layout;
 
-      ui::header_east_bar hdrFrame;
-      ui::vertical_button_bar barView;
-      PlayerControlBar playerControlBar;
-      ui::north_west_sweep sweepNorthWest;
-      ui::south_west_sweep sweepSouthWest;
+      ui::header_east_bar m_frame_header;
+      ui::vertical_button_bar m_view_buttons;
+      PlayerControlBar m_player_control_bar;
+      ui::north_west_sweep m_northwest_sweep;
+      ui::south_west_sweep m_southwest_sweep;
 
-      std::map<const std::string, isolinear::view*> views;
-      std::string activeView = V_QUEUE;
+      std::map<const std::string, isolinear::view*> m_views;
+      std::string m_active_view = V_QUEUE;
 
-      isompd::browse::view viewBrowse;
-      isompd::now_playing::view viewNowPlaying;
-      isompd::queue::view viewQueue;
-      isompd::player::view viewPlayer;
+      isompd::browse::view m_browse_view;
+      isompd::now_playing::view m_now_playing_view;
+      isompd::queue::view m_queue_view;
+      isompd::player::view m_player_view;
 
     public:
       frame(isolinear::layout::grid g, display::window& w, mpdxx::client& _mpdc)
-          : layout{ g, 2, 0, 2, 3, {0,0}, {0,0}, {4,3}, {4,3} }
-          , hdrFrame{layout.north(), w, isolinear::compass::east, "MPD CONTROL"}
-          , barView{w, layout.west()}
-          , playerControlBar{w, layout.south(), mpdc}
-          , sweepNorthWest{w, layout.northwest(), {3, 2}, 50, 20}
-          , sweepSouthWest{w, layout.southwest(), {3, 2}, 50, 20}
+          : m_layout{g, 2, 0, 2, 3, {0, 0}, {0, 0}, {4, 3}, {4, 3} }
+          , m_frame_header{m_layout.north(), w, isolinear::compass::east, "MPD CONTROL"}
+          , m_view_buttons{w, m_layout.west()}
+          , m_player_control_bar{w, m_layout.south(), m_mpdc}
+          , m_northwest_sweep{w, m_layout.northwest(), {3, 2}, 50, 20}
+          , m_southwest_sweep{w, m_layout.southwest(), {3, 2}, 50, 20}
 
-          , mpdc(_mpdc)
+          , m_mpdc(_mpdc)
 
-          , viewNowPlaying(layout.centre(), w, mpdc)
-          , viewQueue     (layout.centre(), w, mpdc)
-          , viewBrowse    (layout.centre(), w, mpdc)
-          , viewPlayer    (layout.centre(), w, mpdc)
+          , m_now_playing_view(m_layout.centre(), w, m_mpdc)
+          , m_queue_view     (m_layout.centre(), w, m_mpdc)
+          , m_browse_view    (m_layout.centre(), w, m_mpdc)
+          , m_player_view    (m_layout.centre(), w, m_mpdc)
       {
-        register_child(&hdrFrame);
-        register_child(&barView);
-        register_child(&playerControlBar);
-        register_child(&sweepNorthWest);
-        register_child(&sweepSouthWest);
+        register_child(&m_frame_header);
+        register_child(&m_view_buttons);
+        register_child(&m_player_control_bar);
+        register_child(&m_northwest_sweep);
+        register_child(&m_southwest_sweep);
 
-        register_view(&viewNowPlaying);
-        register_view(&viewQueue);
-        register_view(&viewBrowse);
-        register_view(&viewPlayer);
+        register_view(&m_now_playing_view);
+        register_view(&m_queue_view);
+        register_view(&m_browse_view);
+        register_view(&m_player_view);
 
         auto switch_view = [this]() {
           auto button = miso::sender<ui::button>();
           std::cout << fmt::format("Request view: {}\n", button->label());
         };
 
-        for (auto const& [view_name, view_ptr] : views) {
-          ui::button& view_btn = barView.add_button(view_name);
+        for (auto const& [view_name, view_ptr] : m_views) {
+          ui::button& view_btn = m_view_buttons.add_button(view_name);
           miso::connect(view_btn.signal_press, switch_view);
         }
 
-          barView.get_button(activeView).activate();
-        emit signal_view_change("", activeView);
+          m_view_buttons.get_button(m_active_view).activate();
+        emit signal_view_change("", m_active_view);
       }
 
       virtual void switch_view(std::string view) {
-        auto previousView = activeView;
-        activeView = view;
+        auto previousView = m_active_view;
+        m_active_view = view;
 
-        barView.deactivate_all();
-        barView.activate_one(activeView);
+        m_view_buttons.deactivate_all();
+        m_view_buttons.activate_one(m_active_view);
 
-        hdrFrame.label(fmt::format("MPD : {}", activeView));
+        m_frame_header.label(fmt::format("MPD : {}", m_active_view));
 
-        emit signal_view_change(previousView, activeView);
+        emit signal_view_change(previousView, m_active_view);
       }
 
       isolinear::geometry::region bounds() const override {
-        return layout.bounds();
+        return m_layout.bounds();
       }
 
       void on_pointer_event(isolinear::event::pointer event) override {
         control::on_pointer_event(event);
-        views.at(activeView)->on_pointer_event(event);
+        m_views.at(m_active_view)->on_pointer_event(event);
       }
 
       virtual void draw(SDL_Renderer* renderer) const {
         control::draw(renderer);
-        views.at(activeView)->draw(renderer);
+        m_views.at(m_active_view)->draw(renderer);
       }
 
       virtual void colours(isolinear::theme::colour_scheme cs) {
         control::colours(cs);
-        for (auto const& [view_name, view_ptr] : views) {
+        for (auto const& [view_name, view_ptr] : m_views) {
           view_ptr->colours(cs);
         }
       }
 
       void register_view(isolinear::view* view) {
         const std::string view_name = view->Name();
-        views.insert(std::pair<const std::string, isolinear::view*>(view_name, view));
+        m_views.insert(std::pair<const std::string, isolinear::view*>(view_name, view));
       }
   };
 
