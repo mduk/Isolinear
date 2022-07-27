@@ -15,7 +15,7 @@
 
 namespace isolinear::layout {
 
-  class compass : public ui::control {
+  class compass {
     protected:
       grid& m_grid;
 
@@ -153,45 +153,6 @@ namespace isolinear::layout {
           );
       }
 
-      geometry::region bounds() const {
-        return m_grid.bounds();
-      }
-
-      virtual void draw(SDL_Renderer* renderer) const override {
-        if (m_north > 0) {
-          north().bounds().draw(renderer);
-        }
-
-        if (m_northeast.x > 0 && m_northeast.y > 0) {
-          northeast().bounds().draw(renderer);
-        }
-
-        if (m_east > 0) {
-          east().bounds().draw(renderer);
-        }
-
-        if (m_southeast.x > 0 && m_southeast.y > 0) {
-          southeast().bounds().draw(renderer);
-        }
-
-        if (m_south > 0) {
-          south().bounds().draw(renderer);
-        }
-
-        if (m_southwest.x > 0 && m_southwest.y > 0) {
-          southwest().bounds().draw(renderer);
-        }
-
-        if (m_west > 0) {
-          west().bounds().draw(renderer);
-        }
-
-        if (m_northwest.x > 0 && m_northwest.y > 0) {
-          northwest().bounds().draw(renderer);
-        }
-
-        centre().bounds().draw(renderer);
-      }
   };
 
   class northwest_elbo : public isolinear::layout::compass {
