@@ -568,11 +568,11 @@ namespace isompd {
         emit signal_view_change("", activeView);
       }
 
-      virtual void SwitchView(std::string view) {
+      virtual void switch_view(std::string view) {
         auto previousView = activeView;
         activeView = view;
 
-          barView.deactivate_all();
+        barView.deactivate_all();
         barView.activate_one(activeView);
 
         hdrFrame.label(fmt::format("MPD : {}", activeView));
@@ -580,11 +580,11 @@ namespace isompd {
         emit signal_view_change(previousView, activeView);
       }
 
-      virtual isolinear::geometry::region bounds() const override {
+      isolinear::geometry::region bounds() const override {
         return layout.bounds();
       }
 
-      virtual void on_pointer_event(isolinear::event::pointer event) {
+      void on_pointer_event(isolinear::event::pointer event) override {
         control::on_pointer_event(event);
         views.at(activeView)->on_pointer_event(event);
       }
