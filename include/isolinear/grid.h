@@ -25,8 +25,6 @@ namespace isolinear {
 
     public:
 
-      grid() : grid({0,0,1280,1024}, {60,30}, {6,6}) {};
-
       grid(
           geometry::region b,
           geometry::vector cs,
@@ -261,7 +259,5 @@ namespace isolinear {
         }
 
     };
-
-
 
 };
