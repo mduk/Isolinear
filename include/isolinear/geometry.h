@@ -23,10 +23,10 @@ namespace isolinear::geometry {
 
       //vector(vector c) : vector{c} {}
 
-      vector(SDL_MouseButtonEvent e) : x{e.x}, y{e.y} {};
-      vector(SDL_MouseMotionEvent e) : x{e.x}, y{e.y} {};
+      explicit vector(SDL_MouseButtonEvent e) : x{e.x}, y{e.y} {};
+      explicit vector(SDL_MouseMotionEvent e) : x{e.x}, y{e.y} {};
 
-      vector(SDL_Surface* s) : x{s->w}, y{s->h} {};
+      explicit vector(SDL_Surface* s) : x{s->w}, y{s->h} {};
 
       //vector(SDL_Rect r) : vector(r.x, r.y) {};
       //vector(SDL_Rect r) : vector(r.w, r.h) {};
