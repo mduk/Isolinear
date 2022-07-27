@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
   isolinear::layout::northwest_elbo elbo_layout(root_grid, hthickness + 1, vthickness + 1);
   isolinear::ui::north_west_sweep nwsweep( window, elbo_layout.sweep(), {vthickness, hthickness}, 50, 20 );
   isolinear::ui::vertical_button_bar vbbar(window, elbo_layout.vertical_control());
-  isolinear::ui::horizontal_button_bar hbbar(window, elbo_layout.horizontal_control());
+  isolinear::ui::header_east_bar hbbar(window, elbo_layout.horizontal_control(), "KITCHEN SINK");
 
   window.add(&nwsweep);
   window.add(&vbbar);
@@ -41,7 +41,10 @@ int main(int argc, char* argv[]) {
   auto button_area = elbo_layout.content().rows(1,6);
   auto progress_area = elbo_layout.content().rows(7,12);
 
-  isolinear::ui::button single_button(window, button_area.rows(1,2).left_columns(2), "BUTTON");
+  isolinear::ui::header_basic label_buttons(button_area.rows(1,2), window, "BUTTONS");
+  window.add(&label_buttons);
+
+  isolinear::ui::button single_button(window, button_area.rows(3,4).left_columns(2), "BUTTON");
   window.add(&single_button);
 
   isolinear::ui::header_basic label_progress(progress_area.rows(1,2), window, "PROGRESS BARS");
