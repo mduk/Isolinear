@@ -12,12 +12,14 @@
 #include "geometry.h"
 #include "display.h"
 #include "mpdxx.h"
+#include "layout.h"
 
 
 using std::cout;
 
 using isolinear::ui::horizontal_button_bar;
 namespace display = isolinear::display;
+namespace layout = isolinear::layout;
 
 
 class PlayerControlBar : public horizontal_button_bar {

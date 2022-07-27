@@ -267,6 +267,10 @@ namespace isolinear::layout {
         compass(grid &g, int n, int e, int s, int w)
             : compass(g, n, e, s, w, {e, n}, {e, s}, {w, s}, {w, n}) {};
 
+        geometry::region bounds() const {
+          return m_grid.bounds();
+        }
+
         grid north() const {
           int near_col = m_northwest.x + 1;
           int near_row = 1;

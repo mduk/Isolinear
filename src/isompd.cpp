@@ -23,12 +23,13 @@ int main(int argc, char* argv[])
   isolinear::init();
   auto& window = isolinear::new_window();
 
-  layout::grid grid(
+  isolinear::layout::gridfactory gridfactory(
       { 0, 0, window.size().x, window.size().y },
       { window.button_font().Height() * 2, window.button_font().Height() },
       { 10, 10 }
     );
 
+  auto& grid = gridfactory.root();
 
   mpdxx::client mpdc(isolinear::io_context, "localhost", "6600");
 

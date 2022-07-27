@@ -73,11 +73,13 @@ int main(int argc, char* argv[])
   isolinear::init();
   auto window = isolinear::new_window();
 
-  layout::grid grid(
+  isolinear::layout::gridfactory gridfactory(
       { 0, 0, window.size().x, window.size().y },
       {window.button_font().Height() },
       { 10, 10 }
     );
+
+  auto& grid = gridfactory.root();
 
   isolinear::ui::horizontal_button_bar control_bar(window, grid.rows(1,2));
   auto& five_second_button = control_bar.add_button("5 SEC");
