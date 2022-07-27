@@ -9,7 +9,7 @@
 #include "init.h"
 #include "theme.h"
 #include "layout.h"
-#include "grid.h"
+#include "layout.h"
 #include "mpd.h"
 #include "event.h"
 
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
   isolinear::init();
   auto& window = isolinear::new_window();
 
-  isolinear::grid grid(
+  layout::grid grid(
       { 0, 0, window.size().x, window.size().y },
       { window.button_font().Height() * 2, window.button_font().Height() },
       { 10, 10 }

@@ -9,7 +9,7 @@
 
 #include "theme.h"
 #include "event.h"
-#include "grid.h"
+#include "layout.h"
 
 
 
@@ -90,18 +90,18 @@ namespace isolinear::ui {
                        public isolinear::ui::control {
 
     protected:
-      isolinear::grid m_grid;
+      layout::grid m_grid;
 
     public:
-      explicit control_list(isolinear::grid g)
+      explicit control_list(layout::grid g)
         : m_grid(std::move(g))
       {}
 
     protected:
-      virtual isolinear::grid grid_for_index(int index) = 0;
+      virtual layout::grid grid_for_index(int index) = 0;
 
     public:
-      isolinear::grid next_grid() {
+      layout::grid next_grid() {
         return grid_for_index(std::list<T>::size() + 1);
       }
 

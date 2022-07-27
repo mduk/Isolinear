@@ -18,7 +18,7 @@
 #include "display.h"
 #include "control.h"
 #include "geometry.h"
-#include "grid.h"
+#include "layout.h"
 #include "event.h"
 
 
@@ -58,16 +58,16 @@ namespace isolinear::ui {
     class horizontal_rule : public control {
 
     protected:
-        isolinear::grid m_grid;
+        layout::grid m_grid;
         isolinear::compass m_alignment;
 
     public:
-        horizontal_rule(isolinear::grid g, isolinear::compass a)
+        horizontal_rule(layout::grid g, isolinear::compass a)
           : m_grid{g}
           , m_alignment{a}
         {}
 
-        horizontal_rule(isolinear::grid g)
+        horizontal_rule(layout::grid g)
             : horizontal_rule(g, isolinear::compass::centre)
         {}
 
@@ -116,7 +116,7 @@ namespace isolinear::ui {
     public:
       miso::signal<> signal_press;
 
-      button( display::window& w, isolinear::grid g, std::string l)
+      button( display::window& w, layout::grid g, std::string l)
         : button(w, g.bounds(), l)
       {}
 
@@ -205,18 +205,18 @@ namespace isolinear::ui {
 
   class button_bar : public control {
     protected:
-      isolinear::grid m_grid;
+      layout::grid m_grid;
       display::window& m_window;
       std::map<std::string, isolinear::ui::button> m_buttons;
       geometry::vector m_button_size{2,2};
 
     public:
-      button_bar(display::window& w, isolinear::grid g)
+      button_bar(display::window& w, layout::grid g)
         : m_window{w}, m_grid{std::move(g)}
       {};
 
-      virtual isolinear::grid calculate_button_grid(int i) const = 0;
-      virtual isolinear::grid calculate_bar_grid() const = 0;
+      virtual layout::grid calculate_button_grid(int i) const = 0;
+      virtual layout::grid calculate_bar_grid() const = 0;
 
       theme::colour_scheme colours() const override {
         return control::colours();
@@ -288,9 +288,9 @@ namespace isolinear::ui {
 
   class horizontal_button_bar : public button_bar {
     public:
-      horizontal_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
+      horizontal_button_bar(display::window& w, layout::grid g) : button_bar(w, g) {}
 
-      isolinear::grid calculate_button_grid(int i) const override {
+      layout::grid calculate_button_grid(int i) const override {
         int near_col = m_button_size.x * (i-1) + 1;
         int near_row = 1;
         int  far_col = m_button_size.x * i;
@@ -302,7 +302,7 @@ namespace isolinear::ui {
           );
       }
 
-      isolinear::grid calculate_bar_grid() const override {
+      layout::grid calculate_bar_grid() const override {
         int near_col = m_button_size.x * m_buttons.size() + 1;
         int near_row = 1;
         int  far_col = m_grid.max_columns();
@@ -318,9 +318,9 @@ namespace isolinear::ui {
 
   class vertical_button_bar : public button_bar {
     public:
-      vertical_button_bar(display::window& w, isolinear::grid g) : button_bar(w, g) {}
+      vertical_button_bar(display::window& w, layout::grid g) : button_bar(w, g) {}
 
-      isolinear::grid calculate_button_grid(int i) const override {
+      layout::grid calculate_button_grid(int i) const override {
         int near_col = 1;
         int near_row = m_button_size.y * (i-1) + 1;
         int  far_col = m_grid.max_columns();
@@ -332,7 +332,7 @@ namespace isolinear::ui {
           );
       }
 
-      isolinear::grid calculate_bar_grid() const override {
+      layout::grid calculate_bar_grid() const override {
         int near_col = 1;
         int near_row = m_button_size.y * m_buttons.size() + 1;
         int  far_col = m_grid.max_columns();
@@ -348,19 +348,19 @@ namespace isolinear::ui {
 
   class header_basic : public control {
     protected:
-      isolinear::grid m_grid;
+      layout::grid m_grid;
       display::window& m_window;
       compass m_alignment = compass::centre;
       std::string m_text{""};
 
     public:
-      header_basic(isolinear::grid g, display::window& w, std::string t)
+      header_basic(layout::grid g, display::window& w, std::string t)
         : header_basic(g, w, isolinear::compass::west, t) {};
 
-      header_basic(isolinear::grid g, display::window& w, compass a)
+      header_basic(layout::grid g, display::window& w, compass a)
         : header_basic(g, w, a, "") {}
 
-      header_basic(isolinear::grid g, display::window& w, compass a, std::string t)
+      header_basic(layout::grid g, display::window& w, compass a, std::string t)
         : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t} {}
 
 
@@ -394,7 +394,7 @@ namespace isolinear::ui {
 
   class header_east_bar : public control {
     protected:
-      isolinear::grid m_grid;
+      layout::grid m_grid;
       display::window& m_window;
       std::string m_text{""};
       std::map<std::string, isolinear::ui::button> m_buttons;
@@ -403,19 +403,19 @@ namespace isolinear::ui {
       theme::colour m_right_cap_colour;
 
     public:
-      header_east_bar(display::window& w, isolinear::grid g, std::string t)
+      header_east_bar(display::window& w, layout::grid g, std::string t)
         : m_grid{g}, m_window{w}, m_text{t}
       {};
 
-      header_east_bar(isolinear::grid g, display::window& w, std::string t)
+      header_east_bar(layout::grid g, display::window& w, std::string t)
         : m_grid{g}, m_window{w}, m_text{t}
       {};
 
-      header_east_bar(isolinear::grid g, display::window& w, compass a, std::string t)
+      header_east_bar(layout::grid g, display::window& w, compass a, std::string t)
         : m_grid{g}, m_window{w}, m_text{t}
       {};
 
-      header_east_bar(isolinear::grid g, display::window& w, compass a)
+      header_east_bar(layout::grid g, display::window& w, compass a)
         : m_grid{g}, m_window{w}
       {};
 
@@ -458,7 +458,7 @@ namespace isolinear::ui {
         return m_buttons.at(label);
       }
 
-      isolinear::grid calculate_button_grid(int i) const  {
+      layout::grid calculate_button_grid(int i) const  {
         i = (i-1) * m_button_width;
         return m_grid.subgrid(
             2+i,   1,
@@ -538,18 +538,18 @@ namespace isolinear::ui {
 
   class header_pair_bar : public control {
     protected:
-      isolinear::grid m_grid;
+      layout::grid m_grid;
       display::window& m_window;
       std::string m_left{""};
       std::string m_right{""};
 
     public:
-      header_pair_bar(isolinear::grid g, display::window& w,
+      header_pair_bar(layout::grid g, display::window& w,
           std::string l, std::string r)
         : m_grid{g}, m_window{w}, m_left{l}, m_right{r}
       {};
 
-      header_pair_bar(isolinear::grid g, display::window& w, compass a)
+      header_pair_bar(layout::grid g, display::window& w, compass a)
         : m_grid{g}, m_window{w}
       {};
 
@@ -675,7 +675,7 @@ namespace isolinear::ui {
         , m_text(l)
       {}
 
-      label(display::window& w, isolinear::grid g, std::string l)
+      label(display::window& w, layout::grid g, std::string l)
         : label(w, g.bounds(), l)
       {}
 
@@ -701,7 +701,7 @@ namespace isolinear::ui {
   class sweep : public control {
     protected:
       display::window& m_window;
-      isolinear::grid m_grid;
+      layout::grid m_grid;
       geometry::vector m_ports;
       int m_outer_radius;
       int m_inner_radius;
@@ -709,7 +709,7 @@ namespace isolinear::ui {
       compass m_opposite;
 
     public:
-      sweep(display::window& w, isolinear::grid g,
+      sweep(display::window& w, layout::grid g,
           geometry::vector p,
           int oradius, int iradius, compass ali)
         : m_window{w}, m_grid{g}, m_ports{p}, m_outer_radius{oradius}, m_inner_radius{iradius}, m_alignment{ali}
@@ -768,7 +768,7 @@ namespace isolinear::ui {
 
   class north_east_sweep : public sweep {
     public:
-      north_east_sweep(display::window& m_window, isolinear::grid m_grid,  geometry::vector ports, int oradius, int iradius)
+      north_east_sweep(display::window& m_window, layout::grid m_grid,  geometry::vector ports, int oradius, int iradius)
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::northeast}
       {}
 
@@ -790,7 +790,7 @@ namespace isolinear::ui {
 
   class south_east_sweep : public sweep {
     public:
-      south_east_sweep(display::window& m_window, isolinear::grid m_grid,  geometry::vector ports, int oradius, int iradius)
+      south_east_sweep(display::window& m_window, layout::grid m_grid,  geometry::vector ports, int oradius, int iradius)
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::southeast}
       {}
 
@@ -812,7 +812,7 @@ namespace isolinear::ui {
 
   class south_west_sweep : public sweep {
     public:
-      south_west_sweep(display::window& m_window, isolinear::grid m_grid,  geometry::vector ports, int oradius, int iradius)
+      south_west_sweep(display::window& m_window, layout::grid m_grid,  geometry::vector ports, int oradius, int iradius)
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::southwest}
       {}
 
@@ -834,7 +834,7 @@ namespace isolinear::ui {
 
   class north_west_sweep : public sweep {
     public:
-      north_west_sweep(display::window& m_window, isolinear::grid m_grid,  geometry::vector ports, int oradius, int iradius)
+      north_west_sweep(display::window& m_window, layout::grid m_grid,  geometry::vector ports, int oradius, int iradius)
         : sweep{m_window, m_grid, ports, oradius, iradius, compass::northwest}
       {}
 
@@ -858,7 +858,7 @@ namespace isolinear::ui {
 
   class horizontal_progress_bar : public control {
     protected:
-      isolinear::grid m_grid;
+      layout::grid m_grid;
       unsigned m_max = 100;
       unsigned m_value = 50;
       unsigned m_gutter = 6;
@@ -876,7 +876,7 @@ namespace isolinear::ui {
     public:
       miso::signal<> signal_valuechanged;
 
-      horizontal_progress_bar(isolinear::grid _g, unsigned _v)
+      horizontal_progress_bar(layout::grid _g, unsigned _v)
         : m_grid{_g}
         , m_bar_region(
             position(
@@ -895,7 +895,7 @@ namespace isolinear::ui {
         , m_bar_colour{theme::nightgazer_colours.active}
       { };
 
-      horizontal_progress_bar(isolinear::grid _g)
+      horizontal_progress_bar(layout::grid _g)
         : horizontal_progress_bar(_g, 0) {};
 
       unsigned max() const {
@@ -1027,12 +1027,12 @@ namespace isolinear::ui {
   class layout_vertical : public isolinear::ui::control_list<T> {
 
     public:
-      explicit layout_vertical(isolinear::grid g)
+      explicit layout_vertical(layout::grid g)
         : isolinear::ui::control_list<T>(g)
       {}
 
     protected:
-      isolinear::grid grid_for_index(int index) override {
+      layout::grid grid_for_index(int index) override {
         int far_row = index * H;
         return isolinear::ui::control_list<T>::m_grid.rows(far_row - (H - 1), far_row);
       }

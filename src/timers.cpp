@@ -9,7 +9,7 @@
 
 #include "init.h"
 #include "theme.h"
-#include "grid.h"
+#include "layout.h"
 #include "event.h"
 #include "ui.h"
 #include "display.h"
@@ -29,7 +29,7 @@ namespace isolinear {
       timer& m_timer;
 
     public:
-      timer_row(display::window& w, isolinear::grid g, timer& t)
+      timer_row(display::window& w, layout::grid g, timer& t)
         : header_east_bar(w, g, "")
         , m_timer(t)
         , add_time(add_button("ADD 10 SEC"))
@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
   isolinear::init();
   auto window = isolinear::new_window();
 
-  isolinear::grid grid(
+  layout::grid grid(
       { 0, 0, window.size().x, window.size().y },
       {window.button_font().Height() },
       { 10, 10 }

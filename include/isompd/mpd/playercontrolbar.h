@@ -33,7 +33,7 @@ class PlayerControlBar : public horizontal_button_bar {
     int queue_length = 0;
 
   public:
-    PlayerControlBar(display::window& w, isolinear::grid g, mpdxx::client& _mpd)
+    PlayerControlBar(display::window& w, layout::grid g, mpdxx::client& _mpd)
       : horizontal_button_bar(w, g)
       , mpd{_mpd}
       , btnPlay(add_button("PLAY"))

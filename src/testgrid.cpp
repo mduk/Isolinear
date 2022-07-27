@@ -1,5 +1,5 @@
 #include "init.h"
-#include "grid.h"
+#include "layout.h"
 #include "ui.h"
 #include "layout.h"
 
