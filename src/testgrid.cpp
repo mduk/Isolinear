@@ -45,8 +45,12 @@ int main(int argc, char* argv[]) {
   isolinear::ui::header_basic label_progress(progress_area.rows(1,2), window, "PROGRESS BARS");
   window.add(&label_progress);
 
-  isolinear::ui::horizontal_progress_bar pbar(progress_area.rows(3, 4), 40);
-  window.add(&pbar);
+  isolinear::ui::horizontal_progress_bar thin_progress(progress_area.row(3), 40);
+  isolinear::ui::horizontal_progress_bar norm_progress(progress_area.rows(4, 5), 50);
+  isolinear::ui::horizontal_progress_bar lrge_progress(progress_area.rows(6,8), 60);
+  window.add(&thin_progress);
+  window.add(&norm_progress);
+  window.add(&lrge_progress);
 
   while (isolinear::loop());
 
