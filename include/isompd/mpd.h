@@ -533,8 +533,8 @@ namespace isompd {
           , hdrFrame{layout.north(), w, isolinear::compass::east, "MPD CONTROL"}
           , barView{w, layout.west()}
           , playerControlBar{w, layout.south(), mpdc}
-          , sweepNorthWest{w, layout.northwest(), {3, 2}, 100, 50}
-          , sweepSouthWest{w, layout.southwest(), {3, 2}, 100, 50}
+          , sweepNorthWest{w, layout.northwest(), {3, 2}, 50, 20}
+          , sweepSouthWest{w, layout.southwest(), {3, 2}, 50, 20}
 
           , mpdc(_mpdc)
 
