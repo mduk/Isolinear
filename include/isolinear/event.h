@@ -49,10 +49,17 @@ namespace isolinear::event {
     protected:
         geometry::position m_position;
         pointer_type m_type;
+        bool m_is_mouse_down{false};
+        bool m_is_mouse_up{false};
 
     public:
         explicit pointer(SDL_MouseMotionEvent e) : m_position{e.x, e.y}, m_type{MOUSE} {};
-        explicit pointer(SDL_MouseButtonEvent e) : m_position{e.x, e.y}, m_type{MOUSE} {};
+        explicit pointer(SDL_MouseButtonEvent e)
+          : m_position{e.x, e.y}
+          , m_type{MOUSE}
+          , m_is_mouse_down{e.type == SDL_MOUSEBUTTONDOWN}
+          , m_is_mouse_up{e.type == SDL_MOUSEBUTTONUP}
+          {};
 
         pointer(SDL_TouchFingerEvent e, geometry::vector ws)
             : m_position{
@@ -67,6 +74,14 @@ namespace isolinear::event {
 
         event::pointer_type type() const {
           return m_type;
+        }
+
+        bool is_mouse_down() const {
+          return m_is_mouse_down;
+        }
+
+        bool is_mouse_up() const {
+          return m_is_mouse_up;
         }
     };
 

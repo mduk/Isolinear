@@ -57,6 +57,11 @@ namespace isolinear::ui {
 
         m_mouse_within_bounds = within_bounds;
 
+        if (m_mouse_within_bounds) {
+          if (event.is_mouse_down()) on_mouse_down(event);
+          if (event.is_mouse_up()) on_mouse_up(event);
+        }
+
         for (auto& child : m_children) {
           child->on_pointer_event(event);
         }
@@ -68,6 +73,8 @@ namespace isolinear::ui {
         }
       }
 
+      virtual void on_mouse_down(event::pointer event) { }
+      virtual void on_mouse_up(event::pointer event) { }
       virtual void on_mouse_enter(event::pointer event) { }
       virtual void on_mouse_leave(event::pointer event) { }
 

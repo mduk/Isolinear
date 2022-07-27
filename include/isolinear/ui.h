@@ -162,16 +162,20 @@ namespace isolinear::ui {
           );
       }
 
-      void on_pointer_event(event::pointer event) override {
-        control::on_pointer_event(event);
-        emit signal_press();
+      void on_mouse_down(event::pointer event) override {
+        m_lit = true;
       }
 
-      void on_mouse_leave(event::pointer event) {
+      void on_mouse_up(event::pointer event) override {
+        emit signal_press();
         m_lit = false;
       }
 
-      void on_keyboard_event(event::keyboard event) {
+      void on_mouse_leave(event::pointer event) override {
+        m_lit = false;
+      }
+
+      void on_keyboard_event(event::keyboard event) override {
         if (event.is_key_up()) {
           m_lit = false;
           return;
@@ -237,7 +241,6 @@ namespace isolinear::ui {
             label
           );
         auto& button = m_buttons.at(label);
-        register_child(&button);
         return button;
       }
 

@@ -556,7 +556,7 @@ namespace isompd {
 
         auto switch_view = [this]() {
           auto button = miso::sender<ui::button>();
-          SwitchView(button->label());
+          std::cout << fmt::format("Request view: {}\n", button->label());
         };
 
         for (auto const& [view_name, view_ptr] : views) {
