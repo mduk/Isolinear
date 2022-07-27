@@ -549,10 +549,10 @@ namespace isompd {
         register_child(&sweepNorthWest);
         register_child(&sweepSouthWest);
 
-        RegisterView(&viewNowPlaying);
-        RegisterView(&viewQueue);
-        RegisterView(&viewBrowse);
-        RegisterView(&viewPlayer);
+        register_view(&viewNowPlaying);
+        register_view(&viewQueue);
+        register_view(&viewBrowse);
+        register_view(&viewPlayer);
 
         auto switch_view = [this]() {
           auto button = miso::sender<ui::button>();
@@ -601,7 +601,7 @@ namespace isompd {
         }
       }
 
-      void RegisterView(isolinear::view* view) {
+      void register_view(isolinear::view* view) {
         const std::string view_name = view->Name();
         views.insert(std::pair<const std::string, isolinear::view*>(view_name, view));
       }
