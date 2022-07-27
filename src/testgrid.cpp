@@ -42,7 +42,10 @@ int main(int argc, char* argv[]) {
   isolinear::ui::button single_button(window, button_area.rows(1,2).left_columns(2), "BUTTON");
   window.add(&single_button);
 
-  isolinear::ui::horizontal_progress_bar pbar(progress_area.rows(1, 2), 40);
+  isolinear::ui::header_basic label_progress(progress_area.rows(1,2), window, "PROGRESS BARS");
+  window.add(&label_progress);
+
+  isolinear::ui::horizontal_progress_bar pbar(progress_area.rows(3, 4), 40);
   window.add(&pbar);
 
   while (isolinear::loop());
