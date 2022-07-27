@@ -265,6 +265,13 @@ namespace isolinear::ui {
         }
       };
 
+      void on_keyboard_event(event::keyboard event) override {
+        control::on_keyboard_event(event);
+        for (auto& [label, button]  : m_buttons) {
+          button.on_keyboard_event(event);
+        }
+      }
+
       region bounds() const override {
         return m_grid.bounds();
       }
