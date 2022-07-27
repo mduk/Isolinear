@@ -18,15 +18,11 @@ int main(int argc, char* argv[]) {
       { 6, 6 } // Cell Gutter
   );
 
-  isolinear::grid grid(
-      { 0, 0, window.size().x, window.size().y }, // Display Region
-      { 60, 30 }, // Cell Size
-      { 6, 6 } // Cell Gutter
-    );
+  auto& root_grid = gridfactory.root();
 
   int hthickness = 2;
   int vthickness = 3;
-  isolinear::layout::northwest_elbo elbo_layout(grid, hthickness+1, vthickness+1);
+  isolinear::layout::northwest_elbo elbo_layout(root_grid, hthickness + 1, vthickness + 1);
   isolinear::ui::north_west_sweep nwsweep( window, elbo_layout.sweep(), {vthickness, hthickness}, 50, 20 );
   isolinear::ui::vertical_button_bar vbbar(window, elbo_layout.vertical_control());
   isolinear::ui::horizontal_button_bar hbbar(window, elbo_layout.horizontal_control());

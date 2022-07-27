@@ -2,6 +2,7 @@
 
 #include <list>
 #include <exception>
+#include <utility>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
@@ -16,15 +17,15 @@ namespace isolinear {
   class grid {
 
     protected:
-      geometry::vector m_cell_size{100, 50};
-      geometry::vector m_size{3,3};
+      geometry::vector m_cell_size{0};
+      geometry::vector m_size{0};
       geometry::vector m_gutter{0};
-      geometry::region m_bounds;
+      geometry::region m_bounds{0};
       geometry::vector m_offset{0};
 
     public:
 
-      grid() {}
+      grid() : grid({0,0,1280,1024}, {60,30}, {6,6}) {};
 
       grid(
           geometry::region b,
@@ -33,7 +34,7 @@ namespace isolinear {
           geometry::vector s,
           geometry::vector o
         ) :
-          m_bounds{b},
+          m_bounds{std::move(b)},
           m_cell_size{cs},
           m_gutter{g},
           m_size{s},
@@ -224,29 +225,32 @@ namespace isolinear {
           , m_offset( (b.W() % cs.x) / 2, (b.H() % cs.y) / 2 )
         {};
 
-        grid subgrid(
+        geometry::vector size() const {
+          return m_size;
+        }
+
+        grid& root() {
+          return subgrid(1,1, m_size.x, m_size.y);
+        }
+
+        grid& subgrid(
             int near_col, int near_row,
             int  far_col, int  far_row
-        ) const {
-          return grid{
-              calculate_grid_region(
-                  near_col, near_row,
-                  far_col, far_row
-              ),
-              m_cell_size,
-              m_gutter,
-              geometry::vector(
-                  far_col - near_col + 1,
-                  far_row - near_row + 1
-              ),
-              {0}
-          };
+        ) {
+          auto region = calculate_grid_region(
+              near_col, near_row,
+              far_col, far_row
+            );
+          geometry::vector size(
+              far_col - near_col + 1,
+              far_row - near_row + 1
+            );
+          geometry::vector offset(0,0);
+          m_grids.emplace_back(region, m_cell_size, m_gutter, size, offset);
+          return m_grids.back();
         }
 
         geometry::region calculate_grid_region(int near_col, int near_row, int far_col, int far_row) const {
-          auto mc = m_size.x;
-          auto mr = m_size.y;
-
           geometry::position origin = m_bounds.origin().add(m_offset);
           return geometry::region{
               /* x */ origin.x + (m_cell_size.x * (near_col - 1)),
