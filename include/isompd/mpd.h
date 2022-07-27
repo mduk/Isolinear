@@ -554,14 +554,14 @@ namespace isompd {
         register_view(&m_browse_view);
         register_view(&m_player_view);
 
-        auto switch_view = [this]() {
+        auto change_view_handler = [this]() {
           auto button = miso::sender<ui::button>();
-          std::cout << fmt::format("Request view: {}\n", button->label());
+          switch_view(button->label());
         };
 
         for (auto const& [view_name, view_ptr] : m_views) {
           ui::button& view_btn = m_view_buttons.add_button(view_name);
-          miso::connect(view_btn.signal_press, switch_view);
+          miso::connect(view_btn.signal_press, change_view_handler);
         }
 
           m_view_buttons.get_button(m_active_view).activate();
