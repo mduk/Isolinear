@@ -241,6 +241,7 @@ namespace isolinear::ui {
             label
           );
         auto& button = m_buttons.at(label);
+        button.colours(colours());
         return button;
       }
 
