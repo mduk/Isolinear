@@ -442,6 +442,9 @@ namespace isompd {
           case SDLK_4:
             switch_view(V_BROWSE);
             break;
+          case SDLK_s:
+            m_mpdc.RequestStatus();
+            break;
           default:
             break;
         }
