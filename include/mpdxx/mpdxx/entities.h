@@ -84,9 +84,14 @@ namespace mpdxx {
         return entitydata.at("single") == "1";
       }
 
-      unsigned const ElapsedTimeSeconds() const {
+      unsigned ElapsedTimeSeconds() const {
         auto elapsed = entitydata.at("elapsed");
         return std::stoi(elapsed.substr(0, elapsed.find('.')));
+      }
+
+      unsigned DurationSeconds() const {
+        auto duration = entitydata.at("duration");
+        return std::stoi(duration.substr(0, duration.find('.')));
       }
 
       std::string ElapsedTimeString() const {

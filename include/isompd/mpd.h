@@ -71,6 +71,8 @@ namespace isompd::now_playing {
 
         miso::connect(m_mpdc.signal_status, [this](mpdxx::status status){
           hide = status.IsStopped();
+          progress.max(status.DurationSeconds());
+          progress.value(status.ElapsedTimeSeconds());
         });
 
         miso::connect(m_mpdc.signal_current_song, [this](mpdxx::song song){
@@ -437,8 +439,6 @@ namespace isompd {
             switch_view(V_QUEUE);
             break;
           case SDLK_3:
-            switch_view(V_BROWSE);
-            break;
           case SDLK_4:
             switch_view(V_BROWSE);
             break;
