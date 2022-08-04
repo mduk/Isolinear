@@ -29,14 +29,14 @@ namespace isompd {
 
   class view : public isolinear::view {
     protected:
-      mpdxx::client& mpdc;
-      display::window& window;
+      mpdxx::client& m_mpdc;
+      display::window& m_window;
 
     public:
       view(std::string t, isolinear::layout::grid g, display::window& w, mpdxx::client& _mpdc)
         : isolinear::view(t, g)
-        , window{w}
-        , mpdc{_mpdc}
+        , m_window{w}
+        , m_mpdc{_mpdc}
       {};
   };
 
@@ -69,11 +69,11 @@ namespace isompd::now_playing {
         register_child(&duration);
         register_child(&progress);
 
-        miso::connect(mpdc.signal_status, [this](mpdxx::status status){
+        miso::connect(m_mpdc.signal_status, [this](mpdxx::status status){
           hide = status.IsStopped();
         });
 
-        miso::connect(mpdc.signal_current_song, [this](mpdxx::song song){
+        miso::connect(m_mpdc.signal_current_song, [this](mpdxx::song song){
           title.Right(song.Title());
           album.Right(song.Album());
           artist.Right(song.Artist());
@@ -328,7 +328,7 @@ namespace isompd::browse {
         });
         register_child(&artist_pager_buttons);
 
-        miso::connect(mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
+        miso::connect(m_mpdc.signal_artist_list, [this](std::list<mpdxx::artist> artist_list){
           artist_pager.clear();
           for (auto& artist : artist_list) {
             artist_pager.add_row(artist);
