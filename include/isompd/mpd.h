@@ -206,162 +206,6 @@ class paginated_rows : public isolinear::ui::control {
 };
 
 
-namespace isompd::player {
-  namespace ui = isolinear::ui;
-
-  class queuerow : public ui::label {
-    protected:
-      mpdxx::song song;
-
-    public:
-      queuerow(isolinear::layout::grid g, display::window& w, mpdxx::song s)
-        : ui::label(w, g, s.Header())
-        , song(s)
-      {
-      }
-  };
-
-  class view : public isompd::view {
-    protected:
-      ui::header_basic hdrQueue;
-      paginated_rows<mpdxx::song, isompd::player::queuerow> queue_pager;
-
-      isolinear::layout::grid gc;
-
-      ui::button btnPlay;
-      ui::button btnPause;
-      ui::button btnStop;
-
-      ui::horizontal_rule hrule1;
-
-      ui::button btnPrevious;
-      ui::button btnNext;
-
-      ui::horizontal_rule hrule2;
-
-      ui::button btnConsume;
-      ui::button btnRandom;
-      ui::button btnSingle;
-      ui::button btnRepeat;
-
-      int queue_length = 0;
-
-    public:
-      view(isolinear::layout::grid g, display::window& w, mpdxx::client& mpdc)
-        : isompd::view("PLAYER", g, w,  mpdc)
-
-        , hdrQueue   (g.columns( 1,  6).rows( 1,  2), w, isolinear::compass::west, "QUEUE")
-        , queue_pager(g.columns( 1,  6).rows( 3, 10), w, 20)
-
-        , gc(g.right_columns(6))
-
-        , btnPlay(    w, gc.rows( 1, 4).columns(1,4), "PLAY")
-        , btnPause(   w, gc.rows( 1, 4).columns(5,6), "PAUSE")
-        , btnStop(    w, gc.rows( 5, 7).columns(1,6), "STOP")
-
-        , hrule1(        gc.rows( 8, 8))
-
-        , btnPrevious(w, gc.rows( 9,10).columns(1,3), "PREVIOUS")
-        , btnNext(    w, gc.rows( 9,10).columns(4,6), "NEXT")
-
-        , hrule2(        gc.rows(11,11))
-
-        , btnRepeat(  w, gc.rows(12,13).columns(1,4), "REPEAT")
-        , btnSingle(  w, gc.rows(12,13).columns(5,6), "SINGLE")
-        , btnConsume( w, gc.rows(14,15).columns(1,2), "CONSUME")
-        , btnRandom(  w, gc.rows(14,15).columns(3,6), "RANDOM")
-      {
-        register_child(&hdrQueue);
-        register_child(&queue_pager);
-        register_child(&btnPlay);
-        register_child(&btnPause);
-        register_child(&btnStop);
-        register_child(&btnPrevious);
-        register_child(&btnNext);
-        register_child(&btnConsume);
-        register_child(&btnRandom);
-        register_child(&btnSingle);
-        register_child(&btnRepeat);
-        register_child(&hrule1);
-        register_child(&hrule2);
-
-        miso::connect(mpdc.signal_queue, [this](std::list<mpdxx::song> queue){
-          queue_pager.clear();
-          for (auto& song : queue) {
-            queue_pager.add_row(song);
-          }
-          queue_pager.page(1);
-        });
-
-        miso::connect(mpdc.signal_status, [this](mpdxx::status status){
-          cout << fmt::format("PlayerView signal_status begin\n");
-          btnConsume.active(status.Consume());
-          btnRandom.active(status.Random());
-          btnSingle.active(status.Single());
-          btnRepeat.active(status.Repeat());
-
-          if (status.IsPlaying()) {
-            cout << " => Playing\n";
-
-            btnPlay.enable();
-            btnPlay.activate();
-
-            btnPause.enable();
-            btnPause.deactivate();
-
-            btnStop.enable();
-            btnStop.deactivate();
-          }
-
-          if (status.IsPaused()) {
-            cout << " => Paused\n";
-
-            btnPlay.enable();
-            btnPlay.enable();
-            btnPlay.activate();
-
-            btnPause.enable();
-            btnPause.activate();
-
-            btnStop.enable();
-            btnStop.deactivate();
-          }
-
-          if (status.IsStopped()) {
-            cout << " => Stopped\n";
-
-            btnPlay.enable();
-            btnStop.enable();
-            btnStop.activate();
-
-            btnPause.disable();
-
-            btnPlay.deactivate();
-            if (queue_length > 0) {
-              btnPlay.disable();
-            } else {
-              btnPlay.enable();
-            }
-          }
-
-          cout << fmt::format("PlayerView signal_status end\n");
-        });
-
-        miso::connect(    btnPlay.signal_press, [&]() { mpdc.Play();          });
-        miso::connect(    btnStop.signal_press, [&]() { mpdc.Stop();          });
-        miso::connect(btnPrevious.signal_press, [&]() { mpdc.Previous();      });
-        miso::connect(    btnNext.signal_press, [&]() { mpdc.Next();          });
-        miso::connect(   btnPause.signal_press, [&]() { mpdc.TogglePause();   });
-        miso::connect( btnConsume.signal_press, [&]() { mpdc.ToggleConsume(); });
-        miso::connect(  btnRandom.signal_press, [&]() { mpdc.ToggleRandom();  });
-        miso::connect(  btnRandom.signal_press, [&]() { mpdc.ToggleSingle();  });
-        miso::connect(  btnRandom.signal_press, [&]() { mpdc.ToggleRepeat();  });
-      }
-  };
-
-}
-
-
 namespace isompd::queue {
   namespace ui = isolinear::ui;
 
@@ -503,7 +347,6 @@ namespace isompd {
       const std::string V_NOWPLAYING = "NOW PLAYING";
       const std::string V_QUEUE = "QUEUE";
       const std::string V_BROWSE = "BROWSE";
-      const std::string V_PLAYER = "PLAYER";
 
     public:
       miso::signal<std::string, std::string> signal_view_change;
@@ -525,7 +368,6 @@ namespace isompd {
       isompd::browse::view m_browse_view;
       isompd::now_playing::view m_now_playing_view;
       isompd::queue::view m_queue_view;
-      isompd::player::view m_player_view;
 
     public:
       frame(isolinear::layout::grid g, display::window& w, mpdxx::client& _mpdc)
@@ -541,7 +383,6 @@ namespace isompd {
           , m_now_playing_view(m_layout.centre(), w, m_mpdc)
           , m_queue_view     (m_layout.centre(), w, m_mpdc)
           , m_browse_view    (m_layout.centre(), w, m_mpdc)
-          , m_player_view    (m_layout.centre(), w, m_mpdc)
       {
         register_child(&m_frame_header);
         register_child(&m_view_buttons);
@@ -552,7 +393,6 @@ namespace isompd {
         register_view(&m_now_playing_view);
         register_view(&m_queue_view);
         register_view(&m_browse_view);
-        register_view(&m_player_view);
 
         auto change_view_handler = [this]() {
           auto button = miso::sender<ui::button>();
