@@ -81,6 +81,10 @@ namespace isompd::now_playing {
         });
       }
 
+      void on_activate() override {
+        m_mpdc.RequestCurrentSong();
+      }
+
       void draw(SDL_Renderer* renderer) const override {
         if (hide) {
           return;
@@ -288,9 +292,6 @@ namespace isompd::queue {
 
 }
 
-
-
-
 namespace isompd::browse {
   namespace ui = isolinear::ui;
 
@@ -417,6 +418,7 @@ namespace isompd {
 
         m_frame_header.label(fmt::format("MPD : {}", m_active_view));
 
+        m_views.at(m_active_view)->on_activate();
         emit signal_view_change(previousView, m_active_view);
       }
 

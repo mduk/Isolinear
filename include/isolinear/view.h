@@ -27,6 +27,8 @@ namespace isolinear {
         return m_grid.bounds();
       }
 
+      virtual void on_activate() {}
+
   };
 
 
