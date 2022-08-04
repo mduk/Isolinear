@@ -19,7 +19,7 @@ namespace isolinear {
     public:
       view(std::string t, layout::grid g) : m_name{t}, m_grid{g} {}
 
-      std::string Name() const {
+      std::string name() const {
         return m_name;
       }
 

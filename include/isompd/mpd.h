@@ -618,7 +618,7 @@ namespace isompd {
       }
 
       void register_view(isolinear::view* view) {
-        const std::string view_name = view->Name();
+        const std::string view_name = view->name();
         m_views.insert(std::pair<const std::string, isolinear::view*>(view_name, view));
       }
   };
