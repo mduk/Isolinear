@@ -26,6 +26,10 @@ namespace isolinear::event {
           return m_sdl_keyboardevent.repeat;
         }
 
+        SDL_Keycode code() const {
+          return m_sdl_keyboardevent.keysym.sym;
+        }
+
     };
 
 

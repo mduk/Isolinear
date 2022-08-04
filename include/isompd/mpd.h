@@ -589,6 +589,22 @@ namespace isompd {
         m_views.at(m_active_view)->on_pointer_event(event);
       }
 
+      void on_keyboard_event(isolinear::event::keyboard event) override {
+        switch (event.code()) {
+          case SDLK_2:
+            switch_view(V_QUEUE);
+            break;
+          case SDLK_3:
+            switch_view(V_BROWSE);
+            break;
+          case SDLK_4:
+            switch_view(V_BROWSE);
+            break;
+          default:
+            break;
+        }
+      }
+
       virtual void draw(SDL_Renderer* renderer) const {
         control::draw(renderer);
         m_views.at(m_active_view)->draw(renderer);
