@@ -39,7 +39,7 @@ namespace isolinear::ui {
           return m_mouse_within_bounds;
       }
 
-      virtual void register_child(control* child) {
+      void register_child(control* child) {
         m_children.push_back(child);
         child->colours(colours());
       }
