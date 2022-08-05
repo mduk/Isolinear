@@ -84,6 +84,7 @@ namespace isompd::now_playing {
       }
 
       void on_activate() override {
+        cout << fmt::format("Now Playing view activated. Requesting Current Song.\n");
         m_mpdc.RequestCurrentSong();
       }
 
