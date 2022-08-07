@@ -214,6 +214,9 @@ namespace isolinear::layout {
             int near_col, int near_row,
             int far_col, int far_row
         ) {
+          if (far_col < 0) { far_col = m_size.x + far_col; }
+          if (far_row < 0) { far_row = m_size.y + far_row; }
+
           auto region = calculate_grid_region(
               near_col, near_row,
               far_col, far_row
