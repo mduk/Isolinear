@@ -371,6 +371,9 @@ namespace isolinear::ui {
       header_basic(layout::grid g, display::window& w, compass a)
         : header_basic(g, w, a, "") {}
 
+      header_basic(display::window& w, layout::grid g, compass a, std::string t)
+          : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t} {}
+
       header_basic(layout::grid g, display::window& w, compass a, std::string t)
         : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t} {}
 
