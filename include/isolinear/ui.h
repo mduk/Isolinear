@@ -51,6 +51,9 @@ namespace isolinear::ui {
 
       void draw(SDL_Renderer* renderer) const override {
         m_bounds.fill(renderer, colours().frame);
+        if (pointer_is_hovering()) {
+          m_bounds.draw(renderer);
+        }
       }
   };
 
@@ -504,7 +507,7 @@ namespace isolinear::ui {
         int filler_start = westcap_width + 1;
         int filler_end = w;
 
-        region   left_cap = m_grid.calculate_grid_region(  x  , y,   x  , y+1);
+        region   left_cap = m_grid.calculate_grid_region(  x  , y,   x  , m_grid.max_rows());
         region  right_cap = m_grid.calculate_grid_region(w+x  , y, w+x  , y+1);
         region centre_bar = m_grid.calculate_grid_region(  x+1, y, w+x-1, y+1);
 
