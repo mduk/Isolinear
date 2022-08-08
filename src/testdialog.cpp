@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
   auto& window = isolinear::new_window();
 
   isolinear::layout::gridfactory gridfactory(window.region(), {60,30}, {6,6});
-  auto& grid = gridfactory.subgrid(4,4,-4,-4);
+  auto& grid = gridfactory.subgrid(6,6,-6,-6);
   dialog mydialog(window, grid);
   window.add(&mydialog);
 

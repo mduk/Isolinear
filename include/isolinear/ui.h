@@ -58,26 +58,27 @@ namespace isolinear::ui {
   };
 
 
-    class horizontal_rule : public control {
+    class rule : public control {
 
     protected:
         layout::grid m_grid;
         isolinear::compass m_alignment;
 
     public:
-        horizontal_rule(layout::grid g, isolinear::compass a)
-          : m_grid{g}
-          , m_alignment{a}
-        {}
-
-        horizontal_rule(layout::grid g)
-            : horizontal_rule(g, isolinear::compass::centre)
+        rule(layout::grid g, isolinear::compass a)
+            : m_grid{std::move(g)}
+            , m_alignment{a}
         {}
 
     public:
-        [[nodiscard]] region bounds() const {
+        region bounds() const {
           return m_grid.bounds();
         }
+    };
+
+    class vertical_rule : public rule {
+    public:
+        vertical_rule(layout::grid g, isolinear::compass a) : rule(g, a) {}
 
         void draw(SDL_Renderer* renderer) const override {
           auto bound_height = m_grid.bounds().H();
@@ -106,6 +107,39 @@ namespace isolinear::ui {
           hrule.fill(renderer, colours().frame);
         }
     };
+
+    class horizontal_rule : public rule {
+
+    public:
+      horizontal_rule(layout::grid g, isolinear::compass a) : rule(g, a) {}
+
+      void draw(SDL_Renderer* renderer) const override {
+        auto bound_height = m_grid.bounds().H();
+
+        auto offset_px = 0;
+        switch (m_alignment) {
+          case compass::north: offset_px = 0; break;
+          case compass::centre: offset_px = (bound_height - m_grid.gutter().y) / 2; break;
+          case compass::south: offset_px = (bound_height - m_grid.gutter().y) ; break;
+          default:
+            std::cout << fmt::format("Invalid alignment for horizontal_rule. alignment={}", m_alignment);
+            break;
+        }
+
+        auto hrule_near_x = m_grid.bounds().near_x();
+        auto hrule_near_y = m_grid.bounds().near_y() + offset_px;
+
+        auto hrule_far_x = m_grid.bounds().far_x();
+        auto hrule_far_y = hrule_near_y + m_grid.gutter().y;
+
+        region hrule(
+          position(hrule_near_x, hrule_near_y),
+          position(hrule_far_x,  hrule_far_y)
+        );
+
+        hrule.fill(renderer, colours().frame);
+      }
+};
 
 
   class button : public control {

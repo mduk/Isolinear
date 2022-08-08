@@ -6,6 +6,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+#include <utility>
+
 #include "geometry.h"
 #include "control.h"
 #include "event.h"
@@ -185,7 +187,7 @@ namespace isolinear::layout {
     };
 
     class gridfactory {
-    protected:
+      protected:
         geometry::vector m_cell_size{100, 50};
         geometry::vector m_size{3, 3};
         geometry::vector m_gutter{0};
@@ -193,7 +195,7 @@ namespace isolinear::layout {
         geometry::vector m_offset{0};
         std::list<grid> m_grids{};
 
-    public:
+      public:
         gridfactory(
             geometry::region b,
             geometry::vector cs,
