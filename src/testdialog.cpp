@@ -70,7 +70,7 @@ public:
       , m_w_rule(m_layout.west(), isolinear::compass::west)
       , m_button_ok(w, m_layout.east().top_rows(m_layout.east().max_rows() / 2), "CONFIRM")
       , m_button_cancel(w, m_layout.east().bottom_rows(m_layout.east().max_rows() / 2), "CANCEL")
-      , m_n_header(w, m_layout.north(), isolinear::compass::northeast, "CONFIRM DELETE")
+      , m_n_header(w, m_layout.north(), isolinear::compass::northeast, "")
     {
       register_child(&m_ne_sweep);
       register_child(&m_nw_sweep);

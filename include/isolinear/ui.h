@@ -450,8 +450,11 @@ namespace isolinear::ui {
         }
 
         void draw(SDL_Renderer *renderer) const override {
+          if (pointer_is_hovering()) {
+            m_grid.bounds().draw(renderer);
+          }
+
           if (m_text.length() == 0) {
-            m_grid.bounds().fill(renderer, colours().frame);
             return;
           }
 
