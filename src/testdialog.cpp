@@ -56,6 +56,7 @@ class dialog : public isolinear::ui::control {
     isolinear::ui::header_basic m_n_header;
     isolinear::ui::button m_button_ok;
     isolinear::ui::button m_button_cancel;
+    isolinear::ui::rect m_button_fill;
 
 public:
     dialog(isolinear::display::window& w, isolinear::layout::grid& g)
@@ -68,9 +69,10 @@ public:
       , m_n_rule(m_layout.north(), isolinear::compass::north)
       , m_s_rule(m_layout.south(), isolinear::compass::south)
       , m_w_rule(m_layout.west(), isolinear::compass::west)
-      , m_button_ok(w, m_layout.east().top_rows(m_layout.east().max_rows() / 2), "CONFIRM")
+      , m_button_ok(w, m_layout.east().top_rows(m_layout.east().max_rows() / 4), "CONFIRM")
+      , m_button_fill(m_layout.east().top_rows(m_layout.east().max_rows() / 2).bottom_rows(m_layout.east().max_rows()/4).bounds())
       , m_button_cancel(w, m_layout.east().bottom_rows(m_layout.east().max_rows() / 2), "CANCEL")
-      , m_n_header(w, m_layout.north(), isolinear::compass::northeast, "")
+      , m_n_header(w, m_layout.north(), isolinear::compass::northeast, "CONFIRM DELETE")
     {
       register_child(&m_ne_sweep);
       register_child(&m_nw_sweep);
@@ -81,6 +83,7 @@ public:
       register_child(&m_w_rule);
       register_child(&m_n_header);
       //register_child(&m_layout);
+      register_child(&m_button_fill);
       register_child(&m_button_ok);
       register_child(&m_button_cancel);
     }
