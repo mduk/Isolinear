@@ -386,32 +386,47 @@ namespace isolinear::layout {
 
     };
 
-    class northwest_elbo : public isolinear::layout::compass {
-    public:
-        explicit northwest_elbo(grid &g, int h, int v)
-            : isolinear::layout::compass(g, h, 0, 0, v) {};
+    class elbo : public isolinear::layout::compass {
+      public:
+        virtual grid sweep() = 0;
+        virtual grid vertical_control() = 0;
+        virtual grid vertical_gutter() = 0;
+        virtual grid horizontal_control() = 0;
+        virtual grid horizontal_gutter() = 0;
+        virtual grid content() = 0;
 
-        grid sweep() {
+        elbo(grid &g, int h, int v)
+          : isolinear::layout::compass(g, h, 0, 0, v) {};
+
+    };
+
+    class northwest_elbo : public elbo {
+      public:
+        northwest_elbo(grid &g, int h, int v)
+          : elbo(g, h, v) {}
+
+      public:
+        grid sweep() override {
           return northwest();
         }
 
-        grid vertical_control() {
+        grid vertical_control() override {
           return west().left_columns(west().max_columns() - 1);
         }
 
-        grid vertical_gutter() {
+        grid vertical_gutter() override {
           return west().right_columns(1);
         }
 
-        grid horizontal_control() {
+        grid horizontal_control() override {
           return north().top_rows(2);
         }
 
-        grid horizontal_gutter() {
+        grid horizontal_gutter() override {
           return north().bottom_rows(1);
         }
 
-        grid content() {
+        grid content() override {
           return centre();
         }
     };
