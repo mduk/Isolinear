@@ -90,7 +90,6 @@ namespace isolinear::layout {
         }
 
         grid columns(int from, int to) const {
-          int cols = max_columns();
           int rows = max_rows();
 
           from = (from > 0) ? from : rows + from;
@@ -128,15 +127,6 @@ namespace isolinear::layout {
         }
 
         geometry::region calculate_grid_region(int near_col, int near_row, int far_col, int far_row) const {
-          auto mc = max_columns();
-          auto mr = max_rows();
-
-          if (false) if (near_col > mc || far_col > mc || near_row > mr || far_row > mr) {
-              throw std::out_of_range(fmt::format(
-                  "Grid region {},{} x {},{} falls outside of the grid bounds, {} x {}",
-                  near_col, near_row, far_col, far_row, mc, mr));
-            }
-
           geometry::position origin = m_bounds.origin().add(m_offset);
           return geometry::region{
               /* x */ origin.x + (m_cell_size.x * (near_col - 1)),
@@ -428,6 +418,36 @@ namespace isolinear::layout {
 
         grid content() override {
           return centre();
+        }
+    };
+
+    class vertical_row {
+      protected:
+        layout::grid m_grid;
+        int m_allocated_north = 1;
+
+      public:
+        explicit vertical_row(grid g) : m_grid(std::move(g)) {}
+
+        grid allocate_north(int space) {
+          auto grid = m_grid.rows(m_allocated_north, m_allocated_north + (space - 1));
+          m_allocated_north += space;
+          return grid;
+        }
+    };
+
+    class horizontal_row {
+      protected:
+        layout::grid m_grid;
+        int m_allocated_left = 1;
+
+      public:
+        explicit horizontal_row(grid g) : m_grid(std::move(g)) {}
+
+        grid allocate_left(int space) {
+          auto grid = m_grid.columns(m_allocated_left, m_allocated_left + (space - 1));
+          m_allocated_left += space;
+          return grid;
         }
     };
 
