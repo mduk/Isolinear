@@ -39,8 +39,8 @@ namespace isolinear::ui {
         geometry::region m_bounds;
 
     public:
-        rect(geometry::region r)
-            : m_bounds{std::move(r)} {}
+        rect(layout::grid g)
+            : m_bounds{g.bounds()} {}
 
     public:
         geometry::region bounds() const override {
