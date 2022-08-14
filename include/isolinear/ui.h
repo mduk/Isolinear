@@ -727,11 +727,8 @@ namespace isolinear::ui {
         std::string m_text;
 
     public:
-        label(display::window &w, region b, std::string l)
-            : m_window(w), m_bounds(b), m_text(l) {}
-
         label(display::window &w, layout::grid g, std::string l)
-            : label(w, g.bounds(), l) {}
+            : m_window(w), m_bounds(g.bounds()), m_text(l) {}
 
     public:
         region bounds() const {
