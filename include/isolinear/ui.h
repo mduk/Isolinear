@@ -166,16 +166,7 @@ namespace isolinear::ui {
         miso::signal<> signal_press;
 
         button(display::window &w, layout::grid g, std::string l)
-            : button(w, g.bounds(), l) {}
-
-        button(
-            display::window &w,
-            region b,
-            std::string l
-        ) :
-            m_bounds{b},
-            m_window{w},
-            m_label{l} {}
+          : m_bounds{g.bounds()}, m_window{w}, m_label{l} {}
 
         void enable() { m_enabled = true; }
 
@@ -292,7 +283,7 @@ namespace isolinear::ui {
           m_buttons.try_emplace(
               label,
               m_window,
-              calculate_button_grid(m_buttons.size() + 1).bounds(),
+              calculate_button_grid(m_buttons.size() + 1),
               label
           );
           auto &button = m_buttons.at(label);
@@ -523,7 +514,7 @@ namespace isolinear::ui {
           m_buttons.try_emplace(
               label,
               m_window,
-              calculate_button_grid(m_buttons.size() + 1).bounds(),
+              calculate_button_grid(m_buttons.size() + 1),
               label
           );
           return m_buttons.at(label);
