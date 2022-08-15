@@ -35,22 +35,15 @@ namespace isolinear::ui {
 
     class rect : public control {
 
-    protected:
-        geometry::region m_bounds;
-
     public:
         rect(layout::grid g)
-            : m_bounds{g.bounds()} {}
+            : control(g) {}
 
     public:
-        geometry::region bounds() const override {
-          return m_bounds;
-        }
-
         void draw(SDL_Renderer *renderer) const override {
-          m_bounds.fill(renderer, colours().frame);
+          m_grid.bounds().fill(renderer, colours().frame);
           if (pointer_is_hovering()) {
-            m_bounds.draw(renderer);
+            m_grid.bounds().draw(renderer);
           }
         }
     };
@@ -59,22 +52,16 @@ namespace isolinear::ui {
     class rule : public control {
 
     protected:
-        layout::grid m_grid;
         isolinear::compass m_alignment;
 
     public:
         rule(layout::grid g, isolinear::compass a)
-            : m_grid{std::move(g)}, m_alignment{a} {}
-
-    public:
-        region bounds() const {
-          return m_grid.bounds();
-        }
+            : control(std::move(g)), m_alignment{a} {}
     };
 
     class vertical_rule : public rule {
     public:
-        vertical_rule(layout::grid g, isolinear::compass a) : rule(g, a) {}
+        vertical_rule(layout::grid g, isolinear::compass a) : rule(std::move(g), a) {}
 
         void draw(SDL_Renderer *renderer) const override {
           auto bound_width = m_grid.bounds().W();
@@ -117,7 +104,7 @@ namespace isolinear::ui {
     class horizontal_rule : public rule {
 
     public:
-        horizontal_rule(layout::grid g, isolinear::compass a) : rule(g, a) {}
+        horizontal_rule(layout::grid g, isolinear::compass a) : rule(std::move(g), a) {}
 
         void draw(SDL_Renderer *renderer) const override {
           auto bound_height = m_grid.bounds().H();
@@ -160,13 +147,12 @@ namespace isolinear::ui {
         bool m_enabled = true;
         bool m_active = false;
         std::string m_label;
-        region m_bounds;
 
     public:
         miso::signal<> signal_press;
 
         button(display::window &w, layout::grid g, std::string l)
-          : m_bounds{g.bounds()}, m_window{w}, m_label{l} {}
+          : control(std::move(g)), m_window{w}, m_label{l} {}
 
         void enable() { m_enabled = true; }
 
@@ -188,20 +174,17 @@ namespace isolinear::ui {
 
         void label(std::string newlabel) { m_label = newlabel + " "; }
 
-        virtual region bounds() const override {
-          return m_bounds;
-        }
-
         void draw(SDL_Renderer *renderer) const override {
+          auto bounds = m_grid.bounds();
           boxColor(renderer,
-                   m_bounds.near_x(), m_bounds.near_y(),
-                   m_bounds.far_x(), m_bounds.far_y(),
+                   bounds.near_x(), bounds.near_y(),
+                   bounds.far_x(), bounds.far_y(),
                    calculate_colour()
           );
 
           m_window.button_font().RenderText(
               renderer,
-              m_bounds,
+              bounds,
               compass::southeast,
               std::string{" "} + m_label + " "
           );
@@ -255,14 +238,13 @@ namespace isolinear::ui {
 
     class button_bar : public control {
     protected:
-        layout::grid m_grid;
         display::window &m_window;
         std::map<std::string, isolinear::ui::button> m_buttons;
         geometry::vector m_button_size{2, 2};
 
     public:
         button_bar(display::window &w, layout::grid g)
-            : m_window{w}, m_grid{std::move(g)} {};
+            : m_window{w}, control(std::move(g)) {};
 
         virtual layout::grid calculate_button_grid(int i) const = 0;
 
@@ -345,7 +327,7 @@ namespace isolinear::ui {
 
     class horizontal_button_bar : public button_bar {
     public:
-        horizontal_button_bar(display::window &w, layout::grid g) : button_bar(w, g) {}
+        horizontal_button_bar(display::window &w, layout::grid g) : button_bar(w, std::move(g)) {}
 
         layout::grid calculate_button_grid(int i) const override {
           int near_col = m_button_size.x * (i - 1) + 1;
@@ -375,7 +357,7 @@ namespace isolinear::ui {
 
     class vertical_button_bar : public button_bar {
     public:
-        vertical_button_bar(display::window &w, layout::grid g) : button_bar(w, g) {}
+        vertical_button_bar(display::window &w, layout::grid g) : button_bar(w, std::move(g)) {}
 
         layout::grid calculate_button_grid(int i) const override {
           int near_col = 1;
@@ -405,24 +387,22 @@ namespace isolinear::ui {
 
     class header_basic : public control {
     protected:
-        layout::grid m_grid;
         display::window &m_window;
         compass m_alignment = compass::centre;
         std::string m_text{""};
 
     public:
         header_basic(layout::grid g, display::window &w, std::string t)
-            : header_basic(g, w, isolinear::compass::west, t) {};
+            : header_basic(std::move(g), w, isolinear::compass::west, t) {};
 
         header_basic(layout::grid g, display::window &w, compass a)
-            : header_basic(g, w, a, "") {}
-
-        header_basic(display::window &w, layout::grid g, compass a, std::string t)
-            : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t} {}
+            : header_basic(std::move(g), w, a, "") {}
 
         header_basic(layout::grid g, display::window &w, compass a, std::string t)
-            : m_grid{g}, m_window{w}, m_alignment{a}, m_text{t} {}
+            : header_basic(w, std::move(g), a, t) {}
 
+        header_basic(display::window &w, layout::grid g, compass a, std::string t)
+            : control(std::move(g)), m_window{w}, m_alignment{a}, m_text{std::move(t)} {}
 
         void label(std::string newlabel) {
           m_text = newlabel;
@@ -432,11 +412,11 @@ namespace isolinear::ui {
           return control::colours();
         }
 
-        virtual void colours(theme::colour_scheme cs) {
+        void colours(theme::colour_scheme cs) override {
           control::colours(cs);
         }
 
-        virtual region bounds() const override {
+        region bounds() const override {
           return m_grid.bounds();
         }
 
@@ -458,40 +438,39 @@ namespace isolinear::ui {
 
     class header_east_bar : public control {
     protected:
-        layout::grid m_grid;
         display::window &m_window;
-        std::string m_text{""};
+        std::string m_text;
         std::map<std::string, isolinear::ui::button> m_buttons;
         int m_button_width{2};
-        theme::colour m_left_cap_colour;
-        theme::colour m_right_cap_colour;
+        theme::colour m_left_cap_colour{};
+        theme::colour m_right_cap_colour{};
 
     public:
         header_east_bar(display::window &w, layout::grid g, std::string t)
-            : m_grid{g}, m_window{w}, m_text{t} {};
+            : control(std::move(g)), m_window{w}, m_text{t} {};
 
         header_east_bar(layout::grid g, display::window &w, std::string t)
-            : m_grid{g}, m_window{w}, m_text{t} {};
+            : control(std::move(g)), m_window{w}, m_text{t} {};
 
         header_east_bar(layout::grid g, display::window &w, compass a, std::string t)
-            : m_grid{g}, m_window{w}, m_text{t} {};
+            : control(std::move(g)), m_window{w}, m_text{t} {};
 
         header_east_bar(layout::grid g, display::window &w, compass a)
-            : m_grid{g}, m_window{w} {};
+            : control(std::move(g)), m_window{w} {};
 
         void label(std::string newlabel) {
-          m_text = newlabel;
+          m_text = std::move(newlabel);
         }
 
         virtual std::string label() const {
           return m_text;
         }
 
-        virtual theme::colour_scheme colours() const {
+        theme::colour_scheme colours() const override {
           return control::colours();
         }
 
-        virtual void colours(theme::colour_scheme cs) {
+        void colours(theme::colour_scheme cs) override {
           m_left_cap_colour = cs.light;
           m_right_cap_colour = cs.light;
 
@@ -598,7 +577,6 @@ namespace isolinear::ui {
 
     class header_pair_bar : public control {
     protected:
-        layout::grid m_grid;
         display::window &m_window;
         std::string m_left{""};
         std::string m_right{""};
@@ -606,10 +584,7 @@ namespace isolinear::ui {
     public:
         header_pair_bar(layout::grid g, display::window &w,
                         std::string l, std::string r)
-            : m_grid{g}, m_window{w}, m_left{l}, m_right{r} {};
-
-        header_pair_bar(layout::grid g, display::window &w, compass a)
-            : m_grid{g}, m_window{w} {};
+            : control{g}, m_window{w}, m_left{l}, m_right{r} {};
 
         void Left(std::string newlabel) {
           m_left = newlabel;
@@ -723,22 +698,17 @@ namespace isolinear::ui {
     class label : public control {
     protected:
         display::window &m_window;
-        region m_bounds;
         std::string m_text;
 
     public:
         label(display::window &w, layout::grid g, std::string l)
-            : m_window(w), m_bounds(g.bounds()), m_text(l) {}
+            : m_window(w), control(g), m_text(l) {}
 
     public:
-        region bounds() const {
-          return m_bounds;
-        }
-
         void draw(SDL_Renderer *renderer) const {
           m_window.label_font().RenderText(
               renderer,
-              m_bounds,
+              m_grid.bounds(),
               compass::west,
               std::string{" "} + m_text + " "
           );
@@ -750,7 +720,6 @@ namespace isolinear::ui {
     class sweep : public control {
     protected:
         display::window &m_window;
-        layout::grid m_grid;
         geometry::vector m_ports;
         int m_outer_radius;
         int m_inner_radius;
@@ -761,7 +730,13 @@ namespace isolinear::ui {
         sweep(display::window &w, layout::grid g,
               geometry::vector p,
               int oradius, int iradius, compass ali)
-            : m_window{w}, m_grid{g}, m_ports{p}, m_outer_radius{oradius}, m_inner_radius{iradius}, m_alignment{ali} {
+            : m_window{w}
+            , control{g}
+            , m_ports{p}
+            , m_outer_radius{oradius}
+            , m_inner_radius{iradius}
+            , m_alignment{ali}
+            {
           switch (m_alignment) {
             case compass::northeast:
               m_opposite = compass::southwest;
@@ -915,7 +890,6 @@ namespace isolinear::ui {
 
     class horizontal_progress_bar : public control {
     protected:
-        layout::grid m_grid;
         unsigned m_max = 100;
         unsigned m_value = 50;
         unsigned m_gutter = 6;
@@ -934,7 +908,7 @@ namespace isolinear::ui {
         miso::signal<> signal_valuechanged;
 
         horizontal_progress_bar(layout::grid _g, unsigned _v)
-            : m_grid{_g}, m_bar_region(
+            : control{_g}, m_bar_region(
             position(
                 m_grid.bounds().near_x() + (m_gutter * 2),
                 m_grid.bounds().near_y() + (m_gutter * 2)

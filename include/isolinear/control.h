@@ -22,12 +22,18 @@ namespace isolinear::ui {
 
   class control {
     protected:
+      layout::grid m_grid;
       theme::colour_scheme m_colours;
       std::list<control*> m_children;
       bool m_mouse_within_bounds{false};
 
     public:
-      virtual region bounds() const = 0;
+      control(layout::grid g)
+        : m_grid(g) {}
+
+      virtual region bounds() const {
+        return m_grid.bounds();
+      }
 
       virtual void draw(SDL_Renderer* renderer) const {
         for (auto& child : m_children) {

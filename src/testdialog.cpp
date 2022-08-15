@@ -15,11 +15,8 @@ class debugcompass
                  isolinear::geometry::vector sw,
                  isolinear::geometry::vector nw)
       : isolinear::layout::compass(g, n, e, s, w, ne, se, sw, nw)
+      , isolinear::ui::control(g)
       {}
-
-    isolinear::geometry::region bounds() const override {
-      return m_grid.bounds();
-    }
 
   private:
     void draw(SDL_Renderer *renderer) const override {
@@ -45,7 +42,6 @@ class debugcompass
 class dialog : public isolinear::ui::control {
 
   protected:
-    isolinear::layout::grid& m_grid;
     debugcompass m_layout;
     isolinear::ui::north_east_sweep m_ne_sweep;
     isolinear::ui::north_west_sweep m_nw_sweep;
@@ -61,7 +57,7 @@ class dialog : public isolinear::ui::control {
 
 public:
     dialog(isolinear::display::window& w, isolinear::layout::grid& g)
-      : m_grid{g}
+      : isolinear::ui::control(g)
       , m_layout(m_grid, 1, 2, 1, 2, {3,3}, {3,2}, {2,2}, {2,2})
       , m_ne_sweep(w, m_layout.northeast(),{2,1},20,10)
       , m_se_sweep(w, m_layout.southeast(),{2,1},20,10)
@@ -88,10 +84,6 @@ public:
       register_child(&m_button_ok);
       register_child(&m_button_cancel);
     }
-
-    isolinear::geometry::region bounds() const override {
-      return m_grid.bounds();
-    };
 
     isolinear::layout::grid centre() const {
       return m_layout.centre();
