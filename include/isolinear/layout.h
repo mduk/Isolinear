@@ -424,15 +424,35 @@ namespace isolinear::layout {
     class vertical_row {
       protected:
         layout::grid m_grid;
-        int m_allocated_north = 1;
+        int m_allocated_north = 0;
+        int m_allocated_south = 0;
 
       public:
         explicit vertical_row(grid g) : m_grid(std::move(g)) {}
 
         grid allocate_north(int space) {
-          auto grid = m_grid.rows(m_allocated_north, m_allocated_north + (space - 1));
+          auto grid = m_grid.rows(
+              m_allocated_north + 1,
+              m_allocated_north + space
+          );
           m_allocated_north += space;
           return grid;
+        }
+
+        grid allocate_south(int space) {
+          auto grid = m_grid.rows(
+              (m_grid.max_rows() - m_allocated_south) - (space-1),
+              m_grid.max_rows() - m_allocated_south
+            );
+          m_allocated_south += space;
+          return grid;
+        }
+
+        grid remainder() {
+          return m_grid.rows(
+              m_allocated_north+1,
+              m_grid.max_rows() - (m_allocated_south)
+          );
         }
     };
 

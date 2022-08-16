@@ -8,34 +8,55 @@ class frame : public isolinear::ui::control {
 protected:
     isolinear::layout::compass m_layout;
     isolinear::layout::horizontal_row m_north;
+    isolinear::layout::vertical_row m_east;
+
     isolinear::ui::north_east_sweep m_ne_sweep;
     isolinear::ui::south_east_sweep m_se_sweep;
+
     isolinear::ui::horizontal_rule m_s_rule;
 
-    isolinear::ui::button m_n_updir;
+
     isolinear::ui::header_basic m_n_header;
+
+    std::list<isolinear::ui::button> m_buttons;
+    isolinear::ui::button& m_n_updir;
+    isolinear::ui::button& m_n_newdir;
+    isolinear::ui::button& m_e_pgup;
+    isolinear::ui::button& m_e_pgdn;
+
     isolinear::ui::rect m_n_fill;
+    isolinear::ui::rect m_e_fill;
 
 public:
     frame(isolinear::display::window& w, isolinear::layout::grid& g)
         : isolinear::ui::control(g)
-        , m_layout(m_grid, 2, 2, 1, 0, {3,3}, {3,2}, {0,2}, {0,2})
+        , m_layout(m_grid, 2, 2, 1, 0, {3,3}, {3,2}, {0,2}, {0,3})
         , m_north(m_layout.north())
+        , m_east(m_layout.east())
 
         , m_ne_sweep(w, m_layout.northeast(),{2,2},20,10)
         , m_se_sweep(w, m_layout.southeast(),{2,1},20,10)
         , m_s_rule(m_layout.south(), isolinear::compass::south)
 
-        , m_n_updir(w, m_north.allocate_left(3), "PARENT DIR")
+        , m_n_updir(m_buttons.emplace_back(w, m_north.allocate_left(3), "PARENT DIR"))
         , m_n_header(w, m_north.allocate_left(8), compass::west, "")
+        , m_n_newdir(m_buttons.emplace_back(w, m_north.allocate_right(2), "NEW DIR"))
         , m_n_fill(m_north.remainder())
+
+        , m_e_pgup(m_buttons.emplace_back(w, m_east.allocate_north(4), "PGUP"))
+        , m_e_pgdn(m_buttons.emplace_back(w, m_east.allocate_south(4), "PGDN"))
+        , m_e_fill(m_east.remainder())
     {
       register_child(&m_ne_sweep);
       register_child(&m_se_sweep);
       register_child(&m_s_rule);
-      register_child(&m_n_updir);
       register_child(&m_n_header);
       register_child(&m_n_fill);
+      register_child(&m_e_fill);
+
+      for (auto& button : m_buttons) {
+        register_child(&button);
+      }
     }
 
     isolinear::ui::header_basic& header() {
