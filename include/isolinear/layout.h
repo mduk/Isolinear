@@ -439,15 +439,36 @@ namespace isolinear::layout {
     class horizontal_row {
       protected:
         layout::grid m_grid;
-        int m_allocated_left = 1;
+        int m_allocated_left = 0;
+        int m_allocated_right = 0;
 
       public:
         explicit horizontal_row(grid g) : m_grid(std::move(g)) {}
 
         grid allocate_left(int space) {
-          auto grid = m_grid.columns(m_allocated_left, m_allocated_left + (space - 1));
+          auto grid = m_grid.columns(
+              m_allocated_left + 1,
+              m_allocated_left + space
+            );
+
           m_allocated_left += space;
           return grid;
+        }
+
+        grid allocate_right(int space) {
+          auto grid = m_grid.columns(
+              (m_grid.max_columns() - m_allocated_right) - (space-1),
+              m_grid.max_columns() - m_allocated_right
+            );
+          m_allocated_right += space;
+          return grid;
+        }
+
+        grid remainder() {
+          return m_grid.columns(
+              m_allocated_left+1,
+              m_grid.max_columns() - (m_allocated_right)
+              );
         }
     };
 

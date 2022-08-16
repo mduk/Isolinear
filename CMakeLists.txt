@@ -54,3 +54,7 @@ target_link_libraries(testgrid LibSDL2 LibMiso LibFmt)
 add_executable(testdialog src/testdialog.cpp)
 target_include_directories(testdialog PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
 target_link_libraries(testdialog LibSDL2 LibMiso LibFmt)
+
+add_executable(testfiles src/testfiles.cpp)
+target_include_directories(testfiles PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/isolinear)
+target_link_libraries(testfiles LibSDL2 LibMiso LibFmt)

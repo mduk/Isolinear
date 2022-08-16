@@ -93,6 +93,7 @@ public:
 
 
 int main(int argc, char* argv[]) {
+  namespace fs = std::filesystem;
   namespace geometry = isolinear::geometry;
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
@@ -105,48 +106,6 @@ int main(int argc, char* argv[]) {
   dialog mydialog(window, grid);
   window.add(&mydialog);
 
-  std::list<isolinear::ui::button> buttons;
-  isolinear::layout::vertical_row vrow(mydialog.centre());
-
-  isolinear::layout::horizontal_row hrow1(vrow.allocate_north(2));
-  buttons.emplace_back(window, hrow1.allocate_left(3), "BUTTON1");
-  buttons.emplace_back(window, hrow1.allocate_left(3), "BUTTON2");
-  buttons.emplace_back(window, hrow1.allocate_left(3), "BUTTON3");
-  buttons.emplace_back(window, hrow1.allocate_left(3), "BUTTON4");
-
-  isolinear::layout::horizontal_row hrow2(vrow.allocate_north(4));
-  buttons.emplace_back(window, hrow2.allocate_left(4), "BUTTON6");
-  buttons.emplace_back(window, hrow2.allocate_left(4), "BUTTON7");
-  buttons.emplace_back(window, hrow2.allocate_left(4), "BUTTON8");
-
-  isolinear::layout::horizontal_row hrow3(vrow.allocate_north(6));
-  buttons.emplace_back(window, hrow3.allocate_left(6), "BUTTON9");
-  buttons.emplace_back(window, hrow3.allocate_left(6), "BUTTON10");
-
-  isolinear::layout::horizontal_row hrow4(vrow.allocate_north(8));
-  buttons.emplace_back(window, hrow4.allocate_left(12), "BUTTON11");
-
-  for (auto& button : buttons) {
-    window.add(&button);
-  }
-
-/*
-  isolinear::ui::vertical_button_bar filebuttons(window, mydialog.centre());
-  window.add(&filebuttons);
-
-  namespace fs = std::filesystem;
-  std::string path = std::getenv("HOME");
-  for (const auto& entry : fs::directory_iterator(path)) {
-    if (!fs::is_directory(entry.path())) {
-      continue;
-    }
-    if (entry.path().filename().string()[0] == '.') {
-      continue;
-    }
-    filebuttons.add_button(entry.path().string());
-    std::cout << "path: " << entry.path() << std::endl;
-  }
-*/
   while (isolinear::loop());
 
   work_guard.reset();
