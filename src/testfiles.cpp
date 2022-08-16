@@ -7,36 +7,38 @@ class frame : public isolinear::ui::control {
 
 protected:
     isolinear::layout::compass m_layout;
+    isolinear::layout::horizontal_row m_north;
     isolinear::ui::north_east_sweep m_ne_sweep;
     isolinear::ui::south_east_sweep m_se_sweep;
-    isolinear::ui::horizontal_rule m_n_rule;
     isolinear::ui::horizontal_rule m_s_rule;
-    isolinear::ui::header_east_bar m_n_header;
-    isolinear::ui::button m_button_ok;
-    isolinear::ui::button m_button_cancel;
+
+    isolinear::ui::button m_n_updir;
+    isolinear::ui::header_basic m_n_header;
+    isolinear::ui::rect m_n_fill;
 
 public:
     frame(isolinear::display::window& w, isolinear::layout::grid& g)
         : isolinear::ui::control(g)
         , m_layout(m_grid, 2, 2, 1, 0, {3,3}, {3,2}, {0,2}, {0,2})
+        , m_north(m_layout.north())
+
         , m_ne_sweep(w, m_layout.northeast(),{2,2},20,10)
         , m_se_sweep(w, m_layout.southeast(),{2,1},20,10)
-        , m_n_rule(m_layout.north(), isolinear::compass::north)
         , m_s_rule(m_layout.south(), isolinear::compass::south)
-        , m_button_ok(w, m_layout.east().top_rows(4), "UP")
-        , m_button_cancel(w, m_layout.east().bottom_rows(4), "DOWN")
-        , m_n_header(w, m_layout.north(), "")
+
+        , m_n_updir(w, m_north.allocate_left(3), "PARENT DIR")
+        , m_n_header(w, m_north.allocate_left(8), compass::west, "")
+        , m_n_fill(m_north.remainder())
     {
       register_child(&m_ne_sweep);
       register_child(&m_se_sweep);
-      register_child(&m_n_rule);
       register_child(&m_s_rule);
+      register_child(&m_n_updir);
       register_child(&m_n_header);
-      register_child(&m_button_ok);
-      register_child(&m_button_cancel);
+      register_child(&m_n_fill);
     }
 
-    isolinear::ui::header_east_bar& header() {
+    isolinear::ui::header_basic& header() {
       return m_n_header;
     }
 
@@ -84,7 +86,7 @@ int main(int argc, char* argv[]) {
     auto status = fs::status(entry.path());
     fs::perms perms = status.permissions();
 
-    buttons.emplace_back(window, hrow.allocate_left(2), "ICO");
+    buttons.emplace_back(window, hrow.allocate_left(1), "ICO");
 
     auto& others_execute = buttons.emplace_back(window,hrow.allocate_right(1),"X");
     others_execute.active((perms & fs::perms::others_exec) != fs::perms::none);
