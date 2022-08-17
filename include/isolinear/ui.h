@@ -229,8 +229,8 @@ namespace isolinear::ui {
         [[nodiscard]] theme::colour calculate_colour() const {
           if (m_lit) return 0xffffffff;
           if (disabled()) return colours().disabled;
-          if (active()) return colours().active;
           if (pointer_is_hovering()) return colours().light;
+          if (active()) return colours().active;
           return colours().light_alternate;
         }
     };
