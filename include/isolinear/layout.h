@@ -484,6 +484,22 @@ namespace isolinear::layout {
           return grid;
         }
 
+        grid allocate_west(geometry::vector size) {
+          auto next_cell_near = m_grid.column(m_allocated_west + 1).bounds().near();
+          isolinear::geometry::vector desired_far(
+              next_cell_near.x + size.x,
+              next_cell_near.y + size.y
+            );
+
+          int from_col = m_grid.position_column_index(next_cell_near);
+          int to_col = m_grid.position_column_index(desired_far);
+
+          int space = (to_col - from_col) + 1;
+          auto grid = m_grid.columns(from_col, to_col);
+          m_allocated_west += space;
+          return grid;
+        }
+
         grid remainder() {
           return m_grid.columns(
               m_allocated_west + 1,

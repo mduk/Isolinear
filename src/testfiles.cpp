@@ -22,7 +22,7 @@ protected:
     std::list<isolinear::ui::button> m_buttons;
 
 public:
-    frame(isolinear::display::window& w, isolinear::layout::grid& g)
+    frame(isolinear::display::window& w, isolinear::layout::grid& g, const std::string& h)
         : isolinear::ui::control(g)
         , m_layout(m_grid, 2, 2, 1, 0, {3,3}, {3,2}, {0,2}, {0,3})
         , m_north(m_layout.north())
@@ -31,10 +31,11 @@ public:
         , m_ne_sweep(w, m_layout.northeast(),{2,2},20,10)
         , m_se_sweep(w, m_layout.southeast(),{2,1},20,10)
         , m_s_rule(m_layout.south(), isolinear::compass::south)
-        , m_n_header(w, m_north.allocate_west(8), compass::west, "")
+        , m_n_header(w, m_north.allocate_west(w.header_font().RenderText(0xffffffff, h).size()), compass::west, h)
     {
       m_buttons.emplace_back(w, m_east.allocate_north(4), "PGUP");
       m_buttons.emplace_back(w, m_east.allocate_south(4), "PGDN");
+
       m_buttons.emplace_back(w, m_north.allocate_west(3), "PARENT DIR");
       m_buttons.emplace_back(w, m_north.allocate_east(2), "NEW DIR");
 
@@ -71,9 +72,9 @@ int main(int argc, char* argv[]) {
 
   isolinear::layout::gridfactory gridfactory(window.region(), {60,30}, {6,6});
 
-  std::string path = std::getenv("HOME");
+  std::string path = std::getenv("DEV_DIR");
 
-  frame myframe(window, gridfactory.root());
+  frame myframe(window, gridfactory.root(), path);
   myframe.header().label(path);
   window.add(&myframe);
 
