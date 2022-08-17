@@ -32,7 +32,6 @@ namespace isolinear::ui {
     // Widgets
 
 
-
     class rect : public control {
 
     public:
@@ -47,7 +46,6 @@ namespace isolinear::ui {
           }
         }
     };
-
 
     class rule : public control {
 
@@ -139,7 +137,6 @@ namespace isolinear::ui {
           hrule.fill(renderer, colours().frame);
         }
     };
-
 
     class button : public control {
     protected:
@@ -235,7 +232,6 @@ namespace isolinear::ui {
         }
     };
 
-
     class button_bar : public control {
     protected:
         display::window &m_window;
@@ -324,7 +320,6 @@ namespace isolinear::ui {
         }
     };
 
-
     class horizontal_button_bar : public button_bar {
     public:
         horizontal_button_bar(display::window &w, layout::grid g) : button_bar(w, std::move(g)) {}
@@ -354,7 +349,6 @@ namespace isolinear::ui {
         }
     };
 
-
     class vertical_button_bar : public button_bar {
     public:
         vertical_button_bar(display::window &w, layout::grid g) : button_bar(w, std::move(g)) {}
@@ -383,7 +377,6 @@ namespace isolinear::ui {
           );
         }
     };
-
 
     class header_basic : public control {
     protected:
@@ -694,7 +687,6 @@ namespace isolinear::ui {
         }
     };
 
-
     class label : public control {
     protected:
         display::window &m_window;
@@ -715,7 +707,6 @@ namespace isolinear::ui {
         }
 
     };
-
 
     class sweep : public control {
     protected:
@@ -887,7 +878,6 @@ namespace isolinear::ui {
 
     };
 
-
     class horizontal_progress_bar : public control {
     protected:
         unsigned m_max = 100;
@@ -1046,5 +1036,4 @@ namespace isolinear::ui {
           }
         }
     };
-
 }
