@@ -31,12 +31,12 @@ public:
         , m_ne_sweep(w, m_layout.northeast(),{2,2},20,10)
         , m_se_sweep(w, m_layout.southeast(),{2,1},20,10)
         , m_s_rule(m_layout.south(), isolinear::compass::south)
-        , m_n_header(w, m_north.allocate_left(8), compass::west, "")
+        , m_n_header(w, m_north.allocate_west(8), compass::west, "")
     {
       m_buttons.emplace_back(w, m_east.allocate_north(4), "PGUP");
       m_buttons.emplace_back(w, m_east.allocate_south(4), "PGDN");
-      m_buttons.emplace_back(w, m_north.allocate_left(3), "PARENT DIR");
-      m_buttons.emplace_back(w, m_north.allocate_right(2), "NEW DIR");
+      m_buttons.emplace_back(w, m_north.allocate_west(3), "PARENT DIR");
+      m_buttons.emplace_back(w, m_north.allocate_east(2), "NEW DIR");
 
       m_rects.emplace_back(m_north.remainder());
       m_rects.emplace_back(m_east.remainder());
@@ -98,34 +98,34 @@ int main(int argc, char* argv[]) {
     auto status = fs::status(entry.path());
     fs::perms perms = status.permissions();
 
-    buttons.emplace_back(window, hrow.allocate_left(1), "ICO");
+    buttons.emplace_back(window, hrow.allocate_west(1), "ICO");
 
-    auto& others_execute = buttons.emplace_back(window,hrow.allocate_right(1),"X");
+    auto& others_execute = buttons.emplace_back(window, hrow.allocate_east(1), "X");
     others_execute.active((perms & fs::perms::others_exec) != fs::perms::none);
-    auto& others_write = buttons.emplace_back(window,hrow.allocate_right(1),"W");
+    auto& others_write = buttons.emplace_back(window, hrow.allocate_east(1), "W");
     others_write.active((perms & fs::perms::others_write) != fs::perms::none);
-    auto& others_read = buttons.emplace_back(window,hrow.allocate_right(1),"R");
+    auto& others_read = buttons.emplace_back(window, hrow.allocate_east(1), "R");
     others_read.active((perms & fs::perms::others_read) != fs::perms::none);
 
-    vrules.emplace_back(hrow.allocate_right(1), compass::centre);
+    vrules.emplace_back(hrow.allocate_east(1), compass::centre);
 
-    auto& owner_execute = buttons.emplace_back(window,hrow.allocate_right(1),"X");
+    auto& owner_execute = buttons.emplace_back(window, hrow.allocate_east(1), "X");
     owner_execute.active((perms & fs::perms::owner_exec) != fs::perms::none);
-    auto& owner_write = buttons.emplace_back(window,hrow.allocate_right(1),"W");
+    auto& owner_write = buttons.emplace_back(window, hrow.allocate_east(1), "W");
     owner_write.active((perms & fs::perms::owner_write) != fs::perms::none);
-    auto& owner_read = buttons.emplace_back(window,hrow.allocate_right(1),"R");
+    auto& owner_read = buttons.emplace_back(window, hrow.allocate_east(1), "R");
     owner_read.active((perms & fs::perms::owner_read) != fs::perms::none);
 
-    vrules.emplace_back(hrow.allocate_right(1), compass::centre);
+    vrules.emplace_back(hrow.allocate_east(1), compass::centre);
 
-    auto& group_execute = buttons.emplace_back(window,hrow.allocate_right(1),"X");
+    auto& group_execute = buttons.emplace_back(window, hrow.allocate_east(1), "X");
     group_execute.active((perms & fs::perms::group_exec) != fs::perms::none);
-    auto& group_write = buttons.emplace_back(window,hrow.allocate_right(1),"W");
+    auto& group_write = buttons.emplace_back(window, hrow.allocate_east(1), "W");
     group_write.active((perms & fs::perms::group_write) != fs::perms::none);
-    auto& group_read = buttons.emplace_back(window,hrow.allocate_right(1),"R");
+    auto& group_read = buttons.emplace_back(window, hrow.allocate_east(1), "R");
     group_read.active((perms & fs::perms::group_read) != fs::perms::none);
 
-    vrules.emplace_back(hrow.allocate_right(1), compass::centre);
+    vrules.emplace_back(hrow.allocate_east(1), compass::centre);
 
     headers.emplace_back(window, hrow.remainder(), compass::west, entry.path().filename());
 
