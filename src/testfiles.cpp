@@ -2,47 +2,84 @@
 #include "ui.h"
 #include <filesystem>
 
+class frame_hbar : public isolinear::ui::control {
+
+protected:
+    isolinear::display::window& m_window;
+    isolinear::layout::horizontal_row m_layout;
+    std::list<isolinear::ui::button> m_buttons;
+
+public:
+    frame_hbar(isolinear::display::window& w, isolinear::layout::grid g)
+      : isolinear::ui::control(g)
+      , m_window(w)
+      , m_layout(g)
+    {}
+
+public:
+    isolinear::layout::horizontal_row& layout() {
+      return m_layout;
+    }
+
+    isolinear::ui::button& add_button(std::string label, uint width) {
+      auto& button = m_buttons.emplace_back(m_window, m_layout.allocate_west(width), label);
+      register_child(&button);
+      return button;
+    }
+
+    void draw(SDL_Renderer *renderer) const override {
+      control::draw(renderer);
+      for (auto& btn : m_buttons) btn.draw(renderer);
+      m_layout.remainder().bounds().fill(renderer, colours().frame);
+    }
+};
 
 class frame : public isolinear::ui::control {
 
 protected:
     isolinear::layout::compass m_layout;
-    isolinear::layout::horizontal_row m_north;
-    isolinear::layout::vertical_row m_east;
 
-    isolinear::ui::north_east_sweep m_ne_sweep;
-    isolinear::ui::south_east_sweep m_se_sweep;
+    frame_hbar m_north;
+    isolinear::layout::vertical_row m_east;
+    isolinear::layout::horizontal_row m_south;
+    isolinear::layout::vertical_row m_west;
+
+    isolinear::ui::north_west_sweep m_nw_sweep;
+    isolinear::ui::south_west_sweep m_sw_sweep;
     isolinear::ui::rect m_s_rule;
     isolinear::ui::header_basic m_n_header;
-    std::list<isolinear::ui::rect> m_rects;
     std::list<isolinear::ui::button> m_buttons;
 
 public:
     frame(isolinear::display::window& w, isolinear::layout::grid g, const std::string& h)
         : isolinear::ui::control(g)
-        , m_layout(m_grid, 2, 2, 1, 0, {3,3}, {3,2}, {0,2}, {0,3})
-        , m_north(m_layout.north())
+        , m_layout(m_grid, 2, 2, 1, 2, {0}, {0}, {3,2}, {3,3})
+
+        , m_north(w, m_layout.north())
         , m_east(m_layout.east())
+        , m_south(m_layout.south())
+        , m_west(m_layout.west())
 
-        , m_ne_sweep(w, m_layout.northeast(),{2,2},20,10)
-        , m_se_sweep(w, m_layout.southeast(),{2,1},20,10)
+        , m_nw_sweep(w, m_layout.northwest(),{2,2},20,10)
+        , m_sw_sweep(w, m_layout.southwest(),{2,1},20,10)
         , m_s_rule(m_layout.south())
-        , m_n_header(w, m_north.allocate_west(w.header_font().RenderText(0xffffffff, h).size()), compass::west, h)
+        , m_n_header(w, m_north.layout().allocate_west(w.header_font().RenderText(0xffffffff, h).size()), compass::west, h)
     {
-      m_rects.emplace_back(m_north.remainder());
-      m_rects.emplace_back(m_east.remainder());
-
-      register_child(&m_ne_sweep);
-      register_child(&m_se_sweep);
+      register_child(&m_north);
+      register_child(&m_nw_sweep);
+      register_child(&m_sw_sweep);
       register_child(&m_s_rule);
       register_child(&m_n_header);
 
       for (auto& button : m_buttons) register_child(&button);
-      for (auto& rect : m_rects) register_child(&rect);
     }
 
     isolinear::ui::header_basic& header() {
       return m_n_header;
+    }
+
+    frame_hbar& north() {
+      return m_north;
     }
 
     isolinear::layout::grid centre() const {
@@ -73,12 +110,10 @@ int main(int argc, char* argv[]) {
   frame list_frame(window, hrow.remainder(), path);
   window.add(&list_frame);
 
+  list_frame.north().add_button("PARENT DIR", 3);
+
   isolinear::layout::vertical_row vrow(list_frame.centre());
 
-
-  isolinear::layout::horizontal_row row(vrow.allocate_north(2));
-  isolinear::ui::rounded_button rbutton(window, row.allocate_west(4), "SPOON");
-  window.add(&rbutton);
 
   std::list<isolinear::ui::header_basic> headers;
   std::list<isolinear::ui::button> buttons;

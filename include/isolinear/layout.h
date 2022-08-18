@@ -424,13 +424,14 @@ namespace isolinear::layout {
     class vertical_row {
       protected:
         layout::grid m_grid;
-        int m_allocated_north = 0;
-        int m_allocated_south = 0;
+        std::list<layout::grid> m_allocated;
+        uint m_allocated_north = 0;
+        uint m_allocated_south = 0;
 
       public:
         explicit vertical_row(grid g) : m_grid(std::move(g)) {}
 
-        grid allocate_north(int space) {
+        grid allocate_north(uint space) {
           auto grid = m_grid.rows(
               m_allocated_north + 1,
               m_allocated_north + space
@@ -439,7 +440,7 @@ namespace isolinear::layout {
           return grid;
         }
 
-        grid allocate_south(int space) {
+        grid allocate_south(uint space) {
           auto grid = m_grid.rows(
               (m_grid.max_rows() - m_allocated_south) - (space-1),
               m_grid.max_rows() - m_allocated_south
@@ -459,13 +460,13 @@ namespace isolinear::layout {
     class horizontal_row {
       protected:
         layout::grid m_grid;
-        int m_allocated_east = 0;
-        int m_allocated_west = 0;
+        uint m_allocated_east = 0;
+        uint m_allocated_west = 0;
 
       public:
         explicit horizontal_row(grid g) : m_grid(std::move(g)) {}
 
-        grid allocate_east(int space) {
+        grid allocate_east(uint space) {
           auto grid = m_grid.columns(
               (m_grid.max_columns() - m_allocated_east) - (space - 1),
               m_grid.max_columns() - m_allocated_east
@@ -500,7 +501,7 @@ namespace isolinear::layout {
           return grid;
         }
 
-        grid remainder() {
+        grid remainder() const {
           return m_grid.columns(
               m_allocated_west + 1,
               m_grid.max_columns() - (m_allocated_east)
