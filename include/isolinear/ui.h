@@ -232,6 +232,34 @@ namespace isolinear::ui {
         }
     };
 
+    class rounded_button : public button {
+    public:
+        rounded_button(isolinear::display::window& w, layout::grid g, std::string l)
+          : button(w, g, l) {}
+
+    public:
+        void draw(SDL_Renderer *renderer) const override {
+          auto left_cap = m_grid.column(1).bounds();
+          auto right_cap = m_grid.column(m_grid.max_columns()).bounds();
+
+          region filler( // filler overlaps caps by half-height for label positioning
+              isolinear::geometry::position( left_cap.far_x() - (left_cap.H()/2), left_cap.near_y() ),
+              isolinear::geometry::position( right_cap.near_x() + (right_cap.H()/2), right_cap.far_y())
+            );
+
+          left_cap.bullnose(renderer, isolinear::compass::west, calculate_colour());
+          right_cap.bullnose(renderer, isolinear::compass::east, calculate_colour());
+          filler.fill(renderer, calculate_colour());
+
+          m_window.button_font().RenderText(
+              renderer,
+              filler,
+              compass::southeast,
+              std::string{" "} + m_label + " "
+            );
+        }
+    };
+
     class button_bar : public control {
     protected:
         display::window &m_window;
