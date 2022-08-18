@@ -104,7 +104,6 @@ template <class DataT, class ViewT>
 class paginated_rows : public isolinear::ui::control {
 
   protected:
-    isolinear::layout::grid grid;
     display::window& window;
     int view_page = 0;
     int page_rows = 10;
@@ -113,10 +112,10 @@ class paginated_rows : public isolinear::ui::control {
 
   public:
     paginated_rows(isolinear::layout::grid g, display::window& w, int pr)
-      : grid(g), window(w), page_rows(pr)
-    {
-
-    }
+      : isolinear::ui::control(g)
+      , window(w)
+      , page_rows(pr)
+    {}
 
     void clear() {
       data_rows.clear();
@@ -157,7 +156,7 @@ class paginated_rows : public isolinear::ui::control {
         }
 
         view_rows.emplace_back(
-            grid.rows((i*2)-1, i*2),
+            m_grid.rows((i*2)-1, i*2),
             window,
             data_rows.at(data_row_index)
           );
@@ -182,7 +181,7 @@ class paginated_rows : public isolinear::ui::control {
       page(view_page - 1);
     }
 
-    isolinear::geometry::region bounds() const override { return grid.bounds(); }
+    isolinear::geometry::region bounds() const override { return m_grid.bounds(); }
 
     void draw(SDL_Renderer* renderer) const override {
       auto nrows = data_rows.size();
@@ -202,7 +201,7 @@ class paginated_rows : public isolinear::ui::control {
         }
 
         ViewT row(
-            grid.rows((i*2)-1, i*2),
+            m_grid.rows((i*2)-1, i*2),
             window,
             data_rows.at(data_row_index)
           );
@@ -375,7 +374,8 @@ namespace isompd {
 
     public:
       frame(isolinear::layout::grid g, display::window& w, mpdxx::client& _mpdc)
-          : m_layout{g, 2, 0, 2, 3, {0, 0}, {0, 0}, {4, 3}, {4, 3} }
+          : ui::control(g)
+          , m_layout{g, 2, 0, 2, 3, {0, 0}, {0, 0}, {4, 3}, {4, 3} }
           , m_frame_header{m_layout.north(), w, isolinear::compass::east, "MPD CONTROL"}
           , m_view_buttons{w, m_layout.west()}
           , m_player_control_bar{w, m_layout.south(), m_mpdc}

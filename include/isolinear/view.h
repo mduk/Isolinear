@@ -14,17 +14,14 @@ namespace isolinear {
   class view : public ui::control {
     protected:
       std::string m_name;
-      layout::grid m_grid;
 
     public:
-      view(std::string t, layout::grid g) : m_name{t}, m_grid{g} {}
+      view(std::string t, layout::grid g)
+        : ui::control(g)
+        , m_name(t) {}
 
       std::string name() const {
         return m_name;
-      }
-
-      geometry::region bounds() const {
-        return m_grid.bounds();
       }
 
       virtual void on_activate() {}
