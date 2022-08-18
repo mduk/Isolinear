@@ -12,17 +12,13 @@ protected:
 
     isolinear::ui::north_east_sweep m_ne_sweep;
     isolinear::ui::south_east_sweep m_se_sweep;
-
-    isolinear::ui::horizontal_rule m_s_rule;
-
-
+    isolinear::ui::rect m_s_rule;
     isolinear::ui::header_basic m_n_header;
-
     std::list<isolinear::ui::rect> m_rects;
     std::list<isolinear::ui::button> m_buttons;
 
 public:
-    frame(isolinear::display::window& w, isolinear::layout::grid& g, const std::string& h)
+    frame(isolinear::display::window& w, isolinear::layout::grid g, const std::string& h)
         : isolinear::ui::control(g)
         , m_layout(m_grid, 2, 2, 1, 0, {3,3}, {3,2}, {0,2}, {0,3})
         , m_north(m_layout.north())
@@ -30,15 +26,9 @@ public:
 
         , m_ne_sweep(w, m_layout.northeast(),{2,2},20,10)
         , m_se_sweep(w, m_layout.southeast(),{2,1},20,10)
-        , m_s_rule(m_layout.south(), isolinear::compass::south)
+        , m_s_rule(m_layout.south())
         , m_n_header(w, m_north.allocate_west(w.header_font().RenderText(0xffffffff, h).size()), compass::west, h)
     {
-      m_buttons.emplace_back(w, m_east.allocate_north(4), "PGUP");
-      m_buttons.emplace_back(w, m_east.allocate_south(4), "PGDN");
-
-      m_buttons.emplace_back(w, m_north.allocate_west(3), "PARENT DIR");
-      m_buttons.emplace_back(w, m_north.allocate_east(2), "NEW DIR");
-
       m_rects.emplace_back(m_north.remainder());
       m_rects.emplace_back(m_east.remainder());
 
@@ -74,11 +64,21 @@ int main(int argc, char* argv[]) {
 
   std::string path = std::getenv("DEV_DIR");
 
-  frame myframe(window, gridfactory.root(), path);
-  myframe.header().label(path);
-  window.add(&myframe);
+  auto& root = gridfactory.root();
+  isolinear::layout::horizontal_row hrow(root);
 
-  isolinear::layout::vertical_row vrow(myframe.centre());
+  isolinear::ui::header_east_bar info_frame(window, hrow.allocate_east(10).rows(1,2), "FILE DETAIL");
+  window.add(&info_frame);
+
+  frame list_frame(window, hrow.remainder(), path);
+  window.add(&list_frame);
+
+  isolinear::layout::vertical_row vrow(list_frame.centre());
+
+
+  isolinear::layout::horizontal_row row(vrow.allocate_north(2));
+  isolinear::ui::rounded_button rbutton(window, row.allocate_west(4), "SPOON");
+  window.add(&rbutton);
 
   std::list<isolinear::ui::header_basic> headers;
   std::list<isolinear::ui::button> buttons;
@@ -99,8 +99,21 @@ int main(int argc, char* argv[]) {
     auto status = fs::status(entry.path());
     fs::perms perms = status.permissions();
 
-    buttons.emplace_back(window, hrow.allocate_west(1), "ICO");
+    headers.emplace_back(window, hrow.remainder(), compass::west, entry.path().filename());
+  }
 
+  for (auto& header : headers) window.add(&header);
+  for (auto& button : buttons) window.add(&button);
+  for (auto& vrule : vrules) window.add(&vrule);
+
+  while (isolinear::loop());
+
+  work_guard.reset();
+  isolinear::shutdown();
+  return 0;
+}
+
+/*
     auto& others_execute = buttons.emplace_back(window, hrow.allocate_east(1), "X");
     others_execute.active((perms & fs::perms::others_exec) != fs::perms::none);
     auto& others_write = buttons.emplace_back(window, hrow.allocate_east(1), "W");
@@ -125,20 +138,4 @@ int main(int argc, char* argv[]) {
     group_write.active((perms & fs::perms::group_write) != fs::perms::none);
     auto& group_read = buttons.emplace_back(window, hrow.allocate_east(1), "R");
     group_read.active((perms & fs::perms::group_read) != fs::perms::none);
-
-    vrules.emplace_back(hrow.allocate_east(1), compass::centre);
-
-    headers.emplace_back(window, hrow.remainder(), compass::west, entry.path().filename());
-
-  }
-
-  for (auto& header : headers) window.add(&header);
-  for (auto& button : buttons) window.add(&button);
-  for (auto& vrule : vrules) window.add(&vrule);
-
-  while (isolinear::loop());
-
-  work_guard.reset();
-  isolinear::shutdown();
-  return 0;
-}
+ */
