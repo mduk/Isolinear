@@ -7,6 +7,8 @@ class frame_hbar : public isolinear::ui::control {
 protected:
     isolinear::display::window& m_window;
     isolinear::layout::horizontal_row m_layout;
+    std::string m_header;
+    isolinear::compass m_header_alignment{isolinear::west};
     std::list<isolinear::ui::button> m_buttons;
 
 public:
@@ -21,7 +23,18 @@ public:
       return m_layout;
     }
 
-    isolinear::ui::button& add_button(std::string label, uint width) {
+    std::string header(std::string h) {
+      m_header = h;
+      return m_header;
+    }
+
+    isolinear::ui::button& add_button_east(std::string label, uint width) {
+      auto& button = m_buttons.emplace_back(m_window, m_layout.allocate_east(width), label);
+      register_child(&button);
+      return button;
+    }
+
+    isolinear::ui::button& add_button_west(std::string label, uint width) {
       auto& button = m_buttons.emplace_back(m_window, m_layout.allocate_west(width), label);
       register_child(&button);
       return button;
@@ -30,7 +43,14 @@ public:
     void draw(SDL_Renderer *renderer) const override {
       control::draw(renderer);
       for (auto& btn : m_buttons) btn.draw(renderer);
-      m_layout.remainder().bounds().fill(renderer, colours().frame);
+
+      auto remainder = m_layout.remainder().bounds();
+      if (m_header.empty()) {
+        remainder.fill(renderer, colours().frame);
+      }
+      else {
+        m_window.header_font().RenderText(renderer, remainder, m_header_alignment, m_header);
+      }
     }
 };
 
@@ -41,13 +61,11 @@ protected:
 
     frame_hbar m_north;
     isolinear::layout::vertical_row m_east;
-    isolinear::layout::horizontal_row m_south;
+    frame_hbar m_south;
     isolinear::layout::vertical_row m_west;
 
     isolinear::ui::north_west_sweep m_nw_sweep;
     isolinear::ui::south_west_sweep m_sw_sweep;
-    isolinear::ui::rect m_s_rule;
-    isolinear::ui::header_basic m_n_header;
     std::list<isolinear::ui::button> m_buttons;
 
 public:
@@ -57,30 +75,22 @@ public:
 
         , m_north(w, m_layout.north())
         , m_east(m_layout.east())
-        , m_south(m_layout.south())
+        , m_south(w, m_layout.south())
         , m_west(m_layout.west())
 
         , m_nw_sweep(w, m_layout.northwest(),{2,2},20,10)
         , m_sw_sweep(w, m_layout.southwest(),{2,1},20,10)
-        , m_s_rule(m_layout.south())
-        , m_n_header(w, m_north.layout().allocate_west(w.header_font().RenderText(0xffffffff, h).size()), compass::west, h)
     {
       register_child(&m_north);
+      register_child(&m_south);
       register_child(&m_nw_sweep);
       register_child(&m_sw_sweep);
-      register_child(&m_s_rule);
-      register_child(&m_n_header);
 
       for (auto& button : m_buttons) register_child(&button);
     }
 
-    isolinear::ui::header_basic& header() {
-      return m_n_header;
-    }
-
-    frame_hbar& north() {
-      return m_north;
-    }
+    frame_hbar& north() { return m_north; }
+    frame_hbar& south() { return m_south; }
 
     isolinear::layout::grid centre() const {
       return m_layout.centre();
@@ -110,10 +120,11 @@ int main(int argc, char* argv[]) {
   frame list_frame(window, hrow.remainder(), path);
   window.add(&list_frame);
 
-  list_frame.north().add_button("PARENT DIR", 3);
+  list_frame.north().header(path);
+  list_frame.north().add_button_east("NEW DIR", 2);
+  list_frame.north().add_button_west("PARENT DIR", 3);
 
   isolinear::layout::vertical_row vrow(list_frame.centre());
-
 
   std::list<isolinear::ui::header_basic> headers;
   std::list<isolinear::ui::button> buttons;
