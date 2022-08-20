@@ -243,7 +243,7 @@ namespace isompd::queue {
       view(isolinear::layout::grid g, display::window& w, mpdxx::client& mpdc)
         : isompd::view("QUEUE", g, w,  mpdc)
         , queue_pager(g, w, 10)
-        , queue_pager_buttons(g.bottom_rows(4).top_rows(2), w, "##")
+        , queue_pager_buttons(g.south_rows(4).south_rows(2), w, "##")
         , previous_page_button(queue_pager_buttons.add_button("PREVIOUS"))
         , next_page_button(queue_pager_buttons.add_button("NEXT"))
       {
@@ -319,7 +319,7 @@ namespace isompd::browse {
         , artist_grid(g)
         , album_grid(g)
         , artist_pager(artist_grid, w, 10)
-        , artist_pager_buttons(w, g.bottom_rows(4).top_rows(2))
+        , artist_pager_buttons(w, g.south_rows(4).south_rows(2))
       {
         register_child(&artist_pager);
 

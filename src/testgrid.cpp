@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
   isolinear::ui::header_basic label_buttons(button_area.rows(1,2), window, "BUTTONS");
   window.add(&label_buttons);
 
-  isolinear::ui::button single_button(window, button_area.rows(3,4).left_columns(2), "BUTTON");
+  isolinear::ui::button single_button(window, button_area.rows(3, 4).west_columns(2), "BUTTON");
   window.add(&single_button);
 
   isolinear::ui::header_basic label_progress(progress_area.rows(1,2), window, "PROGRESS BARS");

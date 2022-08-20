@@ -103,11 +103,11 @@ namespace isolinear::layout {
           return subgrid(from, 1, to, rows);
         }
 
-        grid left_columns(int n) const {
+        grid west_columns(int n) const {
           return columns(1, n);
         }
 
-        grid right_columns(int n) const {
+        grid east_columns(int n) const {
           return columns(max_columns() - n + 1, max_columns());
         }
 
@@ -115,11 +115,11 @@ namespace isolinear::layout {
           return columns(l + 1, max_columns() - r);
         }
 
-        grid top_rows(int n) const {
+        grid north_rows(int n) const {
           return rows(1, n);
         }
 
-        grid bottom_rows(int n) const {
+        grid south_rows(int n) const {
           return rows(max_rows() - (n-1), max_rows());
         }
 
@@ -406,19 +406,19 @@ namespace isolinear::layout {
         }
 
         grid vertical_control() override {
-          return west().left_columns(west().max_columns() - 1);
+          return west().west_columns(west().max_columns() - 1);
         }
 
         grid vertical_gutter() override {
-          return west().right_columns(1);
+          return west().east_columns(1);
         }
 
         grid horizontal_control() override {
-          return north().top_rows(2);
+          return north().north_rows(2);
         }
 
         grid horizontal_gutter() override {
-          return north().bottom_rows(1);
+          return north().south_rows(1);
         }
 
         grid content() override {
