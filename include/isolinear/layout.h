@@ -449,7 +449,7 @@ namespace isolinear::layout {
           return grid;
         }
 
-        grid remainder() {
+        grid remainder() const {
           return m_grid.rows(
               m_allocated_north+1,
               m_grid.max_rows() - (m_allocated_south)
