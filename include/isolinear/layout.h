@@ -26,8 +26,13 @@ namespace isolinear::layout {
         geometry::region m_bounds{0};
         geometry::vector m_offset{0};
 
-    public:
+/*
+    public: // No copying
+        grid( const grid& ) = delete; // non construction-copyable
+        grid& operator=( const grid& ) = delete; // non copyable
+*/
 
+    public: // Constructor
         grid(
             geometry::region b,
             geometry::vector cs,
