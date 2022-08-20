@@ -75,7 +75,7 @@ namespace isolinear::layout {
           int rows = max_rows();
 
           from = (from > 0) ? from : rows + from;
-          to = (  to > 0) ?   to : rows +   to;
+          to = (to > 0) ? to : rows + to;
 
           return subgrid(1, from, cols, to);
         }
@@ -93,7 +93,7 @@ namespace isolinear::layout {
           int rows = max_rows();
 
           from = (from > 0) ? from : rows + from;
-          to = (  to > 0) ?   to : rows +   to;
+          to = (to > 0) ? to : rows + to;
 
           return subgrid(from, 1, to, rows);
         }
