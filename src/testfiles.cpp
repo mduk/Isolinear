@@ -2,6 +2,43 @@
 #include "ui.h"
 #include <filesystem>
 
+class frame_vbar : public isolinear::ui::control {
+
+protected:
+    isolinear::display::window& m_window;
+    isolinear::layout::vertical_row m_layout;
+    std::list<isolinear::ui::button> m_buttons;
+
+public:
+    frame_vbar(isolinear::display::window& w, isolinear::layout::grid g)
+        : isolinear::ui::control(g)
+        , m_window(w)
+        , m_layout(g)
+    {}
+
+public:
+    isolinear::layout::vertical_row& layout() {
+      return m_layout;
+    }
+
+    isolinear::ui::button& add_button_north(std::string label, uint width) {
+      auto& button = m_buttons.emplace_back(m_window, m_layout.allocate_north(width), label);
+      register_child(&button);
+      return button;
+    }
+
+    isolinear::ui::button& add_button_south(std::string label, uint width) {
+      auto& button = m_buttons.emplace_back(m_window, m_layout.allocate_south(width), label);
+      register_child(&button);
+      return button;
+    }
+
+    void draw(SDL_Renderer *renderer) const override {
+      control::draw(renderer);
+      m_layout.remainder().bounds().fill(renderer, colours().frame);
+    }
+};
+
 class frame_hbar : public isolinear::ui::control {
 
 protected:
@@ -60,9 +97,9 @@ protected:
     isolinear::layout::compass m_layout;
 
     frame_hbar m_north;
-    isolinear::layout::vertical_row m_east;
+    frame_vbar m_east;
     frame_hbar m_south;
-    isolinear::layout::vertical_row m_west;
+    frame_vbar m_west;
 
     isolinear::ui::north_west_sweep m_nw_sweep;
     isolinear::ui::south_west_sweep m_sw_sweep;
@@ -74,15 +111,18 @@ public:
         , m_layout(m_grid, 2, 2, 1, 2, {0}, {0}, {3,2}, {3,3})
 
         , m_north(w, m_layout.north())
-        , m_east(m_layout.east())
+        , m_east(w, m_layout.east())
         , m_south(w, m_layout.south())
-        , m_west(m_layout.west())
+        , m_west(w, m_layout.west())
 
         , m_nw_sweep(w, m_layout.northwest(),{2,2},20,10)
         , m_sw_sweep(w, m_layout.southwest(),{2,1},20,10)
     {
       register_child(&m_north);
+      register_child(&m_east);
       register_child(&m_south);
+      register_child(&m_west);
+
       register_child(&m_nw_sweep);
       register_child(&m_sw_sweep);
 
