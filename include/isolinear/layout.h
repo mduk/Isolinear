@@ -297,7 +297,7 @@ namespace isolinear::layout {
 
         grid east() const {
           int near_col = m_grid.max_columns() - (m_east - 1);
-          int near_row = m_northeast.y + 1;
+          int near_row = std::max(m_northeast.y + 1, m_north+1);
           int far_col = m_grid.max_columns();
           int far_row = m_grid.max_rows() - m_southeast.y;
 
