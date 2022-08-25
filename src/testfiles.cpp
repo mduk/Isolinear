@@ -2,6 +2,8 @@
 #include "ui.h"
 #include <filesystem>
 
+namespace fs = std::filesystem;
+
 class frame_vbar : public isolinear::ui::control {
 
 protected:
@@ -94,6 +96,7 @@ public:
 class frame : public isolinear::ui::control {
 
 protected:
+    isolinear::display::window& m_window;
     isolinear::layout::compass m_layout;
 
     frame_hbar m_north;
@@ -105,9 +108,12 @@ protected:
     isolinear::ui::south_west_sweep m_sw_sweep;
     std::list<isolinear::ui::button> m_buttons;
 
+    fs::path m_path{"/"};
+
 public:
-    frame(isolinear::display::window& w, isolinear::layout::grid g, const std::string& h)
+    frame(isolinear::display::window& w, isolinear::layout::grid g)
         : isolinear::ui::control(g)
+        , m_window(w)
         , m_layout(m_grid, 2, 2, 1, 2, {0}, {0}, {3,2}, {3,3})
 
         , m_north(w, m_layout.north())
@@ -117,6 +123,7 @@ public:
 
         , m_nw_sweep(w, m_layout.northwest(),{2,2},20,10)
         , m_sw_sweep(w, m_layout.southwest(),{2,1},20,10)
+        , m_path(std::getenv("HOME"))
     {
       register_child(&m_north);
       register_child(&m_east);
@@ -127,19 +134,46 @@ public:
       register_child(&m_sw_sweep);
 
       for (auto& button : m_buttons) register_child(&button);
+
+      m_north.header(m_path);
     }
 
     frame_hbar& north() { return m_north; }
     frame_hbar& south() { return m_south; }
 
-    isolinear::layout::grid centre() const {
-      return m_layout.centre();
+
+    fs::path path() {
+      return m_path;
+    }
+
+    void path(fs::path path) {
+      m_path = path;
+      m_north.header(m_path);
+    }
+
+    void draw(SDL_Renderer *renderer) const override {
+      control::draw(renderer);
+
+      isolinear::layout::vertical_row vrow(m_layout.centre());
+      std::list<isolinear::ui::header_basic> headers;
+
+      for (const auto& entry : fs::directory_iterator(m_path)) {
+        if (entry.path().filename().string()[0] == '.') {
+          continue;
+        }
+
+        isolinear::layout::horizontal_row hrow(vrow.allocate_north(2));
+        headers.emplace_back(m_window, hrow.remainder(), compass::west, entry.path().filename());
+      }
+
+      for (auto& header : headers) {
+        header.draw(renderer);
+      }
     }
 
 };
 
 int main(int argc, char* argv[]) {
-  namespace fs = std::filesystem;
   namespace geometry = isolinear::geometry;
 
   auto work_guard = asio::make_work_guard(isolinear::io_context);
@@ -149,46 +183,26 @@ int main(int argc, char* argv[]) {
 
   isolinear::layout::gridfactory gridfactory(window.region(), {60,30}, {6,6});
 
-  std::string path = std::getenv("DEV_DIR");
-
   auto& root = gridfactory.root();
   isolinear::layout::horizontal_row hrow(root);
 
   isolinear::ui::header_east_bar info_frame(window, hrow.allocate_east(10).rows(1,2), "FILE DETAIL");
   window.add(&info_frame);
 
-  frame list_frame(window, hrow.remainder(), path);
+  frame list_frame(window, hrow.remainder());
   window.add(&list_frame);
 
-  list_frame.north().header(path);
   list_frame.north().add_button_east("NEW DIR", 2);
-  list_frame.north().add_button_west("PARENT DIR", 3);
+  auto& btn_updir = list_frame.north().add_button_west("PARENT DIR", 3);
+  miso::connect(btn_updir.signal_press, [&list_frame](){
+    list_frame.path(list_frame.path().parent_path());
+  });
 
-  isolinear::layout::vertical_row vrow(list_frame.centre());
 
-  std::list<isolinear::ui::header_basic> headers;
   std::list<isolinear::ui::button> buttons;
   std::list<isolinear::ui::vertical_rule> vrules;
 
-  for (const auto& entry : fs::directory_iterator(path)) {
 
-//    if (!fs::is_directory(entry.path())) {
-//      continue;
-//    }
-
-    if (entry.path().filename().string()[0] == '.') {
-      continue;
-    }
-
-    isolinear::layout::horizontal_row hrow(vrow.allocate_north(2));
-
-    auto status = fs::status(entry.path());
-    fs::perms perms = status.permissions();
-
-    headers.emplace_back(window, hrow.remainder(), compass::west, entry.path().filename());
-  }
-
-  for (auto& header : headers) window.add(&header);
   for (auto& button : buttons) window.add(&button);
   for (auto& vrule : vrules) window.add(&vrule);
 
