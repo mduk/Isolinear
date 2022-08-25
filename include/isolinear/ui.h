@@ -146,6 +146,10 @@ namespace isolinear::ui {
         std::string m_label;
 
     public:
+        button( const button& ) = delete; // non construction-copyable
+        button& operator=( const button& ) = delete; // non copyable
+
+    public:
         miso::signal<> signal_press;
 
         button(display::window &w, layout::grid g, std::string l)
