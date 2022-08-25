@@ -106,9 +106,6 @@ protected:
 
     isolinear::ui::north_west_sweep m_nw_sweep;
     isolinear::ui::south_west_sweep m_sw_sweep;
-    std::list<isolinear::ui::button> m_buttons;
-
-    fs::path m_path{"/"};
 
 public:
     frame(isolinear::display::window& w, isolinear::layout::grid g)
@@ -123,7 +120,6 @@ public:
 
         , m_nw_sweep(w, m_layout.northwest(),{2,2},20,10)
         , m_sw_sweep(w, m_layout.southwest(),{2,1},20,10)
-        , m_path(std::getenv("HOME"))
     {
       register_child(&m_north);
       register_child(&m_east);
@@ -132,16 +128,25 @@ public:
 
       register_child(&m_nw_sweep);
       register_child(&m_sw_sweep);
-
-      for (auto& button : m_buttons) register_child(&button);
-
-      m_north.header(m_path);
     }
 
     frame_hbar& north() { return m_north; }
     frame_hbar& south() { return m_south; }
+};
 
+class filer : public frame {
+protected:
+    fs::path m_path{"/"};
 
+public:
+    filer(isolinear::display::window& w, isolinear::layout::grid g)
+      : frame(w, g)
+      , m_path(std::getenv("HOME"))
+      {
+        m_north.header(m_path);
+      }
+
+public:
     fs::path path() {
       return m_path;
     }
@@ -163,14 +168,14 @@ public:
         }
 
         isolinear::layout::horizontal_row hrow(vrow.allocate_north(2));
-        headers.emplace_back(m_window, hrow.remainder(), compass::west, entry.path().filename());
+        auto& header = headers.emplace_back(m_window, hrow.remainder(), compass::west, entry.path().filename());
+        header.colours(colours());
       }
 
       for (auto& header : headers) {
         header.draw(renderer);
       }
     }
-
 };
 
 int main(int argc, char* argv[]) {
@@ -189,22 +194,13 @@ int main(int argc, char* argv[]) {
   isolinear::ui::header_east_bar info_frame(window, hrow.allocate_east(10).rows(1,2), "FILE DETAIL");
   window.add(&info_frame);
 
-  frame list_frame(window, hrow.remainder());
+  filer list_frame(window, hrow.remainder());
   window.add(&list_frame);
 
-  list_frame.north().add_button_east("NEW DIR", 2);
   auto& btn_updir = list_frame.north().add_button_west("PARENT DIR", 3);
   miso::connect(btn_updir.signal_press, [&list_frame](){
     list_frame.path(list_frame.path().parent_path());
   });
-
-
-  std::list<isolinear::ui::button> buttons;
-  std::list<isolinear::ui::vertical_rule> vrules;
-
-
-  for (auto& button : buttons) window.add(&button);
-  for (auto& vrule : vrules) window.add(&vrule);
 
   while (isolinear::loop());
 
