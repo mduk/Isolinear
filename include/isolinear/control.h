@@ -50,6 +50,10 @@ namespace isolinear::ui {
         child->colours(colours());
       }
 
+      void unregister_child(control* child) {
+        m_children.remove(child);
+      }
+
       virtual void on_pointer_event(event::pointer event) {
         bool within_bounds = bounds().encloses(event.position());
 
