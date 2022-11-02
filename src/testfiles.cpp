@@ -137,14 +137,45 @@ public:
 class filer : public frame {
 protected:
     fs::path m_path{"/"};
+    std::list<isolinear::ui::button> m_file_rows{};
+    isolinear::layout::vertical_row m_vrow;
+    bool m_show_hidden{false};
 
 public:
     filer(isolinear::display::window& w, isolinear::layout::grid g)
       : frame(w, g)
       , m_path(std::getenv("HOME"))
+      , m_vrow(m_layout.centre())
       {
-        m_north.header(m_path);
+        update();
       }
+
+protected:
+    void update() {
+      m_north.header(m_path);
+
+      if (m_file_rows.size() > 0) {
+        m_file_rows.clear();
+        return;
+      }
+
+      for (const auto& entry : fs::directory_iterator(m_path)) {
+        if (!m_show_hidden && entry.path().filename().string()[0] == '.') {
+          continue;
+        }
+
+        if (!is_directory(entry.path())) {
+          continue;
+        }
+
+        auto& row = m_file_rows.emplace_back(m_window, m_vrow.allocate_north(2), entry.path().filename());
+        row.colours(colours());
+        miso::connect(row.signal_press, [&, entry](){
+          path(entry.path());
+          std::cout << fmt::format("cd {}\n", (std::string) entry.path());
+        });
+      }
+    }
 
 public:
     fs::path path() {
@@ -153,28 +184,11 @@ public:
 
     void path(fs::path path) {
       m_path = path;
-      m_north.header(m_path);
+      update();
     }
 
     void draw(SDL_Renderer *renderer) const override {
       control::draw(renderer);
-
-      isolinear::layout::vertical_row vrow(m_layout.centre());
-      std::list<isolinear::ui::header_basic> headers;
-
-      for (const auto& entry : fs::directory_iterator(m_path)) {
-        if (entry.path().filename().string()[0] == '.') {
-          continue;
-        }
-
-        isolinear::layout::horizontal_row hrow(vrow.allocate_north(2));
-        auto& header = headers.emplace_back(m_window, hrow.remainder(), compass::west, entry.path().filename());
-        header.colours(colours());
-      }
-
-      for (auto& header : headers) {
-        header.draw(renderer);
-      }
     }
 };
 
