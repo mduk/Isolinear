@@ -2,3 +2,4 @@
 .session.vim
 
 .build/
+cmake-build-debug/
