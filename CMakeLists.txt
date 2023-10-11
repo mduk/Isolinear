@@ -24,5 +24,8 @@ target_link_libraries(testregion LibSDL2 LibFmt LibMiso LibIsolinear)
 add_executable(testdialog src/testdialog.cpp)
 target_link_libraries(testdialog LibSDL2 LibFmt LibMiso LibIsolinear)
 
+add_executable(kitchensink src/kitchensink.cpp)
+target_link_libraries(kitchensink LibSDL2 LibFmt LibMiso LibIsolinear)
+
 add_executable(gameoflife src/gameoflife.cpp)
 target_link_libraries(gameoflife LibSDL2 LibFmt LibMiso LibIsolinear)
