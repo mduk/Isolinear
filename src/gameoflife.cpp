@@ -13,6 +13,7 @@ protected:
     uint16_t m_rows = 0;
     uint16_t m_length = 0;
     std::vector<bool> m_state{};
+    bool m_paused = false;
 
 public:
 
@@ -37,6 +38,8 @@ public:
     }
 
     void update() {
+      if (m_paused) return;
+
       m_state.clear();
       for (uint16_t index = 0; index < m_length; index++) {
         m_state.push_back(rand() % 2 == 0);
@@ -44,12 +47,14 @@ public:
     }
 
     void draw(SDL_Renderer* renderer) const {
-      m_grid.bounds().draw(renderer);
-
       for (uint16_t index = 0; index < m_length; index++) {
         uint32_t colour = m_state[index] ? 0xffffffff : 0xff000000;
         cell_region(index).fill(renderer, colour);
       }
+    }
+
+    void pause() {
+      m_paused = !m_paused;
     }
 };
 
@@ -80,10 +85,15 @@ int main(int argc, char* argv[]) {
   window.add(&vbbar);
   window.add(&hbbar);
 
+  isolinear::ui::button &pause_btn = vbbar.add_button("PAUSE");
+
   isolinear::layout::grid content_area = elbo_layout.content();
   gameoflife gol(content_area);
   window.add(&gol);
 
+  miso::connect(pause_btn.signal_press, [&gol](){
+    gol.pause();
+  });
 
   while (isolinear::loop()) {
     gol.update();
