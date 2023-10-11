@@ -21,9 +21,6 @@ target_include_directories(LibIsolinear INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/in
 add_executable(testregion src/testregion.cpp)
 target_link_libraries(testregion LibSDL2 LibFmt LibMiso LibIsolinear)
 
-add_executable(testgrid src/testgrid.cpp)
-target_link_libraries(testgrid LibSDL2 LibFmt LibMiso LibIsolinear)
-
 add_executable(testdialog src/testdialog.cpp)
 target_link_libraries(testdialog LibSDL2 LibFmt LibMiso LibIsolinear)
 
