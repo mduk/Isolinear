@@ -125,6 +125,10 @@ namespace isolinear::geometry {
             };
         };
 
+      region(int x, int y, int w)
+          : _position{x, y}, _size(w, w)
+        {};
+
       region(int _x, int _y, int _w, int _h)
           : _position{_x, _y}, _size{_w, _h}
         {};
