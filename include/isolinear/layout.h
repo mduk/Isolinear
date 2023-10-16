@@ -165,6 +165,10 @@ namespace isolinear::layout {
           return m_size.y;
         }
 
+        int cell_count() const {
+          return m_size.x * m_size.y;
+        }
+
         geometry::vector gutter() const {
           return m_gutter;
         }
