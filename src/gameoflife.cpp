@@ -9,16 +9,18 @@ namespace layout = isolinear::layout;
 namespace geometry = isolinear::geometry;
 namespace theme = isolinear::theme;
 
+using game_state = std::vector<bool>;
+
 class gameoflife : public isolinear::ui::control {
 protected:
     layout::grid m_game_grid;
-    std::vector<bool> m_state{};
+    game_state m_state;
     bool m_paused = false;
     geometry::vector m_focused_cell{0};
 
 public:
     miso::signal<bool> signal_paused;
-    miso::signal<int, int> signal_mouse;
+    miso::signal<int, int, int> signal_mouse;
 
 public:
     gameoflife(isolinear::layout::grid g)
@@ -36,8 +38,25 @@ public:
       }
     }
 
-    bool cell_update(int x, int y, std::vector<bool> &state) {
-      return false;
+    int alive_neighbours_of(geometry::vector cell, game_state &state) const {
+      int alive = 0;
+      for (int xo = -1; xo <= 1; xo++) {
+        for (int yo = -1; yo <= 1; yo++) {
+          if (xo == 0 && yo == 0) {
+            continue;
+          }
+          auto i = xytoi( cell.x + xo, cell.y + yo );
+          if (state[i]) {
+            alive++;
+          }
+        }
+      }
+      return alive;
+    }
+
+    bool cell_update(geometry::vector cell, game_state &read_state) {
+      auto cell_alive = m_state[xytoi(cell)];
+      return cell_alive;
     }
 
     void update() {
@@ -54,7 +73,8 @@ public:
 
       for (int x = 0; x < cols; x++) {
         for (int y = 0; y < rows; y++) {
-          m_state[xytoi(x, y)] = cell_update(x, y, m_state);
+          geometry::vector cell_ref{x, y};
+          m_state[xytoi(x, y)] = cell_update(cell_ref, m_state);
         }
       }
     }
@@ -102,7 +122,8 @@ public:
         m_focused_cell = clicked_cell;
       }
 
-      emit signal_mouse(m_focused_cell.x, m_focused_cell.y);
+      auto alive = alive_neighbours_of(m_focused_cell, m_state);
+      emit signal_mouse(m_focused_cell.x, m_focused_cell.y, alive);
     }
 
     void pause() {
@@ -155,8 +176,8 @@ int main(int argc, char* argv[]) {
   isolinear::ui::button &step_btn = vbbar.add_button("STEP");
   step_btn.disable();
 
-  miso::connect(gol.signal_mouse, [&hbbar](int x, int y){
-    hbbar.label(fmt::format("{}x{}", x, y));
+  miso::connect(gol.signal_mouse, [&hbbar](int x, int y, int alive){
+    hbbar.label(fmt::format("{}x{} ({})", x, y, alive));
   });
   miso::connect(pause_btn.signal_press, [&gol](){ gol.pause(); });
   miso::connect(initialise_btn.signal_press, [&gol](){ gol.initialise(); });
