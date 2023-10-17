@@ -25,7 +25,7 @@ public:
 public:
     gameoflife(isolinear::layout::grid g)
         : control(g)
-        , m_game_grid(g.bounds(), {50}, {5}, {84, 49}, {0})
+        , m_game_grid(g.bounds(), {25}, {5}, {67,39}, {0})
         {
       initialise();
     }
@@ -34,7 +34,7 @@ public:
       m_state.clear();
       auto cell_count = m_game_grid.cell_count();
       for (uint16_t index = 1; index <= cell_count; index++) {
-        m_state.push_back(0);
+        m_state.push_back(rand() % 6 == 0);
       }
     }
 
@@ -55,7 +55,14 @@ public:
     }
 
     bool cell_update(geometry::vector cell, game_state &read_state) {
-      auto cell_alive = m_state[xytoi(cell)];
+      auto cell_alive = read_state[xytoi(cell)];
+      auto neighbours = alive_neighbours_of(cell, read_state);
+      if (cell_alive && (neighbours < 2 || neighbours > 3)) {
+        return false;
+      }
+      if (!cell_alive && neighbours == 3) {
+        return true;
+      }
       return cell_alive;
     }
 
@@ -71,12 +78,18 @@ public:
       auto cols = m_game_grid.max_columns();
       auto rows = m_game_grid.max_columns();
 
+      game_state temp;
+      auto cell_count = m_game_grid.cell_count();
+      for (uint16_t index = 1; index <= cell_count; index++) {
+        temp.push_back(0);
+      }
       for (int x = 0; x < cols; x++) {
         for (int y = 0; y < rows; y++) {
           geometry::vector cell_ref{x, y};
-          m_state[xytoi(x, y)] = cell_update(cell_ref, m_state);
+          temp[xytoi(x, y)] = cell_update(cell_ref, m_state);
         }
       }
+      m_state = temp;
     }
 
     int xytoi(int x, int y) const {
