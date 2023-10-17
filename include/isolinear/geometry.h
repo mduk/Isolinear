@@ -242,6 +242,20 @@ namespace isolinear::geometry {
       region left_half()   const { return region{ northwest(), south()     }; }
       region right_half()  const { return region{ north(),     southeast() }; }
 
+      region shrink(Sint16 px) const {
+        position shrunk_near{
+            near_x() + px,
+            near_y() + px,
+        };
+
+        position shrunk_far{
+            far_x() - px,
+            far_y() - px
+        };
+
+        return region{shrunk_near, shrunk_far};
+      }
+
       bool encloses(vector point) const {
         return ( near_x() <= point.x )
             && ( near_y() <= point.y )

@@ -14,7 +14,7 @@ protected:
     layout::grid m_game_grid;
     std::vector<bool> m_state{};
     bool m_paused = false;
-    geometry::vector m_clicked_cell{0};
+    geometry::vector m_focused_cell{0};
 
 public:
     miso::signal<bool> signal_paused;
@@ -23,7 +23,7 @@ public:
 public:
     gameoflife(isolinear::layout::grid g)
         : control(g)
-        , m_game_grid(g.bounds(), {20}, {2}, {84, 49}, {0})
+        , m_game_grid(g.bounds(), {50}, {5}, {84, 49}, {0})
         {
       initialise();
     }
@@ -37,6 +37,7 @@ public:
     }
 
     bool cell_update(int x, int y, std::vector<bool> &state) {
+      return false;
     }
 
     void update() {
@@ -70,26 +71,35 @@ public:
       for (int x = 1; x <= m_game_grid.max_columns(); x++) {
         for (int y = 1; y <= m_game_grid.max_rows(); y++) {
           theme::colour cell_colour{0xff000000};
-
-          if (m_state[xytoi(x,y)]) {
+          auto i = xytoi(x,y);
+          if (m_state[i]) {
             cell_colour = 0xffffffff;
           }
 
-          m_game_grid.cell(x, y).fill(renderer, cell_colour);
+          if (i == xytoi(m_focused_cell)) {
+            m_game_grid.cell(x, y).fill(renderer, isolinear::theme::nightgazer_colours.active);
+            m_game_grid.cell(x, y).shrink(5).fill(renderer, cell_colour);
+          }
+          else {
+            m_game_grid.cell(x, y).fill(renderer, cell_colour);
+          }
         }
       }
       SDL_Delay(50);
     }
 
     virtual void on_mouse_down(isolinear::event::pointer event) {
-      m_clicked_cell = m_game_grid.cell_at(event.position());
+      auto clicked_cell = m_game_grid.cell_at(event.position());
 
-      auto i = xytoi(m_clicked_cell);
-      m_state[i] = !m_state[i];
+      if (clicked_cell.x == m_focused_cell.x && clicked_cell.y == m_focused_cell.y) {
+        auto i = xytoi(m_focused_cell);
+        m_state[i] = !m_state[i];
+      }
+      else {
+        m_focused_cell = clicked_cell;
+      }
 
-      cell_update(m_clicked_cell.x, m_clicked_cell.y, m_state);
-
-      emit signal_mouse(m_clicked_cell.x, m_clicked_cell.y);
+      emit signal_mouse(m_focused_cell.x, m_focused_cell.y);
     }
 
     void pause() {
