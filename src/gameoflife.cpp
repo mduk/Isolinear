@@ -82,7 +82,6 @@ public:
     }
 
     virtual void on_mouse_down(isolinear::event::pointer event) {
-      auto pos = event.position();
       m_clicked_cell = m_game_grid.cell_at(event.position());
 
       auto i = xytoi(m_clicked_cell);
