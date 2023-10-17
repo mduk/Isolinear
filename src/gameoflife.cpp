@@ -29,42 +29,14 @@ public:
     }
 
     void initialise() {
-      std::cout << fmt::format("Game Grid: {}x{} cells\n",
-                               m_game_grid.max_columns(),
-                               m_game_grid.max_rows());
       m_state.clear();
-      auto num_cells = m_game_grid.cell_count();
-      std::cout << fmt::format("Grid has {} cells.\n", num_cells);
-      for (uint16_t index = 1; index <= num_cells; index++) {
-        m_state.push_back(index % 2 == 0);
+      auto cell_count = m_game_grid.cell_count();
+      for (uint16_t index = 1; index <= cell_count; index++) {
+        m_state.push_back(0);
       }
-    }
-
-    int count_alive_neighbours(int x, int y, std::vector<bool> &state) const {
-      int alive = 0;
-      for (int xo = -1; xo < 2; ++xo) {
-        for (int yo = -1; yo < 2; ++yo) {
-          if (xo == 0 && yo == 0) {
-            continue;
-          }
-          int tx = x + xo;
-          int ty = y + yo;
-          if (state[xytoi(tx, ty)]) {
-            alive++;
-          }
-        }
-      }
-      return alive;
     }
 
     bool cell_update(int x, int y, std::vector<bool> &state) {
-      auto neighbours = count_alive_neighbours(x, y, state);
-      if (neighbours < 2 || neighbours > 3) {
-        return false;
-      }
-      if (neighbours == 3) {
-        return true;
-      }
     }
 
     void update() {
@@ -76,7 +48,6 @@ public:
     }
 
     void do_update() {
-      return;
       auto cols = m_game_grid.max_columns();
       auto rows = m_game_grid.max_columns();
 
@@ -114,8 +85,12 @@ public:
           m_game_grid.position_row_index(pos)
         );
 
+      std::cout << fmt::format("Clicked {}x{}\n", m_clicked_cell.x, m_clicked_cell.y);
+
       auto i = xytoi(m_clicked_cell.x, m_clicked_cell.y);
       m_state[i] = !m_state[i];
+
+      cell_update(m_clicked_cell.x, m_clicked_cell.y, m_state);
 
       emit signal_mouse(m_clicked_cell.x, m_clicked_cell.y);
     }
