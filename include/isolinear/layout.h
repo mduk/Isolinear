@@ -131,6 +131,13 @@ namespace isolinear::layout {
           return calculate_grid_region(col, row, col, row);
         }
 
+        geometry::vector cell_at(geometry::vector position) const {
+          return {
+              position_column_index(position),
+              position_row_index(position)
+          };
+        }
+
         geometry::region calculate_grid_region(int near_col, int near_row, int far_col, int far_row) const {
           geometry::position origin = m_bounds.origin().add(m_offset);
           return geometry::region{

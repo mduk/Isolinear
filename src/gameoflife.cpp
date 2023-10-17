@@ -61,6 +61,9 @@ public:
     int xytoi(int x, int y) const {
       return (y * m_game_grid.max_columns()) + x;
     }
+    int xytoi(geometry::vector position) const {
+      return xytoi(position.x, position.y);
+    }
 
     void draw(SDL_Renderer* renderer) const {
       m_game_grid.bounds().fill(renderer, 0xff333333);
@@ -80,14 +83,9 @@ public:
 
     virtual void on_mouse_down(isolinear::event::pointer event) {
       auto pos = event.position();
-      m_clicked_cell = geometry::vector(
-          m_game_grid.position_column_index(pos),
-          m_game_grid.position_row_index(pos)
-        );
+      m_clicked_cell = m_game_grid.cell_at(event.position());
 
-      std::cout << fmt::format("Clicked {}x{}\n", m_clicked_cell.x, m_clicked_cell.y);
-
-      auto i = xytoi(m_clicked_cell.x, m_clicked_cell.y);
+      auto i = xytoi(m_clicked_cell);
       m_state[i] = !m_state[i];
 
       cell_update(m_clicked_cell.x, m_clicked_cell.y, m_state);
