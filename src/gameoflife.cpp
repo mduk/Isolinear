@@ -68,6 +68,9 @@ public:
 
     void draw(SDL_Renderer* renderer) const {
       m_game_grid.bounds().fill(renderer, 0xff333333);
+
+      auto focused_cell_i = xytoi(m_focused_cell);
+
       for (int x = 1; x <= m_game_grid.max_columns(); x++) {
         for (int y = 1; y <= m_game_grid.max_rows(); y++) {
           theme::colour cell_colour{0xff000000};
@@ -76,7 +79,7 @@ public:
             cell_colour = 0xffffffff;
           }
 
-          if (i == xytoi(m_focused_cell)) {
+          if (i == focused_cell_i) {
             m_game_grid.cell(x, y).fill(renderer, isolinear::theme::nightgazer_colours.active);
             m_game_grid.cell(x, y).shrink(5).fill(renderer, cell_colour);
           }
