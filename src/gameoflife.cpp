@@ -27,7 +27,7 @@ public:
 public:
     gameoflife(isolinear::layout::grid g)
         : control(g)
-        , m_game_grid(g.bounds(), {25}, {5}, m_bigness, {0})
+        , m_game_grid(g.bounds(), {25}, {2}, m_bigness, {0})
         {
       initialise();
     }
