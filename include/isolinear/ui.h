@@ -807,13 +807,6 @@ namespace isolinear::ui {
           iradius.fill(renderer, colours().frame);
           iradius.quadrant_arc(renderer, m_alignment, colours().background);
           draw_outer_radius(renderer);
-
-          if (pointer_is_hovering()) {
-            m_grid.draw(renderer);
-            horizontal_port().draw(renderer);
-            vertical_port().draw(renderer);
-            icorner.draw(renderer);
-          }
         }
     };
 
