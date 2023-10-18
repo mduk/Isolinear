@@ -14,6 +14,7 @@ using game_state = std::vector<bool>;
 
 class gameoflife : public isolinear::ui::control {
 protected:
+    geometry::vector m_bigness{67,39};
     layout::grid m_game_grid;
     game_state m_state;
     bool m_paused = false;
@@ -26,7 +27,7 @@ public:
 public:
     gameoflife(isolinear::layout::grid g)
         : control(g)
-        , m_game_grid(g.bounds(), {25}, {5}, {67,39}, {0})
+        , m_game_grid(g.bounds(), {25}, {5}, m_bigness, {0})
         {
       initialise();
     }
