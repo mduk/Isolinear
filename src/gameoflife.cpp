@@ -8,6 +8,7 @@ using isolinear::geometry::region;
 namespace layout = isolinear::layout;
 namespace geometry = isolinear::geometry;
 namespace theme = isolinear::theme;
+namespace ui = isolinear::ui;
 
 using game_state = std::vector<bool>;
 
@@ -153,6 +154,7 @@ public:
     }
 };
 
+
 int main(int argc, char* argv[]) {
   namespace geometry = isolinear::geometry;
 
@@ -184,16 +186,16 @@ int main(int argc, char* argv[]) {
   gameoflife gol(content_area);
   window.add(&gol);
 
-  isolinear::ui::button &initialise_btn = vbbar.add_button("INITIALISE");
-  isolinear::ui::button &pause_btn = vbbar.add_button("PAUSE");
-  isolinear::ui::button &step_btn = vbbar.add_button("STEP");
+  ui::button &randomise_btn = vbbar.add_button("RANDOMISE");
+  ui::button &pause_btn = vbbar.add_button("PAUSE");
+  ui::button &step_btn = vbbar.add_button("STEP");
   step_btn.disable();
 
   miso::connect(gol.signal_mouse, [&hbbar](int x, int y, int alive){
     hbbar.label(fmt::format("{}x{} ({})", x, y, alive));
   });
   miso::connect(pause_btn.signal_press, [&gol](){ gol.pause(); });
-  miso::connect(initialise_btn.signal_press, [&gol](){ gol.initialise(); });
+  miso::connect(randomise_btn.signal_press, [&gol](){ gol.initialise(); });
   miso::connect(step_btn.signal_press, [&gol](){ gol.step(); });
 
   miso::connect(gol.signal_paused, [&step_btn](bool paused){
