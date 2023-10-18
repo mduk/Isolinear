@@ -345,10 +345,6 @@ namespace isolinear::ui {
                    bar.far_x(), bar.far_y(),
                    colours().frame
           );
-
-          if (pointer_is_hovering()) {
-            m_grid.draw(renderer);
-          }
         }
     };
 
