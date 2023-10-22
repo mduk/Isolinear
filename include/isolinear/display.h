@@ -27,8 +27,8 @@ namespace isolinear::display {
       geometry::vector m_size;
 
     protected: // SDL
+      std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> m_sdl_window;
       SDL_Renderer* m_sdl_renderer{nullptr};
-      SDL_Window* m_sdl_window{nullptr};
 
     protected: // Fonts
       const text::font m_header_font{ FONT, 60, 0xff0099ff };
@@ -38,7 +38,9 @@ namespace isolinear::display {
 
     public: // Constructors & Destructors
       window(geometry::vector p, geometry::vector s)
-        : m_position{p}, m_size{s}
+        : m_position{p}
+        , m_size{s}
+        , m_sdl_window(nullptr, SDL_DestroyWindow)
       {
         init_sdl();
         set_title("Isolinear");
@@ -46,7 +48,6 @@ namespace isolinear::display {
 
       ~window() {
         SDL_DestroyRenderer(m_sdl_renderer);
-        SDL_DestroyWindow(m_sdl_window);
       }
 
     public: // ui::control interface
@@ -119,7 +120,7 @@ namespace isolinear::display {
 
   public: // Public window methods
       void set_title(const std::string& new_title) {
-        SDL_SetWindowTitle(m_sdl_window, new_title.c_str());
+        SDL_SetWindowTitle(m_sdl_window.get(), new_title.c_str());
       }
 
       void add(ui::control* drawable) {
@@ -128,12 +129,12 @@ namespace isolinear::display {
       }
 
       uint32_t window_id() const {
-        return SDL_GetWindowID(m_sdl_window);
+        return SDL_GetWindowID(m_sdl_window.get());
       }
 
     protected: // Protected window methods
       void init_sdl() {
-        m_sdl_window = SDL_CreateWindow(
+        m_sdl_window.reset(SDL_CreateWindow(
             m_title.c_str(),
             m_position.x, m_position.y,
             m_size.x, m_size.y,
@@ -141,16 +142,10 @@ namespace isolinear::display {
               | SDL_WINDOW_RESIZABLE
               | SDL_WINDOW_FULLSCREEN_DESKTOP // Take up the screen that is focused
               | SDL_WINDOW_BORDERLESS
-          );
-
-        if (!m_sdl_window) {
-          throw std::runtime_error(
-            "Failed to create SDL window"
-          );
-        }
+          ));
 
         m_sdl_renderer = SDL_CreateRenderer(
-            m_sdl_window, -1, SDL_RENDERER_SOFTWARE
+            m_sdl_window.get(), -1, SDL_RENDERER_SOFTWARE
           );
 
         if (!m_sdl_renderer) {
@@ -164,7 +159,7 @@ namespace isolinear::display {
           );
 
         SDL_GetWindowSize(
-            m_sdl_window,
+            m_sdl_window.get(),
             &m_size.x,
             &m_size.y
           );
