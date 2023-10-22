@@ -129,7 +129,7 @@ public:
     virtual void on_mouse_down(isolinear::event::pointer event) {
       auto clicked_cell = m_game_grid.cell_at(event.position());
 
-      if (clicked_cell.x == m_focused_cell.x && clicked_cell.y == m_focused_cell.y) {
+      if (clicked_cell == m_focused_cell) {
         auto i = xytoi(m_focused_cell);
         m_state[i] = !m_state[i];
       }

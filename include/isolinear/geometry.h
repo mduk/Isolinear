@@ -31,6 +31,8 @@ namespace isolinear::geometry {
       //vector(SDL_Rect r) : vector(r.x, r.y) {};
       //vector(SDL_Rect r) : vector(r.w, r.h) {};
 
+  public:
+      friend bool operator==(const vector &left, const vector &right);
 
     public:
       vector add(vector c) const {
@@ -71,8 +73,12 @@ namespace isolinear::geometry {
       vector northwest() const { return vector{ northwest_x(), northwest_y() }; }
   };
 
+    bool operator==(const vector &left, const vector &right) {
+      return left.x == right.x && left.y == right.y;
+    }
 
-  class position : public vector {
+
+    class position : public vector {
     public:
       position() : vector() {}
       position(vector c) : vector{c} {}
