@@ -83,11 +83,11 @@ namespace isolinear::text {
         TTF_CloseFont(sdl_font);
       }
 
-      int Height() const {
+      int height() const {
         return TTF_FontHeight(sdl_font);
       }
 
-      void RenderText(
+      void render_text(
           SDL_Renderer* renderer,
           region bounds,
           compass align,
@@ -119,7 +119,7 @@ namespace isolinear::text {
         SDL_DestroyTexture(texture);
       };
 
-      rendered_text RenderText(theme::colour colour, std::string text) const {
+      rendered_text render_text(theme::colour colour, std::string text) const {
         return rendered_text{sdl_font, colour, text};
       }
   };
