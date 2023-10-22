@@ -15,33 +15,33 @@ namespace isolinear::text {
 
   class rendered_text {
     protected:
-      TTF_Font* sdl_font;
-      theme::colour colour;
-      std::string text;
+      TTF_Font* m_sdl_font;
+      theme::colour m_colour;
+      std::string m_text;
 
-      SDL_Surface* sdl_surface;
+      SDL_Surface* m_sdl_surface;
 
     public:
       rendered_text(TTF_Font* f, theme::colour c, std::string t)
-        : sdl_font{f}, colour{c}, text{t}
+        : m_sdl_font{f}, m_colour{c}, m_text{t}
       {
-        uint8_t r = colour,
-                g = colour >> 8,
-                b = colour >> 16;
+        uint8_t r = m_colour,
+                g = m_colour >> 8,
+                b = m_colour >> 16;
         SDL_Color colour{r,g,b};
-        sdl_surface = TTF_RenderUTF8_Blended(sdl_font, text.c_str(), colour);
+        m_sdl_surface = TTF_RenderUTF8_Blended(m_sdl_font, m_text.c_str(), colour);
       };
 
       ~rendered_text() {
-        SDL_FreeSurface(sdl_surface);
+        SDL_FreeSurface(m_sdl_surface);
       }
 
       geometry::vector size() const {
-        return geometry::vector{sdl_surface};
+        return geometry::vector{m_sdl_surface};
       }
 
       void draw(SDL_Renderer* renderer, compass alignment, region bounds) const {
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, sdl_surface);
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, m_sdl_surface);
         SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
         region label_region = bounds.align(alignment, size());
@@ -58,6 +58,13 @@ namespace isolinear::text {
   };
 
   class font {
+
+  protected:
+      std::string path;
+      int size_pt;
+      theme::colour colour;
+      TTF_Font* sdl_font;
+
     public:
       font(std::string p, int s, theme::colour c)
           : path{p}, size_pt{s}, colour{c}
@@ -115,12 +122,6 @@ namespace isolinear::text {
       rendered_text RenderText(theme::colour colour, std::string text) const {
         return rendered_text{sdl_font, colour, text};
       }
-
-    protected:
-      std::string path;
-      int size_pt;
-      theme::colour colour;
-      TTF_Font* sdl_font;
   };
 
 
