@@ -607,11 +607,11 @@ namespace isolinear::ui {
                         std::string l, std::string r)
             : control{g}, m_window{w}, m_left{l}, m_right{r} {};
 
-        void Left(std::string newlabel) {
+        void left(std::string newlabel) {
           m_left = newlabel;
         }
 
-        void Right(std::string newlabel) {
+        void right(std::string newlabel) {
           m_right = newlabel;
         }
 
