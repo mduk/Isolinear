@@ -90,6 +90,10 @@ public:
       return m_layout.centre();
     }
 
+    isolinear::ui::button& ok_button() {
+      return m_button_ok;
+    }
+
 };
 
 
@@ -107,7 +111,12 @@ int main(int argc, char* argv[]) {
   dialog mydialog(window, grid);
   window.add(&mydialog);
 
-  while (isolinear::loop());
+  bool keepalive = true;
+  miso::connect(mydialog.ok_button().signal_press, [&](){
+    keepalive = false;
+  });
+
+  while (keepalive && isolinear::loop());
 
   work_guard.reset();
   isolinear::shutdown();
