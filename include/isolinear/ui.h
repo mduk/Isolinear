@@ -183,12 +183,14 @@ namespace isolinear::ui {
                    calculate_colour()
           );
 
-          m_window.button_font().render_text(
-              renderer,
-              bounds,
-              compass::southeast,
-              std::string{" "} + m_label + " "
-          );
+          if (m_label.length() > 0) {
+            m_window.button_font().render_text(
+                renderer,
+                bounds,
+                compass::southeast,
+                std::string{" "} + m_label + " "
+            );
+          }
         }
 
         void on_mouse_down(event::pointer event) override {
