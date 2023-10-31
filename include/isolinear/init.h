@@ -88,7 +88,7 @@ namespace isolinear {
 
   display::window& new_window() {
     auto display = display::detect_displays().back();
-    return new_window( {display.x, display.y}, {display.w, display.h} );
+    return new_window( {display.X(), display.Y()}, {display.W(), display.H()} );
   }
 
 }

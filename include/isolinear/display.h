@@ -168,8 +168,8 @@ namespace isolinear::display {
   };
 
 
-  std::vector<SDL_Rect> detect_displays() {
-    std::vector<SDL_Rect> displays;
+  std::vector<geometry::region> detect_displays() {
+    std::vector<geometry::region> displays;
 
     fmt::print("Detecting displays:\n");
 
@@ -177,7 +177,7 @@ namespace isolinear::display {
     for (int i = 0; i < number_of_displays; i++) {
       SDL_Rect bounds{};
       SDL_GetDisplayBounds(i, &bounds);
-      displays.push_back(bounds);
+      displays.emplace_back(bounds);
 
       fmt::print("  {}: {},{} +({},{}) [{}]\n",
           i,
