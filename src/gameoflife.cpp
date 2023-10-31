@@ -121,6 +121,7 @@ class isogameoflife : public isolinear::ui::control {
 protected:
     std::size_t m_cell_size;
     gameoflife m_game;
+    bool m_pause{false};
 
 public:
     isogameoflife(isolinear::layout::grid g)
@@ -132,7 +133,22 @@ public:
     })
     { }
 
+    void initialise() {
+      m_game.initialise();
+    }
+
+    void pause() {
+      m_pause = !m_pause;
+    }
+
+    void step() {
+      m_game.update();
+    }
+
     void update() {
+      if (m_pause) {
+        return;
+      }
       m_game.update();
     }
 
@@ -192,9 +208,19 @@ int main(int argc, char* argv[]) {
   window.add(&gol);
 
   ui::button &randomise_btn = vbbar.add_button("RANDOMISE");
+  miso::connect(randomise_btn.signal_press, [&](){
+    gol.initialise();
+  });
+
   ui::button &pause_btn = vbbar.add_button("PAUSE");
+  miso::connect(pause_btn.signal_press, [&](){
+    gol.pause();
+  });
+
   ui::button &step_btn = vbbar.add_button("STEP");
-  step_btn.disable();
+  miso::connect(step_btn.signal_press, [&](){
+    gol.step();
+  });
 
   while (isolinear::loop()) {
     gol.update();
