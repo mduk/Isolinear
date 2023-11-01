@@ -812,10 +812,10 @@ namespace isolinear::ui {
         }
     };
 
-    class north_east_sweep : public sweep {
+    class northeast_sweep : public sweep {
     public:
-        north_east_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
-                         int iradius)
+        northeast_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
+                        int iradius)
             : sweep{m_window, m_grid, ports, oradius, iradius, compass::northeast} {}
 
         region horizontal_port() const override {
@@ -834,10 +834,10 @@ namespace isolinear::ui {
 
     };
 
-    class south_east_sweep : public sweep {
+    class southeast_sweep : public sweep {
     public:
-        south_east_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
-                         int iradius)
+        southeast_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
+                        int iradius)
             : sweep{m_window, m_grid, ports, oradius, iradius, compass::southeast} {}
 
         region horizontal_port() const override {
@@ -856,10 +856,10 @@ namespace isolinear::ui {
 
     };
 
-    class south_west_sweep : public sweep {
+    class southwest_sweep : public sweep {
     public:
-        south_west_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
-                         int iradius)
+        southwest_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
+                        int iradius)
             : sweep{m_window, m_grid, ports, oradius, iradius, compass::southwest} {}
 
         region vertical_port() const override {
@@ -878,10 +878,10 @@ namespace isolinear::ui {
 
     };
 
-    class north_west_sweep : public sweep {
+    class northwest_sweep : public sweep {
     public:
-        north_west_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
-                         int iradius)
+        northwest_sweep(display::window &m_window, layout::grid m_grid, geometry::vector ports, int oradius,
+                        int iradius)
             : sweep{m_window, m_grid, ports, oradius, iradius, compass::northwest} {}
 
         region horizontal_port() const override {

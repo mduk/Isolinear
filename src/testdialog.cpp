@@ -43,10 +43,10 @@ class dialog : public isolinear::ui::control {
 
   protected:
     debugcompass m_layout;
-    isolinear::ui::north_east_sweep m_ne_sweep;
-    isolinear::ui::north_west_sweep m_nw_sweep;
-    isolinear::ui::south_east_sweep m_se_sweep;
-    isolinear::ui::south_west_sweep m_sw_sweep;
+    isolinear::ui::northeast_sweep m_ne_sweep;
+    isolinear::ui::northwest_sweep m_nw_sweep;
+    isolinear::ui::southeast_sweep m_se_sweep;
+    isolinear::ui::southwest_sweep m_sw_sweep;
     isolinear::ui::horizontal_rule m_n_rule;
     isolinear::ui::horizontal_rule m_s_rule;
     isolinear::ui::vertical_rule m_w_rule;
