@@ -113,16 +113,18 @@ class isogameoflife : public isolinear::ui::control {
 protected:
     std::size_t m_cell_size;
     gameoflife m_game;
+    layout::grid m_game_grid;
     bool m_pause{false};
 
 public:
     isogameoflife(isolinear::layout::grid g)
     : control(g)
-    , m_cell_size(20)
+    , m_cell_size(10)
     , m_game({
         static_cast<int>(floor(g.bounds().W()/m_cell_size)),
         static_cast<int>(floor(g.bounds().H()/m_cell_size))
     })
+    , m_game_grid(g.bounds(), {static_cast<int>(m_cell_size)}, 4, m_game.size(), 0)
     { }
 
     void initialise() {
@@ -148,18 +150,18 @@ public:
       auto grid_size = m_game.size();
       for (int cy = 0; cy < grid_size.y; cy++) {
         for (int cx = 0; cx < grid_size.x; cx++) {
-          int cell_x = (cx * m_cell_size) + m_grid.bounds().origin().x;
-          int cell_y = (cy * m_cell_size) + m_grid.bounds().origin().y;
           int cell_colour = (
               m_game.cell_state({cx, cy})
               ? 0xffffffff
               : 0xff000000
           );
 
+          geometry::region cell = m_game_grid.cell(cx, cy);
+
           boxColor(
               renderer,
-              cell_x, cell_y,
-              cell_x + m_cell_size, cell_y + m_cell_size,
+              cell.near_x(), cell.near_y(),
+              cell.far_x(), cell.far_y(),
               cell_colour
           );
         }
