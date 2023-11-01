@@ -10,26 +10,16 @@ namespace geometry = isolinear::geometry;
 namespace theme = isolinear::theme;
 namespace ui = isolinear::ui;
 
-class grid_size : public geometry::vector {
-public:
-    grid_size(int x, int y) : vector(x, y) {}
-
-    int n_cells() {
-      return x * y;
-    }
-};
-
-
 class gameoflife {
 private:
     using game_state_ptr = std::unique_ptr<bool[]>;
 
-    grid_size m_grid_size;
+    geometry::vector m_grid_size;
     game_state_ptr m_update;
     game_state_ptr m_display;
 
 public:
-    gameoflife(grid_size gs)
+    gameoflife(geometry::vector gs)
         : m_grid_size(gs)
         , m_update(std::make_unique<bool[]>(gs.x*gs.y))
         , m_display(std::make_unique<bool[]>(gs.x*gs.y))
@@ -37,14 +27,18 @@ public:
       initialise();
     }
 
+    int n_cells() {
+      return m_grid_size.x * m_grid_size.y;
+    }
+
     void initialise() {
-      for (int i = 0; i < m_grid_size.n_cells(); i++) {
+      for (int i = 0; i < n_cells(); i++) {
         m_display[i] = rand() % 6 == 0;
         m_update[i] = 0;
       }
     }
 
-    geometry::vector neighbour(geometry::vector cell, geometry::vector offset, grid_size gs) {
+    geometry::vector neighbour(geometry::vector cell, geometry::vector offset, geometry::vector gs) {
       int x = cell.x + offset.x;
       int y = cell.y + offset.y;
 
@@ -56,7 +50,7 @@ public:
       return {x, y};
     }
 
-    std::array<geometry::vector, 8> neighbours_of(geometry::vector cell, grid_size gs) {
+    std::array<geometry::vector, 8> neighbours_of(geometry::vector cell, geometry::vector gs) {
       return {
           neighbour(cell, {-1, -1}, gs),  // Northwest
           neighbour(cell, { 0, -1}, gs),  // North
@@ -75,7 +69,7 @@ public:
       return (c.y * n_columns) + c.x;
     }
 
-    grid_size size() const {
+    geometry::vector size() const {
       return m_grid_size;
     }
 
