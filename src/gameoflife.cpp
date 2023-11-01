@@ -104,8 +104,6 @@ public:
         }
       }
 
-      // We flip-flop between the two bool arrays so that no copying
-      // or moving needs to happen, we just swap pointers.
       m_display.swap(m_update);
     }
 };
