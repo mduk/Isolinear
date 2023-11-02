@@ -173,7 +173,7 @@ namespace isolinear::ui {
 
         void active(bool state) { m_active = state; }
 
-        bool active() const { return m_active; }
+        [[nodiscard]] bool active() const { return m_active; }
 
         std::string label() { return m_label; }
 
