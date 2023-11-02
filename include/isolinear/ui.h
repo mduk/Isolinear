@@ -161,6 +161,10 @@ namespace isolinear::ui {
 
         bool enabled() const { return m_enabled; }
 
+        void enabled(const bool state) {
+          m_enabled = state;
+        }
+
         bool disabled() const { return !m_enabled; }
 
         void activate() { m_active = true; }
