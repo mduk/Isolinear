@@ -24,17 +24,25 @@ public:
         , m_update(std::make_unique<bool[]>(gs.x*gs.y))
         , m_display(std::make_unique<bool[]>(gs.x*gs.y))
     {
-      initialise();
+      initialise(6);
     }
 
     int n_cells() {
       return m_grid_size.x * m_grid_size.y;
     }
 
-    void initialise() {
+    void initialise(const int factor) {
       for (int i = 0; i < n_cells(); i++) {
-        m_display[i] = rand() % 6 == 0;
+        m_display[i] = rand() % factor == 0;
         m_update[i] = 0;
+      }
+    }
+
+    void mutate(const int factor) {
+      for (int i = 0; i < n_cells(); i++) {
+        if (!m_display[i]) {
+          m_display[i] = rand() % factor == 0;
+        }
       }
     }
 
@@ -108,7 +116,6 @@ public:
     }
 };
 
-
 class isogameoflife : public isolinear::ui::control {
 protected:
     std::size_t m_cell_size;
@@ -120,7 +127,7 @@ protected:
 public:
     isogameoflife(isolinear::layout::grid g)
     : control(g)
-    , m_cell_size(20)
+    , m_cell_size(5)
     , m_game({
         static_cast<int>(floor(g.bounds().W()/m_cell_size)),
         static_cast<int>(floor(g.bounds().H()/m_cell_size))
@@ -128,12 +135,17 @@ public:
     , m_game_grid(g.bounds(), {static_cast<int>(m_cell_size)}, 4, m_game.size(), 0)
     { }
 
-    void initialise() {
-      m_game.initialise();
+    void initialise(const int factor) {
+      m_game.initialise(factor);
     }
 
-    void pause() {
+    void mutate(const int factor) {
+      m_game.mutate(factor);
+    }
+
+    const bool pause() {
       m_pause = !m_pause;
+      return m_pause;
     }
 
     void step() {
@@ -147,7 +159,7 @@ public:
       m_game.update();
     }
 
-    void on_pointer_event(isolinear::event::pointer event) {
+    void on_pointer_event(const isolinear::event::pointer event) {
       m_hover_cell = m_game_grid.cell_at(event.position());
     }
 
@@ -177,7 +189,6 @@ public:
           );
         }
       }
-      SDL_RenderPresent(renderer);
     }
 };
 
@@ -187,7 +198,11 @@ int main(int argc, char* argv[]) {
   auto work_guard = asio::make_work_guard(isolinear::io_context);
 
   isolinear::init();
-  auto& window = isolinear::new_window();
+  auto display = isolinear::display::detect_displays().front();
+  auto& window = isolinear::new_window(
+      {display.X(), display.Y()},
+      {display.W(), display.H()}
+      );
 
   isolinear::layout::gridfactory gridfactory(
       { 0, 0, window.size().x, window.size().y }, // Display Region
@@ -198,7 +213,7 @@ int main(int argc, char* argv[]) {
   auto& root_grid = gridfactory.root();
 
   int hthickness = 2;
-  int vthickness = 3;
+  int vthickness = 2;
   isolinear::layout::northwest_elbo elbo_layout(root_grid, hthickness + 1, vthickness + 1);
   isolinear::ui::northwest_sweep nwsweep(window, elbo_layout.sweep(), {vthickness, hthickness}, 50, 20 );
   isolinear::ui::vertical_button_bar vbbar(window, elbo_layout.vertical_control());
@@ -208,28 +223,50 @@ int main(int argc, char* argv[]) {
   window.add(&vbbar);
   window.add(&hbbar);
 
-  isolinear::layout::grid content_area = elbo_layout.content();
+  layout::grid content_area = elbo_layout.content();
+
   isogameoflife gol(content_area);
   window.add(&gol);
+/*
+  ui::vertical_rule divider_rule(content_area.column(21), compass::centre);
+  window.add(&divider_rule);
+
+  ui::rect side_block(content_area.columns(22, content_area.max_columns()));
+  window.add(&side_block);
+*/
 
   ui::button &randomise_btn = vbbar.add_button("RANDOMISE");
-  miso::connect(randomise_btn.signal_press, [&](){
-    gol.initialise();
-  });
-
+  ui::button &mutate_btn = vbbar.add_button("MUTATE");
   ui::button &pause_btn = vbbar.add_button("PAUSE");
-  miso::connect(pause_btn.signal_press, [&](){
-    gol.pause();
+  ui::button &step_btn = vbbar.add_button("STEP");
+  step_btn.disable();
+
+  miso::connect(randomise_btn.signal_press, [&](){
+    gol.initialise(12);
   });
 
-  ui::button &step_btn = vbbar.add_button("STEP");
+  miso::connect(mutate_btn.signal_press, [&](){
+    gol.mutate(200);
+  });
+
+  miso::connect(pause_btn.signal_press, [&](){
+    if (gol.pause()) {
+      step_btn.enable();
+      pause_btn.activate();
+    }
+    else {
+      step_btn.disable();
+      pause_btn.deactivate();
+    }
+  });
+
   miso::connect(step_btn.signal_press, [&](){
     gol.step();
   });
 
   while (isolinear::loop()) {
     gol.update();
-    SDL_Delay(50);
+ //   SDL_Delay(50);
   };
 
   work_guard.reset();
