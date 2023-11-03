@@ -71,11 +71,12 @@ public:
         int neighbour_x = cell.x + relative_x;
         int neighbour_y = cell.y + relative_y;
 
+        auto [w, h] = m_grid_size;
         if (m_grid_wrap) {
           if (neighbour_x <= 0) { neighbour_x += m_grid_size.x; }
-          if (neighbour_x >= m_grid_size.x) { neighbour_x -= m_grid_size.x; }
+          if (neighbour_x >= w) { neighbour_x -= m_grid_size.x; }
           if (neighbour_y <= 0) { neighbour_y += m_grid_size.y; }
-          if (neighbour_y >= m_grid_size.y) { neighbour_y -= m_grid_size.y; }
+          if (neighbour_y >= h) { neighbour_y -= m_grid_size.y; }
         }
         else {
           if (neighbour_x <= 0) continue;
