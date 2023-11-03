@@ -230,7 +230,7 @@ int main(int argc, char* argv[]) {
   auto& root_grid = gridfactory.root();
 
   int hthickness = 2;
-  int vthickness = 2;
+  int vthickness = 3;
   isolinear::layout::northwest_elbo elbo_layout(root_grid, hthickness + 1, vthickness + 1);
   isolinear::ui::northwest_sweep nwsweep(window, elbo_layout.sweep(), {vthickness, hthickness}, 50, 20 );
   isolinear::ui::vertical_button_bar vbbar(window, elbo_layout.vertical_control());
