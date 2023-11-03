@@ -46,30 +46,30 @@ public:
       }
     }
 
-    geometry::vector neighbour(geometry::vector cell, geometry::vector offset, geometry::vector gs) {
+    geometry::vector neighbour(geometry::vector cell, geometry::vector offset) {
       int x = cell.x + offset.x;
       int y = cell.y + offset.y;
 
-      if (x < 0) { x += gs.x; }
-      if (x > gs.x) { x -= gs.x; }
-      if (y < 0) { y += gs.y; }
-      if (y > gs.y) { y -= gs.y; }
+      if (x < 0) { x += m_grid_size.x; }
+      if (x > m_grid_size.x) { x -= m_grid_size.x; }
+      if (y < 0) { y += m_grid_size.y; }
+      if (y > m_grid_size.y) { y -= m_grid_size.y; }
 
       return {x, y};
     }
 
-    std::array<geometry::vector, 8> neighbours_of(geometry::vector cell, geometry::vector gs) {
+    std::array<geometry::vector, 8> neighbours_of(geometry::vector cell) {
       return {
-          neighbour(cell, {-1, -1}, gs),  // Northwest
-          neighbour(cell, { 0, -1}, gs),  // North
-          neighbour(cell, {+1, -1}, gs),  // Northeast
+          neighbour(cell, {-1, -1}),  // Northwest
+          neighbour(cell, { 0, -1}),  // North
+          neighbour(cell, {+1, -1}),  // Northeast
 
-          neighbour(cell, {-1,  0}, gs),  // West
-          neighbour(cell, {+1,  0}, gs),  // East
+          neighbour(cell, {-1,  0}),  // West
+          neighbour(cell, {+1,  0}),  // East
 
-          neighbour(cell, {-1, +1}, gs),  // Southwest
-          neighbour(cell, { 0, +1}, gs),  // South
-          neighbour(cell, {+1, +1}, gs),  // Southeast
+          neighbour(cell, {-1, +1}),  // Southwest
+          neighbour(cell, { 0, +1}),  // South
+          neighbour(cell, {+1, +1}),  // Southeast
       };
     }
 
@@ -89,7 +89,7 @@ public:
       for (int cy = 0; cy < m_grid_size.y; cy++) {
         for (int cx = 0; cx < m_grid_size.x; cx++) {
           int alive = 0;
-          for (auto neighbour : neighbours_of({cx, cy}, m_grid_size)) {
+          for (auto neighbour : neighbours_of({cx, cy})) {
             if (m_display[xytoi(neighbour, m_grid_size.x)]) {
               alive++;
             }
