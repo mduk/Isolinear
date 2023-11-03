@@ -17,6 +17,7 @@ private:
     geometry::vector m_grid_size;
     game_state_ptr m_update;
     game_state_ptr m_display;
+    bool m_grid_wrap{true};
 
 public:
     gameoflife(geometry::vector gs)
@@ -46,6 +47,11 @@ public:
       }
     }
 
+    bool wrap() {
+      m_grid_wrap = !m_grid_wrap;
+      return m_grid_wrap;
+    }
+
     int alive_neighbours_of(geometry::vector cell) {
       std::array<std::pair<int,int>, 8> neighbours{{
           {-1, -1},  // Northwest
@@ -65,10 +71,18 @@ public:
         int neighbour_x = cell.x + relative_x;
         int neighbour_y = cell.y + relative_y;
 
-        if (neighbour_x < 0) { neighbour_x += m_grid_size.x; }
-        if (neighbour_x > m_grid_size.x) { neighbour_x -= m_grid_size.x; }
-        if (neighbour_y < 0) { neighbour_y += m_grid_size.y; }
-        if (neighbour_y > m_grid_size.y) { neighbour_y -= m_grid_size.y; }
+        if (m_grid_wrap) {
+          if (neighbour_x <= 0) { neighbour_x += m_grid_size.x; }
+          if (neighbour_x >= m_grid_size.x) { neighbour_x -= m_grid_size.x; }
+          if (neighbour_y <= 0) { neighbour_y += m_grid_size.y; }
+          if (neighbour_y >= m_grid_size.y) { neighbour_y -= m_grid_size.y; }
+        }
+        else {
+          if (neighbour_x <= 0) continue;
+          if (neighbour_x >= m_grid_size.x) continue;
+          if (neighbour_y <= 0) continue;
+          if (neighbour_y >= m_grid_size.y) continue;
+        }
 
         if (m_display[xytoi({neighbour_x, neighbour_y}, m_grid_size.x)]) {
           alive_neighbours++;
@@ -140,6 +154,10 @@ public:
 
     void mutate(const int factor) {
       m_game.mutate(factor);
+    }
+
+    bool wrap() {
+      return m_game.wrap();
     }
 
     const bool pause() {
@@ -238,6 +256,7 @@ int main(int argc, char* argv[]) {
   ui::button &mutate_btn = vbbar.add_button("MUTATE");
   ui::button &pause_btn = vbbar.add_button("PAUSE");
   ui::button &step_btn = vbbar.add_button("STEP");
+  ui::button &wrap_btn = vbbar.add_button("WRAP");
   step_btn.disable();
 
   miso::connect(randomise_btn.signal_press, [&](){
@@ -261,6 +280,10 @@ int main(int argc, char* argv[]) {
 
   miso::connect(step_btn.signal_press, [&](){
     gol.step();
+  });
+
+  miso::connect(wrap_btn.signal_press, [&](){
+    wrap_btn.active(gol.wrap());
   });
 
   while (isolinear::loop()) {
