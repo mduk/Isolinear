@@ -257,7 +257,6 @@ int main(int argc, char* argv[]) {
   ui::button &pause_btn = vbbar.add_button("PAUSE");
   ui::button &step_btn = vbbar.add_button("STEP");
   ui::button &wrap_btn = vbbar.add_button("WRAP");
-  step_btn.disable();
 
   miso::connect(randomise_btn.signal_press, [&](){
     gol.initialise(12);
@@ -278,10 +277,12 @@ int main(int argc, char* argv[]) {
     }
   });
 
+  step_btn.disable();
   miso::connect(step_btn.signal_press, [&](){
     gol.step();
   });
 
+  wrap_btn.activate();
   miso::connect(wrap_btn.signal_press, [&](){
     wrap_btn.active(gol.wrap());
   });
