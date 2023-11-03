@@ -79,10 +79,10 @@ public:
           if (neighbour_y >= h) { neighbour_y -= m_grid_size.y; }
         }
         else {
-          if (neighbour_x <= 0) continue;
-          if (neighbour_x >= m_grid_size.x) continue;
-          if (neighbour_y <= 0) continue;
-          if (neighbour_y >= m_grid_size.y) continue;
+          if (neighbour_x <= 0) { continue };
+          if (neighbour_x >= w) { continue };
+          if (neighbour_y <= 0) { continue };
+          if (neighbour_y >= h) { continue };
         }
 
         if (m_display[xytoi({neighbour_x, neighbour_y})]) {
