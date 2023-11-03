@@ -46,31 +46,34 @@ public:
       }
     }
 
-    geometry::vector neighbour(geometry::vector cell, geometry::vector offset) {
-      int x = cell.x + offset.x;
-      int y = cell.y + offset.y;
+    std::vector<geometry::vector> neighbours_of(geometry::vector cell) {
+      std::array<std::pair<int,int>, 8> neighbours{{
+          {-1, -1},  // Northwest
+          { 0, -1},  // North
+          {+1, -1},  // Northeast
 
-      if (x < 0) { x += m_grid_size.x; }
-      if (x > m_grid_size.x) { x -= m_grid_size.x; }
-      if (y < 0) { y += m_grid_size.y; }
-      if (y > m_grid_size.y) { y -= m_grid_size.y; }
+          {-1,  0},  // West
+          {+1,  0},  // East
 
-      return {x, y};
-    }
+          {-1, +1},  // Southwest
+          { 0, +1},  // South
+          {+1, +1},  // Southeast
+      }};
 
-    std::array<geometry::vector, 8> neighbours_of(geometry::vector cell) {
-      return {
-          neighbour(cell, {-1, -1}),  // Northwest
-          neighbour(cell, { 0, -1}),  // North
-          neighbour(cell, {+1, -1}),  // Northeast
+      std::vector<geometry::vector> neighbours_absolute{};
+      for (auto &[ relative_x, relative_y ] : neighbours) {
+        int neighbour_x = cell.x + relative_x;
+        int neighbour_y = cell.y + relative_y;
 
-          neighbour(cell, {-1,  0}),  // West
-          neighbour(cell, {+1,  0}),  // East
+        if (neighbour_x < 0) { neighbour_x += m_grid_size.x; }
+        if (neighbour_x > m_grid_size.x) { neighbour_x -= m_grid_size.x; }
+        if (neighbour_y < 0) { neighbour_y += m_grid_size.y; }
+        if (neighbour_y > m_grid_size.y) { neighbour_y -= m_grid_size.y; }
 
-          neighbour(cell, {-1, +1}),  // Southwest
-          neighbour(cell, { 0, +1}),  // South
-          neighbour(cell, {+1, +1}),  // Southeast
-      };
+        neighbours_absolute.push_back({neighbour_x, neighbour_y});
+      }
+
+      return neighbours_absolute;
     }
 
     int xytoi(geometry::vector c, int n_columns) const {
