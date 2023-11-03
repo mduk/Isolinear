@@ -46,7 +46,7 @@ public:
       }
     }
 
-    std::vector<geometry::vector> neighbours_of(geometry::vector cell) {
+    int alive_neighbours_of(geometry::vector cell) {
       std::array<std::pair<int,int>, 8> neighbours{{
           {-1, -1},  // Northwest
           { 0, -1},  // North
@@ -60,7 +60,7 @@ public:
           {+1, +1},  // Southeast
       }};
 
-      std::vector<geometry::vector> neighbours_absolute{};
+      int alive_neighbours = 0;
       for (auto &[ relative_x, relative_y ] : neighbours) {
         int neighbour_x = cell.x + relative_x;
         int neighbour_y = cell.y + relative_y;
@@ -70,10 +70,12 @@ public:
         if (neighbour_y < 0) { neighbour_y += m_grid_size.y; }
         if (neighbour_y > m_grid_size.y) { neighbour_y -= m_grid_size.y; }
 
-        neighbours_absolute.push_back({neighbour_x, neighbour_y});
+        if (m_display[xytoi({neighbour_x, neighbour_y}, m_grid_size.x)]) {
+          alive_neighbours++;
+        }
       }
 
-      return neighbours_absolute;
+      return alive_neighbours;
     }
 
     int xytoi(geometry::vector c, int n_columns) const {
@@ -91,13 +93,7 @@ public:
     void update() {
       for (int cy = 0; cy < m_grid_size.y; cy++) {
         for (int cx = 0; cx < m_grid_size.x; cx++) {
-          int alive = 0;
-          for (auto neighbour : neighbours_of({cx, cy})) {
-            if (m_display[xytoi(neighbour, m_grid_size.x)]) {
-              alive++;
-            }
-          }
-
+          int alive = alive_neighbours_of({cx, cy});
           int i = xytoi({cx, cy}, m_grid_size.x);
           bool cell_alive = m_display[i];
 
