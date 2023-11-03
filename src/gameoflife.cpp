@@ -181,9 +181,9 @@ public:
     }
 
     void draw(SDL_Renderer* renderer) const {
-      auto grid_size = m_game.size();
-      for (int cy = 0; cy < grid_size.y; cy++) {
-        for (int cx = 0; cx < grid_size.x; cx++) {
+      auto [ grid_x, grid_y ] = m_game.size();
+      for (int cy = 0; cy < grid_y; cy++) {
+        for (int cx = 0; cx < grid_x; cx++) {
 
           int cell_colour = (
               m_game.cell_state({cx, cy})
