@@ -85,7 +85,7 @@ public:
           if (neighbour_y >= m_grid_size.y) continue;
         }
 
-        if (m_display[xytoi({neighbour_x, neighbour_y}, m_grid_size.x)]) {
+        if (m_display[xytoi({neighbour_x, neighbour_y})]) {
           alive_neighbours++;
         }
       }
@@ -93,8 +93,8 @@ public:
       return alive_neighbours;
     }
 
-    int xytoi(geometry::vector c, int n_columns) const {
-      return (c.y * n_columns) + c.x;
+    int xytoi(geometry::vector c) const {
+      return (c.y * m_grid_size.x) + c.x;
     }
 
     geometry::vector size() const {
@@ -102,14 +102,14 @@ public:
     }
 
     bool cell_state(geometry::vector c) const {
-      return m_display[xytoi(c, m_grid_size.x)];
+      return m_display[xytoi(c)];
     }
 
     void update() {
       for (int cy = 0; cy < m_grid_size.y; cy++) {
         for (int cx = 0; cx < m_grid_size.x; cx++) {
           int alive = alive_neighbours_of({cx, cy});
-          int i = xytoi({cx, cy}, m_grid_size.x);
+          int i = xytoi({cx, cy});
           bool cell_alive = m_display[i];
 
           if (cell_alive && (alive == 2 || alive == 3)) {
