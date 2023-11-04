@@ -28,8 +28,18 @@ public:
       initialise(6);
     }
 
-    int n_cells() {
+    int n_cells() const {
       return m_grid_size.x * m_grid_size.y;
+    }
+
+    int n_alive_cells() const {
+      int alive = 0;
+      for (int i=0; i < n_cells(); i++) {
+        if (m_display[i]) {
+          alive++;
+        }
+      }
+      return alive;
     }
 
     void initialise(const int factor) {
@@ -105,20 +115,19 @@ public:
       return m_display[xytoi(c)];
     }
 
-    void update() {
+    int update() {
+      int alive_cells = 0;
       for (int cy = 0; cy < m_grid_size.y; cy++) {
         for (int cx = 0; cx < m_grid_size.x; cx++) {
-          int alive = alive_neighbours_of({cx, cy});
+          int alive_neighbours = alive_neighbours_of({cx, cy});
           int i = xytoi({cx, cy});
           bool cell_alive = m_display[i];
 
-          if (cell_alive && (alive == 2 || alive == 3)) {
+          if ((cell_alive && (alive_neighbours == 2 || alive_neighbours == 3))
+              || (!cell_alive && alive_neighbours == 3)
+          ) {
             m_update[i] = true;
-            continue;
-          }
-
-          if (!cell_alive && alive == 3) {
-            m_update[i] = true;
+            alive_cells++;
             continue;
           }
 
@@ -127,6 +136,8 @@ public:
       }
 
       m_display.swap(m_update);
+
+      return alive_cells;
     }
 };
 
@@ -137,6 +148,9 @@ protected:
     layout::grid m_game_grid;
     geometry::vector m_hover_cell{0};
     bool m_pause{false};
+
+public:
+    miso::signal<int> signal_step;
 
 public:
     isogameoflife(isolinear::layout::grid g)
@@ -167,14 +181,15 @@ public:
     }
 
     void step() {
-      m_game.update();
+      int alive_cells = m_game.update();
+      emit signal_step(alive_cells);
     }
 
     void update() {
       if (m_pause) {
         return;
       }
-      m_game.update();
+      step();
     }
 
     void on_pointer_event(const isolinear::event::pointer event) {
@@ -245,6 +260,11 @@ int main(int argc, char* argv[]) {
 
   isogameoflife gol(content_area);
   window.add(&gol);
+
+  miso::connect(gol.signal_step, [&](int alive_cells){
+    hbbar.label(fmt::format("Alive: {}", alive_cells));
+  });
+
 /*
   ui::vertical_rule divider_rule(content_area.column(21), compass::centre);
   window.add(&divider_rule);
