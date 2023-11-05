@@ -16,6 +16,8 @@ public:
     struct generation {
         int alive = 0;
         int dead = 0;
+        int alive_delta = 0;
+        int dead_delta = 0;
     };
 
 private:
@@ -23,6 +25,7 @@ private:
     game_state_ptr m_update;
     game_state_ptr m_display;
     bool m_grid_wrap{true};
+    generation m_previous_generation;
 
 public:
     gameoflife(geometry::vector gs)
@@ -143,6 +146,10 @@ public:
 
       m_display.swap(m_update);
 
+      gen.alive_delta = m_previous_generation.alive - gen.alive;
+      gen.dead_delta  = m_previous_generation.dead  - gen.dead;
+
+      m_previous_generation = gen;
       return gen;
     }
 };
@@ -312,8 +319,10 @@ int main(int argc, char* argv[]) {
   });
 
   miso::connect(gol.signal_step, [&](gameoflife::generation gen){
-    auto [ alive, dead ] = gen;
-    header_bar.label(fmt::format("{} alive, {} dead", alive, dead));
+    header_bar.label(fmt::format(
+        "{} alive ({}), {} dead ({})",
+        gen.alive, gen.alive_delta, gen.dead, gen.dead_delta
+    ));
   });
 
   while (isolinear::loop()) {
