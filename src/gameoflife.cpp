@@ -11,9 +11,14 @@ namespace theme = isolinear::theme;
 namespace ui = isolinear::ui;
 
 class gameoflife {
-private:
+public:
     using game_state_ptr = std::unique_ptr<bool[]>;
+    struct generation {
+        int alive = 0;
+        int dead = 0;
+    };
 
+private:
     geometry::vector m_grid_size;
     game_state_ptr m_update;
     game_state_ptr m_display;
@@ -115,8 +120,8 @@ public:
       return m_display[xytoi(c)];
     }
 
-    int update() {
-      int alive_cells = 0;
+    generation update() {
+      generation gen;
       for (int cy = 0; cy < m_grid_size.y; cy++) {
         for (int cx = 0; cx < m_grid_size.x; cx++) {
           int alive_neighbours = alive_neighbours_of({cx, cy});
@@ -127,17 +132,18 @@ public:
               || (!cell_alive && alive_neighbours == 3)
           ) {
             m_update[i] = true;
-            alive_cells++;
+            gen.alive++;
             continue;
           }
 
           m_update[i] = false;
+          gen.dead++;
         }
       }
 
       m_display.swap(m_update);
 
-      return alive_cells;
+      return gen;
     }
 };
 
@@ -150,7 +156,7 @@ protected:
     bool m_pause{false};
 
 public:
-    miso::signal<int> signal_step;
+    miso::signal<gameoflife::generation> signal_step;
 
 public:
     isogameoflife(isolinear::layout::grid g)
@@ -181,8 +187,7 @@ public:
     }
 
     void step() {
-      int alive_cells = m_game.update();
-      emit signal_step(alive_cells);
+      emit signal_step(m_game.update());
     }
 
     void update() {
@@ -304,6 +309,11 @@ int main(int argc, char* argv[]) {
   wrap_btn.activate();
   miso::connect(wrap_btn.signal_press, [&](){
       wrap_btn.active(gol.wrap());
+  });
+
+  miso::connect(gol.signal_step, [&](gameoflife::generation gen){
+    auto [ alive, dead ] = gen;
+    header_bar.label(fmt::format("{} alive, {} dead", alive, dead));
   });
 
   while (isolinear::loop()) {
