@@ -243,75 +243,73 @@ int main(int argc, char* argv[]) {
       { 6, 6 } // Cell Gutter
   );
 
+  int sidebar_thickness = 4;
+
   auto& root_grid = gridfactory.root();
+  layout::grid content_grid = root_grid.east_columns(root_grid.max_columns() - sidebar_thickness);
+  layout::grid control_grid = root_grid.west_columns(sidebar_thickness);
 
-  int hthickness = 2;
-  int vthickness = 3;
-  isolinear::layout::northwest_elbo elbo_layout(root_grid, hthickness + 1, vthickness + 1);
-  isolinear::ui::northwest_sweep nwsweep(window, elbo_layout.sweep(), {vthickness, hthickness}, 50, 20 );
-  isolinear::ui::vertical_button_bar vbbar(window, elbo_layout.vertical_control());
-  isolinear::ui::header_east_bar hbbar(window, elbo_layout.horizontal_control(), "GAME OF LIFE");
+  layout::grid graph_grid       = content_grid.rows(1, 6);
+  layout::grid graph_ctrl_grid  = control_grid.rows(1, 5);
+  layout::grid graph_sweep_grid = control_grid.rows(6, 7);
 
-  window.add(&nwsweep);
-  window.add(&vbbar);
-  window.add(&hbbar);
+  layout::grid divider_grid = content_grid.rows(7, 8);
 
-  layout::grid content_area = elbo_layout.content();
+  layout::grid life_grid       = content_grid.rows(9, content_grid.max_rows());
+  layout::grid life_sweep_grid = control_grid.rows(8, 9);
+  layout::grid life_ctrl_grid  = control_grid.rows(10, control_grid.max_rows());
 
-  isogameoflife gol(content_area);
+  ui::vertical_button_bar graph_buttons(window, graph_ctrl_grid.west_columns(3)); window.add(&graph_buttons);
+    graph_buttons.add_button("01-2287");
+    graph_buttons.add_button("01-9232");
+
+  ui::northwest_sweep nwsweep(window, life_sweep_grid, {3, 1}, 50, 20 ); window.add(&nwsweep);
+  ui::southwest_sweep swsweep(window, graph_sweep_grid, {3, 1}, 50, 20); window.add(&swsweep);
+  ui::header_east_bar header_bar(window, divider_grid, "GAME OF LIFE"); window.add(&header_bar);
+
+  ui::vertical_button_bar vbbar(window, life_ctrl_grid.west_columns(3)); window.add(&vbbar);
+    ui::button &randomise_btn = vbbar.add_button("RANDOMISE");
+    ui::button &mutate_btn = vbbar.add_button("MUTATE");
+    ui::button &pause_btn = vbbar.add_button("PAUSE");
+    ui::button &step_btn = vbbar.add_button("STEP");
+    ui::button &wrap_btn = vbbar.add_button("WRAP");
+
+  isogameoflife gol(life_grid);
   window.add(&gol);
 
-  miso::connect(gol.signal_step, [&](int alive_cells){
-    hbbar.label(fmt::format("Alive: {}", alive_cells));
-  });
-
-/*
-  ui::vertical_rule divider_rule(content_area.column(21), compass::centre);
-  window.add(&divider_rule);
-
-  ui::rect side_block(content_area.columns(22, content_area.max_columns()));
-  window.add(&side_block);
-*/
-
-  ui::button &randomise_btn = vbbar.add_button("RANDOMISE");
-  ui::button &mutate_btn = vbbar.add_button("MUTATE");
-  ui::button &pause_btn = vbbar.add_button("PAUSE");
-  ui::button &step_btn = vbbar.add_button("STEP");
-  ui::button &wrap_btn = vbbar.add_button("WRAP");
-
   miso::connect(randomise_btn.signal_press, [&](){
-    gol.initialise(12);
+      gol.initialise(12);
   });
 
   miso::connect(mutate_btn.signal_press, [&](){
-    gol.mutate(200);
+      gol.mutate(200);
   });
 
   miso::connect(pause_btn.signal_press, [&](){
-    if (gol.pause()) {
-      step_btn.enable();
-      pause_btn.activate();
-    }
-    else {
-      step_btn.disable();
-      pause_btn.deactivate();
-    }
+      if (gol.pause()) {
+        step_btn.enable();
+        pause_btn.activate();
+      }
+      else {
+        step_btn.disable();
+        pause_btn.deactivate();
+      }
   });
 
   step_btn.disable();
   miso::connect(step_btn.signal_press, [&](){
-    gol.step();
+      gol.step();
   });
 
   wrap_btn.activate();
   miso::connect(wrap_btn.signal_press, [&](){
-    wrap_btn.active(gol.wrap());
+      wrap_btn.active(gol.wrap());
   });
 
   while (isolinear::loop()) {
     gol.update();
- //   SDL_Delay(50);
-  };
+    //SDL_Delay(100);
+  }
 
   work_guard.reset();
   isolinear::shutdown();
