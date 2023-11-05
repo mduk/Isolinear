@@ -70,7 +70,7 @@ public:
       return m_grid_wrap;
     }
 
-    int alive_neighbours_of(geometry::vector cell) {
+    int alive_neighbours_of(const geometry::vector cell) const {
       std::array<std::pair<int,int>, 8> neighbours{{
           {-1, -1},  // Northwest
           { 0, -1},  // North
@@ -111,7 +111,7 @@ public:
       return alive_neighbours;
     }
 
-    int xytoi(geometry::vector c) const {
+    int xytoi(const geometry::vector c) const {
       return (c.y * m_grid_size.x) + c.x;
     }
 
@@ -119,7 +119,7 @@ public:
       return m_grid_size;
     }
 
-    bool cell_state(geometry::vector c) const {
+    bool cell_state(const geometry::vector c) const {
       return m_display[xytoi(c)];
     }
 
